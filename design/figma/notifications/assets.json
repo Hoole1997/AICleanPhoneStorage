@@ -1,0 +1,52 @@
+[
+  {
+    "node": "5583:4042",
+    "source": "design/figma/notifications/source/notification_switch_on.png",
+    "output": "app/src/main/res/drawable-mdpi/notification_switch_on.webp"
+  },
+  {
+    "node": "5583:4042",
+    "source": "design/figma/notifications/source/notification_switch_on.png",
+    "output": "app/src/main/res/drawable-hdpi/notification_switch_on.webp"
+  },
+  {
+    "node": "5583:4042",
+    "source": "design/figma/notifications/source/notification_switch_on.png",
+    "output": "app/src/main/res/drawable-xhdpi/notification_switch_on.webp"
+  },
+  {
+    "node": "5583:4042",
+    "source": "design/figma/notifications/source/notification_switch_on.png",
+    "output": "app/src/main/res/drawable-xxhdpi/notification_switch_on.webp"
+  },
+  {
+    "node": "5583:4042",
+    "source": "design/figma/notifications/source/notification_switch_on.png",
+    "output": "app/src/main/res/drawable-xxxhdpi/notification_switch_on.webp"
+  },
+  {
+    "node": "5583:4036",
+    "source": "design/figma/notifications/source/notification_switch_off.png",
+    "output": "app/src/main/res/drawable-mdpi/notification_switch_off.webp"
+  },
+  {
+    "node": "5583:4036",
+    "source": "design/figma/notifications/source/notification_switch_off.png",
+    "output": "app/src/main/res/drawable-hdpi/notification_switch_off.webp"
+  },
+  {
+    "node": "5583:4036",
+    "source": "design/figma/notifications/source/notification_switch_off.png",
+    "output": "app/src/main/res/drawable-xhdpi/notification_switch_off.webp"
+  },
+  {
+    "node": "5583:4036",
+    "source": "design/figma/notifications/source/notification_switch_off.png",
+    "output": "app/src/main/res/drawable-xxhdpi/notification_switch_off.webp"
+  },
+  {
+    "node": "5583:4036",
+    "source": "design/figma/notifications/source/notification_switch_off.png",
+    "output": "app/src/main/res/drawable-xxxhdpi/notification_switch_off.webp"
+  }
+]

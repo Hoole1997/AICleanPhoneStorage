@@ -38,6 +38,7 @@ android {
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)

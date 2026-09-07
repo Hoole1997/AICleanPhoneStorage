@@ -1,0 +1,31 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <ImageView android:layout_width="0dp" android:layout_height="334dp" android:src="@drawable/home_header_background" android:scaleType="fitXY"
+        android:contentDescription="@null" android:importantForAccessibility="no" app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
+    <LinearLayout android:id="@+id/notification_content" android:layout_width="0dp" android:layout_height="0dp" android:orientation="vertical"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width" app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:gravity="center_vertical">
+            <androidx.appcompat.widget.AppCompatImageButton android:id="@+id/notification_back" android:layout_width="48dp" android:layout_height="48dp"
+                android:padding="12dp" android:src="@drawable/ic_traffic_back" android:contentDescription="@string/traffic_back"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+            <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text.Bold" android:id="@+id/notification_title"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginEnd="16dp"
+                android:text="@string/notification_title" android:textColor="@color/home_title" android:textSize="18sp"/>
+        </LinearLayout>
+        <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+            <androidx.recyclerview.widget.RecyclerView android:id="@+id/notification_list" android:layout_width="match_parent" android:layout_height="match_parent"
+                android:paddingStart="16dp" android:paddingEnd="16dp" android:paddingBottom="24dp" android:clipToPadding="false" android:scrollbars="none"/>
+            <LinearLayout android:id="@+id/notification_error_panel" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_gravity="center" android:gravity="center" android:orientation="vertical" android:padding="24dp" android:visibility="gone">
+                <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text" android:id="@+id/notification_error_message"
+                    android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:textSize="14sp" android:text="@string/notification_failed"/>
+                <com.google.android.material.button.MaterialButton style="@style/Widget.Traffic.Button" android:id="@+id/notification_retry"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/traffic_retry"/>
+            </LinearLayout>
+            <com.google.android.material.progressindicator.LinearProgressIndicator android:id="@+id/notification_page_progress"
+                android:layout_width="match_parent" android:layout_height="3dp" android:indeterminate="true" android:visibility="gone" app:indicatorColor="@color/traffic_blue"/>
+        </FrameLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

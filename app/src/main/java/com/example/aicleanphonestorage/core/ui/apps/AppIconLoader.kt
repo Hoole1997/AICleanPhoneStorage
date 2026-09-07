@@ -1,4 +1,4 @@
-package com.example.aicleanphonestorage.feature.networktraffic.ui
+package com.example.aicleanphonestorage.core.ui.apps
 
 import android.content.Context
 import android.content.pm.PackageManager
@@ -11,7 +11,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 
 /** 生命周期由页面所有；缓存按实际位图字节计费，资源查询/光栅化不发生在 onBindViewHolder。 */
-internal class TrafficAppIconLoader(context: Context, private val executor: TaskExecutor) {
+internal class AppIconLoader(context: Context, private val executor: TaskExecutor) {
     private val manager = context.applicationContext.packageManager
     private val size = (42 * context.resources.displayMetrics.density).toInt().coerceAtLeast(1)
     private val cache = object : LruCache<String, Bitmap>(2 * 1024 * 1024) {

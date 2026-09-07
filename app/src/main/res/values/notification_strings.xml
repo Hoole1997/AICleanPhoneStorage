@@ -1,0 +1,17 @@
+<resources>
+<string name="notification_title">Clear Notifications</string>
+<string name="notification_select_apps">Select apps to auto-clear notifications</string>
+<string name="notification_access_title">Allow notification access</string>
+<string name="notification_access_message">Allow AI Clean to clear notifications from the apps you select. Notifications are removed after they arrive; ongoing and protected notifications remain. No notification content is saved.</string>
+<string name="notification_access_open">Open settings</string>
+<string name="notification_loading">Preparing apps…</string>
+<string name="notification_loading_apps">Preparing apps · %1$d / %2$d</string>
+<string name="notification_loading_access">Checking notification access</string>
+<string name="notification_failed">Couldn’t load your apps. Please try again.</string>
+<string name="notification_save_failed">Couldn’t save this change. Please try again.</string>
+<string name="notification_empty">No apps available.</string>
+<string name="notification_connection_wait">Notification access isn’t connected. Open settings to check access.</string>
+<string name="notification_settings_unavailable">Notification access settings aren’t available on this device.</string>
+<string name="notification_rule_unavailable">Couldn’t load saved choices. Tap to retry.</string>
+<string name="notification_auto_clear_app">Auto-clear notifications from %1$s</string>
+</resources>

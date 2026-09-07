@@ -1,5 +1,7 @@
 package com.example.aicleanphonestorage.feature.networktraffic.ui
 
+import com.example.aicleanphonestorage.core.ui.apps.AppIconLoader
+
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -30,7 +32,7 @@ internal sealed interface TrafficRow {
 
 internal class TrafficListAdapter(
     private val scope: CoroutineScope,
-    private val icons: TrafficAppIconLoader,
+    private val icons: AppIconLoader,
     private val onPeriod: (TrafficPeriod) -> Unit,
     private val onManage: (TrafficApp) -> Unit,
 ) : ListAdapter<TrafficRow, RecyclerView.ViewHolder>(TrafficRowDiff) {

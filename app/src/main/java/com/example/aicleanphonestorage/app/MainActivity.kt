@@ -1,5 +1,8 @@
 package com.example.aicleanphonestorage.app
 
+import com.example.aicleanphonestorage.feature.notifications.ui.NotificationCleanerActivity
+import com.example.aicleanphonestorage.feature.notifications.ui.NotificationCleanerViewModel
+import com.example.aicleanphonestorage.feature.notifications.ui.NotificationEntryCoordinator
 import android.graphics.Color
 import android.content.Intent
 import android.os.Bundle
@@ -40,6 +43,13 @@ class MainActivity : AppCompatActivity() {
             NetworkTrafficViewModel((application as CleanApplication).container.networkTrafficRepository, createSavedStateHandle(), entryMode = true)
         } }
     }
+    private val notificationEntry: NotificationCleanerViewModel by viewModels {
+        viewModelFactory { initializer {
+            val container = (application as CleanApplication).container
+            NotificationCleanerViewModel(container.notificationAppsRepository, container.notificationConnection.connected, createSavedStateHandle(), entry = true)
+        } }
+    }
+    private lateinit var notificationCoordinator: NotificationEntryCoordinator
     private lateinit var trafficEntryCoordinator: NetworkTrafficEntryCoordinator
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,9 +68,14 @@ class MainActivity : AppCompatActivity() {
         }
         ViewCompat.requestApplyInsets(binding.root)
         trafficEntryCoordinator = NetworkTrafficEntryCoordinator(this, trafficEntry, (application as CleanApplication).container.trafficSnapshotTransfer)
+        notificationCoordinator = NotificationEntryCoordinator(this, notificationEntry, (application as CleanApplication).container.notificationCatalogTransfer)
         renderer = HomeRenderer(binding, object : HomeUiActions by HomeUiActions.None {
             override fun onToolSelected(tool: HomeTool) {
-                if (tool == HomeTool.Network) trafficEntry.beginEntry()
+                when (tool) {
+                    HomeTool.Network -> { notificationEntry.cancelEntry(); trafficEntry.beginEntry() }
+                    HomeTool.Notifications -> { trafficEntry.cancelEntry(); notificationEntry.beginEntry() }
+                    else -> Unit
+                }
             }
         })
         binding.retryButton.setOnClickListener { homeViewModel.retry() }
@@ -74,6 +89,11 @@ class MainActivity : AppCompatActivity() {
             intent.removeExtra(NetworkTrafficActivity.EXTRA_REENTER)
             trafficEntry.beginEntry()
         }
+        if (intent.getBooleanExtra(NotificationCleanerActivity.EXTRA_REENTER, false)) {
+            intent.removeExtra(NotificationCleanerActivity.EXTRA_REENTER)
+            notificationEntry.beginEntry()
+        }
+        lifecycleScope.launch { repeatOnLifecycle(Lifecycle.State.STARTED) { notificationEntry.state.collect(notificationCoordinator::render) } }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) { trafficEntry.state.collect(trafficEntryCoordinator::render) }
         }
@@ -86,15 +106,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun renderCurrentState() = renderer.render(homeViewModel.uiState.value, HomePreviewSupport.content(previewSelection))
 
-    override fun onResume() { super.onResume(); trafficEntry.onForeground() }
-    override fun onResumeFragments() { super.onResumeFragments(); trafficEntryCoordinator.render(trafficEntry.state.value) }
+    override fun onResume() { super.onResume(); trafficEntry.onForeground(); notificationEntry.onForeground() }
+    override fun onResumeFragments() { super.onResumeFragments(); trafficEntryCoordinator.render(trafficEntry.state.value); notificationCoordinator.render(notificationEntry.state.value) }
     override fun onStop() {
-        if (!isChangingConfigurations) trafficEntry.onBackground()
+        if (!isChangingConfigurations) { trafficEntry.onBackground(); notificationEntry.onBackground() }
         super.onStop()
     }
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (intent.getBooleanExtra(NetworkTrafficActivity.EXTRA_REENTER, false)) trafficEntry.beginEntry()
+        if (intent.getBooleanExtra(NetworkTrafficActivity.EXTRA_REENTER, false)) { notificationEntry.cancelEntry(); trafficEntry.beginEntry() }
+        if (intent.getBooleanExtra(NotificationCleanerActivity.EXTRA_REENTER, false)) { trafficEntry.cancelEntry(); notificationEntry.beginEntry() }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

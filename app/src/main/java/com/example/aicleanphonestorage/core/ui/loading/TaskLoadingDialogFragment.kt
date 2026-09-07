@@ -26,6 +26,7 @@ data class LoadingUiState(
     val percent: Int? = null,
     val cancellable: Boolean = true,
     val showAd: Boolean = true,
+    val resultKey: String = TaskLoadingDialogFragment.RESULT_KEY,
 )
 
 class TaskLoadingDialogFragment : DialogFragment() {
@@ -37,7 +38,7 @@ class TaskLoadingDialogFragment : DialogFragment() {
         super.onCreate(savedInstanceState)
         val state = savedInstanceState ?: requireArguments()
         model = LoadingUiState(state.getLong("id"), state.getString("title").orEmpty(), state.getString("message").orEmpty(),
-            state.getInt("percent", -1).takeIf { it >= 0 }, state.getBoolean("cancellable", true), state.getBoolean("ad", true))
+            state.getInt("percent", -1).takeIf { it >= 0 }, state.getBoolean("cancellable", true), state.getBoolean("ad", true), state.getString("result_key") ?: RESULT_KEY)
         isCancelable = model.cancellable
     }
 
@@ -106,7 +107,7 @@ class TaskLoadingDialogFragment : DialogFragment() {
     override fun onStop() { spinner?.cancel(); spinner = null; super.onStop() }
     override fun onDestroyView() { binding = null; super.onDestroyView() }
     override fun onCancel(dialog: DialogInterface) { publishCancellation(); super.onCancel(dialog) }
-    private fun publishCancellation() = parentFragmentManager.setFragmentResult(RESULT_KEY, Bundle().apply { putLong(REQUEST_ID, model.requestId) })
+    private fun publishCancellation() = parentFragmentManager.setFragmentResult(model.resultKey, Bundle().apply { putLong(REQUEST_ID, model.requestId) })
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putAll(model.toBundle())
@@ -120,7 +121,7 @@ class TaskLoadingDialogFragment : DialogFragment() {
         fun newInstance(state: LoadingUiState) = TaskLoadingDialogFragment().apply { arguments = state.toBundle() }
         private fun LoadingUiState.toBundle() = Bundle().apply {
             putLong("id", requestId); putString("title", title); putString("message", message)
-            putInt("percent", percent ?: -1); putBoolean("cancellable", cancellable); putBoolean("ad", showAd)
+            putInt("percent", percent ?: -1); putBoolean("cancellable", cancellable); putBoolean("ad", showAd); putString("result_key", resultKey)
         }
     }
 }

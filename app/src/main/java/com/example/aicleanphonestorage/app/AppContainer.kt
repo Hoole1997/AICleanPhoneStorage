@@ -1,6 +1,12 @@
 package com.example.aicleanphonestorage.app
 
 import android.content.Context
+import com.example.aicleanphonestorage.core.data.OneShotTransfer
+import com.example.aicleanphonestorage.feature.notifications.data.AndroidNotificationAppsRepository
+import com.example.aicleanphonestorage.feature.notifications.data.NotificationRulesStore
+import com.example.aicleanphonestorage.feature.notifications.data.NotificationAppsRepository
+import com.example.aicleanphonestorage.feature.notifications.data.NotificationCatalog
+import com.example.aicleanphonestorage.feature.notifications.service.NotificationListenerConnection
 import com.example.aicleanphonestorage.feature.networktraffic.data.AndroidNetworkTrafficRepository
 import com.example.aicleanphonestorage.feature.networktraffic.data.NetworkTrafficRepository
 import com.example.aicleanphonestorage.feature.networktraffic.data.TrafficSnapshotTransfer
@@ -13,6 +19,12 @@ import com.example.aicleanphonestorage.feature.home.data.HomeOverviewRepository
 class AppContainer(context: Context) {
     private val applicationContext = context.applicationContext
     val taskExecutor: TaskExecutor by lazy { TaskExecutor(AppDispatchers()) }
+    val notificationRules by lazy { NotificationRulesStore(applicationContext) }
+    val notificationConnection by lazy { NotificationListenerConnection() }
+    val notificationCatalogTransfer by lazy { OneShotTransfer<NotificationCatalog>() }
+    val notificationAppsRepository: NotificationAppsRepository by lazy {
+        AndroidNotificationAppsRepository(applicationContext, notificationRules, taskExecutor)
+    }
     val trafficSnapshotTransfer: TrafficSnapshotTransfer by lazy { TrafficSnapshotTransfer() }
     val homeOverviewRepository: HomeOverviewRepository by lazy { EmptyHomeOverviewRepository() }
     val networkTrafficRepository: NetworkTrafficRepository by lazy {

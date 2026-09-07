@@ -1,5 +1,7 @@
 package com.example.aicleanphonestorage.feature.networktraffic.ui
 
+import com.example.aicleanphonestorage.core.ui.apps.AppIconLoader
+
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Color
@@ -53,7 +55,7 @@ class NetworkTrafficActivity : AppCompatActivity() {
         }
         ViewCompat.requestApplyInsets(binding.root)
         val container = (application as CleanApplication).container
-        renderer = NetworkTrafficRenderer(binding, lifecycleScope, TrafficAppIconLoader(this, container.taskExecutor),
+        renderer = NetworkTrafficRenderer(binding, lifecycleScope, AppIconLoader(this, container.taskExecutor),
             viewModel::selectPeriod, ::manageApp) {
             if (viewModel.state.value.status == TrafficStatus.NeedsAccess) returnToEntry()
             else viewModel.selectPeriod(viewModel.state.value.period)

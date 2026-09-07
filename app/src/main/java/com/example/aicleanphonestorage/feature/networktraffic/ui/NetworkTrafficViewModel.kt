@@ -18,8 +18,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.isActive
-import kotlin.random.Random
+import com.example.aicleanphonestorage.core.ui.loading.TimedEntryLoader
+import com.example.aicleanphonestorage.core.ui.loading.TaskProgress
 
 sealed interface TrafficStatus {
     data object Idle : TrafficStatus
@@ -45,7 +45,7 @@ class NetworkTrafficViewModel(
     private val now: () -> Long = System::currentTimeMillis,
     private val entryMode: Boolean = false,
     initialSnapshot: TrafficSnapshot? = null,
-    private val minimumEntryLoadingMillis: () -> Long = { Random.nextLong(2_000, 4_001) },
+    private val minimumEntryLoadingMillis: () -> Long = { TimedEntryLoader.defaultDurationMillis() },
     private val monotonicMillis: () -> Long = { System.nanoTime() / 1_000_000 },
 ) : ViewModel() {
     private val initialPeriod = TrafficPeriod.entries.firstOrNull { it.name == savedState.get<String>(PERIOD_KEY) } ?: TrafficPeriod.THIS_MONTH
@@ -119,7 +119,6 @@ class NetworkTrafficViewModel(
         stopQuery()
         val id = ++sequence
         // 仅首页入口提供广告展示窗口：每次任务随机一次，不延迟页面内日期刷新。
-        val startedAt = monotonicMillis()
         val minimumDisplay = if (entryMode) minimumEntryLoadingMillis().coerceIn(0, 10_000) else 0L
         savedState[PERIOD_KEY] = period.name
         mutableState.update { it.copy(period = period, status = TrafficStatus.Loading(id, TrafficProgress(TrafficStage.MOBILE))) }
@@ -132,28 +131,13 @@ class NetworkTrafficViewModel(
         }
         timeout = deadline
         query = viewModelScope.launch {
-            val presentation = if (entryMode && minimumDisplay > 0) EntryLoadingProgress(startedAt, minimumDisplay, monotonicMillis) else null
-            // 展示计时器是查询的子任务，仅入口 Loading 可见期间运行；取消/退后台会连同它一起取消。
-            val presentationJob = presentation?.let { progress -> launch {
-                while (isActive) {
-                    val frame = progress.frame()
-                    publishProgress(id, frame.detail, frame.percent)
-                    delay(50)
-                }
-            } }
             try {
-                val result = repository.load(period) { progress ->
-                    if (presentation != null) presentation.report(progress)
-                    else publishProgress(id, progress, progress.percent)
-                }
-                currentCoroutineContext().ensureActive()
-                if (presentation != null) {
-                    presentation.complete(result.apps.size)
-                    val frame = presentation.frame()
-                    publishProgress(id, frame.detail, frame.percent)
-                    val remaining = presentation.remainingMillis()
-                    if (remaining > 0) delay(remaining)
-                }
+                val result = if (entryMode) {
+                    TimedEntryLoader({ minimumDisplay }, monotonicMillis).load(
+                        initialStage = "MOBILE", count = { it: TrafficSnapshot -> it.apps.size },
+                        onFrame = { frame -> publishProgress(id, TrafficProgress(TrafficStage.valueOf(frame.detail.stage), frame.detail.completed, frame.detail.total), frame.percent) },
+                    ) { report -> repository.load(period) { report(TaskProgress(it.stage.name, it.completed, it.total)) } }
+                } else repository.load(period) { publishProgress(id, it, it.percent) }
                 mutableState.update { current ->
                     if ((current.status as? TrafficStatus.Loading)?.requestId == id)
                         TrafficUiState(period, TrafficStatus.Ready, result) else current
@@ -166,7 +150,6 @@ class NetworkTrafficViewModel(
             } catch (error: IOException) {
                 failIfCurrent(id)
             } finally {
-                presentationJob?.cancel()
                 deadline.cancel()
             }
         }

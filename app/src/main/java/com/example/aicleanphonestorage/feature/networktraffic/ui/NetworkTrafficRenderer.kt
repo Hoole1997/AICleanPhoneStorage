@@ -1,5 +1,7 @@
 package com.example.aicleanphonestorage.feature.networktraffic.ui
 
+import com.example.aicleanphonestorage.core.ui.apps.AppIconLoader
+
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 internal class NetworkTrafficRenderer(
     private val binding: ScreenNetworkTrafficBinding,
     scope: CoroutineScope,
-    icons: TrafficAppIconLoader,
+    icons: AppIconLoader,
     onPeriod: (TrafficPeriod) -> Unit,
     onManage: (TrafficApp) -> Unit,
     private val onStatusAction: () -> Unit,

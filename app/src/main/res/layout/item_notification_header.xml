@@ -1,0 +1,10 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="vertical" android:paddingTop="20dp" android:paddingBottom="4dp">
+    <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text" android:id="@+id/notification_intro"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="18sp" android:textColor="#666666"
+        android:text="@string/notification_select_apps"/>
+    <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text" android:id="@+id/notification_connection_message"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:gravity="center_vertical"
+        android:background="?attr/selectableItemBackground" android:clickable="true" android:focusable="true"
+        android:layout_marginTop="8dp" android:textSize="12sp" android:textColor="@color/traffic_blue" android:visibility="gone"/>
+</LinearLayout>
