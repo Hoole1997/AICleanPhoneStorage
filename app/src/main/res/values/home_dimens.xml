@@ -1,0 +1,15 @@
+<resources>
+    <dimen name="home_page_margin">16dp</dimen>
+    <dimen name="home_section_gap">20dp</dimen>
+    <dimen name="home_grid_gap">12dp</dimen>
+    <dimen name="home_card_radius">12dp</dimen>
+    <dimen name="home_content_max_width">600dp</dimen>
+    <dimen name="home_toolbar_height">48dp</dimen>
+    <dimen name="home_hero_min_height">286dp</dimen>
+    <dimen name="home_robot_width">178.333dp</dimen>
+    <dimen name="home_robot_height">192.667dp</dimen>
+    <dimen name="home_robot_top">5.667dp</dimen>
+    <dimen name="home_tool_icon_size">32dp</dimen>
+    <dimen name="home_tool_card_padding">12dp</dimen>
+    <dimen name="home_tool_title_size">14sp</dimen>
+</resources>

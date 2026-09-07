@@ -1,0 +1,14 @@
+<resources>
+    <!-- Figma 首页专属浅色调色板；不让系统夜间模式自动反色设计资源。 -->
+    <color name="home_background">#F6F6F6</color>
+    <color name="home_surface">#FFFFFF</color>
+    <color name="home_tool_surface">#FEFEFE</color>
+    <color name="home_title">#001745</color>
+    <color name="home_text_primary">#222222</color>
+    <color name="home_text_secondary">#677184</color>
+    <color name="home_blue">#2878F5</color>
+    <color name="home_hero_blue">#2061DC</color>
+    <color name="home_progress_track">#4AFFFFFF</color>
+    <color name="home_arrow_background">#F2F6FD</color>
+    <color name="home_ripple">#202878F5</color>
+</resources>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.Home.Card" android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:clickable="true" android:focusable="true" app:rippleColor="@color/home_ripple"
+    app:cardBackgroundColor="@color/home_tool_surface">
+    <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:minHeight="104dp" android:padding="@dimen/home_tool_card_padding">
+        <ImageView android:id="@+id/tool_icon" android:layout_width="@dimen/home_tool_icon_size"
+            android:layout_height="@dimen/home_tool_icon_size" android:importantForAccessibility="no"
+            android:contentDescription="@null" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <!-- 标题独占内容宽度，避免箭头抢占空间。所有工具共用字号、边距和约束，不对个别文案打补丁。 -->
+        <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text.Medium"
+            android:id="@+id/tool_title" android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:textAppearance="@style/TextAppearance.Home.ToolTitle"
+            tools:text="Clear Notifications" app:layout_constraintTop_toBottomOf="@id/tool_icon"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" />
+        <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text"
+            android:id="@+id/tool_detail" android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_marginTop="6dp" android:layout_marginEnd="8dp"
+            android:textAppearance="@style/TextAppearance.Home.Caption" tools:text="12.5GB"
+            app:layout_constraintTop_toBottomOf="@id/tool_title" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tool_arrow" app:layout_constraintBottom_toBottomOf="parent" />
+        <!-- 箭头属于副标题行，整卡依然是触摸目标；自然测量文字高度以支持系统字号放大。 -->
+        <ImageView android:id="@+id/tool_arrow" android:layout_width="18dp" android:layout_height="18dp"
+            android:padding="3dp" android:src="@drawable/ic_home_more" android:background="@drawable/home_arrow_surface"
+            android:contentDescription="@null" android:importantForAccessibility="no"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

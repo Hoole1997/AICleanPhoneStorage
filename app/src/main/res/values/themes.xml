@@ -1,10 +1,14 @@
 <resources>
-    <!-- 继续使用现有 Material Views 体系，颜色随系统深浅色切换。 -->
-    <style name="Theme.AICleanPhoneStorage" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/clean_primary</item>
-        <item name="colorPrimaryVariant">@color/clean_primary</item>
-        <item name="colorOnPrimary">@color/clean_on_primary</item>
-        <item name="colorSecondary">@color/clean_primary</item>
-        <item name="colorOnSecondary">@color/clean_on_primary</item>
+    <!-- 设计只提供浅色稿，固定浅色避免系统/OEM 强制深色破坏原版图片和对比度。 -->
+    <style name="Theme.Home.Base" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/home_blue</item>
+        <item name="colorPrimaryVariant">@color/home_blue</item>
+        <item name="colorOnPrimary">@color/home_surface</item>
+        <item name="colorSecondary">@color/home_blue</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowBackground">@color/home_background</item>
+        <item name="android:colorBackground">@color/home_background</item>
+        <item name="colorSurface">@color/home_surface</item>
     </style>
+    <style name="Theme.AICleanPhoneStorage" parent="Theme.Home.Base" />
 </resources>

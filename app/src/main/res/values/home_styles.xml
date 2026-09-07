@@ -1,0 +1,53 @@
+<resources>
+    <!-- includeFontPadding 是 View 属性，不能只放进 TextAppearance。显式使用 MaterialTextView 兼容字体资源。 -->
+    <style name="Widget.Home.Text" parent="@android:style/Widget.TextView">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/home_roboto_regular</item>
+        <item name="fontFamily">@font/home_roboto_regular</item>
+    </style>
+    <style name="TextAppearance.Home" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@color/home_text_primary</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+    <style name="TextAppearance.Home.Title">
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="TextAppearance.Home.Label">
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="TextAppearance.Home.Caption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/home_text_secondary</item>
+    </style>
+    <style name="TextAppearance.Home.ToolTitle" parent="TextAppearance.Home.Label">
+        <item name="android:textSize">@dimen/home_tool_title_size</item>
+    </style>
+    <style name="TextAppearance.Home.Value">
+        <item name="android:textSize">46sp</item>
+        <item name="android:textColor">@color/home_surface</item>
+    </style>
+    <style name="Widget.Home.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">@dimen/home_card_radius</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="cardUseCompatPadding">false</item>
+        <item name="cardPreventCornerOverlap">false</item>
+        <item name="cardBackgroundColor">@color/home_surface</item>
+    </style>
+    <style name="Widget.Home.Text.Medium">
+        <item name="android:fontFamily">@font/home_roboto_medium</item>
+        <item name="fontFamily">@font/home_roboto_medium</item>
+    </style>
+    <style name="Widget.Home.Text.Semibold">
+        <item name="android:fontFamily">@font/home_roboto_semibold</item>
+        <item name="fontFamily">@font/home_roboto_semibold</item>
+    </style>
+    <style name="Widget.Home.Text.Bold">
+        <item name="android:fontFamily">@font/home_roboto_bold</item>
+        <item name="fontFamily">@font/home_roboto_bold</item>
+    </style>
+    <style name="Widget.Home.Text.Black">
+        <item name="android:fontFamily">@font/home_roboto_black</item>
+        <item name="fontFamily">@font/home_roboto_black</item>
+    </style>
+</resources>

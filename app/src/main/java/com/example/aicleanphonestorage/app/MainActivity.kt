@@ -1,6 +1,8 @@
 package com.example.aicleanphonestorage.app
 
+import android.graphics.Color
 import android.os.Bundle
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -12,38 +14,62 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.aicleanphonestorage.databinding.ScreenHomeBinding
+import com.example.aicleanphonestorage.feature.home.preview.HomePreviewSupport
+import com.example.aicleanphonestorage.feature.home.ui.HomeRenderer
+import com.example.aicleanphonestorage.feature.home.ui.HomeUiActions
 import com.example.aicleanphonestorage.feature.home.ui.HomeViewModel
-import com.example.aicleanphonestorage.feature.home.ui.renderHome
 import kotlinx.coroutines.launch
 
-/** Activity 只负责窗口、依赖组装和生命周期，不读取存储、不执行扫描。 */
+/** 只负责窗口和生命周期。系统状态栏由 Android 绘制，不用设计稿的 iOS 图标/时间冒充。 */
 class MainActivity : AppCompatActivity() {
     private val homeViewModel: HomeViewModel by viewModels {
         viewModelFactory {
             initializer { HomeViewModel((application as CleanApplication).container.homeOverviewRepository) }
         }
     }
+    private lateinit var renderer: HomeRenderer
+    private var previewSelection: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        // Binding 只属于本次 Activity 实例；不要传入 ViewModel、Repository 或应用容器。
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.BLACK),
+        )
         val binding = ScreenHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setAccessibilityHeading(binding.pageTitle, true)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-            view.setPadding(bars.left, bars.top, bars.right, bars.bottom)
+            binding.homeContent.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
         ViewCompat.requestApplyInsets(binding.root)
+        renderer = HomeRenderer(binding, HomeUiActions.None)
         binding.retryButton.setOnClickListener { homeViewModel.retry() }
-
+        previewSelection = HomePreviewSupport.initialSelection(intent, savedInstanceState)
+        HomePreviewSupport.attach(binding.pageTitle) { selection ->
+            previewSelection = selection
+            renderCurrentState()
+        }
+        renderCurrentState()
         lifecycleScope.launch {
-            // STOPPED 时取消收集，销毁时整个 Scope 取消；旋转由 ViewModelStore 保留状态持有者。
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                homeViewModel.uiState.collect { binding.renderHome(it) }
+                homeViewModel.uiState.collect { state -> renderer.render(state, HomePreviewSupport.content(previewSelection)) }
             }
         }
+    }
+
+    private fun renderCurrentState() = renderer.render(homeViewModel.uiState.value, HomePreviewSupport.content(previewSelection))
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        // Bundle 只保存小型预览模式标记，滚动位置交给 RecyclerView，绝不存入列表或位图。
+        previewSelection?.let { outState.putString(HomePreviewSupport.STATE_KEY, it) }
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onDestroy() {
+        renderer.dispose()
+        super.onDestroy()
     }
 }

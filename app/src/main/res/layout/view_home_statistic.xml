@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+    android:orientation="horizontal" android:gravity="center">
+    <ImageView android:id="@+id/stat_icon" android:layout_width="28dp" android:layout_height="28dp"
+        android:contentDescription="@null" android:importantForAccessibility="no" />
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:orientation="vertical" android:layout_marginStart="8dp">
+        <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text" android:id="@+id/stat_label" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.Home.Caption" />
+        <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text.Semibold" android:id="@+id/stat_value" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="6dp" android:textAppearance="@style/TextAppearance.Home.Label"
+            android:fontFamily="@font/home_roboto_semibold" />
+    </LinearLayout>
+</LinearLayout>

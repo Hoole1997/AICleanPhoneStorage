@@ -1,53 +1,71 @@
 package com.example.aicleanphonestorage.feature.home.ui
 
-import android.text.format.Formatter
+import android.text.TextPaint
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.databinding.ScreenHomeBinding
-import com.example.aicleanphonestorage.feature.home.data.ScanSummary
-import java.text.NumberFormat
+import kotlin.math.ceil
 
-/** 单向渲染：只格式化几个摘要字段，不触发 I/O 或修改状态。后续还原 Figma 可直接替换此层。 */
-internal fun ScreenHomeBinding.renderHome(state: HomeUiState) {
-    val context = root.context
-    loadingIndicator.isVisible = state is HomeUiState.Loading
-    summaryGroup.isVisible = state is HomeUiState.Ready
-    errorMessage.isVisible = state is HomeUiState.Failure
-    retryButton.isVisible = state is HomeUiState.Failure
+/** 页面渲染与 Activity 生命周期解耦；只处理布局和轻量状态，没有后台任务或平台数据读取。 */
+internal class HomeRenderer(private val binding: ScreenHomeBinding, actions: HomeUiActions) {
+    private val configuration = binding.root.resources.configuration
+    private val contentWidthDp = minOf(configuration.screenWidthDp, 600) - 32
+    private val expanded = configuration.fontScale > 1.2f || contentWidthDp < 320
+    private val adapter = HomeListAdapter(expanded, actions)
+    private var lastContent: HomeContent? = null
 
-    when (state) {
-        HomeUiState.Loading -> Unit
-        is HomeUiState.Failure -> {
-            errorMessage.setText(
-                when (state.reason) {
-                    HomeUiState.Reason.PermissionRequired -> R.string.home_permission_required
-                    HomeUiState.Reason.StorageUnavailable -> R.string.home_storage_unavailable
-                },
-            )
+    init {
+        val grid = GridLayoutManager(binding.root.context, toolColumnCount())
+        grid.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int) = if (adapter.getItemViewType(position) == HomeListAdapter.TOOL) 1 else grid.spanCount
         }
-        is HomeUiState.Ready -> {
-            val overview = state.overview
-            when (val scan = overview.scan) {
-                ScanSummary.NotScanned -> {
-                    summaryTitle.setText(R.string.home_storage_used)
-                    summaryValue.text = overview.storage?.let {
-                        Formatter.formatShortFileSize(context, it.usedBytes)
-                    } ?: context.getString(R.string.home_unknown_value)
-                    scanStatus.setText(R.string.home_not_scanned)
-                }
-                is ScanSummary.Completed -> {
-                    summaryTitle.setText(R.string.home_scan_complete)
-                    summaryValue.text = Formatter.formatShortFileSize(context, scan.junkBytes)
-                    scanStatus.setText(R.string.home_junk_found)
-                }
-            }
-            storageStatus.text = overview.storage?.let { storage ->
-                context.getString(
-                    R.string.home_storage_summary,
-                    Formatter.formatShortFileSize(context, storage.availableBytes),
-                    NumberFormat.getPercentInstance().format(storage.usedFraction),
-                )
-            } ?: context.getString(R.string.home_storage_not_loaded)
+        binding.homeList.layoutManager = grid
+        binding.homeList.adapter = adapter
+        binding.homeList.addItemDecoration(HomeGridSpacing())
+        // 摘要更新不做整卡闪烁/交叉淡入；默认滚动惯性由 RecyclerView 管理。
+        binding.homeList.itemAnimator = null
+        binding.settingsButton.setOnClickListener { actions.onSettings() }
+    }
+
+    private fun toolColumnCount(): Int {
+        if (expanded) return 1
+        val resources = binding.root.resources
+        // 按实际字体/系统字号测量全部标题；空间不足时整组改单列，字号和完整文案始终一致。
+        // 每次页面创建只测量七个短字符串，无逐帧测量、缩字循环或后台任务。
+        val paint = TextPaint().apply {
+            typeface = ResourcesCompat.getFont(binding.root.context, R.font.home_roboto_medium)
+            textSize = resources.getDimension(R.dimen.home_tool_title_size)
         }
+        val titleWidth = HomeTool.entries.maxOf { ceil(paint.measureText(resources.getString(it.titleRes))) }
+        val requiredCardWidth = titleWidth + 2 * resources.getDimension(R.dimen.home_tool_card_padding) + 1
+        val availableWidth = contentWidthDp * resources.displayMetrics.density
+        val cardWidth = (availableWidth - resources.getDimension(R.dimen.home_grid_gap)) / 2
+        return if (cardWidth >= requiredCardWidth) 2 else 1
+    }
+
+    fun render(state: HomeUiState, preview: HomeContent? = null) {
+        val content = preview ?: (state as? HomeUiState.Ready)?.overview?.toHomeContent(configuration.locales[0])
+        binding.homeList.isVisible = content != null
+        binding.statusPanel.isVisible = content == null
+        binding.loadingIndicator.isVisible = content == null && state is HomeUiState.Loading
+        binding.errorMessage.isVisible = content == null && state is HomeUiState.Failure
+        binding.retryButton.isVisible = content == null && state is HomeUiState.Failure
+        if (state is HomeUiState.Failure) {
+            binding.errorMessage.setText(when (state.reason) {
+                HomeUiState.Reason.PermissionRequired -> R.string.home_permission_required
+                HomeUiState.Reason.StorageUnavailable -> R.string.home_storage_unavailable
+            })
+        }
+        if (content != null && content != lastContent) {
+            lastContent = content
+            adapter.submitList(content.rows())
+        }
+    }
+
+    fun dispose() {
+        // 主动断开 RecyclerView 和 adapter，释放回调及可回收视图；没有应用级图片缓存。
+        binding.homeList.adapter = null
     }
 }

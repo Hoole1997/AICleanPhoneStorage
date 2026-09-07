@@ -1,0 +1,1395 @@
+[
+  {
+    "resource": "home_robot",
+    "node": "5548:69",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/home_robot.png",
+    "source_size": [
+      1029,
+      858
+    ],
+    "source_sha256": "3e52423858932a0da78f0e050afc05c7e4ee51e15948d576c7c495e3582cd72c",
+    "crop": [
+      494,
+      17,
+      1029,
+      595
+    ],
+    "density": "mdpi",
+    "output_size": [
+      178,
+      193
+    ],
+    "output": "app/src/main/res/drawable-mdpi/home_robot.webp",
+    "webp_bytes": 21538
+  },
+  {
+    "resource": "home_robot",
+    "node": "5548:69",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/home_robot.png",
+    "source_size": [
+      1029,
+      858
+    ],
+    "source_sha256": "3e52423858932a0da78f0e050afc05c7e4ee51e15948d576c7c495e3582cd72c",
+    "crop": [
+      494,
+      17,
+      1029,
+      595
+    ],
+    "density": "hdpi",
+    "output_size": [
+      268,
+      289
+    ],
+    "output": "app/src/main/res/drawable-hdpi/home_robot.webp",
+    "webp_bytes": 42140
+  },
+  {
+    "resource": "home_robot",
+    "node": "5548:69",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/home_robot.png",
+    "source_size": [
+      1029,
+      858
+    ],
+    "source_sha256": "3e52423858932a0da78f0e050afc05c7e4ee51e15948d576c7c495e3582cd72c",
+    "crop": [
+      494,
+      17,
+      1029,
+      595
+    ],
+    "density": "xhdpi",
+    "output_size": [
+      357,
+      385
+    ],
+    "output": "app/src/main/res/drawable-xhdpi/home_robot.webp",
+    "webp_bytes": 72692
+  },
+  {
+    "resource": "home_robot",
+    "node": "5548:69",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/home_robot.png",
+    "source_size": [
+      1029,
+      858
+    ],
+    "source_sha256": "3e52423858932a0da78f0e050afc05c7e4ee51e15948d576c7c495e3582cd72c",
+    "crop": [
+      494,
+      17,
+      1029,
+      595
+    ],
+    "density": "xxhdpi",
+    "output_size": [
+      535,
+      578
+    ],
+    "output": "app/src/main/res/drawable-xxhdpi/home_robot.webp",
+    "webp_bytes": 138818
+  },
+  {
+    "resource": "home_robot",
+    "node": "5548:69",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/home_robot.png",
+    "source_size": [
+      1029,
+      858
+    ],
+    "source_sha256": "3e52423858932a0da78f0e050afc05c7e4ee51e15948d576c7c495e3582cd72c",
+    "crop": [
+      494,
+      17,
+      1029,
+      595
+    ],
+    "density": "xxxhdpi",
+    "output_size": [
+      713,
+      771
+    ],
+    "output": "app/src/main/res/drawable-xxxhdpi/home_robot.webp",
+    "webp_bytes": 225588
+  },
+  {
+    "resource": "home_header_background",
+    "node": "5548:34",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/home_header_background.png",
+    "source_size": [
+      375,
+      334
+    ],
+    "source_sha256": "e1ce4c57a7812e679a71f09180d96994fc0017f627d56bde4d1c468a37a2a0e9",
+    "crop": null,
+    "density": "nodpi",
+    "output_size": [
+      375,
+      334
+    ],
+    "output": "app/src/main/res/drawable-nodpi/home_header_background.webp",
+    "webp_bytes": 32614
+  },
+  {
+    "resource": "home_hero_background",
+    "node": "5548:68",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/home_hero_background.png",
+    "source_size": [
+      1029,
+      858
+    ],
+    "source_sha256": "529f6026663b7a8ee0583fefdb916690c1c10c23e0c57f40306207858ce9667d",
+    "crop": null,
+    "density": "nodpi",
+    "output_size": [
+      343,
+      286
+    ],
+    "output": "app/src/main/res/drawable-nodpi/home_hero_background.webp",
+    "webp_bytes": 38128
+  },
+  {
+    "resource": "ic_home_settings",
+    "node": "5548:60",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_settings.png",
+    "source_size": [
+      72,
+      72
+    ],
+    "source_sha256": "3be47766c3f9766daa6b21c133e618c4bb19cbd8f765b45d18c340bf207f8d16",
+    "crop": null,
+    "density": "mdpi",
+    "output_size": [
+      24,
+      24
+    ],
+    "output": "app/src/main/res/drawable-mdpi/ic_home_settings.webp",
+    "webp_bytes": 802
+  },
+  {
+    "resource": "ic_home_settings",
+    "node": "5548:60",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_settings.png",
+    "source_size": [
+      72,
+      72
+    ],
+    "source_sha256": "3be47766c3f9766daa6b21c133e618c4bb19cbd8f765b45d18c340bf207f8d16",
+    "crop": null,
+    "density": "hdpi",
+    "output_size": [
+      36,
+      36
+    ],
+    "output": "app/src/main/res/drawable-hdpi/ic_home_settings.webp",
+    "webp_bytes": 1300
+  },
+  {
+    "resource": "ic_home_settings",
+    "node": "5548:60",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_settings.png",
+    "source_size": [
+      72,
+      72
+    ],
+    "source_sha256": "3be47766c3f9766daa6b21c133e618c4bb19cbd8f765b45d18c340bf207f8d16",
+    "crop": null,
+    "density": "xhdpi",
+    "output_size": [
+      48,
+      48
+    ],
+    "output": "app/src/main/res/drawable-xhdpi/ic_home_settings.webp",
+    "webp_bytes": 1908
+  },
+  {
+    "resource": "ic_home_settings",
+    "node": "5548:60",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_settings.png",
+    "source_size": [
+      72,
+      72
+    ],
+    "source_sha256": "3be47766c3f9766daa6b21c133e618c4bb19cbd8f765b45d18c340bf207f8d16",
+    "crop": null,
+    "density": "xxhdpi",
+    "output_size": [
+      72,
+      72
+    ],
+    "output": "app/src/main/res/drawable-xxhdpi/ic_home_settings.webp",
+    "webp_bytes": 1108
+  },
+  {
+    "resource": "ic_home_settings",
+    "node": "5548:60",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_settings.png",
+    "source_size": [
+      72,
+      72
+    ],
+    "source_sha256": "3be47766c3f9766daa6b21c133e618c4bb19cbd8f765b45d18c340bf207f8d16",
+    "crop": null,
+    "density": "xxxhdpi",
+    "output_size": [
+      96,
+      96
+    ],
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_home_settings.webp",
+    "webp_bytes": 5258
+  },
+  {
+    "resource": "ic_home_clean",
+    "node": "5548:86",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_clean.png",
+    "source_size": [
+      66,
+      66
+    ],
+    "source_sha256": "563433b14357a8fbaf3713297a87f20cedcf7d078c63d914fdab3ae96cf77779",
+    "crop": null,
+    "density": "mdpi",
+    "output_size": [
+      22,
+      22
+    ],
+    "output": "app/src/main/res/drawable-mdpi/ic_home_clean.webp",
+    "webp_bytes": 516
+  },
+  {
+    "resource": "ic_home_clean",
+    "node": "5548:86",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_clean.png",
+    "source_size": [
+      66,
+      66
+    ],
+    "source_sha256": "563433b14357a8fbaf3713297a87f20cedcf7d078c63d914fdab3ae96cf77779",
+    "crop": null,
+    "density": "hdpi",
+    "output_size": [
+      33,
+      33
+    ],
+    "output": "app/src/main/res/drawable-hdpi/ic_home_clean.webp",
+    "webp_bytes": 632
+  },
+  {
+    "resource": "ic_home_clean",
+    "node": "5548:86",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_clean.png",
+    "source_size": [
+      66,
+      66
+    ],
+    "source_sha256": "563433b14357a8fbaf3713297a87f20cedcf7d078c63d914fdab3ae96cf77779",
+    "crop": null,
+    "density": "xhdpi",
+    "output_size": [
+      44,
+      44
+    ],
+    "output": "app/src/main/res/drawable-xhdpi/ic_home_clean.webp",
+    "webp_bytes": 922
+  },
+  {
+    "resource": "ic_home_clean",
+    "node": "5548:86",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_clean.png",
+    "source_size": [
+      66,
+      66
+    ],
+    "source_sha256": "563433b14357a8fbaf3713297a87f20cedcf7d078c63d914fdab3ae96cf77779",
+    "crop": null,
+    "density": "xxhdpi",
+    "output_size": [
+      66,
+      66
+    ],
+    "output": "app/src/main/res/drawable-xxhdpi/ic_home_clean.webp",
+    "webp_bytes": 274
+  },
+  {
+    "resource": "ic_home_clean",
+    "node": "5548:86",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_clean.png",
+    "source_size": [
+      66,
+      66
+    ],
+    "source_sha256": "563433b14357a8fbaf3713297a87f20cedcf7d078c63d914fdab3ae96cf77779",
+    "crop": null,
+    "density": "xxxhdpi",
+    "output_size": [
+      88,
+      88
+    ],
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_home_clean.webp",
+    "webp_bytes": 1858
+  },
+  {
+    "resource": "ic_home_download",
+    "node": "5548:105",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_download.png",
+    "source_size": [
+      84,
+      84
+    ],
+    "source_sha256": "460afc3a3550e11779c2b259645131934d9cc8ac35568da9c3f3a2b1edda3479",
+    "crop": null,
+    "density": "mdpi",
+    "output_size": [
+      28,
+      28
+    ],
+    "output": "app/src/main/res/drawable-mdpi/ic_home_download.webp",
+    "webp_bytes": 954
+  },
+  {
+    "resource": "ic_home_download",
+    "node": "5548:105",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_download.png",
+    "source_size": [
+      84,
+      84
+    ],
+    "source_sha256": "460afc3a3550e11779c2b259645131934d9cc8ac35568da9c3f3a2b1edda3479",
+    "crop": null,
+    "density": "hdpi",
+    "output_size": [
+      42,
+      42
+    ],
+    "output": "app/src/main/res/drawable-hdpi/ic_home_download.webp",
+    "webp_bytes": 1700
+  },
+  {
+    "resource": "ic_home_download",
+    "node": "5548:105",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_download.png",
+    "source_size": [
+      84,
+      84
+    ],
+    "source_sha256": "460afc3a3550e11779c2b259645131934d9cc8ac35568da9c3f3a2b1edda3479",
+    "crop": null,
+    "density": "xhdpi",
+    "output_size": [
+      56,
+      56
+    ],
+    "output": "app/src/main/res/drawable-xhdpi/ic_home_download.webp",
+    "webp_bytes": 2430
+  },
+  {
+    "resource": "ic_home_download",
+    "node": "5548:105",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_download.png",
+    "source_size": [
+      84,
+      84
+    ],
+    "source_sha256": "460afc3a3550e11779c2b259645131934d9cc8ac35568da9c3f3a2b1edda3479",
+    "crop": null,
+    "density": "xxhdpi",
+    "output_size": [
+      84,
+      84
+    ],
+    "output": "app/src/main/res/drawable-xxhdpi/ic_home_download.webp",
+    "webp_bytes": 1018
+  },
+  {
+    "resource": "ic_home_download",
+    "node": "5548:105",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_download.png",
+    "source_size": [
+      84,
+      84
+    ],
+    "source_sha256": "460afc3a3550e11779c2b259645131934d9cc8ac35568da9c3f3a2b1edda3479",
+    "crop": null,
+    "density": "xxxhdpi",
+    "output_size": [
+      112,
+      112
+    ],
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_home_download.webp",
+    "webp_bytes": 6322
+  },
+  {
+    "resource": "ic_home_available",
+    "node": "5548:113",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_available.png",
+    "source_size": [
+      84,
+      84
+    ],
+    "source_sha256": "b65ab7ec70b2c2b0d069dd6d94245b6a4718de741df330a68098fadaffa632b1",
+    "crop": null,
+    "density": "mdpi",
+    "output_size": [
+      28,
+      28
+    ],
+    "output": "app/src/main/res/drawable-mdpi/ic_home_available.webp",
+    "webp_bytes": 1276
+  },
+  {
+    "resource": "ic_home_available",
+    "node": "5548:113",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_available.png",
+    "source_size": [
+      84,
+      84
+    ],
+    "source_sha256": "b65ab7ec70b2c2b0d069dd6d94245b6a4718de741df330a68098fadaffa632b1",
+    "crop": null,
+    "density": "hdpi",
+    "output_size": [
+      42,
+      42
+    ],
+    "output": "app/src/main/res/drawable-hdpi/ic_home_available.webp",
+    "webp_bytes": 1890
+  },
+  {
+    "resource": "ic_home_available",
+    "node": "5548:113",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_available.png",
+    "source_size": [
+      84,
+      84
+    ],
+    "source_sha256": "b65ab7ec70b2c2b0d069dd6d94245b6a4718de741df330a68098fadaffa632b1",
+    "crop": null,
+    "density": "xhdpi",
+    "output_size": [
+      56,
+      56
+    ],
+    "output": "app/src/main/res/drawable-xhdpi/ic_home_available.webp",
+    "webp_bytes": 2374
+  },
+  {
+    "resource": "ic_home_available",
+    "node": "5548:113",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_available.png",
+    "source_size": [
+      84,
+      84
+    ],
+    "source_sha256": "b65ab7ec70b2c2b0d069dd6d94245b6a4718de741df330a68098fadaffa632b1",
+    "crop": null,
+    "density": "xxhdpi",
+    "output_size": [
+      84,
+      84
+    ],
+    "output": "app/src/main/res/drawable-xxhdpi/ic_home_available.webp",
+    "webp_bytes": 898
+  },
+  {
+    "resource": "ic_home_available",
+    "node": "5548:113",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_available.png",
+    "source_size": [
+      84,
+      84
+    ],
+    "source_sha256": "b65ab7ec70b2c2b0d069dd6d94245b6a4718de741df330a68098fadaffa632b1",
+    "crop": null,
+    "density": "xxxhdpi",
+    "output_size": [
+      112,
+      112
+    ],
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_home_available.webp",
+    "webp_bytes": 6112
+  },
+  {
+    "resource": "ic_home_used",
+    "node": "5548:121",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_used.png",
+    "source_size": [
+      84,
+      84
+    ],
+    "source_sha256": "051b899f55099004d9fe6c6044e6988cee9f45f5ecc1214d28b101418f4194fa",
+    "crop": null,
+    "density": "mdpi",
+    "output_size": [
+      28,
+      28
+    ],
+    "output": "app/src/main/res/drawable-mdpi/ic_home_used.webp",
+    "webp_bytes": 970
+  },
+  {
+    "resource": "ic_home_used",
+    "node": "5548:121",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_used.png",
+    "source_size": [
+      84,
+      84
+    ],
+    "source_sha256": "051b899f55099004d9fe6c6044e6988cee9f45f5ecc1214d28b101418f4194fa",
+    "crop": null,
+    "density": "hdpi",
+    "output_size": [
+      42,
+      42
+    ],
+    "output": "app/src/main/res/drawable-hdpi/ic_home_used.webp",
+    "webp_bytes": 1588
+  },
+  {
+    "resource": "ic_home_used",
+    "node": "5548:121",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_used.png",
+    "source_size": [
+      84,
+      84
+    ],
+    "source_sha256": "051b899f55099004d9fe6c6044e6988cee9f45f5ecc1214d28b101418f4194fa",
+    "crop": null,
+    "density": "xhdpi",
+    "output_size": [
+      56,
+      56
+    ],
+    "output": "app/src/main/res/drawable-xhdpi/ic_home_used.webp",
+    "webp_bytes": 2126
+  },
+  {
+    "resource": "ic_home_used",
+    "node": "5548:121",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_used.png",
+    "source_size": [
+      84,
+      84
+    ],
+    "source_sha256": "051b899f55099004d9fe6c6044e6988cee9f45f5ecc1214d28b101418f4194fa",
+    "crop": null,
+    "density": "xxhdpi",
+    "output_size": [
+      84,
+      84
+    ],
+    "output": "app/src/main/res/drawable-xxhdpi/ic_home_used.webp",
+    "webp_bytes": 900
+  },
+  {
+    "resource": "ic_home_used",
+    "node": "5548:121",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_used.png",
+    "source_size": [
+      84,
+      84
+    ],
+    "source_sha256": "051b899f55099004d9fe6c6044e6988cee9f45f5ecc1214d28b101418f4194fa",
+    "crop": null,
+    "density": "xxxhdpi",
+    "output_size": [
+      112,
+      112
+    ],
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_home_used.webp",
+    "webp_bytes": 5490
+  },
+  {
+    "resource": "ic_home_more",
+    "node": "5548:142",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_more.png",
+    "source_size": [
+      36,
+      36
+    ],
+    "source_sha256": "001dc43ca4b05f48199c4fc96fc62560c887bd40c7d4f2a655b11851afbf44f5",
+    "crop": null,
+    "density": "mdpi",
+    "output_size": [
+      12,
+      12
+    ],
+    "output": "app/src/main/res/drawable-mdpi/ic_home_more.webp",
+    "webp_bytes": 232
+  },
+  {
+    "resource": "ic_home_more",
+    "node": "5548:142",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_more.png",
+    "source_size": [
+      36,
+      36
+    ],
+    "source_sha256": "001dc43ca4b05f48199c4fc96fc62560c887bd40c7d4f2a655b11851afbf44f5",
+    "crop": null,
+    "density": "hdpi",
+    "output_size": [
+      18,
+      18
+    ],
+    "output": "app/src/main/res/drawable-hdpi/ic_home_more.webp",
+    "webp_bytes": 328
+  },
+  {
+    "resource": "ic_home_more",
+    "node": "5548:142",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_more.png",
+    "source_size": [
+      36,
+      36
+    ],
+    "source_sha256": "001dc43ca4b05f48199c4fc96fc62560c887bd40c7d4f2a655b11851afbf44f5",
+    "crop": null,
+    "density": "xhdpi",
+    "output_size": [
+      24,
+      24
+    ],
+    "output": "app/src/main/res/drawable-xhdpi/ic_home_more.webp",
+    "webp_bytes": 386
+  },
+  {
+    "resource": "ic_home_more",
+    "node": "5548:142",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_more.png",
+    "source_size": [
+      36,
+      36
+    ],
+    "source_sha256": "001dc43ca4b05f48199c4fc96fc62560c887bd40c7d4f2a655b11851afbf44f5",
+    "crop": null,
+    "density": "xxhdpi",
+    "output_size": [
+      36,
+      36
+    ],
+    "output": "app/src/main/res/drawable-xxhdpi/ic_home_more.webp",
+    "webp_bytes": 230
+  },
+  {
+    "resource": "ic_home_more",
+    "node": "5548:142",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_home_more.png",
+    "source_size": [
+      36,
+      36
+    ],
+    "source_sha256": "001dc43ca4b05f48199c4fc96fc62560c887bd40c7d4f2a655b11851afbf44f5",
+    "crop": null,
+    "density": "xxxhdpi",
+    "output_size": [
+      48,
+      48
+    ],
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_home_more.webp",
+    "webp_bytes": 1032
+  },
+  {
+    "resource": "ic_tool_network",
+    "node": "5548:134",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_network.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "7749f5ee226df437f01b3e93c4b8437ec064881995de95c67d0e454fbd7e9365",
+    "crop": null,
+    "density": "mdpi",
+    "output_size": [
+      32,
+      32
+    ],
+    "output": "app/src/main/res/drawable-mdpi/ic_tool_network.webp",
+    "webp_bytes": 2352
+  },
+  {
+    "resource": "ic_tool_network",
+    "node": "5548:134",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_network.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "7749f5ee226df437f01b3e93c4b8437ec064881995de95c67d0e454fbd7e9365",
+    "crop": null,
+    "density": "hdpi",
+    "output_size": [
+      48,
+      48
+    ],
+    "output": "app/src/main/res/drawable-hdpi/ic_tool_network.webp",
+    "webp_bytes": 4190
+  },
+  {
+    "resource": "ic_tool_network",
+    "node": "5548:134",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_network.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "7749f5ee226df437f01b3e93c4b8437ec064881995de95c67d0e454fbd7e9365",
+    "crop": null,
+    "density": "xhdpi",
+    "output_size": [
+      64,
+      64
+    ],
+    "output": "app/src/main/res/drawable-xhdpi/ic_tool_network.webp",
+    "webp_bytes": 6440
+  },
+  {
+    "resource": "ic_tool_network",
+    "node": "5548:134",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_network.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "7749f5ee226df437f01b3e93c4b8437ec064881995de95c67d0e454fbd7e9365",
+    "crop": null,
+    "density": "xxhdpi",
+    "output_size": [
+      96,
+      96
+    ],
+    "output": "app/src/main/res/drawable-xxhdpi/ic_tool_network.webp",
+    "webp_bytes": 10996
+  },
+  {
+    "resource": "ic_tool_network",
+    "node": "5548:134",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_network.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "7749f5ee226df437f01b3e93c4b8437ec064881995de95c67d0e454fbd7e9365",
+    "crop": null,
+    "density": "xxxhdpi",
+    "output_size": [
+      128,
+      128
+    ],
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_tool_network.webp",
+    "webp_bytes": 19028
+  },
+  {
+    "resource": "ic_tool_notifications",
+    "node": "5548:147",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_notifications.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "0b90e31798e58f13945f75ec37bb2b8394b5d207d11bc672e187e4a9578e7e64",
+    "crop": null,
+    "density": "mdpi",
+    "output_size": [
+      32,
+      32
+    ],
+    "output": "app/src/main/res/drawable-mdpi/ic_tool_notifications.webp",
+    "webp_bytes": 2212
+  },
+  {
+    "resource": "ic_tool_notifications",
+    "node": "5548:147",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_notifications.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "0b90e31798e58f13945f75ec37bb2b8394b5d207d11bc672e187e4a9578e7e64",
+    "crop": null,
+    "density": "hdpi",
+    "output_size": [
+      48,
+      48
+    ],
+    "output": "app/src/main/res/drawable-hdpi/ic_tool_notifications.webp",
+    "webp_bytes": 3958
+  },
+  {
+    "resource": "ic_tool_notifications",
+    "node": "5548:147",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_notifications.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "0b90e31798e58f13945f75ec37bb2b8394b5d207d11bc672e187e4a9578e7e64",
+    "crop": null,
+    "density": "xhdpi",
+    "output_size": [
+      64,
+      64
+    ],
+    "output": "app/src/main/res/drawable-xhdpi/ic_tool_notifications.webp",
+    "webp_bytes": 5928
+  },
+  {
+    "resource": "ic_tool_notifications",
+    "node": "5548:147",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_notifications.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "0b90e31798e58f13945f75ec37bb2b8394b5d207d11bc672e187e4a9578e7e64",
+    "crop": null,
+    "density": "xxhdpi",
+    "output_size": [
+      96,
+      96
+    ],
+    "output": "app/src/main/res/drawable-xxhdpi/ic_tool_notifications.webp",
+    "webp_bytes": 9774
+  },
+  {
+    "resource": "ic_tool_notifications",
+    "node": "5548:147",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_notifications.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "0b90e31798e58f13945f75ec37bb2b8394b5d207d11bc672e187e4a9578e7e64",
+    "crop": null,
+    "density": "xxxhdpi",
+    "output_size": [
+      128,
+      128
+    ],
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_tool_notifications.webp",
+    "webp_bytes": 16570
+  },
+  {
+    "resource": "ic_tool_apps",
+    "node": "5548:161",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_apps.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "310db00898a348e8a5453fcf96df3e395a2b39255447f7b21ddb984b57be8ab1",
+    "crop": null,
+    "density": "mdpi",
+    "output_size": [
+      32,
+      32
+    ],
+    "output": "app/src/main/res/drawable-mdpi/ic_tool_apps.webp",
+    "webp_bytes": 2260
+  },
+  {
+    "resource": "ic_tool_apps",
+    "node": "5548:161",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_apps.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "310db00898a348e8a5453fcf96df3e395a2b39255447f7b21ddb984b57be8ab1",
+    "crop": null,
+    "density": "hdpi",
+    "output_size": [
+      48,
+      48
+    ],
+    "output": "app/src/main/res/drawable-hdpi/ic_tool_apps.webp",
+    "webp_bytes": 4144
+  },
+  {
+    "resource": "ic_tool_apps",
+    "node": "5548:161",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_apps.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "310db00898a348e8a5453fcf96df3e395a2b39255447f7b21ddb984b57be8ab1",
+    "crop": null,
+    "density": "xhdpi",
+    "output_size": [
+      64,
+      64
+    ],
+    "output": "app/src/main/res/drawable-xhdpi/ic_tool_apps.webp",
+    "webp_bytes": 6288
+  },
+  {
+    "resource": "ic_tool_apps",
+    "node": "5548:161",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_apps.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "310db00898a348e8a5453fcf96df3e395a2b39255447f7b21ddb984b57be8ab1",
+    "crop": null,
+    "density": "xxhdpi",
+    "output_size": [
+      96,
+      96
+    ],
+    "output": "app/src/main/res/drawable-xxhdpi/ic_tool_apps.webp",
+    "webp_bytes": 10100
+  },
+  {
+    "resource": "ic_tool_apps",
+    "node": "5548:161",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_apps.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "310db00898a348e8a5453fcf96df3e395a2b39255447f7b21ddb984b57be8ab1",
+    "crop": null,
+    "density": "xxxhdpi",
+    "output_size": [
+      128,
+      128
+    ],
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_tool_apps.webp",
+    "webp_bytes": 17804
+  },
+  {
+    "resource": "ic_tool_compress",
+    "node": "5548:174",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_compress.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "5f72712b5a75680d9e99fae00731e8e09906c2ffa86944492bcd5d8d8d0dd49f",
+    "crop": null,
+    "density": "mdpi",
+    "output_size": [
+      32,
+      32
+    ],
+    "output": "app/src/main/res/drawable-mdpi/ic_tool_compress.webp",
+    "webp_bytes": 2210
+  },
+  {
+    "resource": "ic_tool_compress",
+    "node": "5548:174",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_compress.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "5f72712b5a75680d9e99fae00731e8e09906c2ffa86944492bcd5d8d8d0dd49f",
+    "crop": null,
+    "density": "hdpi",
+    "output_size": [
+      48,
+      48
+    ],
+    "output": "app/src/main/res/drawable-hdpi/ic_tool_compress.webp",
+    "webp_bytes": 4052
+  },
+  {
+    "resource": "ic_tool_compress",
+    "node": "5548:174",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_compress.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "5f72712b5a75680d9e99fae00731e8e09906c2ffa86944492bcd5d8d8d0dd49f",
+    "crop": null,
+    "density": "xhdpi",
+    "output_size": [
+      64,
+      64
+    ],
+    "output": "app/src/main/res/drawable-xhdpi/ic_tool_compress.webp",
+    "webp_bytes": 6208
+  },
+  {
+    "resource": "ic_tool_compress",
+    "node": "5548:174",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_compress.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "5f72712b5a75680d9e99fae00731e8e09906c2ffa86944492bcd5d8d8d0dd49f",
+    "crop": null,
+    "density": "xxhdpi",
+    "output_size": [
+      96,
+      96
+    ],
+    "output": "app/src/main/res/drawable-xxhdpi/ic_tool_compress.webp",
+    "webp_bytes": 9706
+  },
+  {
+    "resource": "ic_tool_compress",
+    "node": "5548:174",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_compress.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "5f72712b5a75680d9e99fae00731e8e09906c2ffa86944492bcd5d8d8d0dd49f",
+    "crop": null,
+    "density": "xxxhdpi",
+    "output_size": [
+      128,
+      128
+    ],
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_tool_compress.webp",
+    "webp_bytes": 16694
+  },
+  {
+    "resource": "ic_tool_large_files",
+    "node": "5548:188",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_large_files.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "1fe0767f2d11697ea3d4f4e60dd93165ab186c91fbb03d3369264ba63a505802",
+    "crop": null,
+    "density": "mdpi",
+    "output_size": [
+      32,
+      32
+    ],
+    "output": "app/src/main/res/drawable-mdpi/ic_tool_large_files.webp",
+    "webp_bytes": 2198
+  },
+  {
+    "resource": "ic_tool_large_files",
+    "node": "5548:188",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_large_files.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "1fe0767f2d11697ea3d4f4e60dd93165ab186c91fbb03d3369264ba63a505802",
+    "crop": null,
+    "density": "hdpi",
+    "output_size": [
+      48,
+      48
+    ],
+    "output": "app/src/main/res/drawable-hdpi/ic_tool_large_files.webp",
+    "webp_bytes": 3904
+  },
+  {
+    "resource": "ic_tool_large_files",
+    "node": "5548:188",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_large_files.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "1fe0767f2d11697ea3d4f4e60dd93165ab186c91fbb03d3369264ba63a505802",
+    "crop": null,
+    "density": "xhdpi",
+    "output_size": [
+      64,
+      64
+    ],
+    "output": "app/src/main/res/drawable-xhdpi/ic_tool_large_files.webp",
+    "webp_bytes": 5852
+  },
+  {
+    "resource": "ic_tool_large_files",
+    "node": "5548:188",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_large_files.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "1fe0767f2d11697ea3d4f4e60dd93165ab186c91fbb03d3369264ba63a505802",
+    "crop": null,
+    "density": "xxhdpi",
+    "output_size": [
+      96,
+      96
+    ],
+    "output": "app/src/main/res/drawable-xxhdpi/ic_tool_large_files.webp",
+    "webp_bytes": 9346
+  },
+  {
+    "resource": "ic_tool_large_files",
+    "node": "5548:188",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_large_files.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "1fe0767f2d11697ea3d4f4e60dd93165ab186c91fbb03d3369264ba63a505802",
+    "crop": null,
+    "density": "xxxhdpi",
+    "output_size": [
+      128,
+      128
+    ],
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_tool_large_files.webp",
+    "webp_bytes": 16708
+  },
+  {
+    "resource": "ic_tool_unused_files",
+    "node": "5548:201",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_unused_files.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "952f3621dfd778b1b5aa6faf75d09354c1f2b1ac2a5e178ba13765311f35732f",
+    "crop": null,
+    "density": "mdpi",
+    "output_size": [
+      32,
+      32
+    ],
+    "output": "app/src/main/res/drawable-mdpi/ic_tool_unused_files.webp",
+    "webp_bytes": 2204
+  },
+  {
+    "resource": "ic_tool_unused_files",
+    "node": "5548:201",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_unused_files.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "952f3621dfd778b1b5aa6faf75d09354c1f2b1ac2a5e178ba13765311f35732f",
+    "crop": null,
+    "density": "hdpi",
+    "output_size": [
+      48,
+      48
+    ],
+    "output": "app/src/main/res/drawable-hdpi/ic_tool_unused_files.webp",
+    "webp_bytes": 3872
+  },
+  {
+    "resource": "ic_tool_unused_files",
+    "node": "5548:201",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_unused_files.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "952f3621dfd778b1b5aa6faf75d09354c1f2b1ac2a5e178ba13765311f35732f",
+    "crop": null,
+    "density": "xhdpi",
+    "output_size": [
+      64,
+      64
+    ],
+    "output": "app/src/main/res/drawable-xhdpi/ic_tool_unused_files.webp",
+    "webp_bytes": 5892
+  },
+  {
+    "resource": "ic_tool_unused_files",
+    "node": "5548:201",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_unused_files.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "952f3621dfd778b1b5aa6faf75d09354c1f2b1ac2a5e178ba13765311f35732f",
+    "crop": null,
+    "density": "xxhdpi",
+    "output_size": [
+      96,
+      96
+    ],
+    "output": "app/src/main/res/drawable-xxhdpi/ic_tool_unused_files.webp",
+    "webp_bytes": 9382
+  },
+  {
+    "resource": "ic_tool_unused_files",
+    "node": "5548:201",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_unused_files.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "952f3621dfd778b1b5aa6faf75d09354c1f2b1ac2a5e178ba13765311f35732f",
+    "crop": null,
+    "density": "xxxhdpi",
+    "output_size": [
+      128,
+      128
+    ],
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_tool_unused_files.webp",
+    "webp_bytes": 16514
+  },
+  {
+    "resource": "ic_tool_screenshots",
+    "node": "5548:215",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_screenshots.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "c02486a0f6ceccbc1180ce1251d48e20ba65092193f384d803d0a64faee18424",
+    "crop": null,
+    "density": "mdpi",
+    "output_size": [
+      32,
+      32
+    ],
+    "output": "app/src/main/res/drawable-mdpi/ic_tool_screenshots.webp",
+    "webp_bytes": 2412
+  },
+  {
+    "resource": "ic_tool_screenshots",
+    "node": "5548:215",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_screenshots.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "c02486a0f6ceccbc1180ce1251d48e20ba65092193f384d803d0a64faee18424",
+    "crop": null,
+    "density": "hdpi",
+    "output_size": [
+      48,
+      48
+    ],
+    "output": "app/src/main/res/drawable-hdpi/ic_tool_screenshots.webp",
+    "webp_bytes": 4396
+  },
+  {
+    "resource": "ic_tool_screenshots",
+    "node": "5548:215",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_screenshots.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "c02486a0f6ceccbc1180ce1251d48e20ba65092193f384d803d0a64faee18424",
+    "crop": null,
+    "density": "xhdpi",
+    "output_size": [
+      64,
+      64
+    ],
+    "output": "app/src/main/res/drawable-xhdpi/ic_tool_screenshots.webp",
+    "webp_bytes": 6694
+  },
+  {
+    "resource": "ic_tool_screenshots",
+    "node": "5548:215",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_screenshots.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "c02486a0f6ceccbc1180ce1251d48e20ba65092193f384d803d0a64faee18424",
+    "crop": null,
+    "density": "xxhdpi",
+    "output_size": [
+      96,
+      96
+    ],
+    "output": "app/src/main/res/drawable-xxhdpi/ic_tool_screenshots.webp",
+    "webp_bytes": 11034
+  },
+  {
+    "resource": "ic_tool_screenshots",
+    "node": "5548:215",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "source": "design/figma/home/source/ic_tool_screenshots.png",
+    "source_size": [
+      96,
+      96
+    ],
+    "source_sha256": "c02486a0f6ceccbc1180ce1251d48e20ba65092193f384d803d0a64faee18424",
+    "crop": null,
+    "density": "xxxhdpi",
+    "output_size": [
+      128,
+      128
+    ],
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_tool_screenshots.webp",
+    "webp_bytes": 18784
+  }
+]

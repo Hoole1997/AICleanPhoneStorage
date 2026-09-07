@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.Home.Card" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:id="@+id/statistics_row" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:minHeight="62dp" android:gravity="center_vertical" android:orientation="horizontal"
+        android:paddingTop="12dp" android:paddingBottom="12dp">
+        <include android:id="@+id/download_stat" layout="@layout/view_home_statistic" />
+        <include android:id="@+id/available_stat" layout="@layout/view_home_statistic" />
+        <include android:id="@+id/used_stat" layout="@layout/view_home_statistic" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
