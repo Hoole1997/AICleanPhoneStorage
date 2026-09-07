@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">AIClean&amp;PhoneStorage</string>
+    <string name="home_foundation_note">基础架构已就绪。扫描、清理与存储读取尚未接入。</string>
+    <string name="home_loading">正在加载首页摘要</string>
+    <string name="home_storage_used">已用存储空间</string>
+    <string name="home_scan_complete">扫描完成</string>
+    <string name="home_unknown_value">—</string>
+    <string name="home_not_scanned">尚未扫描</string>
+    <string name="home_junk_found">发现的垃圾文件大小</string>
+    <string name="home_storage_not_loaded">存储信息尚未读取</string>
+    <string name="home_storage_summary">可用 %1$s · 已用 %2$s</string>
+    <string name="home_storage_unavailable">暂时无法读取存储摘要，请重试。</string>
+    <string name="home_permission_required">当前无法访问存储摘要，所需访问权限可能已被撤销。</string>
+    <string name="home_retry">重试</string>
 </resources>
