@@ -1,0 +1,202 @@
+[
+  {
+    "source": "design/figma/network-traffic/source/ic_traffic_mobile.png",
+    "output": "app/src/main/res/drawable-mdpi/ic_traffic_mobile.webp",
+    "size": [
+      22,
+      22
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_traffic_mobile.png",
+    "output": "app/src/main/res/drawable-hdpi/ic_traffic_mobile.webp",
+    "size": [
+      33,
+      33
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_traffic_mobile.png",
+    "output": "app/src/main/res/drawable-xhdpi/ic_traffic_mobile.webp",
+    "size": [
+      44,
+      44
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_traffic_mobile.png",
+    "output": "app/src/main/res/drawable-xxhdpi/ic_traffic_mobile.webp",
+    "size": [
+      66,
+      66
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_traffic_mobile.png",
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_traffic_mobile.webp",
+    "size": [
+      88,
+      88
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_traffic_back.png",
+    "output": "app/src/main/res/drawable-mdpi/ic_traffic_back.webp",
+    "size": [
+      24,
+      24
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_traffic_back.png",
+    "output": "app/src/main/res/drawable-hdpi/ic_traffic_back.webp",
+    "size": [
+      36,
+      36
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_traffic_back.png",
+    "output": "app/src/main/res/drawable-xhdpi/ic_traffic_back.webp",
+    "size": [
+      48,
+      48
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_traffic_back.png",
+    "output": "app/src/main/res/drawable-xxhdpi/ic_traffic_back.webp",
+    "size": [
+      72,
+      72
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_traffic_back.png",
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_traffic_back.webp",
+    "size": [
+      96,
+      96
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_task_spinner.png",
+    "output": "app/src/main/res/drawable-mdpi/ic_task_spinner.webp",
+    "size": [
+      50,
+      50
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_task_spinner.png",
+    "output": "app/src/main/res/drawable-hdpi/ic_task_spinner.webp",
+    "size": [
+      75,
+      75
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_task_spinner.png",
+    "output": "app/src/main/res/drawable-xhdpi/ic_task_spinner.webp",
+    "size": [
+      100,
+      100
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_task_spinner.png",
+    "output": "app/src/main/res/drawable-xxhdpi/ic_task_spinner.webp",
+    "size": [
+      150,
+      150
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_task_spinner.png",
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_task_spinner.webp",
+    "size": [
+      200,
+      200
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_task_close.png",
+    "output": "app/src/main/res/drawable-mdpi/ic_task_close.webp",
+    "size": [
+      14,
+      14
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_task_close.png",
+    "output": "app/src/main/res/drawable-hdpi/ic_task_close.webp",
+    "size": [
+      21,
+      21
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_task_close.png",
+    "output": "app/src/main/res/drawable-xhdpi/ic_task_close.webp",
+    "size": [
+      28,
+      28
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_task_close.png",
+    "output": "app/src/main/res/drawable-xxhdpi/ic_task_close.webp",
+    "size": [
+      42,
+      42
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_task_close.png",
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_task_close.webp",
+    "size": [
+      56,
+      56
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_traffic_wifi.png",
+    "output": "app/src/main/res/drawable-mdpi/ic_traffic_wifi.webp",
+    "size": [
+      22,
+      22
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_traffic_wifi.png",
+    "output": "app/src/main/res/drawable-hdpi/ic_traffic_wifi.webp",
+    "size": [
+      33,
+      33
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_traffic_wifi.png",
+    "output": "app/src/main/res/drawable-xhdpi/ic_traffic_wifi.webp",
+    "size": [
+      44,
+      44
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_traffic_wifi.png",
+    "output": "app/src/main/res/drawable-xxhdpi/ic_traffic_wifi.webp",
+    "size": [
+      66,
+      66
+    ]
+  },
+  {
+    "source": "design/figma/network-traffic/source/ic_traffic_wifi.png",
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_traffic_wifi.webp",
+    "size": [
+      88,
+      88
+    ]
+  }
+]

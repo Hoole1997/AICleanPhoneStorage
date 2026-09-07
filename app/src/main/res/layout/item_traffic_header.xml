@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingTop="6dp">
+    <com.google.android.material.chip.ChipGroup android:id="@+id/period_group" android:layout_width="match_parent" android:layout_height="wrap_content"
+        app:singleSelection="true" app:selectionRequired="true" app:chipSpacingHorizontal="12dp">
+        <com.google.android.material.chip.Chip style="@style/Widget.Traffic.Filter" android:id="@+id/period_month"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" android:checkable="true" android:text="@string/traffic_this_month"/>
+        <com.google.android.material.chip.Chip style="@style/Widget.Traffic.Filter" android:id="@+id/period_previous"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" android:checkable="true" android:text="@string/traffic_last_month"/>
+        <com.google.android.material.chip.Chip style="@style/Widget.Traffic.Filter" android:id="@+id/period_day"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" android:checkable="true" android:text="@string/traffic_24_hours"/>
+    </com.google.android.material.chip.ChipGroup>
+    <LinearLayout android:id="@+id/traffic_totals" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="18dp" android:orientation="horizontal">
+        <include android:id="@+id/mobile_total" layout="@layout/view_traffic_total"/>
+        <include android:id="@+id/wifi_total" layout="@layout/view_traffic_total"/>
+    </LinearLayout>
+    <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text" android:id="@+id/traffic_notice"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp"
+        android:textSize="12sp" android:textColor="@color/home_text_secondary" android:visibility="gone"/>
+
+    <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text.Semibold" android:id="@+id/apps_heading"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp"
+        android:text="@string/traffic_apps" android:textSize="18sp" android:textColor="@color/home_text_primary"/>
+</LinearLayout>

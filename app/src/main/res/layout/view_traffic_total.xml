@@ -1,0 +1,14 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="0dp" android:layout_height="wrap_content"
+    android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical">
+        <ImageView android:id="@+id/total_icon" android:layout_width="22dp" android:layout_height="22dp" android:contentDescription="@null" android:importantForAccessibility="no"/>
+        <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text" android:id="@+id/total_label"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="10dp" android:textSize="14sp" android:textColor="@color/traffic_text"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:baselineAligned="true">
+        <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text.Bold" android:id="@+id/total_value"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="18sp" android:textColor="@color/traffic_blue"/>
+        <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text" android:id="@+id/total_unit"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:textSize="14sp" android:textColor="@color/traffic_text"/>
+    </LinearLayout>
+</LinearLayout>

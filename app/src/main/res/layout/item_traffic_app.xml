@@ -1,0 +1,25 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="66dp" android:paddingTop="9dp" android:paddingBottom="9dp">
+    <ImageView android:id="@+id/app_icon" android:layout_width="42dp" android:layout_height="42dp"
+        android:contentDescription="@null" android:importantForAccessibility="no" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
+    <com.google.android.material.button.MaterialButton style="@style/Widget.Traffic.Button" android:id="@+id/app_manage"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/traffic_manage"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
+    <LinearLayout android:id="@+id/app_metrics" android:layout_width="0dp" android:layout_height="wrap_content"
+        android:layout_marginStart="12dp" android:layout_marginEnd="12dp" android:orientation="vertical"
+        app:layout_constraintStart_toEndOf="@id/app_icon" app:layout_constraintEnd_toStartOf="@id/app_manage"
+        app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent">
+        <LinearLayout android:id="@+id/app_name_row" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+            <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text.Medium" android:id="@+id/app_label"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textSize="16sp"
+                android:maxLines="1" android:ellipsize="end" android:textColor="@color/traffic_text"/>
+            <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text" android:id="@+id/app_bytes"
+                android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp"
+                android:textSize="12sp" android:textColor="@color/traffic_secondary"/>
+        </LinearLayout>
+        <ProgressBar android:id="@+id/app_usage_bar" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent"
+            android:layout_height="5dp" android:layout_marginTop="10dp" android:indeterminate="false" android:max="10000"
+            android:progressDrawable="@drawable/traffic_usage_progress" android:importantForAccessibility="no"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

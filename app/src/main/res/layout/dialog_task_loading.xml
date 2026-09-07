@@ -1,0 +1,37 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/task_dialog_surface"
+    android:overScrollMode="never" android:fillViewport="false">
+    <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:minHeight="281dp" android:paddingBottom="20dp">
+        <ImageView android:id="@+id/loading_spinner" android:layout_width="50dp" android:layout_height="50dp"
+            android:layout_marginTop="28dp" android:src="@drawable/ic_task_spinner" android:contentDescription="@null"
+            android:importantForAccessibility="no" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
+        <androidx.appcompat.widget.AppCompatImageButton android:id="@+id/loading_close" android:layout_width="48dp" android:layout_height="48dp"
+            android:padding="17dp" android:background="?attr/selectableItemBackgroundBorderless" android:src="@drawable/ic_task_close"
+            android:contentDescription="@string/task_loading_cancel" app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
+        <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text.Semibold" android:id="@+id/loading_title"
+            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:layout_marginEnd="16dp"
+            android:layout_marginTop="12dp" android:textSize="18sp" android:textColor="@color/traffic_text" android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/loading_spinner" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
+        <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text" android:id="@+id/loading_message"
+            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp" android:textSize="12sp" android:textColor="@color/home_text_secondary" android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/loading_title" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
+        <LinearLayout android:id="@+id/loading_progress_row" android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:layout_marginTop="24dp" android:gravity="center_vertical"
+            app:layout_constraintTop_toBottomOf="@id/loading_message" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent">
+            <com.google.android.material.progressindicator.LinearProgressIndicator android:id="@+id/loading_progress"
+                android:layout_width="0dp" android:layout_height="6dp" android:layout_weight="1" android:indeterminate="true"
+                android:importantForAccessibility="no" app:trackThickness="6dp" app:trackCornerRadius="6dp"
+                app:indicatorColor="@color/traffic_blue" app:trackColor="@color/task_ad_background"/>
+            <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text.Medium" android:id="@+id/loading_percentage"
+                android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="10dp"
+                android:minWidth="30dp" android:gravity="end" android:textSize="14sp" android:textColor="@color/traffic_blue"/>
+        </LinearLayout>
+        <com.example.aicleanphonestorage.core.ui.loading.AdPlaceholderView android:id="@+id/loading_ad"
+            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/loading_progress_row" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

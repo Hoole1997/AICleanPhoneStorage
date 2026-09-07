@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- 使用情况访问是系统设置中的特殊访问权，不能用普通运行时权限对话框申请。 -->
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />
+    <!-- 旧系统移动网络查询按需读取 subscriberId；Android 10+ 直接查询全部移动网络。 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" android:maxSdkVersion="28" />
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
 
     <application
         android:name=".app.CleanApplication"
@@ -11,6 +23,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AICleanPhoneStorage">
+        <activity android:name=".feature.networktraffic.ui.NetworkTrafficActivity" android:exported="false" />
         <activity
             android:name=".app.MainActivity"
             android:exported="true">

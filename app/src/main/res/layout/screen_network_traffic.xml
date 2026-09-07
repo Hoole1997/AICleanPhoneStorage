@@ -1,0 +1,40 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <ImageView android:layout_width="0dp" android:layout_height="334dp" android:src="@drawable/home_header_background" android:scaleType="fitXY"
+        android:contentDescription="@null" android:importantForAccessibility="no" app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
+    <LinearLayout android:id="@+id/traffic_content" android:layout_width="0dp" android:layout_height="0dp" android:orientation="vertical"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width" app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:gravity="center_vertical">
+            <androidx.appcompat.widget.AppCompatImageButton android:id="@+id/traffic_back" android:layout_width="48dp" android:layout_height="48dp"
+                android:padding="12dp" android:src="@drawable/ic_traffic_back" android:contentDescription="@string/traffic_back"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+            <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text.Bold" android:id="@+id/traffic_title"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginEnd="16dp"
+                android:text="@string/traffic_title" android:textColor="@color/home_title" android:textSize="18sp"/>
+        </LinearLayout>
+        <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+            <!-- 头部/应用/说明共用一个 RecyclerView，横屏和大字体也能滚到应用列表。 -->
+            <androidx.recyclerview.widget.RecyclerView android:id="@+id/traffic_list" android:layout_width="match_parent" android:layout_height="match_parent"
+                android:paddingStart="16dp" android:paddingEnd="16dp" android:paddingBottom="24dp" android:clipToPadding="false" android:scrollbars="none"/>
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/traffic_refresh_indicator" android:layout_width="match_parent" android:layout_height="3dp"
+                android:layout_gravity="top" android:visibility="gone" android:indeterminate="false"
+                android:contentDescription="@string/traffic_updating" app:indicatorColor="@color/traffic_blue"
+                app:trackColor="@color/task_ad_background" app:trackThickness="3dp"/>
+            <ScrollView android:id="@+id/traffic_status_panel" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center"
+                    android:orientation="vertical" android:padding="24dp">
+                    <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text.Semibold" android:id="@+id/traffic_status_title"
+                        android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="20sp" android:gravity="center"/>
+                    <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text" android:id="@+id/traffic_status_message"
+                        android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="14sp" android:gravity="center"
+                        android:layout_marginTop="12dp" android:textColor="@color/home_text_secondary"/>
+                    <com.google.android.material.button.MaterialButton style="@style/Widget.Traffic.Button" android:id="@+id/traffic_status_action"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="20dp"/>
+                </LinearLayout>
+            </ScrollView>
+        </FrameLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
