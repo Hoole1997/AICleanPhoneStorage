@@ -1,6 +1,7 @@
 package com.example.aicleanphonestorage.feature.home.ui
 
 import com.example.aicleanphonestorage.feature.home.ui.motion.HomeHeroMotion
+import com.example.aicleanphonestorage.feature.home.data.HomeToolMetric
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -157,7 +158,14 @@ private class ToolHolder(private val binding: ItemHomeToolBinding, private val a
     fun bind(content: HomeToolItem) = with(binding) {
         toolTitle.setText(content.tool.titleRes)
         toolIcon.setImageResource(content.tool.iconRes)
-        toolDetail.text = content.detail ?: root.context.getString(R.string.home_unknown_value)
+        toolDetail.text = content.detail ?: when(val metric=content.metric){
+            HomeToolMetric.Reading->root.context.getString(R.string.home_metric_reading)
+            HomeToolMetric.NotScanned->root.context.getString(R.string.home_metric_scan_first)
+            HomeToolMetric.AccessRequired->root.context.getString(R.string.home_metric_access)
+            HomeToolMetric.Unavailable->root.context.getString(R.string.home_metric_unavailable)
+            is HomeToolMetric.AppCount->root.resources.getQuantityString(if(metric.selected)R.plurals.home_selected_apps else R.plurals.home_app_count,metric.value,metric.value)
+            else->root.context.getString(R.string.home_unknown_value)
+        }
         // 整张卡片是点击目标，18dp 的箭头只是装饰，避免不合规的小触摸区域。
         root.contentDescription = "${toolTitle.text}, ${toolDetail.text}"
         root.setOnClickListener { actions.onToolSelected(content.tool) }

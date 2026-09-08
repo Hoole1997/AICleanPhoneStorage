@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.feature.home.data.HomeOverview
+import com.example.aicleanphonestorage.feature.home.data.HomeToolMetric
 import com.example.aicleanphonestorage.feature.home.data.ScanSummary
 import java.text.NumberFormat
 import java.util.Locale
@@ -25,7 +26,11 @@ data class HeroContent(
     val progressFraction: Float? = usedPercent?.div(100f),
 )
 
-data class HomeStatistics(val download: String? = null, val available: String? = null, val used: String? = null)
+data class HomeStatistics(
+    val download: String? = null,
+    val available: String? = null,
+    val used: String? = null,
+)
 
 /** 文案、原版图标集中定义，卡片渲染和网格测量共用，避免两份映射发生偏差。 */
 enum class HomeTool(@param:StringRes val titleRes: Int, @param:DrawableRes val iconRes: Int) {
@@ -37,19 +42,28 @@ enum class HomeTool(@param:StringRes val titleRes: Int, @param:DrawableRes val i
     UnusedFiles(R.string.home_tool_unused_files, R.drawable.ic_tool_unused_files),
     Screenshots(R.string.home_tool_screenshots, R.drawable.ic_tool_screenshots),
 }
-data class HomeToolItem(val tool: HomeTool, val detail: String? = null)
+
+data class HomeToolItem(
+    val tool: HomeTool,
+    val detail: String? = null,
+    val metric: HomeToolMetric? = null,
+)
 
 /** 真实摘要转换与设计样例隔离；缺失的容量/速率不填入设计稿的假数值。 */
 internal fun HomeOverview.toHomeContent(locale: Locale): HomeContent {
-    val numbers = NumberFormat.getNumberInstance(locale).apply {
-        maximumFractionDigits = 1
-        isGroupingUsed = false
-    }
+    val numbers =
+        NumberFormat.getNumberInstance(locale).apply {
+            maximumFractionDigits = 1
+            isGroupingUsed = false
+        }
     fun size(bytes: Long): Pair<String, String> {
         val units = arrayOf("B", "KB", "MB", "GB", "TB", "PB", "EB")
         var value = bytes.toDouble()
         var index = 0
-        while (value >= 1000 && index < units.lastIndex) { value /= 1000; index++ }
+        while (value >= 1000 && index < units.lastIndex) {
+            value /= 1000
+            index++
+        }
         return numbers.format(value) to units[index]
     }
     fun compact(bytes: Long) = size(bytes).let { it.first + it.second }
@@ -57,17 +71,39 @@ internal fun HomeOverview.toHomeContent(locale: Locale): HomeContent {
     val completed = scan as? ScanSummary.Completed
     val displayedSize = (completed?.junkBytes ?: storage?.usedBytes)?.let(::size)
     return HomeContent(
-        hero = HeroContent(
-            scanComplete = completed != null,
-            value = displayedSize?.first,
-            unit = displayedSize?.second.orEmpty(),
-            totalCapacity = storage?.let { compact(it.totalBytes) },
-            usedPercent = percent,
-            progressFraction = storage?.usedFraction?.toFloat(),
-        ),
-        statistics = HomeStatistics(
-            available = storage?.let { compact(it.availableBytes) },
-            used = percent?.let { NumberFormat.getPercentInstance(locale).format(it / 100.0) },
-        ),
+        hero =
+            HeroContent(
+                scanComplete = completed != null,
+                value = displayedSize?.first,
+                unit = displayedSize?.second.orEmpty(),
+                totalCapacity = storage?.let { compact(it.totalBytes) },
+                usedPercent = percent,
+                progressFraction = storage?.usedFraction?.toFloat(),
+            ),
+        tools =
+            HomeTool.entries.map { tool ->
+                val metric =
+                    when (tool) {
+                        HomeTool.Network -> tools.network
+                        HomeTool.Notifications -> tools.notifications
+                        HomeTool.Apps -> tools.apps
+                        HomeTool.Compress -> tools.compress
+                        HomeTool.LargeFiles -> tools.largeFiles
+                        HomeTool.UnusedFiles -> tools.unusedFiles
+                        HomeTool.Screenshots -> tools.screenshots
+                    }
+                HomeToolItem(
+                    tool,
+                    (metric as? HomeToolMetric.Bytes)?.let {
+                        (if (it.partial) "≥" else "") + compact(it.value)
+                    },
+                    metric,
+                )
+            },
+        statistics =
+            HomeStatistics(
+                available = storage?.let { compact(it.availableBytes) },
+                used = percent?.let { NumberFormat.getPercentInstance(locale).format(it / 100.0) },
+            ),
     )
 }

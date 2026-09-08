@@ -49,6 +49,7 @@ internal class FileScanSources(context: Context, private val index: ScanIndex) {
                         mutableListOf(
                             MediaStore.MediaColumns._ID,
                             MediaStore.MediaColumns.DISPLAY_NAME,
+                        MediaStore.MediaColumns.DATA,
                             MediaStore.MediaColumns.SIZE,
                             MediaStore.MediaColumns.MIME_TYPE,
                             MediaStore.MediaColumns.DATE_MODIFIED,
@@ -91,6 +92,7 @@ internal class FileScanSources(context: Context, private val index: ScanIndex) {
                                     category = CleanupPolicy.category(name, mime),
                                     backend = FileBackend.MEDIA,
                                     scope = collection.toString(),
+                                    path = cursor.text(MediaStore.MediaColumns.DATA),
                                 ),
                                 folder,
                             )

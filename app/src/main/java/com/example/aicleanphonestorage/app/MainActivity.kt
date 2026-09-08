@@ -148,7 +148,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         // Bundle 只保存小型预览模式标记，滚动位置交给 RecyclerView，绝不存入列表或位图。
-        previewSelection?.let { outState.putString(HomePreviewSupport.STATE_KEY, it) }
+        HomePreviewSupport.saveSelection(outState,previewSelection)
         super.onSaveInstanceState(outState)
     }
 

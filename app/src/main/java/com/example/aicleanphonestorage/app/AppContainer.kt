@@ -32,7 +32,14 @@ class AppContainer(context: Context) {
         AndroidNotificationAppsRepository(applicationContext, notificationRules, taskExecutor)
     }
     val trafficSnapshotTransfer: TrafficSnapshotTransfer by lazy { TrafficSnapshotTransfer() }
-    val homeOverviewRepository: HomeOverviewRepository by lazy { junkSummaryRepository }
+    val homeOverviewRepository: HomeOverviewRepository by lazy {
+        com.example.aicleanphonestorage.feature.home.data.AndroidHomeOverviewRepository(
+            junkSummaryRepository,
+            com.example.aicleanphonestorage.feature.home.data.HomeFileMetricsSource(fileScanRepository.index,taskExecutor),
+            com.example.aicleanphonestorage.feature.home.data.HomePlatformMetricsSource(applicationContext,taskExecutor),
+            notificationRules,
+        )
+    }
     val networkTrafficRepository: NetworkTrafficRepository by lazy {
         AndroidNetworkTrafficRepository(applicationContext, taskExecutor)
     }

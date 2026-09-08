@@ -47,7 +47,7 @@ class HomeViewModelTest {
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect {} }
 
     @Test
-    fun `repository starts on subscription and closes when last subscriber leaves`() = runTest {
+    fun `repository stops in background while retaining last overview for smooth return`() = runTest {
         var active = 0
         var starts = 0
         val vm = viewModel {
@@ -74,7 +74,7 @@ class HomeViewModelTest {
         second.cancelAndJoin()
         runCurrent()
         assertEquals(0, active)
-        assertEquals(HomeUiState.Loading, vm.uiState.value)
+        assertEquals(HomeUiState.Ready(HomeOverview()), vm.uiState.value)
         observe(vm)
         runCurrent()
         assertEquals(2, starts)

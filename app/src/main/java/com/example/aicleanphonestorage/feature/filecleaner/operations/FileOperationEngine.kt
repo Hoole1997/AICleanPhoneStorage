@@ -107,6 +107,7 @@ internal class FileOperationEngine(
                                 }
                             }
                             content.validate(file)
+                        if(file.path.isBlank())content.identityPath(file)?.let{index.rememberPath(file.id,it)}
                             // 删除原图前再次检查副本，避免生成后被移走/修改却仍删除原图。
                             index.output(operation, file.id)?.let { (uri, sha) ->
                                 verifyCopy(uri, sha)

@@ -1,0 +1,9 @@
+<resources>
+    <string name="home_preview_live">Live data</string>
+    <string name="home_metric_reading">Reading…</string>
+    <string name="home_metric_scan_first">Scan first</string>
+    <string name="home_metric_access">Access needed</string>
+    <string name="home_metric_unavailable">Unavailable</string>
+    <plurals name="home_app_count"><item quantity="one">%1$d app</item><item quantity="other">%1$d apps</item></plurals>
+    <plurals name="home_selected_apps"><item quantity="one">%1$d app selected</item><item quantity="other">%1$d apps selected</item></plurals>
+</resources>

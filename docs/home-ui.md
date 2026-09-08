@@ -2,11 +2,11 @@
 
 ## 范围与状态
 
-使用 Kotlin + XML/ViewBinding + Material 原生组件；首页是一个 RecyclerView，GridLayoutManager 负责通栏摘要/统计/标题与双列工具区。没有嵌套 RecyclerView/ScrollView，Network Traffic 已接入真实统计，详见 [模块说明](network-traffic.md)；其余扫描、删除、压缩、测速、通知监听或设置业务尚未接入。
+使用 Kotlin + XML/ViewBinding + Material 原生组件；首页是一个 RecyclerView，GridLayoutManager 负责通栏摘要/统计/标题与双列工具区。没有嵌套 RecyclerView/ScrollView，Network Traffic 已接入真实统计，详见 [模块说明](network-traffic.md)；通知、应用管理与文件清理入口现已接入，首页数字来源见 [入口统计](home-metrics.md)。
 
 Debug 默认展示 Figma 初始状态。**长按顶部应用标题**可切换“未扫描”和“扫描完成”；也可通过启动 Intent 的 `home_preview=initial|scanned` 选择状态。长按菜单与示例数值位于 `src/debug`，Release 使用同名空实现，不接受预览参数。真实数据源仍为空，正式包显示未知值，避免把 199MB 等设计示例伪装成设备结果。
 
-Network Traffic 通过首页入口完成权限和Loading后进入结果页；其余主按钮、设置或工具卡只呈现原生点击反馈，语义动作通过 HomeUiActions 留给后续页面协调器。预览切换不占用这些业务动作；旋转/Activity 重建保存小型模式标记，滚动位置由 RecyclerView 保存。
+Network Traffic 通过首页入口完成权限和Loading后进入结果页；Smart Cleaning 和工具卡均通过 HomeUiActions 接入对应业务协调器。Debug 默认显示真实数据；设计预览仅在长按标题或显式 Intent 选择时启用，并可切回 Live data；旋转/Activity 重建保存小型模式标记，滚动位置由 RecyclerView 保存。
 
 ## Figma 对应
 

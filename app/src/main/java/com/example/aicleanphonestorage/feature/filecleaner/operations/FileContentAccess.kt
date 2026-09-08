@@ -40,6 +40,16 @@ internal class FileContentAccess(context: Context) {
         return digest.digest().joinToString("") { "%02x".format(it) }
     }
 
+    /** 兼容旧快照没有保存路径的媒体；仅用于清除同一文件的其他索引记录，不能用于绕过 URI 授权。 */
+    @Suppress("DEPRECATION")
+    fun identityPath(item:ScannedFile):String? {
+        if(item.path.isNotBlank())return item.path
+        if(item.backend!=FileBackend.MEDIA)return null
+        return try{resolver.query(Uri.parse(item.uri),arrayOf(MediaStore.MediaColumns.DATA),null,null,null)?.use{if(it.moveToFirst())it.getString(0)else null}}
+            catch(_:SecurityException){null}
+            catch(_:IllegalArgumentException){null}
+    }
+
     fun validatedFile(item: ScannedFile): File {
         val root = File(item.scope).canonicalFile
         val file = File(item.path)

@@ -3,10 +3,7 @@ package com.example.aicleanphonestorage.feature.home.data
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-/**
- * 读取摘要，不触发扫描。真实实现必须 main-safe，且在取消订阅时释放监听器、Cursor 和流。
- * 后续在 data 包接入 MediaStore/数据库，页面不需要依赖平台数据源。
- */
+/** 读取摘要，不触发扫描。真实实现必须 main-safe，且在取消订阅时释放监听器、Cursor 和流。 后续在 data 包接入 MediaStore/数据库，页面不需要依赖平台数据源。 */
 interface HomeOverviewRepository {
     fun observeOverview(): Flow<HomeOverview>
 }

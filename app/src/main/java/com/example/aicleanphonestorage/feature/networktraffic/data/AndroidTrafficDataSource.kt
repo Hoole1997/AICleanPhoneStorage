@@ -24,19 +24,19 @@ internal class AndroidTrafficDataSource(context: Context) {
     private val manager = app.getSystemService(NetworkStatsManager::class.java)
 
     @Suppress("DEPRECATION")
-    suspend fun readMobile(window: TrafficWindow): NetworkRead {
-        if (Build.VERSION.SDK_INT >= 29) return read(ConnectivityManager.TYPE_MOBILE, listOf(null), window)
+    suspend fun readMobile(window: TrafficWindow,includeApplications:Boolean=true): NetworkRead {
+        if (Build.VERSION.SDK_INT >= 29) return read(ConnectivityManager.TYPE_MOBILE, listOf(null), window,includeApplications)
         if (ContextCompat.checkSelfPermission(app, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED)
             return NetworkRead(NetworkUsage.unavailable(UsageAvailability.PHONE_PERMISSION_REQUIRED), emptyMap())
         val ids = try { legacySubscriberIds() } catch (error: SecurityException) {
             return NetworkRead(NetworkUsage.unavailable(UsageAvailability.PHONE_PERMISSION_REQUIRED), emptyMap())
         }
         if (ids.isEmpty()) return NetworkRead(NetworkUsage.unavailable(UsageAvailability.NO_SIM), emptyMap())
-        return read(ConnectivityManager.TYPE_MOBILE, ids, window)
+        return read(ConnectivityManager.TYPE_MOBILE, ids, window,includeApplications)
     }
 
     @Suppress("DEPRECATION")
-    suspend fun readWifi(window: TrafficWindow): NetworkRead = read(ConnectivityManager.TYPE_WIFI, listOf(null), window)
+    suspend fun readWifi(window: TrafficWindow,includeApplications:Boolean=true): NetworkRead = read(ConnectivityManager.TYPE_WIFI, listOf(null), window,includeApplications)
 
     @SuppressLint("MissingPermission", "HardwareIds")
     @Suppress("DEPRECATION")
@@ -49,7 +49,7 @@ internal class AndroidTrafficDataSource(context: Context) {
     }
 
     @SuppressLint("MissingPermission")
-    private suspend fun read(type: Int, subscriberIds: List<String?>, window: TrafficWindow): NetworkRead {
+    private suspend fun read(type: Int, subscriberIds: List<String?>, window: TrafficWindow,includeApplications:Boolean): NetworkRead {
         val statsManager = manager ?: return unavailable()
         if (window.startMillis == window.endMillis) return NetworkRead(NetworkUsage(0, UsageAvailability.AVAILABLE), emptyMap())
         val byUid = HashMap<Int, Long>()
@@ -62,6 +62,7 @@ internal class AndroidTrafficDataSource(context: Context) {
                     ?: return unavailable()
                 total = addBytes(total, addBytes(summary.rxBytes, summary.txBytes))
                 currentCoroutineContext().ensureActive()
+                if(!includeApplications)continue
                 val stats = statsManager.querySummary(type, subscriber, window.startMillis, window.endMillis)
                     ?: return unavailable()
                 try {

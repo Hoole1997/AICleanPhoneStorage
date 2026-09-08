@@ -4,6 +4,7 @@ package com.example.aicleanphonestorage.feature.home.data
 data class HomeOverview(
     val storage: StorageSummary? = null,
     val scan: ScanSummary = ScanSummary.NotScanned,
+    val tools: HomeToolMetrics = HomeToolMetrics(),
 )
 
 data class StorageSummary(val totalBytes: Long, val usedBytes: Long) {
@@ -12,8 +13,11 @@ data class StorageSummary(val totalBytes: Long, val usedBytes: Long) {
         require(usedBytes in 0..totalBytes)
     }
 
-    val availableBytes: Long get() = totalBytes - usedBytes
-    val usedFraction: Double get() = usedBytes.toDouble() / totalBytes
+    val availableBytes: Long
+        get() = totalBytes - usedBytes
+
+    val usedFraction: Double
+        get() = usedBytes.toDouble() / totalBytes
 }
 
 /** 不能用 junkBytes == 0 判断是否扫描过：扫描完成且没有垃圾是有效结果。 */

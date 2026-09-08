@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.update
 
 /** 仅缓存元数据/选择状态的临时索引。所有方法由Repository在I/O线程调用，不存文件内容或Bitmap。 */
 internal class ScanIndex(context: Context) :
-    SQLiteOpenHelper(context.applicationContext, "cleanup_index.db", null, 2) {
+    SQLiteOpenHelper(context.applicationContext, "cleanup_index.db", null, 3) {
     private val revision = kotlinx.coroutines.flow.MutableStateFlow(0L)
     val changes: kotlinx.coroutines.flow.StateFlow<Long> = revision
     private val sources = Collections.newSetFromMap(WeakHashMap<PagingSource<*, *>, Boolean>())
@@ -30,6 +30,7 @@ internal class ScanIndex(context: Context) :
         db.execSQL("CREATE INDEX files_scan_sort ON files(scan,size DESC,id)")
         db.execSQL("CREATE INDEX files_selection ON files(scan,selected)")
         createGroupIndexes(db)
+        createIdentityIndexes(db)
         db.execSQL(
             "CREATE TABLE directories(scan INTEGER NOT NULL, document TEXT NOT NULL, done INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(scan,document))"
         )
@@ -51,6 +52,12 @@ internal class ScanIndex(context: Context) :
             db.execSQL("ALTER TABLE files ADD COLUMN fingerprint TEXT NOT NULL DEFAULT ''")
             createGroupIndexes(db)
         }
+        if (oldVersion < 3) createIdentityIndexes(db)
+    }
+
+    private fun createIdentityIndexes(db: SQLiteDatabase) {
+        db.execSQL("CREATE INDEX files_uri ON files(uri)")
+        db.execSQL("CREATE INDEX files_path ON files(path)")
     }
 
     private fun createGroupIndexes(db: SQLiteDatabase) {
@@ -281,8 +288,58 @@ internal class ScanIndex(context: Context) :
         invalidate()
     }
 
+    fun rememberPath(id: Long, path: String) {
+        if (path.isNotBlank())
+            writableDatabase.update(
+                "files",
+                ContentValues().apply { put("path", path) },
+                "id=?",
+                arrayOf(id.toString()),
+            )
+    }
+
     fun remove(id: Long, notify: Boolean = true) {
-        writableDatabase.delete("files", "id=?", arrayOf(id.toString()))
+        val file = get(id) ?: return
+        val args = if (file.path.isBlank()) arrayOf(file.uri) else arrayOf(file.uri, file.path)
+        val identity = if (file.path.isBlank()) "uri=?" else "uri=? OR (path<>'' AND path=?)"
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            // 其他旧快照中的待处理项已不存在，标记跳过；已完成的当前操作保留其删除结果。
+            val groups =
+                db.rawQuery(
+                        "SELECT DISTINCT scan,group_key FROM files WHERE ($identity) AND retained=1 AND group_key<>''",
+                        args,
+                    )
+                    .use { c ->
+                        buildList { while (c.moveToNext()) add(c.getLong(0) to c.getString(1)) }
+                    }
+            db.execSQL(
+                "UPDATE operation_items SET state='skipped' WHERE state='pending' AND file IN (SELECT id FROM files WHERE $identity)",
+                args,
+            )
+            db.delete("files", identity, args)
+            // 参考图从其他清理入口被删除时，剩余组重新保留一张，防止旧分组将最后副本当垃圾。
+            for ((scan, group) in groups) {
+                val keeper =
+                    db.rawQuery(
+                            "SELECT id FROM files WHERE scan=? AND group_key=? ORDER BY size DESC,id LIMIT 1",
+                            arrayOf(scan.toString(), group),
+                        )
+                        .use { if (it.moveToFirst()) it.getLong(0) else null } ?: continue
+                db.execSQL(
+                    "UPDATE files SET retained=1,selected=0 WHERE id=?",
+                    arrayOf(keeper.toString()),
+                )
+                db.execSQL(
+                    "UPDATE operation_items SET state='skipped' WHERE file=? AND state='pending'",
+                    arrayOf(keeper.toString()),
+                )
+            }
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
         if (notify) invalidate()
     }
 
