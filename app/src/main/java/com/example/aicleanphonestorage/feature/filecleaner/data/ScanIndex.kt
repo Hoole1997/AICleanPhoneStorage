@@ -491,6 +491,19 @@ internal class ScanIndex(context: Context) :
             .rawQuery("SELECT status FROM operations WHERE id=?", arrayOf(operation.toString()))
             .use { if (it.moveToFirst()) it.getString(0) else "missing" }
 
+    /** 基于持久操作快照统计；原文件删除后仍可读取，副本占用从已删除字节中扣除。 */
+    fun operationStorage(operation: Long): Pair<Long, Long> =
+        readableDatabase.rawQuery(
+            """SELECT COALESCE(SUM(CASE WHEN state='deleted' THEN file_bytes ELSE 0 END),0)
+                - COALESCE(SUM(output_bytes),0),
+                COALESCE(SUM(CASE WHEN output IS NOT NULL THEN MAX(file_bytes-output_bytes,0) ELSE 0 END),0)
+                FROM operation_items WHERE op=?""",
+            arrayOf(operation.toString()),
+        ).use {
+            it.moveToFirst()
+            it.getLong(0).coerceAtLeast(0) to it.getLong(1).coerceAtLeast(0)
+        }
+
     fun cancelPending(operation: Long) {
         writableDatabase.execSQL(
             "UPDATE operation_items SET state='skipped' WHERE op=? AND state IN ('pending','awaiting')",

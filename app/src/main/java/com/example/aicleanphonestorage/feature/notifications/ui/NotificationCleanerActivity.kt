@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -18,6 +19,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.aicleanphonestorage.app.CleanApplication
 import com.example.aicleanphonestorage.app.MainActivity
 import com.example.aicleanphonestorage.core.ui.apps.AppIconLoader
+import com.example.aicleanphonestorage.core.ui.completion.CompletionContract
 import com.example.aicleanphonestorage.databinding.ScreenNotificationCleanerBinding
 import kotlinx.coroutines.launch
 
@@ -41,6 +43,19 @@ class NotificationCleanerActivity : AppCompatActivity() {
     }
     private lateinit var renderer: NotificationCleanerRenderer
     private var returning = false
+    private val completion =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (
+                result.data?.getStringExtra(CompletionContract.ACTION) ==
+                    CompletionContract.CONTINUE
+            ) {
+                startActivity(
+                    Intent(this, MainActivity::class.java)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                )
+                finish()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +67,12 @@ class NotificationCleanerActivity : AppCompatActivity() {
         setContentView(binding.root)
         ViewCompat.setAccessibilityHeading(binding.notificationTitle, true)
         binding.notificationBack.setOnClickListener { finish() }
+        binding.notificationDone.setOnClickListener {
+            viewModel.completionReport()?.let { report ->
+                completion.launch(CompletionContract.intent(this, report))
+                viewModel.completionPresented()
+            }
+        }
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val bars =
                 insets.getInsets(

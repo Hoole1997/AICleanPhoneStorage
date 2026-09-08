@@ -274,6 +274,10 @@ internal class CleanupViewModel(
     }
 
     fun removeOriginals(id: Long) {
+        val result = current.value.operation as? CleanupOperationState.Result ?: return
+        if (result.id != id || result.summary.originalsAvailable <= 0) return
+        // 确认后立即进入工作状态，避免索引准备期间旋转/退后台再次展示旧结果。
+        current.update { it.copy(operation = CleanupOperationState.Running(id)) }
         work =
             viewModelScope.launch(failures) {
                 operations.deleteOriginals(id)

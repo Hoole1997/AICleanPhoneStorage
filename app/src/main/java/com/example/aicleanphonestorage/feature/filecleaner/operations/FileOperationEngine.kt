@@ -24,6 +24,8 @@ internal data class OperationSummary(
     val failed: Int,
     val skipped: Int,
     val originalsAvailable: Int,
+    val freedBytes: Long = 0,
+    val reducedBytes: Long = 0,
 )
 
 internal sealed interface OperationStep {
@@ -191,15 +193,19 @@ internal class FileOperationEngine(
 
     suspend fun summary(operation: Long) = executor.io { summaryNow(operation) }
 
-    private fun summaryNow(operation: Long) =
-        OperationSummary(
+    private fun summaryNow(operation: Long): OperationSummary {
+        val (freed, reduced) = index.operationStorage(operation)
+        return OperationSummary(
             index.operationCount(operation),
             index.operationCount(operation, "deleted"),
             index.copyCount(operation),
             index.operationCount(operation, "failed"),
             index.operationCount(operation, "skipped"),
             index.operationCount(operation, "copied"),
+            freed,
+            reduced,
         )
+    }
 
     suspend fun cancel(operation: Long) =
         executor.io {

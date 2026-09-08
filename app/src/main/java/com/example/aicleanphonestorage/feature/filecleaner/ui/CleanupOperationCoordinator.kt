@@ -1,13 +1,18 @@
 package com.example.aicleanphonestorage.feature.filecleaner.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.format.Formatter
 import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import com.example.aicleanphonestorage.R
+import com.example.aicleanphonestorage.app.MainActivity
+import com.example.aicleanphonestorage.core.ui.completion.CompletionContract
 import com.example.aicleanphonestorage.core.ui.loading.*
 
 /** 所有文件清理页面共享确认、系统删除授权与完成结果；不在页面间复制操作流程。 */
@@ -17,12 +22,47 @@ internal class CleanupOperationCoordinator(
     saved: Bundle?,
 ) {
     private var originalsConfirmation: Long? = saved?.getLong("originals")?.takeIf { it > 0 }
+    // 保留到 Activity Result 返回，旋转/重建不会重复打开同一份完成页。
+    private var presentedResult: Long? = saved?.getLong("completion.presented")?.takeIf { it > 0 }
+    private val completion =
+        activity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result ->
+            val id = presentedResult ?: return@registerForActivityResult
+            presentedResult = null
+            val action =
+                result.data
+                    ?.takeIf { it.getLongExtra(CompletionContract.OPERATION, 0) == id }
+                    ?.getStringExtra(CompletionContract.ACTION)
+            if (action == CompletionContract.REMOVE_ORIGINALS) {
+                originalsConfirmation = id
+                render(model.state.value.operation)
+            } else {
+                model.dismissOperation()
+                if (action == CompletionContract.CONTINUE) {
+                    activity.startActivity(
+                        Intent(activity, MainActivity::class.java)
+                            .addFlags(
+                                Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                            )
+                    )
+                    activity.finish()
+                }
+            }
+        }
     private val consent =
         activity.registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
             model.consentResult(it.resultCode == android.app.Activity.RESULT_OK)
         }
 
     init {
+        // Activity Result 在 STARTED 时分发；回到原图确认时没有新的业务状态发射，需在 RESUMED 补呈现。
+        activity.lifecycle.addObserver(
+            object : DefaultLifecycleObserver {
+                override fun onResume(owner: LifecycleOwner) {
+                    render(model.state.value.operation)
+                }
+            }
+        )
         activity.supportFragmentManager.setFragmentResultListener(WORK_CANCEL, activity) { _, _ ->
             model.onBackground()
         }
@@ -42,11 +82,6 @@ internal class CleanupOperationCoordinator(
                 }
                 op is CleanupOperationState.Confirm ->
                     if (positive) model.confirm(op.id) else model.dismissOperation()
-                op is CleanupOperationState.Result ->
-                    if (positive && op.summary.originalsAvailable > 0) {
-                        originalsConfirmation = op.id
-                        render(model.state.value.operation)
-                    } else model.dismissOperation()
             }
         }
     }
@@ -103,33 +138,25 @@ internal class CleanupOperationCoordinator(
                         activity.getString(R.string.cleanup_confirm),
                         activity.getString(R.string.cleanup_cancel),
                     )
-                operation is CleanupOperationState.Result ->
-                    CleanupMessageDialog.create(
-                        "result:${operation.id}",
-                        activity.getString(R.string.cleanup_done),
-                        activity.getString(
-                            R.string.cleanup_result,
-                            operation.summary.deleted,
-                            operation.summary.copied,
-                            operation.summary.skipped,
-                            operation.summary.failed,
-                        ),
-                        activity.getString(
-                            if (operation.summary.originalsAvailable > 0)
-                                R.string.cleanup_remove_originals
-                            else R.string.cleanup_done
-                        ),
-                        activity.getString(
-                            if (operation.summary.originalsAvailable > 0)
-                                R.string.cleanup_keep_originals
-                            else R.string.cleanup_cancel
-                        ),
-                    )
                 else -> null
             }
         if (old?.identity != message?.identity) {
             old?.dismissNow()
             message?.showNow(activity.supportFragmentManager, CleanupMessageDialog.TAG)
+        }
+        if (
+            operation is CleanupOperationState.Result &&
+                originalsConfirmation == null &&
+                presentedResult == null
+        ) {
+            val feature = model.state.value.handle?.feature ?: return
+            presentedResult = operation.id
+            completion.launch(
+                CompletionContract.intent(
+                    activity,
+                    operation.summary.completionReport(feature, operation.id),
+                )
+            )
         }
         if (operation is CleanupOperationState.Consent && !model.waitingSystem) {
             model.consentLaunched()
@@ -146,6 +173,7 @@ internal class CleanupOperationCoordinator(
 
     fun save(out: Bundle) {
         originalsConfirmation?.let { out.putLong("originals", it) }
+        presentedResult?.let { out.putLong("completion.presented", it) }
     }
 
     companion object {

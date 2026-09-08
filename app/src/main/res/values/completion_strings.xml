@@ -1,0 +1,26 @@
+<resources>
+    <string name="completion_page_title">All done</string>
+    <string name="completion_result_title">Your results</string>
+    <string name="completion_cleanup_title">Cleanup complete</string>
+    <string name="completion_compression_title">Compression complete</string>
+    <string name="completion_notifications_title">Notification settings saved</string>
+    <string name="completion_partial_title">Finished with exceptions</string>
+    <string name="completion_no_changes_title">No files changed</string>
+    <string name="completion_no_changes_message">No files were processed successfully. Your remaining files are available to review.</string>
+    <string name="completion_reclaimed">%1$s of space freed</string>
+    <string name="completion_copies_smaller">Compressed copies are %1$s smaller in total.</string>
+    <plurals name="completion_originals_remaining">
+        <item quantity="one">%1$d original photo kept. Remove it to free space.</item>
+        <item quantity="other">%1$d original photos kept. Remove them to free space.</item>
+    </plurals>
+    <plurals name="completion_skipped"><item quantity="one">%1$d skipped</item><item quantity="other">%1$d skipped</item></plurals>
+    <plurals name="completion_failed"><item quantity="one">%1$d failed</item><item quantity="other">%1$d failed</item></plurals>
+    <string name="completion_exceptions">%1$s · %2$s</string>
+    <string name="completion_continue">Continue</string>
+    <string name="completion_notifications_message">New notifications from these apps will be cleared automatically when notification access is connected.</string>
+    <string name="completion_notifications_off">Auto-clear is off. No apps are selected.</string>
+    <string name="completion_notification_done">Done</string>
+    <plurals name="completion_files"><item quantity="one">file cleaned</item><item quantity="other">files cleaned</item></plurals>
+    <plurals name="completion_photos"><item quantity="one">photo compressed</item><item quantity="other">photos compressed</item></plurals>
+    <plurals name="completion_apps"><item quantity="one">app set to auto-clear</item><item quantity="other">apps set to auto-clear</item></plurals>
+</resources>

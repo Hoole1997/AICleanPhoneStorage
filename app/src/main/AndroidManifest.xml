@@ -28,6 +28,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AICleanPhoneStorage">
+        <activity android:name=".core.ui.completion.CompletionActivity" android:exported="false" />
         <activity android:name=".feature.junkcleaner.ui.JunkCleaningActivity" android:exported="false" />
         <activity android:name=".feature.appmanager.ui.AppManagerActivity" android:exported="false" />
         <activity android:name=".feature.filecleaner.ui.FileCleanupActivity" android:exported="false" />

@@ -71,4 +71,18 @@ class NotificationCleanerViewModelTest {
         assertTrue(vm.state.value.saving.isEmpty())
         assertEquals(1L, vm.state.value.saveError)
     }
+    @Test fun `completion waits for successful persistence and is consumed once`() = runTest {
+        val repo = Fake(); val vm = vm(repo, false)
+        vm.onForeground(); runCurrent()
+        assertNull(vm.completionReport())
+        vm.setEnabled("app.1", true); runCurrent()
+        assertNull(vm.completionReport())
+        advanceTimeBy(20); runCurrent()
+        assertEquals(1, vm.completionReport()!!.completed)
+        vm.completionPresented()
+        assertNull(vm.completionReport())
+        repo.saveFails = true
+        vm.setEnabled("app.1", false); advanceUntilIdle()
+        assertNull(vm.completionReport())
+    }
 }
