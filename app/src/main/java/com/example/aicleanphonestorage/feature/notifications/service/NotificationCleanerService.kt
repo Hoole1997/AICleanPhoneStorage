@@ -15,17 +15,21 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.retryWhen
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.atomic.AtomicLong
 
 /** 系统绑定的事件服务：不主动startService、不轮询、不保活、不申请前台服务或POST_NOTIFICATIONS。 */
 class NotificationCleanerService : NotificationListenerService() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var session: Job? = null
     private val connected = AtomicBoolean(false)
+    private val generation = AtomicLong()
     private val selected = AtomicReference<Set<String>>(emptySet())
     private val pending = ConcurrentHashMap<String, NotificationCandidate>()
     private val rescan = AtomicBoolean(false)
@@ -35,6 +39,7 @@ class NotificationCleanerService : NotificationListenerService() {
     override fun onListenerConnected() {
         super.onListenerConnected()
         session?.cancel()
+        val token = generation.incrementAndGet()
         connected.set(true)
         selected.set(emptySet()); pending.clear(); rescan.set(true)
         (application as CleanApplication).container.notificationConnection.update(true)
@@ -42,12 +47,21 @@ class NotificationCleanerService : NotificationListenerService() {
             coroutineScope {
                 launch {
                     (application as CleanApplication).container.notificationRules.selectedPackages
+                        .retryWhen { error, attempt ->
+                            if (error is IOException && attempt < 2 && generation.get() == token) {
+                                selected.set(emptySet()); pending.clear()
+                                (application as CleanApplication).container.notificationConnection.update(false)
+                                delay(250L * (attempt + 1)) // 仅两次有界重试，不常驻轮询文件。
+                                true
+                            } else false
+                        }
                         .catch { error ->
-                            (application as CleanApplication).container.notificationConnection.update(false)
-                            selected.set(emptySet()) // 规则读取失败时停止清理，不以旧选择继续删除。
                             if (error !is IOException) throw error
+                            stopCleaning(token)
                         }
                         .collect { latest ->
+                            if (generation.get() != token) return@collect
+                            (application as CleanApplication).container.notificationConnection.update(true)
                             val previous = selected.getAndSet(latest)
                             if ((latest - previous).isNotEmpty()) rescan.set(true)
                             wake.trySend(Unit)
@@ -55,7 +69,7 @@ class NotificationCleanerService : NotificationListenerService() {
                 }
                 for (signal in wake) {
                     currentCoroutineContext().ensureActive()
-                    if (!connected.get()) break
+                    if (!connected.get() || generation.get() != token) break
                     if (rescan.getAndSet(false) && selected.get().isNotEmpty()) {
                         try {
                             // 仅连接/新增规则时读取现有通知，立刻提取元数据；不缓存正文或原始数组。
@@ -63,12 +77,12 @@ class NotificationCleanerService : NotificationListenerService() {
                                 currentCoroutineContext().ensureActive()
                                 candidate(notification).let { if (eligible(it)) pending.putIfAbsent(it.key, it) }
                             }
-                        } catch (_: SecurityException) { selected.set(emptySet()); break }
+                        } catch (_: SecurityException) { stopCleaning(token); break }
                     }
                     for ((key, item) in pending) {
                         currentCoroutineContext().ensureActive()
-                        if (pending.remove(key, item) && connected.get() && eligible(item)) {
-                            try { cancelNotification(key) } catch (_: SecurityException) { selected.set(emptySet()); break }
+                        if (pending.remove(key, item) && connected.get() && generation.get() == token && eligible(item)) {
+                            try { cancelNotification(key) } catch (_: SecurityException) { stopCleaning(token); break }
                         }
                     }
                 }
@@ -88,12 +102,21 @@ class NotificationCleanerService : NotificationListenerService() {
         sbn.user == Process.myUserHandle(), sbn.isClearable, sbn.isOngoing,
         sbn.notification.flags and Notification.FLAG_FOREGROUND_SERVICE != 0)
 
+    private fun stopCleaning(token: Long) {
+        if (generation.get() != token) return
+        connected.set(false); selected.set(emptySet()); pending.clear()
+        (application as CleanApplication).container.notificationConnection.update(false)
+        session?.cancel()
+    }
+
     override fun onListenerDisconnected() {
+        generation.incrementAndGet()
         (application as CleanApplication).container.notificationConnection.update(false)
         connected.set(false); selected.set(emptySet()); pending.clear(); session?.cancel()
         super.onListenerDisconnected()
     }
     override fun onDestroy() {
+        generation.incrementAndGet()
         (application as CleanApplication).container.notificationConnection.update(false)
         connected.set(false); selected.set(emptySet()); pending.clear()
         serviceScope.cancel(); wake.close()

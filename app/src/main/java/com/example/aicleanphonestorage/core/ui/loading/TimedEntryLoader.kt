@@ -15,6 +15,7 @@ internal class TimedEntryLoader(
 ) {
     suspend fun <T> load(
         initialStage: String = "APPLICATIONS",
+        finalStage: String = "APPLICATIONS",
         count: (T) -> Int,
         onFrame: (TimedEntryProgress.Frame) -> Unit,
         work: suspend ((TaskProgress) -> Unit) -> T,
@@ -28,7 +29,7 @@ internal class TimedEntryLoader(
         try {
             val result = work(timeline::report)
             currentCoroutineContext().ensureActive()
-            timeline.complete(count(result))
+            timeline.complete(count(result), finalStage)
             onFrame(timeline.frame())
             val remaining = timeline.remainingMillis()
             if (remaining > 0) delay(remaining)

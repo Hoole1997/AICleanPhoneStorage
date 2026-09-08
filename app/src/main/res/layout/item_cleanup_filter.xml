@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:paddingStart="16dp" android:paddingEnd="16dp">
+    <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text.Medium" android:id="@+id/filter_label" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textSize="14sp"/>
+    <ImageView android:id="@+id/filter_checked" android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/cleanup_check_on" android:importantForAccessibility="no" android:contentDescription="@null"/>
+</LinearLayout>

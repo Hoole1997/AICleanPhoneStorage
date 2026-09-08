@@ -1,0 +1,300 @@
+package com.example.aicleanphonestorage.feature.filecleaner.ui
+
+import android.content.IntentSender
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
+import com.example.aicleanphonestorage.feature.filecleaner.data.*
+import com.example.aicleanphonestorage.feature.filecleaner.operations.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
+
+internal sealed interface CleanupOperationState {
+    data object Idle : CleanupOperationState
+
+    data class Confirm(val id: Long, val count: Int, val bytes: Long, val compress: Boolean) :
+        CleanupOperationState
+
+    data class Running(val id: Long, val done: Int = 0, val total: Int = 0) : CleanupOperationState
+
+    data class Consent(val id: Long, val sender: IntentSender) : CleanupOperationState
+
+    data class Result(val id: Long, val summary: OperationSummary) : CleanupOperationState
+}
+
+internal data class CleanupUiState(
+    val handle: ScanHandle? = null,
+    val filter: CleanupFilter = CleanupFilter(),
+    val totals: SelectionTotals = SelectionTotals(),
+    val operation: CleanupOperationState = CleanupOperationState.Idle,
+    val editing: Int = 0,
+    val error: Long = 0,
+)
+
+@OptIn(ExperimentalCoroutinesApi::class)
+internal class CleanupViewModel(
+    private val repository: FileScanRepository,
+    private val operations: FileOperationEngine,
+    private val saved: SavedStateHandle,
+    scanId: Long,
+) : ViewModel() {
+    private val restoredFilter =
+        CleanupFilter(
+            category =
+                FileCategory.entries.getOrElse(saved["filter.category"] ?: 0) { FileCategory.ALL },
+            minimumBytes = saved["filter.size"] ?: 10_000_000L,
+            recentDays = saved["filter.recent"] ?: 0,
+            unusedDays = saved["filter.unused"] ?: 30,
+            referenceMillis = saved["filter.clock"] ?: System.currentTimeMillis(),
+        )
+    private val current = MutableStateFlow(CleanupUiState(filter = restoredFilter))
+    // 存储被撤销、磁盘已满等可恢复错误统一转换为 UI 状态；取消仍由父 Job 传播。
+    private val failures = CoroutineExceptionHandler { _, error ->
+        when (error) {
+            is java.io.IOException,
+            is android.database.SQLException,
+            is SecurityException ->
+                current.update {
+                    it.copy(operation = CleanupOperationState.Idle, error = it.error + 1)
+                }
+            else -> throw error
+        }
+    }
+    val state = current.asStateFlow()
+    private val query = MutableStateFlow<Pair<ScanHandle, CleanupFilter>?>(null)
+    val files =
+        query
+            .filterNotNull()
+            .flatMapLatest { (handle, filter) -> repository.pager(handle, filter).flow }
+            .cachedIn(viewModelScope)
+    private var work: Job? = null
+    private var totalsJob: Job? = null
+
+    init {
+        saved[SCAN] = scanId
+        viewModelScope.launch(failures) {
+            val handle = repository.handle(scanId)
+            current.update { it.copy(handle = handle, error = if (handle == null) 1 else 0) }
+            handle?.let {
+                query.value = it to current.value.filter
+                refreshTotals()
+            }
+            // 进程重建只恢复结果；不会自动重启压缩或跳过删除确认。
+            saved.get<Long>(OP)?.let { id ->
+                if (!waitingSystem) {
+                    operations.cancel(id)
+                    val summary = operations.summary(id)
+                    current.update {
+                        it.copy(operation = CleanupOperationState.Result(id, summary))
+                    }
+                }
+            }
+        }
+    }
+
+    fun setFilter(filter: CleanupFilter) {
+        if (
+            current.value.operation != CleanupOperationState.Idle ||
+                work?.isActive == true ||
+                current.value.editing > 0
+        )
+            return
+        saved["filter.category"] = filter.category.ordinal
+        saved["filter.size"] = filter.minimumBytes
+        saved["filter.recent"] = filter.recentDays
+        saved["filter.unused"] = filter.unusedDays
+        saved["filter.clock"] = filter.referenceMillis
+        current.update { it.copy(filter = filter) }
+        current.value.handle?.let {
+            query.value = it to filter
+            refreshTotals()
+        }
+    }
+
+    fun toggle(id: Long, selected: Boolean) = edit { repository.select(id, selected) }
+
+    fun selectAll() = edit {
+        current.value.handle?.let {
+            repository.selectAll(
+                it,
+                current.value.filter,
+                current.value.totals.selectedCount != current.value.totals.count,
+            )
+        }
+    }
+
+    fun quality(id: Long, quality: Int) = edit { repository.quality(id, quality) }
+
+    private fun edit(block: suspend () -> Unit) {
+        if (
+            current.value.operation != CleanupOperationState.Idle ||
+                work?.isActive == true ||
+                current.value.editing > 0
+        )
+            return
+        current.update { it.copy(editing = it.editing + 1) }
+        viewModelScope.launch(failures) {
+            try {
+                block()
+                refreshTotals()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                current.update { it.copy(error = it.error + 1) }
+            } finally {
+                current.update { it.copy(editing = it.editing - 1) }
+            }
+        }
+    }
+
+    fun refreshTotals() {
+        totalsJob?.cancel()
+        val value = current.value
+        val handle = value.handle ?: return
+        totalsJob =
+            viewModelScope.launch(failures) {
+                val totals = repository.totals(handle, value.filter)
+                current.update { it.copy(totals = totals) }
+            }
+    }
+
+    fun prepare() {
+        val value = current.value
+        val handle = value.handle ?: return
+        if (
+            value.editing > 0 ||
+                totalsJob?.isActive == true ||
+                work?.isActive == true ||
+                value.totals.selectedCount == 0 ||
+                value.operation != CleanupOperationState.Idle
+        )
+            return
+        work =
+            viewModelScope.launch(failures) {
+                val op = repository.prepare(handle, value.filter)
+                current.update {
+                    it.copy(
+                        operation =
+                            CleanupOperationState.Confirm(
+                                op.id,
+                                op.count,
+                                op.bytes,
+                                handle.feature == CleanupFeature.PHOTO_COMPRESS,
+                            )
+                    )
+                }
+            }
+    }
+
+    fun dismissOperation() {
+        saved.remove<Long>(OP)
+        current.update { it.copy(operation = CleanupOperationState.Idle) }
+        refreshTotals()
+    }
+
+    fun confirm(id: Long) {
+        val confirmation = current.value.operation as? CleanupOperationState.Confirm ?: return
+        if (confirmation.id == id) run(id, confirmation.compress)
+    }
+
+    private fun run(id: Long, compress: Boolean) {
+        saved[OP] = id
+        current.update { it.copy(operation = CleanupOperationState.Running(id)) }
+        work =
+            viewModelScope.launch(failures) {
+                try {
+                    val progress: (Int, Int) -> Unit = { done, total ->
+                        current.update {
+                            if ((it.operation as? CleanupOperationState.Running)?.id == id)
+                                it.copy(operation = CleanupOperationState.Running(id, done, total))
+                            else it
+                        }
+                    }
+                    val result =
+                        if (compress) operations.compress(id, progress)
+                        else operations.delete(id, progress)
+                    currentCoroutineContext().ensureActive()
+                    when (result) {
+                        is OperationStep.Consent ->
+                            current.update {
+                                it.copy(
+                                    operation = CleanupOperationState.Consent(id, result.sender)
+                                )
+                            }
+                        is OperationStep.Finished ->
+                            current.update {
+                                it.copy(
+                                    operation = CleanupOperationState.Result(id, result.summary)
+                                )
+                            }
+                    }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (_: Exception) {
+                    current.update {
+                        it.copy(operation = CleanupOperationState.Idle, error = it.error + 1)
+                    }
+                } finally {
+                    refreshTotals()
+                }
+            }
+    }
+
+    fun consentLaunched() {
+        saved[CONSENT] = true
+    }
+
+    val waitingSystem: Boolean
+        get() = saved[CONSENT] ?: false
+
+    fun consentResult(accepted: Boolean) {
+        val id = saved.get<Long>(OP) ?: return
+        saved[CONSENT] = false
+        work =
+            viewModelScope.launch(failures) {
+                operations.consentResult(id, accepted)
+                if (accepted) run(id, false)
+                else {
+                    val summary = operations.summary(id)
+                    current.update {
+                        it.copy(operation = CleanupOperationState.Result(id, summary))
+                    }
+                }
+            }
+    }
+
+    fun removeOriginals(id: Long) {
+        work =
+            viewModelScope.launch(failures) {
+                operations.deleteOriginals(id)
+                run(id, false)
+            }
+    }
+
+    fun onBackground() {
+        val running = current.value.operation as? CleanupOperationState.Running ?: return
+        if (waitingSystem) return
+        val previous = work
+        previous?.cancel()
+        current.update { it.copy(operation = CleanupOperationState.Idle) }
+        viewModelScope.launch(failures) {
+            previous?.join()
+            operations.cancel(running.id)
+            val summary = operations.summary(running.id)
+            if (
+                saved.get<Long>(OP) == running.id &&
+                    current.value.operation == CleanupOperationState.Idle
+            )
+                current.update {
+                    it.copy(operation = CleanupOperationState.Result(running.id, summary))
+                }
+        }
+    }
+
+    companion object {
+        private const val SCAN = "cleanup.scan"
+        private const val OP = "cleanup.operation"
+        private const val CONSENT = "cleanup.consent"
+    }
+}

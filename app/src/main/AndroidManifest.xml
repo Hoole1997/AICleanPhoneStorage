@@ -6,6 +6,11 @@
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />
     <!-- 旧系统移动网络查询按需读取 subscriberId；Android 10+ 直接查询全部移动网络。 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
     <queries>
         <intent>
             <action android:name="android.intent.action.MAIN" />
@@ -23,6 +28,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AICleanPhoneStorage">
+        <activity android:name=".feature.filecleaner.ui.FileCleanupActivity" android:exported="false" />
+        <provider android:name="androidx.core.content.FileProvider" android:authorities="${applicationId}.cleanup.files" android:exported="false" android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/cleanup_file_paths" />
+        </provider>
         <activity android:name=".feature.networktraffic.ui.NetworkTrafficActivity" android:exported="false" />
         <activity android:name=".feature.notifications.ui.NotificationCleanerActivity" android:exported="false" />
         <!-- 只能由Android通知管理器绑定；不是可被其他应用启动的普通服务。 -->

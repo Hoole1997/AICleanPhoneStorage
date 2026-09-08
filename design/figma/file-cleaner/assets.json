@@ -1,0 +1,212 @@
+[
+  {
+    "node": "5603:1360",
+    "source": "design/figma/file-cleaner/source/cleanup_check_off.png",
+    "sha256": "93b3b7e8c56d28c25b5340e8026faacb444142facc02ab0dc4029b0be4fc1a2c",
+    "output": "app/src/main/res/drawable-mdpi/cleanup_check_off.webp"
+  },
+  {
+    "node": "5603:1360",
+    "source": "design/figma/file-cleaner/source/cleanup_check_off.png",
+    "sha256": "93b3b7e8c56d28c25b5340e8026faacb444142facc02ab0dc4029b0be4fc1a2c",
+    "output": "app/src/main/res/drawable-hdpi/cleanup_check_off.webp"
+  },
+  {
+    "node": "5603:1360",
+    "source": "design/figma/file-cleaner/source/cleanup_check_off.png",
+    "sha256": "93b3b7e8c56d28c25b5340e8026faacb444142facc02ab0dc4029b0be4fc1a2c",
+    "output": "app/src/main/res/drawable-xhdpi/cleanup_check_off.webp"
+  },
+  {
+    "node": "5603:1360",
+    "source": "design/figma/file-cleaner/source/cleanup_check_off.png",
+    "sha256": "93b3b7e8c56d28c25b5340e8026faacb444142facc02ab0dc4029b0be4fc1a2c",
+    "output": "app/src/main/res/drawable-xxhdpi/cleanup_check_off.webp"
+  },
+  {
+    "node": "5603:1360",
+    "source": "design/figma/file-cleaner/source/cleanup_check_off.png",
+    "sha256": "93b3b7e8c56d28c25b5340e8026faacb444142facc02ab0dc4029b0be4fc1a2c",
+    "output": "app/src/main/res/drawable-xxxhdpi/cleanup_check_off.webp"
+  },
+  {
+    "node": "5603:1351",
+    "source": "design/figma/file-cleaner/source/cleanup_check_on.png",
+    "sha256": "33e0202512cbb2b3edf28261aef399077716f602cadd5767cadda61b2a87a3d5",
+    "output": "app/src/main/res/drawable-mdpi/cleanup_check_on.webp"
+  },
+  {
+    "node": "5603:1351",
+    "source": "design/figma/file-cleaner/source/cleanup_check_on.png",
+    "sha256": "33e0202512cbb2b3edf28261aef399077716f602cadd5767cadda61b2a87a3d5",
+    "output": "app/src/main/res/drawable-hdpi/cleanup_check_on.webp"
+  },
+  {
+    "node": "5603:1351",
+    "source": "design/figma/file-cleaner/source/cleanup_check_on.png",
+    "sha256": "33e0202512cbb2b3edf28261aef399077716f602cadd5767cadda61b2a87a3d5",
+    "output": "app/src/main/res/drawable-xhdpi/cleanup_check_on.webp"
+  },
+  {
+    "node": "5603:1351",
+    "source": "design/figma/file-cleaner/source/cleanup_check_on.png",
+    "sha256": "33e0202512cbb2b3edf28261aef399077716f602cadd5767cadda61b2a87a3d5",
+    "output": "app/src/main/res/drawable-xxhdpi/cleanup_check_on.webp"
+  },
+  {
+    "node": "5603:1351",
+    "source": "design/figma/file-cleaner/source/cleanup_check_on.png",
+    "sha256": "33e0202512cbb2b3edf28261aef399077716f602cadd5767cadda61b2a87a3d5",
+    "output": "app/src/main/res/drawable-xxxhdpi/cleanup_check_on.webp"
+  },
+  {
+    "node": "5603:727",
+    "source": "design/figma/file-cleaner/source/cleanup_photo_check_off.png",
+    "sha256": "f5b73df838620cba1e25dbbe8fbd4c66bc30d59820a226fa60652181e50d9bc9",
+    "output": "app/src/main/res/drawable-mdpi/cleanup_photo_check_off.webp"
+  },
+  {
+    "node": "5603:727",
+    "source": "design/figma/file-cleaner/source/cleanup_photo_check_off.png",
+    "sha256": "f5b73df838620cba1e25dbbe8fbd4c66bc30d59820a226fa60652181e50d9bc9",
+    "output": "app/src/main/res/drawable-hdpi/cleanup_photo_check_off.webp"
+  },
+  {
+    "node": "5603:727",
+    "source": "design/figma/file-cleaner/source/cleanup_photo_check_off.png",
+    "sha256": "f5b73df838620cba1e25dbbe8fbd4c66bc30d59820a226fa60652181e50d9bc9",
+    "output": "app/src/main/res/drawable-xhdpi/cleanup_photo_check_off.webp"
+  },
+  {
+    "node": "5603:727",
+    "source": "design/figma/file-cleaner/source/cleanup_photo_check_off.png",
+    "sha256": "f5b73df838620cba1e25dbbe8fbd4c66bc30d59820a226fa60652181e50d9bc9",
+    "output": "app/src/main/res/drawable-xxhdpi/cleanup_photo_check_off.webp"
+  },
+  {
+    "node": "5603:727",
+    "source": "design/figma/file-cleaner/source/cleanup_photo_check_off.png",
+    "sha256": "f5b73df838620cba1e25dbbe8fbd4c66bc30d59820a226fa60652181e50d9bc9",
+    "output": "app/src/main/res/drawable-xxxhdpi/cleanup_photo_check_off.webp"
+  },
+  {
+    "node": "5603:1334",
+    "source": "design/figma/file-cleaner/source/cleanup_chevron_down.png",
+    "sha256": "70108eaa19053231633ca01b04fe871cc17bb9baa1bc1e0e5c7d73ddb6c2ddac",
+    "output": "app/src/main/res/drawable-mdpi/cleanup_chevron_down.webp"
+  },
+  {
+    "node": "5603:1334",
+    "source": "design/figma/file-cleaner/source/cleanup_chevron_down.png",
+    "sha256": "70108eaa19053231633ca01b04fe871cc17bb9baa1bc1e0e5c7d73ddb6c2ddac",
+    "output": "app/src/main/res/drawable-hdpi/cleanup_chevron_down.webp"
+  },
+  {
+    "node": "5603:1334",
+    "source": "design/figma/file-cleaner/source/cleanup_chevron_down.png",
+    "sha256": "70108eaa19053231633ca01b04fe871cc17bb9baa1bc1e0e5c7d73ddb6c2ddac",
+    "output": "app/src/main/res/drawable-xhdpi/cleanup_chevron_down.webp"
+  },
+  {
+    "node": "5603:1334",
+    "source": "design/figma/file-cleaner/source/cleanup_chevron_down.png",
+    "sha256": "70108eaa19053231633ca01b04fe871cc17bb9baa1bc1e0e5c7d73ddb6c2ddac",
+    "output": "app/src/main/res/drawable-xxhdpi/cleanup_chevron_down.webp"
+  },
+  {
+    "node": "5603:1334",
+    "source": "design/figma/file-cleaner/source/cleanup_chevron_down.png",
+    "sha256": "70108eaa19053231633ca01b04fe871cc17bb9baa1bc1e0e5c7d73ddb6c2ddac",
+    "output": "app/src/main/res/drawable-xxxhdpi/cleanup_chevron_down.webp"
+  },
+  {
+    "node": "5603:719",
+    "source": "design/figma/file-cleaner/source/cleanup_expand.png",
+    "sha256": "fa05e31e8007f6b0f1aceb09eece032b7e176e63d060f9bcb0c716dc8151502f",
+    "output": "app/src/main/res/drawable-mdpi/cleanup_expand.webp"
+  },
+  {
+    "node": "5603:719",
+    "source": "design/figma/file-cleaner/source/cleanup_expand.png",
+    "sha256": "fa05e31e8007f6b0f1aceb09eece032b7e176e63d060f9bcb0c716dc8151502f",
+    "output": "app/src/main/res/drawable-hdpi/cleanup_expand.webp"
+  },
+  {
+    "node": "5603:719",
+    "source": "design/figma/file-cleaner/source/cleanup_expand.png",
+    "sha256": "fa05e31e8007f6b0f1aceb09eece032b7e176e63d060f9bcb0c716dc8151502f",
+    "output": "app/src/main/res/drawable-xhdpi/cleanup_expand.webp"
+  },
+  {
+    "node": "5603:719",
+    "source": "design/figma/file-cleaner/source/cleanup_expand.png",
+    "sha256": "fa05e31e8007f6b0f1aceb09eece032b7e176e63d060f9bcb0c716dc8151502f",
+    "output": "app/src/main/res/drawable-xxhdpi/cleanup_expand.webp"
+  },
+  {
+    "node": "5603:719",
+    "source": "design/figma/file-cleaner/source/cleanup_expand.png",
+    "sha256": "fa05e31e8007f6b0f1aceb09eece032b7e176e63d060f9bcb0c716dc8151502f",
+    "output": "app/src/main/res/drawable-xxxhdpi/cleanup_expand.webp"
+  },
+  {
+    "node": "5603:900",
+    "source": "design/figma/file-cleaner/source/cleanup_photo_check_on.png",
+    "sha256": "ea036a6fb5b82fb452bd15af03c0d77d2ecc58dffa857f867124e9d74c00838e",
+    "output": "app/src/main/res/drawable-mdpi/cleanup_photo_check_on.webp"
+  },
+  {
+    "node": "5603:900",
+    "source": "design/figma/file-cleaner/source/cleanup_photo_check_on.png",
+    "sha256": "ea036a6fb5b82fb452bd15af03c0d77d2ecc58dffa857f867124e9d74c00838e",
+    "output": "app/src/main/res/drawable-hdpi/cleanup_photo_check_on.webp"
+  },
+  {
+    "node": "5603:900",
+    "source": "design/figma/file-cleaner/source/cleanup_photo_check_on.png",
+    "sha256": "ea036a6fb5b82fb452bd15af03c0d77d2ecc58dffa857f867124e9d74c00838e",
+    "output": "app/src/main/res/drawable-xhdpi/cleanup_photo_check_on.webp"
+  },
+  {
+    "node": "5603:900",
+    "source": "design/figma/file-cleaner/source/cleanup_photo_check_on.png",
+    "sha256": "ea036a6fb5b82fb452bd15af03c0d77d2ecc58dffa857f867124e9d74c00838e",
+    "output": "app/src/main/res/drawable-xxhdpi/cleanup_photo_check_on.webp"
+  },
+  {
+    "node": "5603:900",
+    "source": "design/figma/file-cleaner/source/cleanup_photo_check_on.png",
+    "sha256": "ea036a6fb5b82fb452bd15af03c0d77d2ecc58dffa857f867124e9d74c00838e",
+    "output": "app/src/main/res/drawable-xxxhdpi/cleanup_photo_check_on.webp"
+  },
+  {
+    "node": "5603:725",
+    "source": "design/figma/file-cleaner/source/cleanup_chevron_right.png",
+    "sha256": "fa87173b7496675ac6788c72ebba8c158d95e102e30883adda083584c7d9f8ec",
+    "output": "app/src/main/res/drawable-mdpi/cleanup_chevron_right.webp"
+  },
+  {
+    "node": "5603:725",
+    "source": "design/figma/file-cleaner/source/cleanup_chevron_right.png",
+    "sha256": "fa87173b7496675ac6788c72ebba8c158d95e102e30883adda083584c7d9f8ec",
+    "output": "app/src/main/res/drawable-hdpi/cleanup_chevron_right.webp"
+  },
+  {
+    "node": "5603:725",
+    "source": "design/figma/file-cleaner/source/cleanup_chevron_right.png",
+    "sha256": "fa87173b7496675ac6788c72ebba8c158d95e102e30883adda083584c7d9f8ec",
+    "output": "app/src/main/res/drawable-xhdpi/cleanup_chevron_right.webp"
+  },
+  {
+    "node": "5603:725",
+    "source": "design/figma/file-cleaner/source/cleanup_chevron_right.png",
+    "sha256": "fa87173b7496675ac6788c72ebba8c158d95e102e30883adda083584c7d9f8ec",
+    "output": "app/src/main/res/drawable-xxhdpi/cleanup_chevron_right.webp"
+  },
+  {
+    "node": "5603:725",
+    "source": "design/figma/file-cleaner/source/cleanup_chevron_right.png",
+    "sha256": "fa87173b7496675ac6788c72ebba8c158d95e102e30883adda083584c7d9f8ec",
+    "output": "app/src/main/res/drawable-xxxhdpi/cleanup_chevron_right.webp"
+  }
+]

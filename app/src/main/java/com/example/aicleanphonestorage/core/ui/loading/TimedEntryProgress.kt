@@ -28,8 +28,8 @@ internal class TimedEntryProgress(
     fun report(progress: TaskProgress) {
         actual.updateAndGet { if (it.finished) it else Actual(progress) }
     }
-    fun complete(appCount: Int) {
-        actual.set(Actual(TaskProgress("APPLICATIONS", appCount, appCount), finished = true))
+    fun complete(appCount: Int, stage: String = "APPLICATIONS") {
+        actual.set(Actual(TaskProgress(stage, appCount, appCount), finished = true))
     }
     fun remainingMillis(): Long = (durationMillis - elapsed()).coerceAtLeast(0)
     private fun elapsed(): Long = (monotonicMillis() - startedAt).coerceAtLeast(0)

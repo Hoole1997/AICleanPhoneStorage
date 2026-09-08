@@ -18,6 +18,8 @@ import com.example.aicleanphonestorage.feature.home.data.HomeOverviewRepository
 /** 手动依赖注入的唯一组装入口。应用级对象禁止保存 Activity/View 或启动隐式后台任务。 */
 class AppContainer(context: Context) {
     private val applicationContext = context.applicationContext
+    internal val fileScanRepository by lazy { com.example.aicleanphonestorage.feature.filecleaner.data.FileScanRepository(applicationContext,taskExecutor) }
+    internal val fileOperations by lazy { com.example.aicleanphonestorage.feature.filecleaner.operations.FileOperationEngine(applicationContext,fileScanRepository.index,taskExecutor) }
     val taskExecutor: TaskExecutor by lazy { TaskExecutor(AppDispatchers()) }
     val notificationRules by lazy { NotificationRulesStore(applicationContext) }
     val notificationConnection by lazy { NotificationListenerConnection() }
