@@ -17,7 +17,7 @@ internal class TimedEntryProgress(
     private val durationMillis: Long,
     private val monotonicMillis: () -> Long,
     initialStage: String = "APPLICATIONS",
-) {
+) : EntryProgressTimeline {
     data class Frame(val detail: TaskProgress, val percent: Int?)
     private data class Actual(val detail: TaskProgress, val finished: Boolean = false)
     private val actual = AtomicReference(Actual(TaskProgress(initialStage)))
@@ -25,16 +25,16 @@ internal class TimedEntryProgress(
     private val completionFrameMillis = minOf(100L, durationMillis / 4)
     private val rampMillis = (durationMillis - completionFrameMillis).coerceAtLeast(1)
 
-    fun report(progress: TaskProgress) {
+    override fun report(progress: TaskProgress) {
         actual.updateAndGet { if (it.finished) it else Actual(progress) }
     }
-    fun complete(appCount: Int, stage: String = "APPLICATIONS") {
+    override fun complete(appCount: Int, stage: String) {
         actual.set(Actual(TaskProgress(stage, appCount, appCount), finished = true))
     }
-    fun remainingMillis(): Long = (durationMillis - elapsed()).coerceAtLeast(0)
+    override fun remainingMillis(): Long = (durationMillis - elapsed()).coerceAtLeast(0)
     private fun elapsed(): Long = (monotonicMillis() - startedAt).coerceAtLeast(0)
 
-    fun frame(): Frame {
+    override fun frame(): Frame {
         val source = actual.get()
         val detail = source.detail
         val fraction = (elapsed().toDouble() / rampMillis).coerceIn(0.0, 1.0)

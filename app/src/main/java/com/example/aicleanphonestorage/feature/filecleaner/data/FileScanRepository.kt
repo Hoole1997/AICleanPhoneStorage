@@ -77,6 +77,7 @@ internal class FileScanRepository(context: Context, private val executor: TaskEx
                     if (batch.isNotEmpty()) index.insert(session, batch)
                     var skipped = 0
                     if (feature == CleanupFeature.SMART_CLEAN) {
+                        progress(ScanProgress(0,null,"PHOTOS"))
                         skipped =
                             photoAnalyzer.analyze(session) { done ->
                                 progress(ScanProgress(done, null, "PHOTOS"))

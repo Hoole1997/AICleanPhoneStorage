@@ -41,6 +41,8 @@ class AppManagerActivity : AppCompatActivity() {
     }
     private lateinit var binding: ScreenAppManagerBinding
     private lateinit var adapter: AppManagerAdapter
+    private var latestState=AppManagerUiState()
+    private var committed:AppManagerCatalog?=null
     private var submitted: AppManagerCatalog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,15 +86,23 @@ class AppManagerActivity : AppCompatActivity() {
     }
 
     private fun render(state: AppManagerUiState) {
+        latestState=state
         state.catalog?.let {
             if (it !== submitted) {
                 submitted = it
-                adapter.submitList(it.apps)
+                val catalog=it
+                adapter.submitList(it.apps){committed=catalog;renderListState()}
             }
         }
-        binding.appManagerProgress.isVisible = state.refreshing && state.catalog == null
-        binding.appManagerEmpty.isVisible = state.catalog?.apps?.isEmpty() == true && !state.failed
-        binding.appManagerRetry.isVisible = state.failed
+        renderListState()
+    }
+    private fun renderListState(){
+        val state=latestState
+        val empty=state.catalog!=null && committed===state.catalog && adapter.itemCount==0 && !state.refreshing && !state.failed
+        binding.appManagerEmpty.isVisible=empty
+        binding.appManagerList.isVisible=!empty
+        binding.appManagerProgress.isVisible=state.refreshing && adapter.itemCount==0
+        binding.appManagerRetry.isVisible=state.failed
     }
 
     override fun onStart() {

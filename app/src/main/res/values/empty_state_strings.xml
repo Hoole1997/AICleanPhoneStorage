@@ -1,0 +1,4 @@
+<resources>
+    <string name="list_empty_message">No data available</string>
+    <string name="list_load_retry">Couldn’t load this list. Tap to retry.</string>
+</resources>

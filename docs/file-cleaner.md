@@ -53,3 +53,9 @@ adb shell am instrument -w -e class com.example.aicleanphonestorage.CleanupFeatu
 平台依据：[Android 共享媒体访问](https://developer.android.com/training/data-storage/shared/media)、[所有文件访问](https://developer.android.com/training/data-storage/manage-all-files)。所有文件访问权限的商店申报须与文件管理/清理用途对应。
 
 2026-09-07 验证记录：Debug 构建、41 项单元测试、Lint（0 错误）通过；真机五项文件操作/扫描测试通过，四页 UI/旋转测试在前轮通过，最后回归因设备锁屏未执行。UI 测试明确要求设备已解锁。
+
+## 连续扫描 Loading
+
+文件扫描现在统一使用 `ContinuousEntryProgress`：从第一帧 0% 开始，整个请求只建立一次时间轴，阶段切换不切换 indeterminate 模式、不回退。Smart Cleaning 的文件枚举与照片分析共用总体进度；Unused Files 及其他文件入口使用单阶段进度。
+
+文件总数未知时，百分比是阶段工作量的展示估计，并非精确的文件完成比例；无需为了统计总数再扫描一遍。前 90% 留给工作阶段，结果真正准备完成才解锁最后 10%。随机展示窗口会延后进度及计数；慢扫描完成后用 300ms 收尾并短暂显示 100%，不提前进入结果页。

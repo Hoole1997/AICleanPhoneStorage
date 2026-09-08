@@ -94,14 +94,14 @@ internal class CleanupEntryCoordinator(
             return
         val existing = manager.findFragmentByTag(LOADING) as? TaskLoadingDialogFragment
         if (state is CleanupEntryState.Loading) {
-            val detail = state.frame?.detail
+            val detail = state.frame.detail
             val message =
-                if (detail?.stage == "PHOTOS") activity.getString(R.string.junk_analyzing_photos)
-                else if ((detail?.total ?: 0) > 0)
+                if (detail.stage == "PHOTOS") activity.getString(R.string.junk_analyzing_photos)
+                else if ((detail.total ?: 0) > 0)
                     activity.getString(
                         R.string.cleanup_prepare_files,
-                        detail?.completed ?: 0,
-                        detail?.total ?: 0,
+                        detail.completed ?: 0,
+                        detail.total ?: 0,
                     )
                 else activity.getString(R.string.cleanup_scanning_files)
             val loading =
@@ -109,7 +109,7 @@ internal class CleanupEntryCoordinator(
                     state.id,
                     activity.getString(R.string.cleanup_scan),
                     message,
-                    state.frame?.percent,
+                    state.frame.percent ?: 0,
                     resultKey = CANCEL,
                 )
             if (existing == null)

@@ -48,11 +48,11 @@ internal class TrafficListAdapter(
         TrafficRow.Empty -> Long.MIN_VALUE + 1
     }
 
-    fun submit(snapshot: TrafficSnapshot, selected: TrafficPeriod, onCommitted: () -> Unit = {}) {
+    fun submit(snapshot: TrafficSnapshot, selected: TrafficPeriod, showEmpty:Boolean=true, onCommitted: () -> Unit = {}) {
         submitList(buildList {
             add(TrafficRow.Header(selected, snapshot.mobile, snapshot.wifi))
             snapshot.apps.forEach { add(TrafficRow.App(it, snapshot.totalBytes)) }
-            if (snapshot.apps.isEmpty()) add(TrafficRow.Empty)
+            if (showEmpty && snapshot.apps.isEmpty()) add(TrafficRow.Empty)
         }, onCommitted)
     }
 
@@ -78,9 +78,11 @@ internal class TrafficListAdapter(
         }
     }
     override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
+        if(holder is EmptyHolder)holder.binding.root.fitRemainingSpace(holder.itemView.parent as RecyclerView)
         if (holder is AppHolder) { attached += holder; if (active) holder.loadIcon() }
     }
     override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
+        if(holder is EmptyHolder)holder.binding.root.stopFittingList()
         if (holder is AppHolder) { attached -= holder; holder.pauseIcon() }
     }
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {

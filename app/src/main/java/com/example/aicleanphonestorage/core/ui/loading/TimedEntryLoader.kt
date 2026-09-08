@@ -16,13 +16,17 @@ internal class TimedEntryLoader(
     suspend fun <T> load(
         initialStage: String = "APPLICATIONS",
         finalStage: String = "APPLICATIONS",
+        continuousStages: List<String>? = null,
         count: (T) -> Int,
         onFrame: (TimedEntryProgress.Frame) -> Unit,
         work: suspend ((TaskProgress) -> Unit) -> T,
     ): T = coroutineScope {
         val millis = duration().coerceIn(0, 10_000)
-        if (millis == 0L) return@coroutineScope work { onFrame(TimedEntryProgress.Frame(it, it.percent)) }
-        val timeline = TimedEntryProgress(clock(), millis, clock, initialStage)
+        if (millis == 0L && continuousStages == null) return@coroutineScope work { onFrame(TimedEntryProgress.Frame(it, it.percent)) }
+        val timeline:EntryProgressTimeline = if(continuousStages==null) TimedEntryProgress(clock(), millis, clock, initialStage)
+            else ContinuousEntryProgress(clock(),millis,clock,continuousStages)
+        // 先同步发布首帧，不能等待 ticker 第一次调度才从循环进度切到 0%。
+        onFrame(timeline.frame())
         val ticker = launch {
             while (isActive) { onFrame(timeline.frame()); delay(50) }
         }

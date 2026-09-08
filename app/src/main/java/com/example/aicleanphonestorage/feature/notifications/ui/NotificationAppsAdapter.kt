@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 internal sealed interface NotificationRow {
     val key: String
-    data class Header(val connected: Boolean, val rulesReady: Boolean, val error: Boolean) : NotificationRow { override val key = "header" }
+    data class Header(val connected: Boolean, val rulesReady: Boolean, val error: Boolean, val empty:Boolean=false) : NotificationRow { override val key = "header" }
     data class App(val app: NotificationApp, val checked: Boolean, val enabled: Boolean) : NotificationRow { override val key = app.packageName }
     data object Empty : NotificationRow { override val key = "empty" }
 }
@@ -42,12 +42,12 @@ internal class NotificationAppsAdapter(
     fun submit(state: NotificationUiState) {
         val catalog = state.catalog ?: return
         submitList(buildList {
-            add(NotificationRow.Header(state.listenerConnected, state.rulesLoaded, state.saveError > 0 && !state.rulesLoaded))
+            add(NotificationRow.Header(state.listenerConnected, state.rulesLoaded, state.saveError > 0 && !state.rulesLoaded, empty=catalog.apps.isEmpty()))
             catalog.apps.forEach { app ->
                 val checked = state.saving[app.packageName] ?: (app.packageName in state.selected)
                 add(NotificationRow.App(app, checked, state.rulesLoaded && app.packageName !in state.saving && (app.installed || checked)))
             }
-            if (catalog.apps.isEmpty()) add(NotificationRow.Empty)
+            if (state.phase==NotificationPhase.Ready && catalog.apps.isEmpty()) add(NotificationRow.Empty)
         })
     }
     override fun getItemViewType(position: Int) = when (getItem(position)) { is NotificationRow.Header -> 0; is NotificationRow.App -> 1; NotificationRow.Empty -> 2 }
@@ -69,9 +69,11 @@ internal class NotificationAppsAdapter(
         }
     }
     override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
+        if(holder is EmptyHolder)holder.binding.root.fitRemainingSpace(holder.itemView.parent as RecyclerView)
         if (holder is AppHolder) { attached.add(holder); if (active) holder.loadIcon() }
     }
     override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
+        if(holder is EmptyHolder)holder.binding.root.stopFittingList()
         if (holder is AppHolder) { attached.remove(holder); holder.pauseIcon() }
     }
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) { if (holder is AppHolder) holder.clearIcon() }
@@ -83,6 +85,7 @@ internal class NotificationAppsAdapter(
     private inner class HeaderHolder(private val binding: ItemNotificationHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
         init { ViewCompat.setAccessibilityHeading(binding.notificationIntro, true); binding.notificationConnectionMessage.setOnClickListener { connectionAction() } }
         fun bind(row: NotificationRow.Header) {
+            binding.notificationIntro.isVisible=!row.empty
             binding.notificationConnectionMessage.isVisible = row.error || (row.rulesReady && !row.connected)
             binding.notificationConnectionMessage.setText(if (row.error) R.string.notification_rule_unavailable else R.string.notification_connection_wait)
         }
@@ -122,6 +125,6 @@ internal class NotificationAppsAdapter(
         fun pauseIcon() { iconJob?.cancel(); iconJob = null }
         fun clearIcon() { pauseIcon(); binding.notificationAppIcon.setImageResource(android.R.drawable.sym_def_app_icon) }
     }
-    private class EmptyHolder(binding: ItemNotificationEmptyBinding) : RecyclerView.ViewHolder(binding.root)
+    private class EmptyHolder(val binding: ItemNotificationEmptyBinding) : RecyclerView.ViewHolder(binding.root)
     companion object { private const val SELECTION = "selection" }
 }

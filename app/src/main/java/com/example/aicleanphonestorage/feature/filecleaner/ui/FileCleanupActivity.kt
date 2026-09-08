@@ -53,6 +53,7 @@ class FileCleanupActivity : AppCompatActivity() {
         }
     }
     private lateinit var binding: ScreenFileCleanupBinding
+    private lateinit var listState:CleanupListStateRenderer
     private lateinit var filters: CleanupFilters
     private var adapter: CleanupFilesAdapter? = null
     private var lastError = 0L
@@ -67,6 +68,7 @@ class FileCleanupActivity : AppCompatActivity() {
         )
         binding = ScreenFileCleanupBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        listState=CleanupListStateRenderer(binding)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val bars =
                 insets.getInsets(
@@ -80,7 +82,7 @@ class FileCleanupActivity : AppCompatActivity() {
         binding.cleanupBack.setOnClickListener { finish() }
         binding.cleanupSelectAll.setOnClickListener { model.selectAll() }
         binding.cleanupAction.setOnClickListener { model.prepare() }
-        binding.cleanupEmpty.setOnClickListener { adapter?.retry() }
+        binding.cleanupError.setOnClickListener { adapter?.retry() }
         filters = CleanupFilters(binding, model::setFilter)
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) { model.state.collect(::render) }
@@ -123,19 +125,14 @@ class FileCleanupActivity : AppCompatActivity() {
             )
         adapter = files
         binding.cleanupFiles.adapter = files
+        // 两类事件都由 Paging Presenter 在主线程同步回调，避免旧 Loading 被异步收集到页面提交之后。
+        files.addLoadStateListener { listState.loading(it,files.itemCount) }
+        files.addOnPagesUpdatedListener { listState.pagesPresented(files.itemCount) }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { model.files.collectLatest(files::submitData) }
-                launch {
-                    files.loadStateFlow.collect {
-                        binding.cleanupEmpty.isVisible =
-                            files.itemCount == 0 && it.refresh !is LoadState.Loading
-                        binding.cleanupEmpty.setText(
-                            if (it.refresh is LoadState.Error) R.string.cleanup_scan_failed
-                            else R.string.cleanup_no_files
-                        )
-                    }
-                }
+
+
             }
         }
     }
@@ -196,6 +193,7 @@ class FileCleanupActivity : AppCompatActivity() {
             finish()
             return
         }
+        listState.state(state)
         operationCoordinator.render(state.operation)
     }
 

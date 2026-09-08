@@ -25,6 +25,7 @@ internal class NetworkTrafficRenderer(
     private val adapter = TrafficListAdapter(scope, icons, onPeriod, onManage)
     private val refresh = TrafficRefreshProgress(binding.trafficRefreshIndicator, scope)
     private var lastSnapshot: TrafficSnapshot? = null
+    private var lastEmpty:Boolean?=null
     private var lastPeriod: TrafficPeriod? = null
     private var committedSnapshot: TrafficSnapshot? = null
     private var committedPeriod: TrafficPeriod? = null
@@ -51,9 +52,10 @@ internal class NetworkTrafficRenderer(
             else -> refresh.abort()
         }
         val hasSnapshot = state.snapshot != null
-        val showMessage = status == TrafficStatus.NeedsAccess || (!hasSnapshot && (status == TrafficStatus.Paused || status is TrafficStatus.Failed))
+        val unavailable=status==TrafficStatus.Ready && state.snapshot?.let{it.apps.isEmpty() && it.mobile.bytes==null && it.wifi.bytes==null}==true
+        val showMessage = unavailable || status == TrafficStatus.NeedsAccess || (!hasSnapshot && (status == TrafficStatus.Paused || status is TrafficStatus.Failed))
         trafficStatusPanel.isVisible = showMessage
-        trafficList.isVisible = hasSnapshot && status != TrafficStatus.NeedsAccess
+        trafficList.isVisible = hasSnapshot && status != TrafficStatus.NeedsAccess && !unavailable
         trafficStatusTitle.setText(if (status == TrafficStatus.NeedsAccess) R.string.traffic_access_title else R.string.traffic_title)
         val errorText = when {
             status == TrafficStatus.NeedsAccess -> R.string.traffic_access_message
@@ -69,9 +71,10 @@ internal class NetworkTrafficRenderer(
         lastError = status as? TrafficStatus.Failed
         state.snapshot?.let { snapshot ->
             val selected = if (status is TrafficStatus.Failed) snapshot.period else state.period
-            if (snapshot !== lastSnapshot || selected != lastPeriod) {
-                lastSnapshot = snapshot; lastPeriod = selected
-                adapter.submit(snapshot, selected) {
+            val showEmpty=status==TrafficStatus.Ready && !unavailable
+            if (snapshot !== lastSnapshot || selected != lastPeriod || showEmpty!=lastEmpty) {
+                lastSnapshot = snapshot; lastPeriod = selected;lastEmpty=showEmpty
+                adapter.submit(snapshot, selected, showEmpty) {
                     committedSnapshot = snapshot; committedPeriod = selected
                     finishRefreshIfCommitted()
                 }

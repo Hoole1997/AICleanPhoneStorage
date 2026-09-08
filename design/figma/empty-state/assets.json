@@ -1,0 +1,32 @@
+[
+  {
+    "node": "5659:598",
+    "source": "design/figma/empty-state/source/empty_state_robot.png",
+    "sha256": "fb6a2efbcd17befc603cff7ea55a6283c2bce0d9f5e1e22b7202f291367e0280",
+    "output": "app/src/main/res/drawable-mdpi/empty_state_robot.webp"
+  },
+  {
+    "node": "5659:598",
+    "source": "design/figma/empty-state/source/empty_state_robot.png",
+    "sha256": "fb6a2efbcd17befc603cff7ea55a6283c2bce0d9f5e1e22b7202f291367e0280",
+    "output": "app/src/main/res/drawable-hdpi/empty_state_robot.webp"
+  },
+  {
+    "node": "5659:598",
+    "source": "design/figma/empty-state/source/empty_state_robot.png",
+    "sha256": "fb6a2efbcd17befc603cff7ea55a6283c2bce0d9f5e1e22b7202f291367e0280",
+    "output": "app/src/main/res/drawable-xhdpi/empty_state_robot.webp"
+  },
+  {
+    "node": "5659:598",
+    "source": "design/figma/empty-state/source/empty_state_robot.png",
+    "sha256": "fb6a2efbcd17befc603cff7ea55a6283c2bce0d9f5e1e22b7202f291367e0280",
+    "output": "app/src/main/res/drawable-xxhdpi/empty_state_robot.webp"
+  },
+  {
+    "node": "5659:598",
+    "source": "design/figma/empty-state/source/empty_state_robot.png",
+    "sha256": "fb6a2efbcd17befc603cff7ea55a6283c2bce0d9f5e1e22b7202f291367e0280",
+    "output": "app/src/main/res/drawable-xxxhdpi/empty_state_robot.webp"
+  }
+]

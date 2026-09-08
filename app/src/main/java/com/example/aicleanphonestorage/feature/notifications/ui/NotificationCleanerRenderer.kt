@@ -27,7 +27,7 @@ internal class NotificationCleanerRenderer(
     }
     fun render(state: NotificationUiState) {
         binding.notificationList.isVisible = state.catalog != null
-        binding.notificationErrorPanel.isVisible = state.catalog == null && state.phase == NotificationPhase.Failed
+        binding.notificationErrorPanel.isVisible = state.catalog?.apps.isNullOrEmpty() && state.phase == NotificationPhase.Failed
         binding.notificationPageProgress.isVisible = state.phase is NotificationPhase.Loading || state.phase == NotificationPhase.CheckingAccess
         adapter.submit(state)
         if (state.saveError > lastSaveError) {

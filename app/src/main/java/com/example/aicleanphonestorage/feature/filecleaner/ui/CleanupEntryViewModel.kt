@@ -22,7 +22,7 @@ internal sealed interface CleanupEntryState {
     data class Loading(
         val feature: CleanupFeature,
         val id: Long,
-        val frame: TimedEntryProgress.Frame? = null,
+        val frame: TimedEntryProgress.Frame = TimedEntryProgress.Frame(TaskProgress("FILES",0),0),
     ) : CleanupEntryState
 
     data class Ready(val handle: ScanHandle) : CleanupEntryState
@@ -63,6 +63,7 @@ internal class CleanupEntryViewModel(
                         TimedEntryLoader().load(
                             initialStage = "FILES",
                             finalStage = "FILES",
+                            continuousStages=if(feature==CleanupFeature.SMART_CLEAN)listOf("FILES","PHOTOS")else listOf("FILES"),
                             count = { it: ScanHandle -> it.scannedCount },
                             onFrame = {
                                 if ((current.value as? CleanupEntryState.Loading)?.id == id)

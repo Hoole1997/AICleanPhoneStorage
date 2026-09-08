@@ -121,6 +121,12 @@ class JunkCleaningActivity : AppCompatActivity() {
             finish()
             return
         }
+        val empty=summary.snapshot?.categories?.all{it.count==0}==true
+        binding.junkEmpty.isVisible=empty
+        binding.junkCategories.isVisible=summary.snapshot!=null && !empty
+        binding.junkPageProgress.isVisible=summary.snapshot==null && !summary.failed
+        binding.junkFooter.isVisible=summary.snapshot!=null && !empty
+        binding.junkClean.isVisible=!empty
         summary.snapshot?.let { snapshot ->
             val enabled = work.operation == CleanupOperationState.Idle && work.editing == 0
             adapter.submit(snapshot, enabled)
@@ -135,6 +141,7 @@ class JunkCleaningActivity : AppCompatActivity() {
                 snapshot.handle?.scopeLabel == "Selected folder" ||
                     (snapshot.handle?.analysisSkipped ?: 0) > 0
         }
+        if(empty && binding.junkScope.isVisible)binding.junkFooter.isVisible=true
         operations.render(work.operation)
     }
 
