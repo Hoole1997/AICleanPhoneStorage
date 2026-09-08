@@ -11,7 +11,7 @@
             android:importantForAccessibility="no" android:contentDescription="@null"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" />
-        <!-- 原版整组插画已烘焙为透明 WebP，不在客户端实时绘制模糊、阴影或动画。 -->
+        <!-- 原版整组插画已烘焙为透明 WebP，不在客户端实时绘制模糊或阴影；动效仅使用 RenderNode 变换。 -->
         <ImageView android:id="@+id/robot_art" android:layout_width="@dimen/home_robot_width"
             android:layout_height="@dimen/home_robot_height" android:layout_marginTop="@dimen/home_robot_top"
             android:src="@drawable/home_robot" android:scaleType="fitCenter"
@@ -53,7 +53,7 @@
         <androidx.constraintlayout.widget.Barrier android:id="@+id/hero_content_bottom"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             app:barrierDirection="bottom" app:constraint_referenced_ids="summary_column,robot_art" />
-        <com.google.android.material.button.MaterialButton android:id="@+id/clean_button"
+        <com.example.aicleanphonestorage.core.ui.motion.ShimmerPillButton android:id="@+id/clean_button"
             android:layout_width="0dp" android:layout_height="wrap_content" android:minHeight="52dp"
             android:layout_marginStart="29dp" android:layout_marginEnd="29dp"
             android:layout_marginTop="12dp" android:layout_marginBottom="24dp"
@@ -61,7 +61,7 @@
             android:paddingStart="12dp" android:paddingEnd="12dp" android:text="@string/home_smart_clean"
             android:textAppearance="@style/TextAppearance.Home.Label" android:textSize="16sp" android:fontFamily="@font/home_roboto_semibold" app:fontFamily="@font/home_roboto_semibold"
             android:textColor="@color/home_blue" android:textAllCaps="false" android:letterSpacing="0"
-            android:elevation="0dp" android:stateListAnimator="@null" app:backgroundTint="@color/home_surface"
+            android:elevation="0dp" android:stateListAnimator="@animator/home_clean_press" app:backgroundTint="@color/home_surface"
             app:cornerRadius="100dp" app:strokeWidth="0dp" app:rippleColor="@color/home_ripple"
             app:icon="@drawable/ic_home_clean" app:iconSize="22dp" app:iconPadding="8dp" app:iconTint="@null"
             app:iconGravity="textStart" app:layout_constraintTop_toBottomOf="@id/hero_content_bottom"

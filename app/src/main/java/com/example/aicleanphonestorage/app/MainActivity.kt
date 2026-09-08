@@ -129,7 +129,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun renderCurrentState() = renderer.render(homeViewModel.uiState.value, HomePreviewSupport.content(previewSelection))
 
-    override fun onResume() { super.onResume(); trafficEntry.onForeground(); notificationEntry.onForeground(); cleanupEntry.onForeground() }
+    override fun onResume() { super.onResume(); renderer.setResumed(true); trafficEntry.onForeground(); notificationEntry.onForeground(); cleanupEntry.onForeground() }
+    override fun onPause(){renderer.setResumed(false);super.onPause()}
+    override fun onWindowFocusChanged(hasFocus:Boolean){
+        super.onWindowFocusChanged(hasFocus)
+        if(this::renderer.isInitialized)renderer.setWindowFocused(hasFocus)
+    }
     override fun onResumeFragments() { super.onResumeFragments(); trafficEntryCoordinator.render(trafficEntry.state.value); notificationCoordinator.render(notificationEntry.state.value); cleanupCoordinator.render(cleanupEntry.state.value); appManagerCoordinator.render(appManagerEntry.state.value) }
     override fun onStop() {
         if (!isChangingConfigurations) { trafficEntry.onBackground(); notificationEntry.onBackground(); cleanupEntry.onBackground(); appManagerEntry.cancel() }

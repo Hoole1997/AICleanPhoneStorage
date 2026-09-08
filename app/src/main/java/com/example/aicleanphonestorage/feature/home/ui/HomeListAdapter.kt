@@ -1,5 +1,6 @@
 package com.example.aicleanphonestorage.feature.home.ui
 
+import com.example.aicleanphonestorage.feature.home.ui.motion.HomeHeroMotion
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,11 +18,24 @@ import com.example.aicleanphonestorage.databinding.ItemHomeStatsBinding
 import com.example.aicleanphonestorage.databinding.ItemHomeToolBinding
 import java.text.NumberFormat
 
-/** DiffUtil 只刷新变化的行。图片是预处理的小型本地 WebP，无网络请求、动画或实时模糊。 */
+/** DiffUtil 只刷新变化的行。图片是预处理的小型本地 WebP，无网络请求或实时模糊；Hero 装饰动效由可见性与生命周期控制。 */
 internal class HomeListAdapter(
     private val expanded: Boolean,
     private val actions: HomeUiActions,
 ) : ListAdapter<HomeRow, RecyclerView.ViewHolder>(RowDiff) {
+    private val heroes=mutableSetOf<HeroHolder>()
+    private var motionActive=false
+    fun setMotionActive(active:Boolean){motionActive=active;heroes.forEach{it.motion.setActive(active)}}
+    fun refreshMotionVisibility(){heroes.forEach{it.motion.refreshVisibility()}}
+    override fun onViewAttachedToWindow(holder:RecyclerView.ViewHolder){
+        if(holder is HeroHolder){heroes+=holder;holder.motion.setActive(motionActive)}
+    }
+    override fun onViewDetachedFromWindow(holder:RecyclerView.ViewHolder){
+        if(holder is HeroHolder){heroes-=holder;holder.motion.setActive(false)}
+    }
+    override fun onViewRecycled(holder:RecyclerView.ViewHolder){
+        if(holder is HeroHolder){heroes-=holder;holder.motion.setActive(false)}
+    }
     init { stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY }
 
     override fun getItemViewType(position: Int): Int = when (getItem(position)) {
@@ -69,6 +83,7 @@ private class HeroHolder(
     expanded: Boolean,
     actions: HomeUiActions,
 ) : RecyclerView.ViewHolder(binding.root) {
+    val motion=HomeHeroMotion(binding)
     init {
         binding.cleanButton.setOnClickListener { actions.onSmartClean() }
         if (expanded) {

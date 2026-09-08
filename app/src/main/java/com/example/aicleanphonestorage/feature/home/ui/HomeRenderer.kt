@@ -1,5 +1,8 @@
 package com.example.aicleanphonestorage.feature.home.ui
 
+import android.view.View
+import com.example.aicleanphonestorage.core.ui.motion.MotionPreferences
+import androidx.recyclerview.widget.RecyclerView
 import android.text.TextPaint
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
@@ -15,6 +18,25 @@ internal class HomeRenderer(private val binding: ScreenHomeBinding, actions: Hom
     private val expanded = configuration.fontScale > 1.2f || contentWidthDp < 320
     private val adapter = HomeListAdapter(expanded, actions)
     private var lastContent: HomeContent? = null
+    private var resumed=false
+    private var focused=false
+    private var motionAllowed=false
+    private val motionPreferences=MotionPreferences(binding.root.context){allowed->motionAllowed=allowed;updateMotion()}
+    private val scrollListener=object:RecyclerView.OnScrollListener(){
+        override fun onScrollStateChanged(recyclerView:RecyclerView,newState:Int)=updateMotion()
+        override fun onScrolled(recyclerView:RecyclerView,dx:Int,dy:Int){if(recyclerView.scrollState==RecyclerView.SCROLL_STATE_IDLE)adapter.refreshMotionVisibility()}
+    }
+    private val layoutListener=View.OnLayoutChangeListener { _,_,_,_,_,_,_,_,_->adapter.refreshMotionVisibility() }
+    fun setResumed(value:Boolean){
+        resumed=value
+        if(value)motionPreferences.start()else motionPreferences.stop()
+        updateMotion()
+    }
+    fun setWindowFocused(value:Boolean){focused=value;updateMotion()}
+    private fun updateMotion(){
+        adapter.setMotionActive(resumed && focused && motionAllowed && binding.homeList.isVisible && binding.homeList.scrollState==RecyclerView.SCROLL_STATE_IDLE)
+        adapter.refreshMotionVisibility()
+    }
 
     init {
         val grid = GridLayoutManager(binding.root.context, toolColumnCount())
@@ -26,6 +48,8 @@ internal class HomeRenderer(private val binding: ScreenHomeBinding, actions: Hom
         binding.homeList.addItemDecoration(HomeGridSpacing())
         // 摘要更新不做整卡闪烁/交叉淡入；默认滚动惯性由 RecyclerView 管理。
         binding.homeList.itemAnimator = null
+        binding.homeList.addOnScrollListener(scrollListener)
+        binding.homeList.addOnLayoutChangeListener(layoutListener)
         binding.settingsButton.setOnClickListener { actions.onSettings() }
     }
 
@@ -62,10 +86,14 @@ internal class HomeRenderer(private val binding: ScreenHomeBinding, actions: Hom
             lastContent = content
             adapter.submitList(content.rows())
         }
+        updateMotion()
     }
 
     fun dispose() {
         // 主动断开 RecyclerView 和 adapter，释放回调及可回收视图；没有应用级图片缓存。
+        setResumed(false)
+        binding.homeList.removeOnScrollListener(scrollListener)
+        binding.homeList.removeOnLayoutChangeListener(layoutListener)
         binding.homeList.adapter = null
     }
 }
