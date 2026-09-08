@@ -20,6 +20,9 @@ class AppContainer(context: Context) {
     private val applicationContext = context.applicationContext
     internal val fileScanRepository by lazy { com.example.aicleanphonestorage.feature.filecleaner.data.FileScanRepository(applicationContext,taskExecutor) }
     internal val fileOperations by lazy { com.example.aicleanphonestorage.feature.filecleaner.operations.FileOperationEngine(applicationContext,fileScanRepository.index,taskExecutor) }
+    internal val installedAppsReader by lazy { com.example.aicleanphonestorage.core.data.apps.InstalledAppsReader(applicationContext,taskExecutor) }
+    internal val appManagerRepository by lazy { com.example.aicleanphonestorage.feature.appmanager.data.AndroidAppManagerRepository(installedAppsReader) }
+    internal val appManagerTransfer by lazy { OneShotTransfer<com.example.aicleanphonestorage.feature.appmanager.data.AppManagerCatalog>() }
     val taskExecutor: TaskExecutor by lazy { TaskExecutor(AppDispatchers()) }
     val notificationRules by lazy { NotificationRulesStore(applicationContext) }
     val notificationConnection by lazy { NotificationListenerConnection() }

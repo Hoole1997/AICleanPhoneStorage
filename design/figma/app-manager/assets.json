@@ -1,0 +1,32 @@
+[
+  {
+    "node": "5646:217",
+    "source": "design/figma/app-manager/source/ic_app_manager_next.png",
+    "sha256": "5c79ab1fdb0dcc72f8e27be711fc6c44d3a4642b158f3f46e8d6985d835402a7",
+    "output": "app/src/main/res/drawable-mdpi/ic_app_manager_next.webp"
+  },
+  {
+    "node": "5646:217",
+    "source": "design/figma/app-manager/source/ic_app_manager_next.png",
+    "sha256": "5c79ab1fdb0dcc72f8e27be711fc6c44d3a4642b158f3f46e8d6985d835402a7",
+    "output": "app/src/main/res/drawable-hdpi/ic_app_manager_next.webp"
+  },
+  {
+    "node": "5646:217",
+    "source": "design/figma/app-manager/source/ic_app_manager_next.png",
+    "sha256": "5c79ab1fdb0dcc72f8e27be711fc6c44d3a4642b158f3f46e8d6985d835402a7",
+    "output": "app/src/main/res/drawable-xhdpi/ic_app_manager_next.webp"
+  },
+  {
+    "node": "5646:217",
+    "source": "design/figma/app-manager/source/ic_app_manager_next.png",
+    "sha256": "5c79ab1fdb0dcc72f8e27be711fc6c44d3a4642b158f3f46e8d6985d835402a7",
+    "output": "app/src/main/res/drawable-xxhdpi/ic_app_manager_next.webp"
+  },
+  {
+    "node": "5646:217",
+    "source": "design/figma/app-manager/source/ic_app_manager_next.png",
+    "sha256": "5c79ab1fdb0dcc72f8e27be711fc6c44d3a4642b158f3f46e8d6985d835402a7",
+    "output": "app/src/main/res/drawable-xxxhdpi/ic_app_manager_next.webp"
+  }
+]

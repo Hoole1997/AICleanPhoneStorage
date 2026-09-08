@@ -5,6 +5,7 @@ import com.example.aicleanphonestorage.feature.notifications.ui.NotificationClea
 import com.example.aicleanphonestorage.feature.notifications.ui.NotificationEntryCoordinator
 import com.example.aicleanphonestorage.feature.filecleaner.ui.*
 import com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature
+import com.example.aicleanphonestorage.feature.appmanager.ui.*
 import android.graphics.Color
 import android.content.Intent
 import android.os.Bundle
@@ -54,6 +55,10 @@ class MainActivity : AppCompatActivity() {
     private val cleanupEntry: CleanupEntryViewModel by viewModels { viewModelFactory { initializer {
         CleanupEntryViewModel((application as CleanApplication).container.fileScanRepository,createSavedStateHandle())
     } } }
+    private val appManagerEntry: AppManagerEntryViewModel by viewModels { viewModelFactory { initializer {
+        AppManagerEntryViewModel((application as CleanApplication).container.appManagerRepository)
+    } } }
+    private lateinit var appManagerCoordinator: AppManagerEntryCoordinator
     private lateinit var cleanupCoordinator: CleanupEntryCoordinator
     private lateinit var notificationCoordinator: NotificationEntryCoordinator
     private lateinit var trafficEntryCoordinator: NetworkTrafficEntryCoordinator
@@ -77,16 +82,18 @@ class MainActivity : AppCompatActivity() {
         notificationCoordinator = NotificationEntryCoordinator(this, notificationEntry, (application as CleanApplication).container.notificationCatalogTransfer)
         cleanupCoordinator = CleanupEntryCoordinator(this,cleanupEntry,(application as CleanApplication).container.fileScanRepository.access)
         lifecycleScope.launch { repeatOnLifecycle(Lifecycle.State.STARTED) { cleanupEntry.state.collect(cleanupCoordinator::render) } }
+        appManagerCoordinator = AppManagerEntryCoordinator(this,appManagerEntry,(application as CleanApplication).container.appManagerTransfer)
+        lifecycleScope.launch { repeatOnLifecycle(Lifecycle.State.STARTED) { appManagerEntry.state.collect(appManagerCoordinator::render) } }
         renderer = HomeRenderer(binding, object : HomeUiActions by HomeUiActions.None {
             override fun onToolSelected(tool: HomeTool) {
                 when (tool) {
-                    HomeTool.Network -> { cleanupEntry.cancel(); notificationEntry.cancelEntry(); trafficEntry.beginEntry() }
-                    HomeTool.Notifications -> { cleanupEntry.cancel(); trafficEntry.cancelEntry(); notificationEntry.beginEntry() }
+                    HomeTool.Network -> { appManagerEntry.cancel(); cleanupEntry.cancel(); notificationEntry.cancelEntry(); trafficEntry.beginEntry() }
+                    HomeTool.Notifications -> { appManagerEntry.cancel(); cleanupEntry.cancel(); trafficEntry.cancelEntry(); notificationEntry.beginEntry() }
                     HomeTool.Compress,HomeTool.LargeFiles,HomeTool.UnusedFiles,HomeTool.Screenshots -> {
-                        trafficEntry.cancelEntry();notificationEntry.cancelEntry()
+                        appManagerEntry.cancel();trafficEntry.cancelEntry();notificationEntry.cancelEntry()
                         cleanupEntry.begin(when(tool){HomeTool.Compress->CleanupFeature.PHOTO_COMPRESS;HomeTool.LargeFiles->CleanupFeature.LARGE_FILES;HomeTool.UnusedFiles->CleanupFeature.UNUSED_FILES;else->CleanupFeature.SCREENSHOTS})
                     }
-                    else -> Unit
+                    HomeTool.Apps -> { trafficEntry.cancelEntry();notificationEntry.cancelEntry();cleanupEntry.cancel();appManagerEntry.begin() }
                 }
             }
         })
@@ -119,9 +126,9 @@ class MainActivity : AppCompatActivity() {
     private fun renderCurrentState() = renderer.render(homeViewModel.uiState.value, HomePreviewSupport.content(previewSelection))
 
     override fun onResume() { super.onResume(); trafficEntry.onForeground(); notificationEntry.onForeground(); cleanupEntry.onForeground() }
-    override fun onResumeFragments() { super.onResumeFragments(); trafficEntryCoordinator.render(trafficEntry.state.value); notificationCoordinator.render(notificationEntry.state.value); cleanupCoordinator.render(cleanupEntry.state.value) }
+    override fun onResumeFragments() { super.onResumeFragments(); trafficEntryCoordinator.render(trafficEntry.state.value); notificationCoordinator.render(notificationEntry.state.value); cleanupCoordinator.render(cleanupEntry.state.value); appManagerCoordinator.render(appManagerEntry.state.value) }
     override fun onStop() {
-        if (!isChangingConfigurations) { trafficEntry.onBackground(); notificationEntry.onBackground(); cleanupEntry.onBackground() }
+        if (!isChangingConfigurations) { trafficEntry.onBackground(); notificationEntry.onBackground(); cleanupEntry.onBackground(); appManagerEntry.cancel() }
         super.onStop()
     }
     override fun onNewIntent(intent: Intent) {

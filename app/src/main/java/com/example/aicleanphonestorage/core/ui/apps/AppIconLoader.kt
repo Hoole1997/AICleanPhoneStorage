@@ -11,9 +11,9 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 
 /** 生命周期由页面所有；缓存按实际位图字节计费，资源查询/光栅化不发生在 onBindViewHolder。 */
-internal class AppIconLoader(context: Context, private val executor: TaskExecutor) {
+internal class AppIconLoader(context: Context, private val executor: TaskExecutor, sizeDp: Int = 42) {
     private val manager = context.applicationContext.packageManager
-    private val size = (42 * context.resources.displayMetrics.density).toInt().coerceAtLeast(1)
+    private val size = (sizeDp.coerceIn(24,64) * context.resources.displayMetrics.density).toInt().coerceAtLeast(1)
     private val cache = object : LruCache<String, Bitmap>(2 * 1024 * 1024) {
         override fun sizeOf(key: String, value: Bitmap) = value.allocationByteCount
     }

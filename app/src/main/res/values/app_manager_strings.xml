@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<resources>
+    <string name="app_manager_title">App Manager</string>
+    <string name="app_manager_scanning">Scanning…</string>
+    <string name="app_manager_loading_prepare">Preparing installed apps</string>
+    <string name="app_manager_loading_apps">Preparing apps · %1$d / %2$d</string>
+    <string name="app_manager_load_failed">Couldn’t load apps. Please try again.</string>
+    <string name="app_manager_retry">Couldn’t refresh apps. Tap to retry.</string>
+    <string name="app_manager_empty">No apps found.</string>
+    <string name="app_manager_open_app">Open settings for %1$s</string>
+    <string name="app_manager_settings_unavailable">Couldn’t open this app’s settings. The app may have been removed.</string>
+    <style name="ShapeAppearance.AppManager.Icon" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+</resources>
