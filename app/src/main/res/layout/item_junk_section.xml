@@ -1,0 +1,4 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:paddingTop="8dp" android:paddingBottom="12dp" android:paddingStart="16dp" android:paddingEnd="16dp">
+    <View android:layout_width="2dp" android:layout_height="10dp" android:background="@color/traffic_blue" />
+    <com.google.android.material.textview.MaterialTextView android:id="@+id/junk_section_title" style="@style/Widget.Home.Text.Semibold" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="6dp" android:textSize="16sp" android:textColor="#222222" />
+</LinearLayout>

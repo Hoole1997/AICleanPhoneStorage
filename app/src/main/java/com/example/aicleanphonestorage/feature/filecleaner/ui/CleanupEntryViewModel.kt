@@ -70,7 +70,7 @@ internal class CleanupEntryViewModel(
                             },
                         ) { report ->
                             repository.scan(feature) {
-                                report(TaskProgress("FILES", it.completed, it.total))
+                                report(TaskProgress(it.stage, it.completed, it.total))
                             }
                         }
                     currentCoroutineContext().ensureActive()

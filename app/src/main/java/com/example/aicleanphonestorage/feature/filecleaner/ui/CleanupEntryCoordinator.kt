@@ -96,7 +96,8 @@ internal class CleanupEntryCoordinator(
         if (state is CleanupEntryState.Loading) {
             val detail = state.frame?.detail
             val message =
-                if ((detail?.total ?: 0) > 0)
+                if (detail?.stage == "PHOTOS") activity.getString(R.string.junk_analyzing_photos)
+                else if ((detail?.total ?: 0) > 0)
                     activity.getString(
                         R.string.cleanup_prepare_files,
                         detail?.completed ?: 0,
@@ -144,7 +145,19 @@ internal class CleanupEntryCoordinator(
         if (state is CleanupEntryState.Ready) {
             val handle = model.consume() ?: return
             activity.startActivity(
-                Intent(activity, FileCleanupActivity::class.java)
+                Intent(
+                        activity,
+                        if (
+                            handle.feature ==
+                                com.example.aicleanphonestorage.feature.filecleaner.data
+                                    .CleanupFeature
+                                    .SMART_CLEAN
+                        )
+                            com.example.aicleanphonestorage.feature.junkcleaner.ui
+                                    .JunkCleaningActivity::class
+                                .java
+                        else FileCleanupActivity::class.java,
+                    )
                     .putExtra(FileCleanupActivity.EXTRA_SCAN, handle.id)
             )
         }

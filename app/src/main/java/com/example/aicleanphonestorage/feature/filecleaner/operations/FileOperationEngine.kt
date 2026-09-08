@@ -89,6 +89,23 @@ internal class FileOperationEngine(
                     for (file in batch) {
                         currentCoroutineContext().ensureActive()
                         try {
+                            if (file.retained) throw IOException("Reference photo is protected")
+                            if (file.groupKey.isNotEmpty()) {
+                                val reference =
+                                    index.retainedPeer(file)
+                                        ?: throw IOException("Reference photo missing")
+                                content.validate(reference)
+                                if (file.groupKey.startsWith("exact:")) {
+                                    val expected =
+                                        index.expectedFingerprint(file.id)
+                                            ?: throw IOException("Duplicate proof unavailable")
+                                    if (
+                                        content.fingerprint(reference) != expected ||
+                                            content.fingerprint(file) != expected
+                                    )
+                                        throw IOException("Duplicate contents changed")
+                                }
+                            }
                             content.validate(file)
                             // 删除原图前再次检查副本，避免生成后被移走/修改却仍删除原图。
                             index.output(operation, file.id)?.let { (uri, sha) ->

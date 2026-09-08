@@ -1,0 +1,17 @@
+<resources>
+<string name="junk_title">Smart Cleaning</string><string name="junk_scan_complete">Scan Complete</string><string name="junk_clean">Smart Clean</string>
+<string name="junk_files_section">Junk</string><string name="junk_photos_section">Photos</string>
+<string name="junk_installers">APK</string><string name="junk_temporary">Temporary Files</string><string name="junk_logs">Old Logs</string><string name="junk_empty_files">Empty Files</string>
+<string name="junk_duplicates">Duplicates</string><string name="junk_similar">Similar</string><string name="junk_quality">Review Quality</string><string name="junk_keep">Keep</string>
+<string name="junk_installers_description">Installer files. Deleting an APK does not uninstall the app.</string>
+<string name="junk_temporary_description">Temporary or unfinished download files not modified for at least 7 days. Review before deleting.</string>
+<string name="junk_logs_description">Log files not modified for at least 30 days. You may need them for troubleshooting.</string>
+<string name="junk_empty_description">Zero-byte files not modified for at least 7 days.</string>
+<string name="junk_duplicate_description">Matching file contents. One reference photo in each group is protected.</string>
+<string name="junk_similar_description">Visual similarity candidates, grouped together. One reference is protected. Review each photo before deleting.</string>
+<string name="junk_quality_description">Small images or low-detail candidates. These may still be valuable; review before deleting.</string>
+<string name="junk_analyzing_photos">Analyzing photos on this device…</string>
+<string name="junk_select_category">%1$s · Selected %2$d / %3$d</string>
+<string name="junk_storage">%1$s / %2$s</string>
+<string name="junk_scope">%1$s · Photo analysis skipped: %2$d. Review candidates before cleaning.</string>
+</resources>

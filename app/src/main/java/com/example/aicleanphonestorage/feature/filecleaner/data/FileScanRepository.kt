@@ -19,6 +19,13 @@ import kotlinx.coroutines.withContext
 internal class FileScanRepository(context: Context, private val executor: TaskExecutor) {
     val index = ScanIndex(context)
     val access = CleanupAccess(context)
+    private val junkIndex =
+        com.example.aicleanphonestorage.feature.junkcleaner.data.JunkIndex(index)
+    private val photoAnalyzer =
+        com.example.aicleanphonestorage.feature.junkcleaner.data.JunkPhotoAnalyzer(
+            context,
+            junkIndex,
+        )
     private val sources = FileScanSources(context, index)
     private val scanLock = Mutex()
 
@@ -44,7 +51,19 @@ internal class FileScanRepository(context: Context, private val executor: TaskEx
                             session,
                             { file, folder ->
                                 if (CleanupPolicy.candidate(feature, file, folder, startedAt)) {
-                                    batch += file
+                                    batch +=
+                                        if (feature == CleanupFeature.SMART_CLEAN)
+                                            file.copy(
+                                                bucket =
+                                                    com.example.aicleanphonestorage.feature
+                                                        .junkcleaner
+                                                        .data
+                                                        .JunkRules
+                                                        .classify(file, startedAt)
+                                                        ?.name
+                                                        .orEmpty()
+                                            )
+                                        else file
                                     if (batch.size == 200) {
                                         index.insert(session, batch)
                                         batch.clear()
@@ -56,6 +75,13 @@ internal class FileScanRepository(context: Context, private val executor: TaskEx
                         }
                     currentCoroutineContext().ensureActive()
                     if (batch.isNotEmpty()) index.insert(session, batch)
+                    var skipped = 0
+                    if (feature == CleanupFeature.SMART_CLEAN) {
+                        skipped =
+                            photoAnalyzer.analyze(session) { done ->
+                                progress(ScanProgress(done, null, "PHOTOS"))
+                            }
+                    }
                     val label =
                         when (permission.source) {
                             ScanSourceKind.MEDIA ->
@@ -64,7 +90,7 @@ internal class FileScanRepository(context: Context, private val executor: TaskEx
                             ScanSourceKind.DOCUMENT -> "Selected folder"
                             null -> ""
                         }
-                    ScanHandle(session, feature, count, label, permission.limited)
+                    ScanHandle(session, feature, count, label, permission.limited, skipped)
                         .also(index::finishScan)
                 } catch (error: Exception) {
                     // 取消或失败只移除本应用的临时索引，绝不触碰原文件。

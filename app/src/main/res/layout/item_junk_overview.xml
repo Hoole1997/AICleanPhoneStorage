@@ -1,0 +1,15 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:layout_marginBottom="12dp" android:gravity="center_vertical" android:baselineAligned="false">
+    <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+        <ImageView android:layout_width="118dp" android:layout_height="118dp" android:layout_gravity="center" android:src="@drawable/junk_hero" android:contentDescription="@null" android:importantForAccessibility="no" />
+    </FrameLayout>
+    <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:paddingStart="8dp" android:paddingEnd="16dp">
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" android:layout_gravity="center">
+            <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text.Medium" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/junk_scan_complete" android:textSize="14sp" android:textColor="@color/traffic_secondary" />
+            <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp">
+                <com.google.android.material.textview.MaterialTextView android:id="@+id/junk_bytes" style="@style/Widget.Home.Text.Black" android:layout_width="0dp" android:layout_height="wrap_content" android:textSize="46sp" android:textColor="@color/traffic_blue" android:maxLines="1" app:autoSizeTextType="uniform" app:autoSizeMinTextSize="24sp" app:autoSizeMaxTextSize="46sp" app:autoSizeStepGranularity="1sp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toStartOf="@id/junk_unit" app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintWidth_default="wrap" app:layout_constraintHorizontal_chainStyle="packed" app:layout_constraintHorizontal_bias="0" />
+                <com.google.android.material.textview.MaterialTextView android:id="@+id/junk_unit" style="@style/Widget.Home.Text.Medium" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:textSize="12sp" android:textColor="@color/traffic_blue" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBaseline_toBaselineOf="@id/junk_bytes" app:layout_constraintStart_toEndOf="@id/junk_bytes" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.textview.MaterialTextView android:id="@+id/junk_storage" style="@style/Widget.Home.Text" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:textSize="14sp" android:textColor="@color/traffic_secondary" />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

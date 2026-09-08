@@ -1,0 +1,152 @@
+[
+  {
+    "node": "5548:447",
+    "source": "design/figma/junk-cleaner/source/junk_hero.png",
+    "sha256": "59ba05377811299312c4f5e2ec2034bff8810128f5482e29ef2a8a2cebbcbf18",
+    "output": "app/src/main/res/drawable-mdpi/junk_hero.webp"
+  },
+  {
+    "node": "5548:447",
+    "source": "design/figma/junk-cleaner/source/junk_hero.png",
+    "sha256": "59ba05377811299312c4f5e2ec2034bff8810128f5482e29ef2a8a2cebbcbf18",
+    "output": "app/src/main/res/drawable-hdpi/junk_hero.webp"
+  },
+  {
+    "node": "5548:447",
+    "source": "design/figma/junk-cleaner/source/junk_hero.png",
+    "sha256": "59ba05377811299312c4f5e2ec2034bff8810128f5482e29ef2a8a2cebbcbf18",
+    "output": "app/src/main/res/drawable-xhdpi/junk_hero.webp"
+  },
+  {
+    "node": "5548:447",
+    "source": "design/figma/junk-cleaner/source/junk_hero.png",
+    "sha256": "59ba05377811299312c4f5e2ec2034bff8810128f5482e29ef2a8a2cebbcbf18",
+    "output": "app/src/main/res/drawable-xxhdpi/junk_hero.webp"
+  },
+  {
+    "node": "5548:447",
+    "source": "design/figma/junk-cleaner/source/junk_hero.png",
+    "sha256": "59ba05377811299312c4f5e2ec2034bff8810128f5482e29ef2a8a2cebbcbf18",
+    "output": "app/src/main/res/drawable-xxxhdpi/junk_hero.webp"
+  },
+  {
+    "node": "5548:469",
+    "source": "design/figma/junk-cleaner/source/junk_check_off.png",
+    "sha256": "7af72aa1d97f6ce247e140dfcac6ae4a226834d3f645186e2821f7d45ed07bdf",
+    "output": "app/src/main/res/drawable-mdpi/junk_check_off.webp"
+  },
+  {
+    "node": "5548:469",
+    "source": "design/figma/junk-cleaner/source/junk_check_off.png",
+    "sha256": "7af72aa1d97f6ce247e140dfcac6ae4a226834d3f645186e2821f7d45ed07bdf",
+    "output": "app/src/main/res/drawable-hdpi/junk_check_off.webp"
+  },
+  {
+    "node": "5548:469",
+    "source": "design/figma/junk-cleaner/source/junk_check_off.png",
+    "sha256": "7af72aa1d97f6ce247e140dfcac6ae4a226834d3f645186e2821f7d45ed07bdf",
+    "output": "app/src/main/res/drawable-xhdpi/junk_check_off.webp"
+  },
+  {
+    "node": "5548:469",
+    "source": "design/figma/junk-cleaner/source/junk_check_off.png",
+    "sha256": "7af72aa1d97f6ce247e140dfcac6ae4a226834d3f645186e2821f7d45ed07bdf",
+    "output": "app/src/main/res/drawable-xxhdpi/junk_check_off.webp"
+  },
+  {
+    "node": "5548:469",
+    "source": "design/figma/junk-cleaner/source/junk_check_off.png",
+    "sha256": "7af72aa1d97f6ce247e140dfcac6ae4a226834d3f645186e2821f7d45ed07bdf",
+    "output": "app/src/main/res/drawable-xxxhdpi/junk_check_off.webp"
+  },
+  {
+    "node": "5548:480",
+    "source": "design/figma/junk-cleaner/source/junk_check_on.png",
+    "sha256": "a2e6b0f18d36a48848787cb73ea2e16f844277a2f26ff2d58f82ebd3b2c6c9f4",
+    "output": "app/src/main/res/drawable-mdpi/junk_check_on.webp"
+  },
+  {
+    "node": "5548:480",
+    "source": "design/figma/junk-cleaner/source/junk_check_on.png",
+    "sha256": "a2e6b0f18d36a48848787cb73ea2e16f844277a2f26ff2d58f82ebd3b2c6c9f4",
+    "output": "app/src/main/res/drawable-hdpi/junk_check_on.webp"
+  },
+  {
+    "node": "5548:480",
+    "source": "design/figma/junk-cleaner/source/junk_check_on.png",
+    "sha256": "a2e6b0f18d36a48848787cb73ea2e16f844277a2f26ff2d58f82ebd3b2c6c9f4",
+    "output": "app/src/main/res/drawable-xhdpi/junk_check_on.webp"
+  },
+  {
+    "node": "5548:480",
+    "source": "design/figma/junk-cleaner/source/junk_check_on.png",
+    "sha256": "a2e6b0f18d36a48848787cb73ea2e16f844277a2f26ff2d58f82ebd3b2c6c9f4",
+    "output": "app/src/main/res/drawable-xxhdpi/junk_check_on.webp"
+  },
+  {
+    "node": "5548:480",
+    "source": "design/figma/junk-cleaner/source/junk_check_on.png",
+    "sha256": "a2e6b0f18d36a48848787cb73ea2e16f844277a2f26ff2d58f82ebd3b2c6c9f4",
+    "output": "app/src/main/res/drawable-xxxhdpi/junk_check_on.webp"
+  },
+  {
+    "node": "5548:475",
+    "source": "design/figma/junk-cleaner/source/junk_next.png",
+    "sha256": "858e524da9e87a0e97910200dfdf7232af6be3201f156b6eea9b8e5a8bef7ad4",
+    "output": "app/src/main/res/drawable-mdpi/junk_next.webp"
+  },
+  {
+    "node": "5548:475",
+    "source": "design/figma/junk-cleaner/source/junk_next.png",
+    "sha256": "858e524da9e87a0e97910200dfdf7232af6be3201f156b6eea9b8e5a8bef7ad4",
+    "output": "app/src/main/res/drawable-hdpi/junk_next.webp"
+  },
+  {
+    "node": "5548:475",
+    "source": "design/figma/junk-cleaner/source/junk_next.png",
+    "sha256": "858e524da9e87a0e97910200dfdf7232af6be3201f156b6eea9b8e5a8bef7ad4",
+    "output": "app/src/main/res/drawable-xhdpi/junk_next.webp"
+  },
+  {
+    "node": "5548:475",
+    "source": "design/figma/junk-cleaner/source/junk_next.png",
+    "sha256": "858e524da9e87a0e97910200dfdf7232af6be3201f156b6eea9b8e5a8bef7ad4",
+    "output": "app/src/main/res/drawable-xxhdpi/junk_next.webp"
+  },
+  {
+    "node": "5548:475",
+    "source": "design/figma/junk-cleaner/source/junk_next.png",
+    "sha256": "858e524da9e87a0e97910200dfdf7232af6be3201f156b6eea9b8e5a8bef7ad4",
+    "output": "app/src/main/res/drawable-xxxhdpi/junk_next.webp"
+  },
+  {
+    "node": "5548:709",
+    "source": "design/figma/junk-cleaner/source/junk_file.png",
+    "sha256": "8af4fb4e5e7c965ba29702ea585c86e4c7ca0a2ab2db02a20a981a1b1c6d467f",
+    "output": "app/src/main/res/drawable-mdpi/junk_file.webp"
+  },
+  {
+    "node": "5548:709",
+    "source": "design/figma/junk-cleaner/source/junk_file.png",
+    "sha256": "8af4fb4e5e7c965ba29702ea585c86e4c7ca0a2ab2db02a20a981a1b1c6d467f",
+    "output": "app/src/main/res/drawable-hdpi/junk_file.webp"
+  },
+  {
+    "node": "5548:709",
+    "source": "design/figma/junk-cleaner/source/junk_file.png",
+    "sha256": "8af4fb4e5e7c965ba29702ea585c86e4c7ca0a2ab2db02a20a981a1b1c6d467f",
+    "output": "app/src/main/res/drawable-xhdpi/junk_file.webp"
+  },
+  {
+    "node": "5548:709",
+    "source": "design/figma/junk-cleaner/source/junk_file.png",
+    "sha256": "8af4fb4e5e7c965ba29702ea585c86e4c7ca0a2ab2db02a20a981a1b1c6d467f",
+    "output": "app/src/main/res/drawable-xxhdpi/junk_file.webp"
+  },
+  {
+    "node": "5548:709",
+    "source": "design/figma/junk-cleaner/source/junk_file.png",
+    "sha256": "8af4fb4e5e7c965ba29702ea585c86e4c7ca0a2ab2db02a20a981a1b1c6d467f",
+    "output": "app/src/main/res/drawable-xxxhdpi/junk_file.webp"
+  }
+]

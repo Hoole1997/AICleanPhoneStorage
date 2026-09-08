@@ -38,9 +38,11 @@ internal class CleanupViewModel(
     private val operations: FileOperationEngine,
     private val saved: SavedStateHandle,
     scanId: Long,
+    initialFilter: CleanupFilter = CleanupFilter(),
 ) : ViewModel() {
     private val restoredFilter =
         CleanupFilter(
+            bucket = saved["filter.bucket"] ?: initialFilter.bucket,
             category =
                 FileCategory.entries.getOrElse(saved["filter.category"] ?: 0) { FileCategory.ALL },
             minimumBytes = saved["filter.size"] ?: 10_000_000L,
@@ -100,6 +102,7 @@ internal class CleanupViewModel(
                 current.value.editing > 0
         )
             return
+        saved["filter.bucket"] = filter.bucket
         saved["filter.category"] = filter.category.ordinal
         saved["filter.size"] = filter.minimumBytes
         saved["filter.recent"] = filter.recentDays
@@ -121,6 +124,12 @@ internal class CleanupViewModel(
                 current.value.filter,
                 current.value.totals.selectedCount != current.value.totals.count,
             )
+        }
+    }
+
+    fun selectBucket(bucket: String, selected: Boolean) = edit {
+        current.value.handle?.let {
+            repository.selectAll(it, current.value.filter.copy(bucket = bucket), selected)
         }
     }
 

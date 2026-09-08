@@ -9,8 +9,6 @@ import android.text.format.Formatter
 import android.widget.Toast
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.IntentSenderRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
@@ -30,6 +28,8 @@ import com.example.aicleanphonestorage.core.ui.loading.*
 import com.example.aicleanphonestorage.databinding.ScreenFileCleanupBinding
 import com.example.aicleanphonestorage.feature.filecleaner.data.*
 import com.example.aicleanphonestorage.feature.filecleaner.operations.FileContentAccess
+import com.example.aicleanphonestorage.feature.junkcleaner.ui.descriptionRes
+import com.example.aicleanphonestorage.feature.junkcleaner.ui.titleRes
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -47,6 +47,7 @@ class FileCleanupActivity : AppCompatActivity() {
                     container.fileOperations,
                     createSavedStateHandle(),
                     intent.getLongExtra(EXTRA_SCAN, -1),
+                    initialFilter = CleanupFilter(bucket = intent.getStringExtra(EXTRA_BUCKET)),
                 )
             }
         }
@@ -55,15 +56,11 @@ class FileCleanupActivity : AppCompatActivity() {
     private lateinit var filters: CleanupFilters
     private var adapter: CleanupFilesAdapter? = null
     private var lastError = 0L
-    private var originalsConfirmation: Long? = null
-    private val consent =
-        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
-            model.consentResult(it.resultCode == RESULT_OK)
-        }
+    private lateinit var operationCoordinator: CleanupOperationCoordinator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        originalsConfirmation = savedInstanceState?.getLong("originals")?.takeIf { it > 0 }
+        operationCoordinator = CleanupOperationCoordinator(this, model, savedInstanceState)
         enableEdgeToEdge(
             SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
             SystemBarStyle.light(Color.TRANSPARENT, Color.BLACK),
@@ -85,44 +82,25 @@ class FileCleanupActivity : AppCompatActivity() {
         binding.cleanupAction.setOnClickListener { model.prepare() }
         binding.cleanupEmpty.setOnClickListener { adapter?.retry() }
         filters = CleanupFilters(binding, model::setFilter)
-        supportFragmentManager.setFragmentResultListener(WORK_CANCEL, this) { _, _ ->
-            model.onBackground()
-        }
-        supportFragmentManager.setFragmentResultListener(CleanupMessageDialog.RESULT, this) {
-            _,
-            result ->
-            val identity = result.getString("identity").orEmpty()
-            val positive = result.getString("action") == "positive"
-            val op = model.state.value.operation
-            when {
-                identity.startsWith("originals:") -> {
-                    val id = originalsConfirmation
-                    originalsConfirmation = null
-                    if (positive && id != null) model.removeOriginals(id)
-                    else model.dismissOperation()
-                }
-                op is CleanupOperationState.Confirm ->
-                    if (positive) model.confirm(op.id) else model.dismissOperation()
-                op is CleanupOperationState.Result ->
-                    if (positive && op.summary.originalsAvailable > 0) {
-                        originalsConfirmation = op.id
-                        render(model.state.value)
-                    } else model.dismissOperation()
-            }
-        }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) { model.state.collect(::render) }
         }
     }
 
     private fun attach(feature: CleanupFeature) {
+        val junkKind =
+            com.example.aicleanphonestorage.feature.junkcleaner.data.JunkKind.from(
+                intent.getStringExtra(EXTRA_BUCKET)
+            )
         if (adapter != null) return
         val columns =
-            when (feature) {
-                CleanupFeature.PHOTO_COMPRESS -> 2
-                CleanupFeature.SCREENSHOTS -> 3
-                else -> 1
-            }
+            if (feature == CleanupFeature.SMART_CLEAN && junkKind?.photos == true) 3
+            else
+                when (feature) {
+                    CleanupFeature.PHOTO_COMPRESS -> 2
+                    CleanupFeature.SCREENSHOTS -> 3
+                    else -> 1
+                }
         binding.cleanupFiles.layoutManager =
             if (columns == 1) LinearLayoutManager(this) else GridLayoutManager(this, columns)
         if (columns > 1)
@@ -141,6 +119,7 @@ class FileCleanupActivity : AppCompatActivity() {
                 model::toggle,
                 ::preview,
                 ::quality,
+                photoGrid = columns > 1,
             )
         adapter = files
         binding.cleanupFiles.adapter = files
@@ -165,7 +144,22 @@ class FileCleanupActivity : AppCompatActivity() {
         val handle = state.handle
         if (handle != null) {
             attach(handle.feature)
-            binding.cleanupTitle.setText(handle.feature.titleRes)
+            val junkKind =
+                com.example.aicleanphonestorage.feature.junkcleaner.data.JunkKind.from(
+                    intent.getStringExtra(EXTRA_BUCKET)
+                )
+            binding.cleanupTitle.setText(junkKind?.titleRes ?: handle.feature.titleRes)
+            if (handle.feature == CleanupFeature.SMART_CLEAN) {
+                binding.root.setBackgroundColor(Color.WHITE)
+                binding.cleanupBackground.isVisible = false
+                binding.cleanupFooter.isVisible = false
+                binding.cleanupFiles.setPadding(
+                    binding.cleanupFiles.paddingLeft,
+                    (18 * resources.displayMetrics.density).toInt(),
+                    binding.cleanupFiles.paddingRight,
+                    (16 * resources.displayMetrics.density).toInt(),
+                )
+            }
             binding.cleanupPhotoHeader.isVisible = handle.feature == CleanupFeature.PHOTO_COMPRESS
             binding.cleanupFilters.isVisible = handle.feature == CleanupFeature.LARGE_FILES
             binding.cleanupUnusedAge.isVisible = handle.feature == CleanupFeature.UNUSED_FILES
@@ -173,6 +167,10 @@ class FileCleanupActivity : AppCompatActivity() {
                 handle.partial || handle.scopeLabel == "Selected folder"
             binding.cleanupScope.text =
                 if (handle.partial) getString(R.string.cleanup_limited) else handle.scopeLabel
+            if (handle.feature == CleanupFeature.SMART_CLEAN && junkKind != null) {
+                binding.cleanupScope.isVisible = true
+                binding.cleanupScope.setText(junkKind.descriptionRes)
+            }
             binding.cleanupPotential.text =
                 Formatter.formatShortFileSize(this, state.totals.estimatedSaving)
             binding.cleanupAction.setText(
@@ -198,98 +196,7 @@ class FileCleanupActivity : AppCompatActivity() {
             finish()
             return
         }
-        renderOperation(state.operation)
-    }
-
-    private fun renderOperation(operation: CleanupOperationState) {
-        if (
-            supportFragmentManager.isStateSaved ||
-                !lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
-        )
-            return
-        val loading =
-            supportFragmentManager.findFragmentByTag(WORKING) as? TaskLoadingDialogFragment
-        if (operation is CleanupOperationState.Running) {
-            val frame =
-                LoadingUiState(
-                    operation.id,
-                    getString(R.string.cleanup_working, operation.done, operation.total),
-                    getString(R.string.cleanup_processing_files),
-                    if (operation.total > 0) operation.done * 100 / operation.total else null,
-                    cancellable = true,
-                    showAd = false,
-                    resultKey = WORK_CANCEL,
-                )
-            if (loading == null)
-                TaskLoadingDialogFragment.newInstance(frame)
-                    .showNow(supportFragmentManager, WORKING)
-            else loading.render(frame)
-        } else loading?.dismiss()
-        val old =
-            supportFragmentManager.findFragmentByTag(CleanupMessageDialog.TAG)
-                as? CleanupMessageDialog
-        val message =
-            when {
-                originalsConfirmation != null ->
-                    CleanupMessageDialog.create(
-                        "originals:$originalsConfirmation",
-                        getString(R.string.cleanup_tips),
-                        getString(R.string.cleanup_originals_confirm),
-                        getString(R.string.cleanup_confirm),
-                        getString(R.string.cleanup_cancel),
-                    )
-                operation is CleanupOperationState.Confirm ->
-                    CleanupMessageDialog.create(
-                        "confirm:${operation.id}",
-                        getString(R.string.cleanup_tips),
-                        if (operation.compress)
-                            getString(R.string.cleanup_compress_confirm, operation.count)
-                        else
-                            getString(
-                                R.string.cleanup_delete_confirm,
-                                operation.count,
-                                Formatter.formatShortFileSize(this, operation.bytes),
-                            ),
-                        getString(R.string.cleanup_confirm),
-                        getString(R.string.cleanup_cancel),
-                    )
-                operation is CleanupOperationState.Result ->
-                    CleanupMessageDialog.create(
-                        "result:${operation.id}",
-                        getString(R.string.cleanup_done),
-                        getString(
-                            R.string.cleanup_result,
-                            operation.summary.deleted,
-                            operation.summary.copied,
-                            operation.summary.skipped,
-                            operation.summary.failed,
-                        ),
-                        getString(
-                            if (operation.summary.originalsAvailable > 0)
-                                R.string.cleanup_remove_originals
-                            else R.string.cleanup_done
-                        ),
-                        getString(
-                            if (operation.summary.originalsAvailable > 0)
-                                R.string.cleanup_keep_originals
-                            else R.string.cleanup_cancel
-                        ),
-                    )
-                else -> null
-            }
-        if (old?.identity != message?.identity) {
-            old?.dismissNow()
-            message?.showNow(supportFragmentManager, CleanupMessageDialog.TAG)
-        }
-        if (operation is CleanupOperationState.Consent && !model.waitingSystem) {
-            model.consentLaunched()
-            try {
-                consent.launch(IntentSenderRequest.Builder(operation.sender).build())
-            } catch (_: android.content.IntentSender.SendIntentException) {
-                model.consentResult(false)
-                toast(R.string.cleanup_action_failed)
-            }
-        }
+        operationCoordinator.render(state.operation)
     }
 
     private fun preview(file: ScannedFile) {
@@ -358,7 +265,7 @@ class FileCleanupActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        originalsConfirmation?.let { outState.putLong("originals", it) }
+        operationCoordinator.save(outState)
         super.onSaveInstanceState(outState)
     }
 
@@ -370,7 +277,6 @@ class FileCleanupActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_SCAN = "cleanup.scan.id"
-        private const val WORKING = "cleanup.operation.loading"
-        private const val WORK_CANCEL = "cleanup.operation.cancel"
+        const val EXTRA_BUCKET = "cleanup.bucket"
     }
 }

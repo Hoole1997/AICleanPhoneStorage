@@ -23,6 +23,7 @@ class AppContainer(context: Context) {
     internal val installedAppsReader by lazy { com.example.aicleanphonestorage.core.data.apps.InstalledAppsReader(applicationContext,taskExecutor) }
     internal val appManagerRepository by lazy { com.example.aicleanphonestorage.feature.appmanager.data.AndroidAppManagerRepository(installedAppsReader) }
     internal val appManagerTransfer by lazy { OneShotTransfer<com.example.aicleanphonestorage.feature.appmanager.data.AppManagerCatalog>() }
+    internal val junkSummaryRepository by lazy { com.example.aicleanphonestorage.feature.junkcleaner.data.JunkSummaryRepository(fileScanRepository.index,taskExecutor) }
     val taskExecutor: TaskExecutor by lazy { TaskExecutor(AppDispatchers()) }
     val notificationRules by lazy { NotificationRulesStore(applicationContext) }
     val notificationConnection by lazy { NotificationListenerConnection() }
@@ -31,7 +32,7 @@ class AppContainer(context: Context) {
         AndroidNotificationAppsRepository(applicationContext, notificationRules, taskExecutor)
     }
     val trafficSnapshotTransfer: TrafficSnapshotTransfer by lazy { TrafficSnapshotTransfer() }
-    val homeOverviewRepository: HomeOverviewRepository by lazy { EmptyHomeOverviewRepository() }
+    val homeOverviewRepository: HomeOverviewRepository by lazy { junkSummaryRepository }
     val networkTrafficRepository: NetworkTrafficRepository by lazy {
         AndroidNetworkTrafficRepository(applicationContext, taskExecutor)
     }

@@ -30,9 +30,12 @@ internal class CleanupFilesAdapter(
     private val toggle: (Long, Boolean) -> Unit,
     private val preview: (ScannedFile) -> Unit,
     private val quality: (ScannedFile) -> Unit,
+    private val photoGrid: Boolean = false,
 ) : PagingDataAdapter<ScannedFile, CleanupFilesAdapter.Holder>(DIFF) {
     private val grid =
-        feature == CleanupFeature.PHOTO_COMPRESS || feature == CleanupFeature.SCREENSHOTS
+        photoGrid ||
+            feature == CleanupFeature.PHOTO_COMPRESS ||
+            feature == CleanupFeature.SCREENSHOTS
     private val date = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
     private val holders = mutableSetOf<Holder>()
 
@@ -78,7 +81,9 @@ internal class CleanupFilesAdapter(
         private var imageJob: Job? = null
 
         init {
-            check.setOnClickListener { row?.let { toggle(it.id, !it.selected) } }
+            check.setOnClickListener {
+                row?.let { if (it.retained) preview(it) else toggle(it.id, !it.selected) }
+            }
             ViewCompat.setAccessibilityDelegate(
                 check,
                 object : AccessibilityDelegateCompat() {
@@ -99,11 +104,16 @@ internal class CleanupFilesAdapter(
             val changed = row?.id != file?.id || row?.modifiedMillis != file?.modifiedMillis
             row = file
             check.isSelected = file?.selected == true
+            check.isEnabled = file?.retained != true
+            check.isVisible = file?.retained != true
             check.contentDescription =
                 file?.let { itemView.context.getString(R.string.cleanup_select_file, it.name) }
             if (changed || !payload) {
                 stopImage()
-                image.setImageResource(R.drawable.ic_tool_large_files)
+                image.setImageResource(
+                    if (feature == CleanupFeature.SMART_CLEAN) R.drawable.junk_file
+                    else R.drawable.ic_tool_large_files
+                )
                 startImage()
             }
             if (file != null) bindText(file)
@@ -136,7 +146,9 @@ internal class CleanupFilesAdapter(
     inner class FileHolder(private val binding: ItemCleanupFileBinding) :
         Holder(binding.root, binding.fileIcon, binding.fileCheck) {
         init {
-            binding.root.setOnClickListener { row?.let { toggle(it.id, !it.selected) } }
+            binding.root.setOnClickListener {
+                row?.let { if (it.retained) preview(it) else toggle(it.id, !it.selected) }
+            }
             binding.fileIcon.setOnClickListener { row?.let(preview) }
         }
 
@@ -151,7 +163,9 @@ internal class CleanupFilesAdapter(
     inner class PhotoHolder(private val binding: ItemCleanupPhotoBinding) :
         Holder(binding.root, binding.photoImage, binding.photoCheck) {
         init {
-            binding.root.setOnClickListener { row?.let { toggle(it.id, !it.selected) } }
+            binding.root.setOnClickListener {
+                row?.let { if (it.retained) preview(it) else toggle(it.id, !it.selected) }
+            }
             binding.photoExpand.setOnClickListener { row?.let(preview) }
             binding.photoSavingAction.setOnClickListener { row?.let(quality) }
             binding.photoShade.isVisible = feature == CleanupFeature.PHOTO_COMPRESS
@@ -165,6 +179,7 @@ internal class CleanupFilesAdapter(
 
         override fun bindText(file: ScannedFile) {
             val context = binding.root.context
+            binding.photoKeep.isVisible = file.retained
             binding.photoExpand.contentDescription =
                 context.getString(R.string.cleanup_preview, file.name)
             binding.photoSaving.text =

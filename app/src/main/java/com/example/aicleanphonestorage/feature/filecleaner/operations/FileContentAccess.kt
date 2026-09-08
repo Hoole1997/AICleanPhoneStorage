@@ -11,6 +11,8 @@ import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStream
 import java.nio.file.Files
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 
 /** 操作前重新核对范围/大小/修改时间，拒绝将扫描后被替换的文件当作原选择删除。 */
 internal class FileContentAccess(context: Context) {
@@ -20,6 +22,23 @@ internal class FileContentAccess(context: Context) {
     fun input(item: ScannedFile): InputStream =
         if (item.backend == FileBackend.DIRECT) FileInputStream(validatedFile(item))
         else resolver.openInputStream(Uri.parse(item.uri)) ?: throw IOException("Cannot open file")
+
+    /** 流式读取，只保留一个缓冲区；扫描和重复项删除前使用同一校验算法。 */
+    suspend fun fingerprint(item: ScannedFile): String {
+        validate(item)
+        val digest = java.security.MessageDigest.getInstance("SHA-256")
+        input(item).use { stream ->
+            val buffer = ByteArray(64 * 1024)
+            while (true) {
+                currentCoroutineContext().ensureActive()
+                val count = stream.read(buffer)
+                if (count < 0) break
+                digest.update(buffer, 0, count)
+            }
+        }
+        validate(item)
+        return digest.digest().joinToString("") { "%02x".format(it) }
+    }
 
     fun validatedFile(item: ScannedFile): File {
         val root = File(item.scope).canonicalFile

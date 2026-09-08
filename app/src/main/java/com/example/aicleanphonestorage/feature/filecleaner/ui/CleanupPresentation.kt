@@ -10,4 +10,5 @@ internal val CleanupFeature.titleRes: Int
             CleanupFeature.LARGE_FILES -> R.string.cleanup_large
             CleanupFeature.UNUSED_FILES -> R.string.cleanup_unused
             CleanupFeature.SCREENSHOTS -> R.string.cleanup_screenshots
+            CleanupFeature.SMART_CLEAN -> R.string.junk_title
         }

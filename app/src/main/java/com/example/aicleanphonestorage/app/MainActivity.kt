@@ -85,6 +85,10 @@ class MainActivity : AppCompatActivity() {
         appManagerCoordinator = AppManagerEntryCoordinator(this,appManagerEntry,(application as CleanApplication).container.appManagerTransfer)
         lifecycleScope.launch { repeatOnLifecycle(Lifecycle.State.STARTED) { appManagerEntry.state.collect(appManagerCoordinator::render) } }
         renderer = HomeRenderer(binding, object : HomeUiActions by HomeUiActions.None {
+            override fun onSmartClean() {
+                trafficEntry.cancelEntry();notificationEntry.cancelEntry();appManagerEntry.cancel()
+                cleanupEntry.begin(CleanupFeature.SMART_CLEAN)
+            }
             override fun onToolSelected(tool: HomeTool) {
                 when (tool) {
                     HomeTool.Network -> { appManagerEntry.cancel(); cleanupEntry.cancel(); notificationEntry.cancelEntry(); trafficEntry.beginEntry() }

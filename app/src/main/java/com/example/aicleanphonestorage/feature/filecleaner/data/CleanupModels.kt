@@ -8,6 +8,7 @@ enum class CleanupFeature {
     LARGE_FILES,
     UNUSED_FILES,
     SCREENSHOTS,
+    SMART_CLEAN,
 }
 
 enum class FileCategory {
@@ -33,6 +34,7 @@ data class CleanupFilter(
     val recentDays: Int = 0,
     val unusedDays: Int = 30,
     val referenceMillis: Long = System.currentTimeMillis(),
+    val bucket: String? = null,
 )
 
 data class ScannedFile(
@@ -48,6 +50,9 @@ data class ScannedFile(
     val path: String = "",
     val selected: Boolean = false,
     val quality: Int = 75,
+    val bucket: String = "",
+    val groupKey: String = "",
+    val retained: Boolean = false,
 )
 
 data class ScanHandle(
@@ -56,6 +61,7 @@ data class ScanHandle(
     val scannedCount: Int,
     val scopeLabel: String,
     val partial: Boolean = false,
+    val analysisSkipped: Int = 0,
 )
 
 data class SelectionTotals(
@@ -68,7 +74,7 @@ data class SelectionTotals(
 
 data class PreparedOperation(val id: Long, val count: Int, val bytes: Long)
 
-data class ScanProgress(val completed: Int, val total: Int? = null)
+data class ScanProgress(val completed: Int, val total: Int? = null, val stage: String = "FILES")
 
 internal object CleanupPolicy {
     private val documents =
@@ -94,9 +100,16 @@ internal object CleanupPolicy {
     }
 
     fun candidate(feature: CleanupFeature, file: ScannedFile, folder: String, now: Long): Boolean {
+        if (feature == CleanupFeature.SMART_CLEAN)
+            return com.example.aicleanphonestorage.feature.junkcleaner.data.JunkRules.include(
+                file,
+                folder,
+                now,
+            )
         if (file.size <= 0 || folder.contains("/AIClean/Compressed", ignoreCase = true))
             return false
         return when (feature) {
+            CleanupFeature.SMART_CLEAN -> false // 已在上方交给垃圾候选策略。
             CleanupFeature.PHOTO_COMPRESS ->
                 file.mime in setOf("image/jpeg", "image/png") && file.size >= 100_000
             CleanupFeature.SCREENSHOTS ->

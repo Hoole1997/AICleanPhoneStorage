@@ -8,24 +8,28 @@ import android.database.sqlite.SQLiteOpenHelper
 import androidx.paging.PagingSource
 import java.util.Collections
 import java.util.WeakHashMap
+import kotlinx.coroutines.flow.update
 
 /** 仅缓存元数据/选择状态的临时索引。所有方法由Repository在I/O线程调用，不存文件内容或Bitmap。 */
 internal class ScanIndex(context: Context) :
-    SQLiteOpenHelper(context.applicationContext, "cleanup_index.db", null, 1) {
+    SQLiteOpenHelper(context.applicationContext, "cleanup_index.db", null, 2) {
+    private val revision = kotlinx.coroutines.flow.MutableStateFlow(0L)
+    val changes: kotlinx.coroutines.flow.StateFlow<Long> = revision
     private val sources = Collections.newSetFromMap(WeakHashMap<PagingSource<*, *>, Boolean>())
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
-            "CREATE TABLE scans(id INTEGER PRIMARY KEY AUTOINCREMENT, feature TEXT NOT NULL, created INTEGER NOT NULL, count INTEGER NOT NULL DEFAULT 0, label TEXT NOT NULL DEFAULT '', partial INTEGER NOT NULL DEFAULT 0, ready INTEGER NOT NULL DEFAULT 0)"
+            "CREATE TABLE scans(id INTEGER PRIMARY KEY AUTOINCREMENT, feature TEXT NOT NULL, created INTEGER NOT NULL, count INTEGER NOT NULL DEFAULT 0, label TEXT NOT NULL DEFAULT '', partial INTEGER NOT NULL DEFAULT 0, ready INTEGER NOT NULL DEFAULT 0, analysis_skipped INTEGER NOT NULL DEFAULT 0)"
         )
         db.execSQL(
             """CREATE TABLE files(id INTEGER PRIMARY KEY AUTOINCREMENT, scan INTEGER NOT NULL, uri TEXT NOT NULL,
             name TEXT NOT NULL, mime TEXT NOT NULL, size INTEGER NOT NULL, modified INTEGER NOT NULL, category TEXT NOT NULL,
             backend TEXT NOT NULL, scope TEXT NOT NULL, path TEXT NOT NULL, selected INTEGER NOT NULL DEFAULT 0,
-            quality INTEGER NOT NULL DEFAULT 75, UNIQUE(scan,uri))"""
+            quality INTEGER NOT NULL DEFAULT 75, bucket TEXT NOT NULL DEFAULT '', group_key TEXT NOT NULL DEFAULT '', retained INTEGER NOT NULL DEFAULT 0, fingerprint TEXT NOT NULL DEFAULT '', UNIQUE(scan,uri))"""
         )
         db.execSQL("CREATE INDEX files_scan_sort ON files(scan,size DESC,id)")
         db.execSQL("CREATE INDEX files_selection ON files(scan,selected)")
+        createGroupIndexes(db)
         db.execSQL(
             "CREATE TABLE directories(scan INTEGER NOT NULL, document TEXT NOT NULL, done INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(scan,document))"
         )
@@ -39,7 +43,20 @@ internal class ScanIndex(context: Context) :
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        error("Define a migration before changing cleanup index version")
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE scans ADD COLUMN analysis_skipped INTEGER NOT NULL DEFAULT 0")
+            db.execSQL("ALTER TABLE files ADD COLUMN bucket TEXT NOT NULL DEFAULT ''")
+            db.execSQL("ALTER TABLE files ADD COLUMN group_key TEXT NOT NULL DEFAULT ''")
+            db.execSQL("ALTER TABLE files ADD COLUMN retained INTEGER NOT NULL DEFAULT 0")
+            db.execSQL("ALTER TABLE files ADD COLUMN fingerprint TEXT NOT NULL DEFAULT ''")
+            createGroupIndexes(db)
+        }
+    }
+
+    private fun createGroupIndexes(db: SQLiteDatabase) {
+        db.execSQL("CREATE INDEX files_groups ON files(scan,bucket,group_key,retained)")
+        db.execSQL("CREATE INDEX files_photo_sizes ON files(scan,category,size)")
+        db.execSQL("CREATE INDEX files_fingerprints ON files(scan,fingerprint)")
     }
 
     fun start(feature: CleanupFeature): Long {
@@ -75,11 +92,13 @@ internal class ScanIndex(context: Context) :
                 put("label", handle.scopeLabel)
                 put("partial", if (handle.partial) 1 else 0)
                 put("ready", 1)
+                put("analysis_skipped", handle.analysisSkipped)
             },
             "id=?",
             arrayOf(handle.id.toString()),
         )
         writableDatabase.delete("directories", "scan=?", arrayOf(handle.id.toString()))
+        invalidate()
     }
 
     fun handle(id: Long): ScanHandle? =
@@ -94,6 +113,7 @@ internal class ScanIndex(context: Context) :
                         it.getInt(it.getColumnIndexOrThrow("count")),
                         it.getString(it.getColumnIndexOrThrow("label")),
                         it.getInt(it.getColumnIndexOrThrow("partial")) != 0,
+                        it.getInt(it.getColumnIndexOrThrow("analysis_skipped")),
                     )
             }
 
@@ -126,6 +146,9 @@ internal class ScanIndex(context: Context) :
             put("backend", item.backend.name)
             put("scope", item.scope)
             put("path", item.path)
+            put("bucket", item.bucket)
+            put("group_key", item.groupKey)
+            put("retained", if (item.retained) 1 else 0)
         }
 
     private fun where(
@@ -151,6 +174,13 @@ internal class ScanIndex(context: Context) :
             clauses += "modified>0 AND modified<=?"
             args += (filter.referenceMillis - filter.unusedDays * 86_400_000L).toString()
         }
+        if (feature == CleanupFeature.SMART_CLEAN) {
+            clauses += "bucket<>''"
+            filter.bucket?.let {
+                clauses += "bucket=?"
+                args += it
+            }
+        }
         return clauses.joinToString(" AND ") to args.toTypedArray()
     }
 
@@ -162,9 +192,38 @@ internal class ScanIndex(context: Context) :
     ): List<ScannedFile> {
         val (selection, args) = where(handle.id, handle.feature, filter)
         return readableDatabase
-            .query("files", null, selection, args, null, null, "size DESC,id", "$offset,$limit")
+            .query(
+                "files",
+                null,
+                selection,
+                args,
+                null,
+                null,
+                if (
+                    handle.feature == CleanupFeature.SMART_CLEAN &&
+                        filter.bucket in listOf("DUPLICATES", "SIMILAR")
+                )
+                    "group_key,retained DESC,id"
+                else "size DESC,id",
+                "$offset,$limit",
+            )
             .use { cursor -> buildList { while (cursor.moveToNext()) add(row(cursor)) } }
     }
+
+    fun expectedFingerprint(id: Long): String? =
+        readableDatabase
+            .rawQuery("SELECT fingerprint FROM files WHERE id=?", arrayOf(id.toString()))
+            .use {
+                if (it.moveToFirst()) it.getString(0).takeIf { hash -> hash.length == 64 } else null
+            }
+
+    fun retainedPeer(file: ScannedFile): ScannedFile? =
+        readableDatabase
+            .rawQuery(
+                "SELECT * FROM files WHERE scan=(SELECT scan FROM files WHERE id=?) AND group_key=? AND retained=1 LIMIT 1",
+                arrayOf(file.id.toString(), file.groupKey),
+            )
+            .use { if (it.moveToFirst()) row(it) else null }
 
     fun get(id: Long): ScannedFile? =
         readableDatabase
@@ -176,7 +235,7 @@ internal class ScanIndex(context: Context) :
         return readableDatabase
             .rawQuery(
                 """SELECT COUNT(*),TOTAL(size),TOTAL(selected),TOTAL(CASE WHEN selected=1 THEN size ELSE 0 END),
-            TOTAL(size*(100-quality)/100.0) FROM files WHERE $selection""",
+            TOTAL(size*(100-quality)/100.0) FROM files WHERE $selection AND retained=0""",
                 args,
             )
             .use {
@@ -195,7 +254,7 @@ internal class ScanIndex(context: Context) :
         writableDatabase.update(
             "files",
             ContentValues().apply { put("selected", if (value) 1 else 0) },
-            "id=?",
+            "id=? AND retained=0",
             arrayOf(id.toString()),
         )
         invalidate()
@@ -206,7 +265,7 @@ internal class ScanIndex(context: Context) :
         writableDatabase.update(
             "files",
             ContentValues().apply { put("selected", if (value) 1 else 0) },
-            selection,
+            "$selection AND retained=0",
             args,
         )
         invalidate()
@@ -275,6 +334,7 @@ internal class ScanIndex(context: Context) :
     }
 
     private fun invalidate() {
+        revision.update { it + 1 }
         val current = synchronized(sources) { sources.toList() }
         current.forEach { it.invalidate() }
     }
@@ -294,7 +354,7 @@ internal class ScanIndex(context: Context) :
                     },
                 )
             db.execSQL(
-                "INSERT INTO operation_items(op,file,file_bytes) SELECT ?,id,size FROM files WHERE $selection AND selected=1",
+                "INSERT INTO operation_items(op,file,file_bytes) SELECT ?,id,size FROM files WHERE $selection AND selected=1 AND retained=0",
                 arrayOf(id.toString(), *args),
             )
             db.setTransactionSuccessful()
@@ -423,6 +483,9 @@ internal class ScanIndex(context: Context) :
             string("path"),
             number("selected") == 1L,
             number("quality").toInt(),
+            string("bucket"),
+            string("group_key"),
+            number("retained") == 1L,
         )
     }
 }

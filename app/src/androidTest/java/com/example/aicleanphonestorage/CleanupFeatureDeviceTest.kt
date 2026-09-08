@@ -140,7 +140,7 @@ class CleanupFeatureDeviceTest {
         val root = File(context.cacheDir, "cleanup_test_${UUID.randomUUID()}").apply { mkdirs() }
         try {
             val photos = (0..11).map { photo(root, it) }
-            for (feature in CleanupFeature.entries) {
+            for (feature in CleanupFeature.entries.filter{it!=CleanupFeature.SMART_CLEAN}) {
                 val handle =
                     scan(
                         feature,
