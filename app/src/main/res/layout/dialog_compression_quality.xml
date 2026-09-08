@@ -1,0 +1,63 @@
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.Home.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="16dp"
+    app:cardBackgroundColor="@color/home_surface">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="4dp">
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/quality_title"
+                style="@style/Widget.Home.Text.Semibold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cleanup_quality"
+                android:textSize="18sp"
+                android:textColor="@color/home_title"
+                android:gravity="start" />
+            <RadioGroup
+                android:id="@+id/quality_options"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:orientation="vertical">
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/quality_small"
+                    style="@style/Widget.Cleanup.QualityOption" />
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/quality_balanced"
+                    style="@style/Widget.Cleanup.QualityOption"
+                    android:layout_marginTop="8dp" />
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/quality_high"
+                    style="@style/Widget.Cleanup.QualityOption"
+                    android:layout_marginTop="8dp" />
+            </RadioGroup>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/quality_cancel"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:minHeight="48dp"
+                android:textSize="14sp"
+                android:textAllCaps="false"
+                android:text="@string/cleanup_cancel"
+                android:textColor="@color/home_text_secondary" />
+        </LinearLayout>
+    </ScrollView>
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,25 @@
+<resources>
+    <string name="quality_small_title">Smaller file</string>
+    <string name="quality_small_description">More compression</string>
+    <string name="quality_balanced_title">Balanced</string>
+    <string name="quality_balanced_description">Size and detail</string>
+    <string name="quality_high_title">Higher quality</string>
+    <string name="quality_high_description">More detail</string>
+    <style name="Widget.Cleanup.QualityOption" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:paddingEnd">14dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:drawablePadding">12dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:fontFamily">@font/home_roboto_regular</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/quality_option_text</item>
+        <item name="android:button">@null</item>
+        <item name="buttonTint">@null</item>
+        <item name="android:background">@drawable/quality_option_background</item>
+    </style>
+</resources>

@@ -18,7 +18,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -30,7 +29,6 @@ import com.example.aicleanphonestorage.feature.filecleaner.data.*
 import com.example.aicleanphonestorage.feature.filecleaner.operations.FileContentAccess
 import com.example.aicleanphonestorage.feature.junkcleaner.ui.descriptionRes
 import com.example.aicleanphonestorage.feature.junkcleaner.ui.titleRes
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -53,7 +51,7 @@ class FileCleanupActivity : AppCompatActivity() {
         }
     }
     private lateinit var binding: ScreenFileCleanupBinding
-    private lateinit var listState:CleanupListStateRenderer
+    private lateinit var listState: CleanupListStateRenderer
     private lateinit var filters: CleanupFilters
     private var adapter: CleanupFilesAdapter? = null
     private var lastError = 0L
@@ -62,13 +60,21 @@ class FileCleanupActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         operationCoordinator = CleanupOperationCoordinator(this, model, savedInstanceState)
+        supportFragmentManager.setFragmentResultListener(CompressionQualityDialog.RESULT, this) {
+            _,
+            result ->
+            val id = result.getLong(CompressionQualityDialog.FILE_ID)
+            val quality = result.getInt(CompressionQualityDialog.QUALITY)
+            if (id > 0 && QualityOption.entries.any { it.value == quality })
+                model.quality(id, quality)
+        }
         enableEdgeToEdge(
             SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
             SystemBarStyle.light(Color.TRANSPARENT, Color.BLACK),
         )
         binding = ScreenFileCleanupBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        listState=CleanupListStateRenderer(binding)
+        listState = CleanupListStateRenderer(binding)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val bars =
                 insets.getInsets(
@@ -126,13 +132,11 @@ class FileCleanupActivity : AppCompatActivity() {
         adapter = files
         binding.cleanupFiles.adapter = files
         // 两类事件都由 Paging Presenter 在主线程同步回调，避免旧 Loading 被异步收集到页面提交之后。
-        files.addLoadStateListener { listState.loading(it,files.itemCount) }
+        files.addLoadStateListener { listState.loading(it, files.itemCount) }
         files.addOnPagesUpdatedListener { listState.pagesPresented(files.itemCount) }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { model.files.collectLatest(files::submitData) }
-
-
             }
         }
     }
@@ -229,22 +233,17 @@ class FileCleanupActivity : AppCompatActivity() {
     }
 
     private fun quality(file: ScannedFile) {
-        val values = intArrayOf(60, 75, 85)
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.cleanup_quality)
-            .setSingleChoiceItems(
-                arrayOf(
-                    getString(R.string.cleanup_quality_small),
-                    getString(R.string.cleanup_quality_balanced),
-                    getString(R.string.cleanup_quality_high),
-                ),
-                values.indexOf(file.quality),
-            ) { dialog, index ->
-                model.quality(file.id, values[index])
-                dialog.dismiss()
-            }
-            .setNegativeButton(R.string.cleanup_cancel, null)
-            .show()
+        val manager = supportFragmentManager
+        if (
+            manager.isStateSaved ||
+                !lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) ||
+                model.state.value.operation != CleanupOperationState.Idle ||
+                model.state.value.editing > 0 ||
+                manager.findFragmentByTag(CompressionQualityDialog.TAG) != null
+        )
+            return
+        CompressionQualityDialog.create(file.id, file.quality)
+            .showNow(manager, CompressionQualityDialog.TAG)
     }
 
     private fun toast(message: Int) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()

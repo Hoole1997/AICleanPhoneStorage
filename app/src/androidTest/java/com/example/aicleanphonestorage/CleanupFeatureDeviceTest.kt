@@ -11,12 +11,14 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.aicleanphonestorage.app.CleanApplication
 import com.example.aicleanphonestorage.feature.filecleaner.data.*
 import com.example.aicleanphonestorage.feature.filecleaner.operations.*
+import com.example.aicleanphonestorage.feature.filecleaner.ui.CompressionQualityDialog
 import com.example.aicleanphonestorage.feature.filecleaner.ui.FileCleanupActivity
 import java.io.File
 import java.io.RandomAccessFile
@@ -133,14 +135,16 @@ class CleanupFeatureDeviceTest {
 
     @Test
     fun fourPagesRenderSelectionConfirmationAndSurviveRecreation() {
-        org.junit.Assume.assumeTrue("UI tests require an unlocked, awake device",
+        org.junit.Assume.assumeTrue(
+            "UI tests require an unlocked, awake device",
             context.getSystemService(android.os.PowerManager::class.java).isInteractive &&
-                !context.getSystemService(android.app.KeyguardManager::class.java).isKeyguardLocked)
+                !context.getSystemService(android.app.KeyguardManager::class.java).isKeyguardLocked,
+        )
 
         val root = File(context.cacheDir, "cleanup_test_${UUID.randomUUID()}").apply { mkdirs() }
         try {
             val photos = (0..11).map { photo(root, it) }
-            for (feature in CleanupFeature.entries.filter{it!=CleanupFeature.SMART_CLEAN}) {
+            for (feature in CleanupFeature.entries.filter { it != CleanupFeature.SMART_CLEAN }) {
                 val handle =
                     scan(
                         feature,
@@ -195,6 +199,90 @@ class CleanupFeatureDeviceTest {
                 }
             }
         } finally {
+            root.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun customQualityDialogRestoresAndUpdatesOnlyItsPhoto() {
+        val root = File(context.cacheDir, "quality_test_${UUID.randomUUID()}").apply { mkdirs() }
+        val handle = scan(CleanupFeature.PHOTO_COMPRESS, listOf(photo(root, 1), photo(root, 2)))
+        try {
+            val rows = index.page(handle, CleanupFilter(), 0, 2)
+            val target = rows.first()
+            ActivityScenario.launch<FileCleanupActivity>(
+                    Intent(context, FileCleanupActivity::class.java)
+                        .putExtra(FileCleanupActivity.EXTRA_SCAN, handle.id)
+                )
+                .use { scenario ->
+                    waitUntil {
+                        var ready = false
+                        scenario.onActivity {
+                            ready =
+                                it.lifecycle.currentState.isAtLeast(
+                                    androidx.lifecycle.Lifecycle.State.RESUMED
+                                ) &&
+                                    it.hasWindowFocus() &&
+                                    it.findViewById<RecyclerView>(R.id.cleanup_files)
+                                        .findViewHolderForAdapterPosition(0) != null
+                        }
+                        ready
+                    }
+                    fun open() =
+                        scenario.onActivity {
+                            it.findViewById<RecyclerView>(R.id.cleanup_files)
+                                .findViewHolderForAdapterPosition(0)!!
+                                .itemView
+                                .findViewById<View>(R.id.photo_saving_action)
+                                .performClick()
+                            assertNotNull(
+                                it.supportFragmentManager.findFragmentByTag(
+                                    CompressionQualityDialog.TAG
+                                )
+                            )
+                        }
+                    open()
+                    screenshot("quality_actual")
+                    onView(withId(R.id.quality_balanced))
+                        .inRoot(isDialog())
+                        .check(matches(isChecked()))
+                    scenario.recreate()
+                    onView(withId(R.id.quality_balanced))
+                        .inRoot(isDialog())
+                        .check(matches(isChecked()))
+                    assertEquals(75, index.get(target.id)!!.quality)
+                    onView(withId(R.id.quality_high)).inRoot(isDialog()).perform(click())
+                    waitUntil { index.get(target.id)!!.quality == 85 }
+                    assertEquals(75, index.get(rows.last().id)!!.quality)
+                    assertEquals(0, index.totals(handle, CleanupFilter()).selectedCount)
+                    waitUntil {
+                        var updated = false
+                        scenario.onActivity {
+                            updated =
+                                it.findViewById<RecyclerView>(R.id.cleanup_files)
+                                    .findViewHolderForAdapterPosition(0)
+                                    ?.itemView
+                                    ?.findViewById<View>(R.id.photo_saving_action)
+                                    ?.contentDescription
+                                    ?.endsWith("85") == true
+                        }
+                        updated
+                    }
+                    open()
+                    onView(withId(R.id.quality_high)).inRoot(isDialog()).check(matches(isChecked()))
+                    screenshot("quality_custom")
+                    onView(withId(R.id.quality_cancel)).inRoot(isDialog()).perform(click())
+                    assertEquals(85, index.get(target.id)!!.quality)
+                    scenario.onActivity {
+                        assertNull(
+                            it.supportFragmentManager.findFragmentByTag(
+                                CompressionQualityDialog.TAG
+                            )
+                        )
+                    }
+                }
+        } finally {
+            index.discard(handle.id)
             root.deleteRecursively()
         }
     }
