@@ -17,7 +17,8 @@ import com.example.aicleanphonestorage.app.MainActivity
 import com.example.aicleanphonestorage.core.ui.loading.TaskLoadingDialogFragment
 import com.example.aicleanphonestorage.feature.networktraffic.data.UsageAccessChecker
 import com.example.aicleanphonestorage.feature.networktraffic.ui.NetworkTrafficActivity
-import com.example.aicleanphonestorage.feature.networktraffic.ui.UsageAccessSettings
+import com.example.aicleanphonestorage.core.permissions.PermissionKind
+import com.example.aicleanphonestorage.core.permissions.PermissionSettingsNavigator
 import org.junit.Assert.*
 import org.junit.Assume.assumeTrue
 import org.junit.Test
@@ -66,7 +67,7 @@ class TrafficFeatureDeviceTest {
 
     @Test fun usageAccessIntentTargetsCurrentApplication() {
         val context = instrumentation.targetContext
-        val intent = UsageAccessSettings.detailsIntent(context.packageName)
+        val intent = PermissionSettingsNavigator.intents(PermissionKind.USAGE, context.packageName, null).first()
         assertEquals("package", intent.data?.scheme)
         assertEquals(context.packageName, intent.data?.schemeSpecificPart)
         // 真机公共路由可解析；不点击开关、不改用户授权。

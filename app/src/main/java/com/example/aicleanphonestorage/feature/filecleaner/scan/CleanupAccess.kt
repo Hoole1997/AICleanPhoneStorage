@@ -42,22 +42,6 @@ internal class CleanupAccess(context: Context) {
     private fun granted(permission: String) =
         ContextCompat.checkSelfPermission(app, permission) == PackageManager.PERMISSION_GRANTED
 
-    fun photoPermissions(): Array<String> =
-        when {
-            Build.VERSION.SDK_INT >= 34 ->
-                arrayOf(
-                    Manifest.permission.READ_MEDIA_IMAGES,
-                    Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED,
-                )
-            Build.VERSION.SDK_INT >= 33 -> arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
-            Build.VERSION.SDK_INT <= 28 ->
-                arrayOf(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                )
-            else -> arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-        }
-
     @Suppress("DEPRECATION")
     suspend fun resolve(feature: CleanupFeature): ScanAccess {
         val allFiles = Build.VERSION.SDK_INT >= 30 && Environment.isExternalStorageManager()

@@ -1,29 +1,67 @@
 package com.example.aicleanphonestorage.app
 
 import android.content.Context
+import com.example.aicleanphonestorage.core.coroutines.AppDispatchers
+import com.example.aicleanphonestorage.core.coroutines.TaskExecutor
 import com.example.aicleanphonestorage.core.data.OneShotTransfer
-import com.example.aicleanphonestorage.feature.notifications.data.AndroidNotificationAppsRepository
-import com.example.aicleanphonestorage.feature.notifications.data.NotificationRulesStore
-import com.example.aicleanphonestorage.feature.notifications.data.NotificationAppsRepository
-import com.example.aicleanphonestorage.feature.notifications.data.NotificationCatalog
-import com.example.aicleanphonestorage.feature.notifications.service.NotificationListenerConnection
+import com.example.aicleanphonestorage.feature.home.data.HomeOverviewRepository
 import com.example.aicleanphonestorage.feature.networktraffic.data.AndroidNetworkTrafficRepository
 import com.example.aicleanphonestorage.feature.networktraffic.data.NetworkTrafficRepository
 import com.example.aicleanphonestorage.feature.networktraffic.data.TrafficSnapshotTransfer
-import com.example.aicleanphonestorage.core.coroutines.AppDispatchers
-import com.example.aicleanphonestorage.core.coroutines.TaskExecutor
-import com.example.aicleanphonestorage.feature.home.data.EmptyHomeOverviewRepository
-import com.example.aicleanphonestorage.feature.home.data.HomeOverviewRepository
+import com.example.aicleanphonestorage.feature.notifications.data.AndroidNotificationAppsRepository
+import com.example.aicleanphonestorage.feature.notifications.data.NotificationAppsRepository
+import com.example.aicleanphonestorage.feature.notifications.data.NotificationCatalog
+import com.example.aicleanphonestorage.feature.notifications.data.NotificationRulesStore
+import com.example.aicleanphonestorage.feature.notifications.service.NotificationListenerConnection
 
 /** 手动依赖注入的唯一组装入口。应用级对象禁止保存 Activity/View 或启动隐式后台任务。 */
 class AppContainer(context: Context) {
     private val applicationContext = context.applicationContext
-    internal val fileScanRepository by lazy { com.example.aicleanphonestorage.feature.filecleaner.data.FileScanRepository(applicationContext,taskExecutor) }
-    internal val fileOperations by lazy { com.example.aicleanphonestorage.feature.filecleaner.operations.FileOperationEngine(applicationContext,fileScanRepository.index,taskExecutor) }
-    internal val installedAppsReader by lazy { com.example.aicleanphonestorage.core.data.apps.InstalledAppsReader(applicationContext,taskExecutor) }
-    internal val appManagerRepository by lazy { com.example.aicleanphonestorage.feature.appmanager.data.AndroidAppManagerRepository(installedAppsReader) }
-    internal val appManagerTransfer by lazy { OneShotTransfer<com.example.aicleanphonestorage.feature.appmanager.data.AppManagerCatalog>() }
-    internal val junkSummaryRepository by lazy { com.example.aicleanphonestorage.feature.junkcleaner.data.JunkSummaryRepository(fileScanRepository.index,taskExecutor) }
+    internal val fileScanRepository by lazy {
+        com.example.aicleanphonestorage.feature.filecleaner.data.FileScanRepository(
+            applicationContext,
+            taskExecutor,
+        )
+    }
+    internal val fileOperations by lazy {
+        com.example.aicleanphonestorage.feature.filecleaner.operations.FileOperationEngine(
+            applicationContext,
+            fileScanRepository.index,
+            taskExecutor,
+        )
+    }
+    internal val installedAppsReader by lazy {
+        com.example.aicleanphonestorage.core.data.apps.InstalledAppsReader(
+            applicationContext,
+            taskExecutor,
+        )
+    }
+    internal val appManagerRepository by lazy {
+        com.example.aicleanphonestorage.feature.appmanager.data.AndroidAppManagerRepository(
+            installedAppsReader
+        )
+    }
+    internal val appManagerTransfer by lazy {
+        OneShotTransfer<com.example.aicleanphonestorage.feature.appmanager.data.AppManagerCatalog>()
+    }
+    internal val junkSummaryRepository by lazy {
+        com.example.aicleanphonestorage.feature.junkcleaner.data.JunkSummaryRepository(
+            fileScanRepository.index,
+            taskExecutor,
+        )
+    }
+    internal val permissionAccess by lazy {
+        com.example.aicleanphonestorage.core.permissions.AndroidPermissionAccess(
+            applicationContext,
+            android.content.ComponentName(
+                applicationContext,
+                com.example.aicleanphonestorage.feature.notifications.service
+                        .NotificationCleanerService::class
+                    .java,
+            ),
+            taskExecutor,
+        )
+    }
     val taskExecutor: TaskExecutor by lazy { TaskExecutor(AppDispatchers()) }
     val notificationRules by lazy { NotificationRulesStore(applicationContext) }
     val notificationConnection by lazy { NotificationListenerConnection() }
@@ -35,8 +73,14 @@ class AppContainer(context: Context) {
     val homeOverviewRepository: HomeOverviewRepository by lazy {
         com.example.aicleanphonestorage.feature.home.data.AndroidHomeOverviewRepository(
             junkSummaryRepository,
-            com.example.aicleanphonestorage.feature.home.data.HomeFileMetricsSource(fileScanRepository.index,taskExecutor),
-            com.example.aicleanphonestorage.feature.home.data.HomePlatformMetricsSource(applicationContext,taskExecutor),
+            com.example.aicleanphonestorage.feature.home.data.HomeFileMetricsSource(
+                fileScanRepository.index,
+                taskExecutor,
+            ),
+            com.example.aicleanphonestorage.feature.home.data.HomePlatformMetricsSource(
+                applicationContext,
+                taskExecutor,
+            ),
             notificationRules,
         )
     }

@@ -10,7 +10,5 @@ import com.example.aicleanphonestorage.feature.notifications.service.Notificatio
 class NotificationAccess(context: Context) {
     private val app = context.applicationContext
     val component = ComponentName(app, NotificationCleanerService::class.java)
-    fun isGranted(): Boolean = if (Build.VERSION.SDK_INT >= 27) {
-        app.getSystemService(NotificationManager::class.java)?.isNotificationListenerAccessGranted(component) == true
-    } else NotificationManagerCompat.getEnabledListenerPackages(app).contains(app.packageName)
+    fun isGranted():Boolean=com.example.aicleanphonestorage.core.permissions.PermissionChecks.notifications(app,component)
 }

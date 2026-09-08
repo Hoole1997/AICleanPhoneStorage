@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.asStateFlow
 internal sealed interface CleanupEntryState {
     data object Idle : CleanupEntryState
 
+    data class Checking(val feature: CleanupFeature) : CleanupEntryState
+
     data class Permission(val feature: CleanupFeature, val request: AccessRequest) :
         CleanupEntryState
 
@@ -22,7 +24,7 @@ internal sealed interface CleanupEntryState {
     data class Loading(
         val feature: CleanupFeature,
         val id: Long,
-        val frame: TimedEntryProgress.Frame = TimedEntryProgress.Frame(TaskProgress("FILES",0),0),
+        val frame: TimedEntryProgress.Frame = TimedEntryProgress.Frame(TaskProgress("FILES", 0), 0),
     ) : CleanupEntryState
 
     data class Ready(val handle: ScanHandle) : CleanupEntryState
@@ -48,6 +50,7 @@ internal class CleanupEntryViewModel(
     fun begin(feature: CleanupFeature) {
         if (current.value is CleanupEntryState.Loading) return
         job?.cancel()
+        current.value = CleanupEntryState.Checking(feature)
         saved[KEY] = feature.name
         job =
             viewModelScope.launch {
@@ -63,7 +66,9 @@ internal class CleanupEntryViewModel(
                         TimedEntryLoader().load(
                             initialStage = "FILES",
                             finalStage = "FILES",
-                            continuousStages=if(feature==CleanupFeature.SMART_CLEAN)listOf("FILES","PHOTOS")else listOf("FILES"),
+                            continuousStages =
+                                if (feature == CleanupFeature.SMART_CLEAN) listOf("FILES", "PHOTOS")
+                                else listOf("FILES"),
                             count = { it: ScanHandle -> it.scannedCount },
                             onFrame = {
                                 if ((current.value as? CleanupEntryState.Loading)?.id == id)
@@ -102,7 +107,11 @@ internal class CleanupEntryViewModel(
     }
 
     fun onBackground() {
-        if (current.value is CleanupEntryState.Loading) cancel()
+        if (
+            current.value is CleanupEntryState.Loading ||
+                current.value is CleanupEntryState.Checking
+        )
+            cancel()
     }
 
     fun cancel() {
@@ -118,10 +127,18 @@ internal class CleanupEntryViewModel(
     }
 
     fun rememberTree(uri: String, feature: CleanupFeature) {
-        viewModelScope.launch {
-            repository.rememberTree(uri)
-            begin(feature)
-        }
+        current.value = CleanupEntryState.Checking(feature)
+        job =
+            viewModelScope.launch {
+                try {
+                    repository.rememberTree(uri)
+                    begin(feature)
+                } catch (error: CancellationException) {
+                    throw error
+                } catch (_: IOException) {
+                    current.value = CleanupEntryState.Failed(feature)
+                }
+            }
     }
 
     companion object {

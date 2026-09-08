@@ -1,0 +1,19 @@
+<resources>
+    <string name="permission_usage_title">Usage access</string>
+    <string name="permission_usage_message">Allow usage access to view app network traffic and storage statistics. Turn on access for this app on the next screen.</string>
+    <string name="permission_notification_title">Notification access</string>
+    <string name="permission_notification_message">Allow notification access to automatically clear notifications from apps you select. We do not store notification contents.</string>
+    <string name="permission_files_title">File access</string>
+    <string name="permission_files_message">Allow access to shared storage to find and manage files. Other apps’ private folders are excluded. You can choose a folder instead.</string>
+    <string name="permission_photos_title">Photos access</string>
+    <string name="permission_photos_message">Allow access to photos to find screenshots and create compressed copies. Where supported, you can allow selected photos only.</string>
+    <string name="permission_phone_title">Mobile traffic access</string>
+    <string name="permission_phone_message">This Android version needs phone access to identify the mobile subscription for traffic statistics. You can continue with Wi-Fi only.</string>
+    <string name="permission_folder_title">Choose a folder</string>
+    <string name="permission_folder_message">Choose a writable folder to scan and manage. Only files inside the folder you select will be included.</string>
+    <string name="permission_system_note">Android will ask you to confirm this access.</string>
+    <string name="permission_continue">Continue</string>
+    <string name="permission_open_settings">Open settings</string>
+    <string name="permission_not_now">Not now</string>
+    <string name="permission_unavailable">Couldn’t open or complete this permission request. Please try again.</string>
+</resources>

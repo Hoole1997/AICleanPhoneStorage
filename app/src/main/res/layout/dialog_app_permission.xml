@@ -1,0 +1,90 @@
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.Home.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="20dp"
+    app:cardBackgroundColor="@color/home_surface">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="28dp"
+            android:paddingBottom="12dp">
+            <ImageView
+                android:id="@+id/permission_icon"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:padding="14dp"
+                android:background="@drawable/permission_icon_surface"
+                android:scaleType="fitCenter"
+                android:contentDescription="@null"
+                android:importantForAccessibility="no" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/permission_title"
+                style="@style/Widget.Home.Text.Semibold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:textSize="20sp"
+                android:textColor="@color/home_title"
+                android:gravity="center"
+                android:accessibilityHeading="true" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/permission_message"
+                style="@style/Widget.Home.Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:gravity="center" />
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/Widget.Home.Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textSize="12sp"
+                android:textColor="@color/home_text_secondary"
+                android:gravity="center"
+                android:text="@string/permission_system_note" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/permission_continue"
+                style="@style/Widget.Traffic.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:minHeight="48dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:cornerRadius="100dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/permission_folder"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:textAllCaps="false"
+                android:text="@string/cleanup_choose_folder"
+                android:visibility="gone" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/permission_cancel"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:minHeight="48dp"
+                android:textAllCaps="false"
+                android:textColor="@color/home_text_secondary" />
+        </LinearLayout>
+    </ScrollView>
+</com.google.android.material.card.MaterialCardView>
