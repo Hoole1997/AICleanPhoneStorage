@@ -1,0 +1,13 @@
+<resources>
+    <string name="push_clean">Nettoyer</string>
+    <string name="push_network">Réseau</string>
+    <string name="push_photos">Photos</string>
+    <string name="push_unused">Inutilisés</string>
+    <string name="push_shortcuts_channel">Outils de nettoyage rapide</string>
+    <string name="push_reminders_channel">Rappels de nettoyage</string>
+    <string name="push_settings">Notifications</string>
+    <string name="push_permission_title">Gardez vos outils à portée de main</string>
+    <string name="push_permission_message">Autorisez les notifications pour accéder au nettoyage, au réseau, aux photos et aux fichiers inutilisés et recevoir des rappels.</string>
+    <string name="push_reminder_title">Faites de la place pour l’essentiel</string>
+    <string name="push_reminder_body">Examinez vos fichiers et photos quand vous le souhaitez. Vous décidez quoi garder ou supprimer.</string>
+</resources>

@@ -37,6 +37,9 @@ class PermissionDialogFragment : DialogFragment() {
         val binding = DialogAppPermissionBinding.inflate(inflater, container, false)
         val spec =
             when (kind) {
+                PermissionKind.POST_NOTIFICATIONS ->
+                    Triple(R.string.push_permission_title, R.string.push_permission_message,
+                        R.drawable.ic_tool_notifications)
                 PermissionKind.USAGE ->
                     Triple(
                         R.string.permission_usage_title,

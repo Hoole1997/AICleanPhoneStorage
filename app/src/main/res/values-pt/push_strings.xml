@@ -1,0 +1,13 @@
+<resources>
+    <string name="push_clean">Limpar</string>
+    <string name="push_network">Rede</string>
+    <string name="push_photos">Fotos</string>
+    <string name="push_unused">Sem uso</string>
+    <string name="push_shortcuts_channel">Ferramentas de limpeza</string>
+    <string name="push_reminders_channel">Lembretes de limpeza</string>
+    <string name="push_settings">Notificações</string>
+    <string name="push_permission_title">Tenha a limpeza sempre à mão</string>
+    <string name="push_permission_message">Permita notificações para acessar limpeza, rede, fotos e arquivos sem uso pelo painel de notificações e receber lembretes.</string>
+    <string name="push_reminder_title">Abra espaço para o que importa</string>
+    <string name="push_reminder_body">Revise arquivos e fotos quando quiser. Você decide o que manter ou excluir.</string>
+</resources>

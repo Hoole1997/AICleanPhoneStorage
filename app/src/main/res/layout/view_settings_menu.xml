@@ -1,6 +1,10 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/Widget.Home.Card" android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="20dp" android:clipToOutline="true">
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+        <com.example.aicleanphonestorage.feature.settings.SettingsItemView android:id="@+id/settings_notifications"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            app:settingTitle="@string/push_settings" app:settingIcon="@drawable/ic_tool_notifications" />
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginLeft="68dp" android:layout_marginRight="20dp" android:background="#EFF2F7" />
         <com.example.aicleanphonestorage.feature.settings.SettingsItemView android:id="@+id/settings_language"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             app:settingTitle="@string/settings_language" app:settingIcon="@drawable/ic_settings_language" />

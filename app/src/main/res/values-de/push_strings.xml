@@ -1,0 +1,13 @@
+<resources>
+    <string name="push_clean">Reinigen</string>
+    <string name="push_network">Netzwerk</string>
+    <string name="push_photos">Fotos</string>
+    <string name="push_unused">Ungenutzt</string>
+    <string name="push_shortcuts_channel">Schnelle Reinigung</string>
+    <string name="push_reminders_channel">Reinigungserinnerungen</string>
+    <string name="push_settings">Benachrichtigungen</string>
+    <string name="push_permission_title">Reinigungswerkzeuge griffbereit</string>
+    <string name="push_permission_message">Erlaube Benachrichtigungen, um Reinigung, Netzwerk, Fotos und ungenutzte Dateien schnell zu öffnen und Reinigungserinnerungen zu erhalten.</string>
+    <string name="push_reminder_title">Platz für Wichtiges schaffen</string>
+    <string name="push_reminder_body">Prüfe Dateien und Fotos, wenn du Zeit hast. Du entscheidest, was bleibt und was gelöscht wird.</string>
+</resources>

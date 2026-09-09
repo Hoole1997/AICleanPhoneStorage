@@ -1,0 +1,13 @@
+<resources>
+    <string name="push_clean">Dọn dẹp</string>
+    <string name="push_network">Mạng</string>
+    <string name="push_photos">Ảnh</string>
+    <string name="push_unused">Chưa dùng</string>
+    <string name="push_shortcuts_channel">Công cụ dọn dẹp nhanh</string>
+    <string name="push_reminders_channel">Lời nhắc dọn dẹp</string>
+    <string name="push_settings">Thông báo</string>
+    <string name="push_permission_title">Mở nhanh công cụ dọn dẹp</string>
+    <string name="push_permission_message">Cho phép thông báo để mở dọn dẹp, mạng, ảnh và tệp chưa dùng từ bảng thông báo, cũng như nhận lời nhắc.</string>
+    <string name="push_reminder_title">Dành chỗ cho điều quan trọng</string>
+    <string name="push_reminder_body">Xem lại tệp và ảnh khi bạn sẵn sàng. Bạn quyết định giữ hay xóa nội dung nào.</string>
+</resources>

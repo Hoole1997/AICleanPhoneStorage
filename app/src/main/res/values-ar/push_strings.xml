@@ -1,0 +1,13 @@
+<resources>
+    <string name="push_clean">تنظيف</string>
+    <string name="push_network">الشبكة</string>
+    <string name="push_photos">الصور</string>
+    <string name="push_unused">غير مستخدم</string>
+    <string name="push_shortcuts_channel">أدوات التنظيف السريع</string>
+    <string name="push_reminders_channel">تذكيرات التنظيف</string>
+    <string name="push_settings">الإشعارات</string>
+    <string name="push_permission_title">أدوات التنظيف في متناولك</string>
+    <string name="push_permission_message">اسمح بالإشعارات للوصول إلى التنظيف والشبكة والصور والملفات غير المستخدمة من لوحة الإشعارات وتلقي التذكيرات.</string>
+    <string name="push_reminder_title">أفسح المجال لما يهمك</string>
+    <string name="push_reminder_body">راجع الملفات والصور عندما يناسبك. أنت تختار ما تحتفظ به أو تحذفه.</string>
+</resources>

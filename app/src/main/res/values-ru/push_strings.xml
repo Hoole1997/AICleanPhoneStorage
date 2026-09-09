@@ -1,0 +1,13 @@
+<resources>
+    <string name="push_clean">Очистка</string>
+    <string name="push_network">Сеть</string>
+    <string name="push_photos">Фото</string>
+    <string name="push_unused">Неисп.</string>
+    <string name="push_shortcuts_channel">Быстрые инструменты очистки</string>
+    <string name="push_reminders_channel">Напоминания об очистке</string>
+    <string name="push_settings">Уведомления</string>
+    <string name="push_permission_title">Инструменты очистки под рукой</string>
+    <string name="push_permission_message">Разрешите уведомления для быстрого доступа к очистке, сети, фото и неиспользуемым файлам, а также получения напоминаний.</string>
+    <string name="push_reminder_title">Освободите место для важного</string>
+    <string name="push_reminder_body">Просмотрите файлы и фото в удобное время. Вы решаете, что сохранить или удалить.</string>
+</resources>

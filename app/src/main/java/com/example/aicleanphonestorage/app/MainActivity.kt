@@ -18,12 +18,11 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.aicleanphonestorage.core.permissions.*
 import com.example.aicleanphonestorage.databinding.ScreenHomeBinding
 import com.example.aicleanphonestorage.feature.appmanager.ui.*
-import com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature
 import com.example.aicleanphonestorage.feature.filecleaner.ui.*
 import com.example.aicleanphonestorage.feature.home.preview.HomePreviewSupport
 import com.example.aicleanphonestorage.feature.home.ui.HomeRenderer
 import com.example.aicleanphonestorage.feature.home.ui.HomeTool
-import com.example.aicleanphonestorage.feature.home.ui.HomeUiActions
+import com.example.aicleanphonestorage.feature.home.ui.HomeEntryActions
 import com.example.aicleanphonestorage.feature.home.ui.HomeViewModel
 import com.example.aicleanphonestorage.feature.networktraffic.ui.NetworkTrafficActivity
 import com.example.aicleanphonestorage.feature.networktraffic.ui.NetworkTrafficEntryCoordinator
@@ -32,6 +31,9 @@ import com.example.aicleanphonestorage.feature.notifications.ui.NotificationClea
 import com.example.aicleanphonestorage.feature.notifications.ui.NotificationCleanerViewModel
 import com.example.aicleanphonestorage.feature.notifications.ui.NotificationEntryCoordinator
 import kotlinx.coroutines.launch
+import com.example.aicleanphonestorage.feature.push.NotificationNavigation
+import com.example.aicleanphonestorage.feature.push.PushPermissionCoordinator
+import com.remax.notification.NotificationDestination
 
 /** 只负责窗口和生命周期。系统状态栏由 Android 绘制，不用设计稿的 iOS 图标/时间冒充。 */
 class MainActivity : AppCompatActivity() {
@@ -52,6 +54,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    private lateinit var homeActions: HomeEntryActions
+    private lateinit var pushPermission: PushPermissionCoordinator
+    private var allowPushPrompt = true
     private lateinit var permissions: PermissionCoordinator
     private lateinit var renderer: HomeRenderer
     private var previewSelection: String? = null
@@ -158,76 +163,17 @@ class MainActivity : AppCompatActivity() {
                 appManagerEntry.state.collect(appManagerCoordinator::render)
             }
         }
-        renderer =
-            HomeRenderer(
-                binding,
-                object : HomeUiActions by HomeUiActions.None {
-                    override fun onSettings() {
-                        permissions.cancel()
-                        trafficEntry.cancelEntry()
-                        notificationEntry.cancelEntry()
-                        appManagerEntry.cancel()
-                        cleanupEntry.cancel()
-                        startActivity(
-                            Intent(
-                                    this@MainActivity,
-                                    com.example.aicleanphonestorage.feature.settings
-                                            .SettingsActivity::class
-                                        .java,
-                                )
-                                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                        )
-                    }
-
-                    override fun onSmartClean() {
-                        permissions.cancel()
-                        trafficEntry.cancelEntry()
-                        notificationEntry.cancelEntry()
-                        appManagerEntry.cancel()
-                        cleanupEntry.begin(CleanupFeature.SMART_CLEAN)
-                    }
-
-                    override fun onToolSelected(tool: HomeTool) {
-                        permissions.cancel()
-                        when (tool) {
-                            HomeTool.Network -> {
-                                appManagerEntry.cancel()
-                                cleanupEntry.cancel()
-                                notificationEntry.cancelEntry()
-                                trafficEntry.beginEntry()
-                            }
-                            HomeTool.Notifications -> {
-                                appManagerEntry.cancel()
-                                cleanupEntry.cancel()
-                                trafficEntry.cancelEntry()
-                                notificationEntry.beginEntry()
-                            }
-                            HomeTool.Compress,
-                            HomeTool.LargeFiles,
-                            HomeTool.UnusedFiles,
-                            HomeTool.Screenshots -> {
-                                appManagerEntry.cancel()
-                                trafficEntry.cancelEntry()
-                                notificationEntry.cancelEntry()
-                                cleanupEntry.begin(
-                                    when (tool) {
-                                        HomeTool.Compress -> CleanupFeature.PHOTO_COMPRESS
-                                        HomeTool.LargeFiles -> CleanupFeature.LARGE_FILES
-                                        HomeTool.UnusedFiles -> CleanupFeature.UNUSED_FILES
-                                        else -> CleanupFeature.SCREENSHOTS
-                                    }
-                                )
-                            }
-                            HomeTool.Apps -> {
-                                trafficEntry.cancelEntry()
-                                notificationEntry.cancelEntry()
-                                cleanupEntry.cancel()
-                                appManagerEntry.begin()
-                            }
-                        }
-                    }
-                },
-            )
+        homeActions = HomeEntryActions(
+            permissions, trafficEntry, notificationEntry, cleanupEntry, appManagerEntry,
+            beforeNavigation = { allowPushPrompt = false },
+            openSettings = {
+                startActivity(Intent(this, com.example.aicleanphonestorage.feature.settings.SettingsActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP))
+            },
+        )
+        renderer = HomeRenderer(binding, homeActions)
+        pushPermission = PushPermissionCoordinator(this, permissions,
+            (application as CleanApplication).notificationRuntime)
         binding.retryButton.setOnClickListener { homeViewModel.retry() }
         previewSelection = HomePreviewSupport.initialSelection(intent, savedInstanceState)
         HomePreviewSupport.attach(binding.pageTitle) { selection ->
@@ -235,6 +181,7 @@ class MainActivity : AppCompatActivity() {
             renderCurrentState()
         }
         renderCurrentState()
+        handleNotificationIntent(intent)
         if (intent.getBooleanExtra(NetworkTrafficActivity.EXTRA_REENTER, false)) {
             intent.removeExtra(NetworkTrafficActivity.EXTRA_REENTER)
             trafficEntry.beginEntry()
@@ -268,6 +215,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         renderer.setResumed(true)
+        pushPermission.onResume { allowPushPrompt && previewSelection == null }
         if (!permissions.pending) {
             trafficEntry.onForeground()
             notificationEntry.onForeground()
@@ -307,6 +255,7 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         if (permissions.onReturnIntent(intent)) return
         setIntent(intent)
+        handleNotificationIntent(intent)
         if (intent.getBooleanExtra(NetworkTrafficActivity.EXTRA_REENTER, false)) {
             permissions.cancel()
             notificationEntry.cancelEntry()
@@ -316,6 +265,19 @@ class MainActivity : AppCompatActivity() {
             permissions.cancel()
             trafficEntry.cancelEntry()
             notificationEntry.beginEntry()
+        }
+    }
+
+    private fun handleNotificationIntent(intent: Intent) {
+        val destination = NotificationNavigation.consume(intent) ?: return
+        allowPushPrompt = false
+        when (destination) {
+            NotificationDestination.HOME -> homeActions.cancelPending()
+            NotificationDestination.CLEAN -> homeActions.onSmartClean()
+            NotificationDestination.NETWORK -> homeActions.onToolSelected(HomeTool.Network)
+            NotificationDestination.PHOTOS -> homeActions.onToolSelected(HomeTool.Compress)
+            NotificationDestination.UNUSED_FILES -> homeActions.onToolSelected(HomeTool.UnusedFiles)
+            NotificationDestination.SCREENSHOTS -> homeActions.onToolSelected(HomeTool.Screenshots)
         }
     }
 

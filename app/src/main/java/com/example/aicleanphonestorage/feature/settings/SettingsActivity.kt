@@ -6,12 +6,16 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.databinding.ViewSettingsMenuBinding
 
-/** 四个固定入口用原生按钮布局；无需列表适配器、后台订阅或额外权限。 */
+/** 固定入口用原生按钮布局；无需列表适配器、后台订阅或额外权限。 */
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val page = SettingsPage.install(this, R.string.home_settings)
         val menu = ViewSettingsMenuBinding.inflate(layoutInflater, page.settingsBody, true)
+        menu.settingsNotifications.setOnClickListener {
+            com.example.aicleanphonestorage.core.permissions.PermissionSettingsNavigator.open(
+                this, com.example.aicleanphonestorage.core.permissions.PermissionKind.POST_NOTIFICATIONS, null)
+        }
         menu.settingsLanguage.setOnClickListener { open(LanguageSettingsActivity::class.java) }
         menu.settingsFeedback.setOnClickListener { open(FeedbackActivity::class.java) }
         menu.settingsAbout.setOnClickListener { open(AboutActivity::class.java) }
@@ -22,6 +26,11 @@ class SettingsActivity : AppCompatActivity() {
                 R.string.settings_link_unavailable,
             )
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (application as com.example.aicleanphonestorage.app.CleanApplication).notificationRuntime.refreshResident()
     }
 
     private fun open(target: Class<out AppCompatActivity>) {

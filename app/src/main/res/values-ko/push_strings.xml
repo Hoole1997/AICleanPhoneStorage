@@ -1,0 +1,13 @@
+<resources>
+    <string name="push_clean">정리</string>
+    <string name="push_network">네트워크</string>
+    <string name="push_photos">사진</string>
+    <string name="push_unused">미사용</string>
+    <string name="push_shortcuts_channel">빠른 정리 도구</string>
+    <string name="push_reminders_channel">정리 알림</string>
+    <string name="push_settings">알림 설정</string>
+    <string name="push_permission_title">정리 도구를 간편하게</string>
+    <string name="push_permission_message">알림을 허용하면 알림창에서 정리, 네트워크, 사진, 미사용 파일에 빠르게 접근하고 정리 알림을 받을 수 있습니다.</string>
+    <string name="push_reminder_title">중요한 것을 위한 공간 확보</string>
+    <string name="push_reminder_body">편할 때 파일과 사진을 확인하세요. 보관하거나 삭제할 항목은 직접 선택합니다.</string>
+</resources>

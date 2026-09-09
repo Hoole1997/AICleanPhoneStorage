@@ -1,0 +1,13 @@
+<resources>
+    <string name="push_clean">クリーン</string>
+    <string name="push_network">通信量</string>
+    <string name="push_photos">写真</string>
+    <string name="push_unused">未使用</string>
+    <string name="push_shortcuts_channel">クリーンアップツール</string>
+    <string name="push_reminders_channel">クリーンアップのリマインダー</string>
+    <string name="push_settings">通知設定</string>
+    <string name="push_permission_title">ツールにすばやくアクセス</string>
+    <string name="push_permission_message">通知を許可すると、通知パネルからクリーンアップ、通信量、写真、未使用ファイルを開き、リマインダーを受け取れます。</string>
+    <string name="push_reminder_title">大切なもののために空き容量を</string>
+    <string name="push_reminder_body">都合のよいときにファイルや写真を確認しましょう。残すものと削除するものは自分で選べます。</string>
+</resources>

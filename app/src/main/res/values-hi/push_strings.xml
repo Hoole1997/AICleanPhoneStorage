@@ -1,0 +1,13 @@
+<resources>
+    <string name="push_clean">सफ़ाई</string>
+    <string name="push_network">नेटवर्क</string>
+    <string name="push_photos">फ़ोटो</string>
+    <string name="push_unused">अनुपयोगी</string>
+    <string name="push_shortcuts_channel">त्वरित सफ़ाई टूल</string>
+    <string name="push_reminders_channel">सफ़ाई के रिमाइंडर</string>
+    <string name="push_settings">सूचनाएँ</string>
+    <string name="push_permission_title">सफ़ाई टूल हमेशा पास रखें</string>
+    <string name="push_permission_message">सूचना पैनल से सफ़ाई, नेटवर्क, फ़ोटो और अनुपयोगी फ़ाइलें खोलने और रिमाइंडर पाने के लिए सूचनाओं की अनुमति दें।</string>
+    <string name="push_reminder_title">ज़रूरी चीज़ों के लिए जगह बनाएँ</string>
+    <string name="push_reminder_body">समय मिलने पर फ़ाइलें और फ़ोटो देखें। क्या रखना या हटाना है, यह आप तय करते हैं।</string>
+</resources>

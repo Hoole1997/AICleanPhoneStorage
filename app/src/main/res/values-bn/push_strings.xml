@@ -1,0 +1,13 @@
+<resources>
+    <string name="push_clean">পরিষ্কার</string>
+    <string name="push_network">নেটওয়ার্ক</string>
+    <string name="push_photos">ছবি</string>
+    <string name="push_unused">অব্যবহৃত</string>
+    <string name="push_shortcuts_channel">দ্রুত পরিষ্কারের টুল</string>
+    <string name="push_reminders_channel">পরিষ্কারের রিমাইন্ডার</string>
+    <string name="push_settings">বিজ্ঞপ্তি</string>
+    <string name="push_permission_title">পরিষ্কারের টুল হাতের কাছে রাখুন</string>
+    <string name="push_permission_message">বিজ্ঞপ্তি প্যানেল থেকে পরিষ্কার, নেটওয়ার্ক, ছবি ও অব্যবহৃত ফাইল খুলতে এবং রিমাইন্ডার পেতে বিজ্ঞপ্তির অনুমতি দিন।</string>
+    <string name="push_reminder_title">গুরুত্বপূর্ণ জিনিসের জন্য জায়গা করুন</string>
+    <string name="push_reminder_body">সুবিধামতো ফাইল ও ছবি দেখুন। কী রাখবেন বা মুছবেন, তা আপনিই বেছে নিন।</string>
+</resources>

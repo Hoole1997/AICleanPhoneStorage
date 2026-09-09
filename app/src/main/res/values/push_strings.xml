@@ -1,0 +1,13 @@
+<resources>
+    <string name="push_clean">Clean</string>
+    <string name="push_network">Network</string>
+    <string name="push_photos">Photos</string>
+    <string name="push_unused">Unused</string>
+    <string name="push_shortcuts_channel">Quick cleaning tools</string>
+    <string name="push_reminders_channel">Cleaning reminders</string>
+    <string name="push_settings">Notifications</string>
+    <string name="push_permission_title">Keep cleaning tools handy</string>
+    <string name="push_permission_message">Allow notifications to access Clean, Network, Photos and unused files from your notification shade and receive cleaning reminders.</string>
+    <string name="push_reminder_title">Make room for what matters</string>
+    <string name="push_reminder_body">Review files and photos when you are ready. You choose what to keep or delete.</string>
+</resources>

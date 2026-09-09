@@ -1,0 +1,13 @@
+<resources>
+    <string name="push_clean">Temizle</string>
+    <string name="push_network">Ağ</string>
+    <string name="push_photos">Fotoğraf</string>
+    <string name="push_unused">Atıl</string>
+    <string name="push_shortcuts_channel">Hızlı temizleme araçları</string>
+    <string name="push_reminders_channel">Temizleme hatırlatıcıları</string>
+    <string name="push_settings">Bildirimler</string>
+    <string name="push_permission_title">Temizleme araçları elinizin altında</string>
+    <string name="push_permission_message">Bildirim panelinden temizleme, ağ, fotoğraflar ve kullanılmayan dosyalara erişmek ve hatırlatıcı almak için bildirimlere izin verin.</string>
+    <string name="push_reminder_title">Önemli şeylere yer açın</string>
+    <string name="push_reminder_body">Dosya ve fotoğrafları uygun olduğunuzda inceleyin. Neyi saklayıp sileceğinize siz karar verirsiniz.</string>
+</resources>

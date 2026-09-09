@@ -1,0 +1,8 @@
+# Android library 的编译产物与本地缓存，不提交 AAR、DEX、测试报告或中间文件。
+/build/
+/.gradle/
+/.kotlin/
+/.cxx/
+/.externalNativeBuild/
+/local.properties
+*.iml

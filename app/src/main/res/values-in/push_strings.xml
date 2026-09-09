@@ -1,0 +1,13 @@
+<resources>
+    <string name="push_clean">Bersihkan</string>
+    <string name="push_network">Jaringan</string>
+    <string name="push_photos">Foto</string>
+    <string name="push_unused">Tak dipakai</string>
+    <string name="push_shortcuts_channel">Alat pembersihan cepat</string>
+    <string name="push_reminders_channel">Pengingat pembersihan</string>
+    <string name="push_settings">Notifikasi</string>
+    <string name="push_permission_title">Alat pembersihan mudah diakses</string>
+    <string name="push_permission_message">Izinkan notifikasi untuk membuka pembersihan, jaringan, foto, dan file yang tidak dipakai dari panel notifikasi serta menerima pengingat.</string>
+    <string name="push_reminder_title">Beri ruang untuk yang penting</string>
+    <string name="push_reminder_body">Tinjau file dan foto saat Anda siap. Anda yang memilih apa yang disimpan atau dihapus.</string>
+</resources>

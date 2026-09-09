@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -9,7 +10,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.aicleanphonestorage"
+        applicationId = "com.leafmotivation.quizguessoncolor"
         minSdk = 24
         targetSdk = 37
         versionCode = 1
@@ -40,6 +41,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":notification"))
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.datastore.preferences)
@@ -56,6 +58,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(platform(libs.firebase.bom))
+    androidTestImplementation(libs.firebase.messaging)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.test.core)

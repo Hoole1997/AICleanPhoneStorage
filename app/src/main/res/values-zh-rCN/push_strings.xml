@@ -1,0 +1,13 @@
+<resources>
+    <string name="push_clean">清理</string>
+    <string name="push_network">流量</string>
+    <string name="push_photos">照片</string>
+    <string name="push_unused">闲置文件</string>
+    <string name="push_shortcuts_channel">快捷清理工具</string>
+    <string name="push_reminders_channel">清理提醒</string>
+    <string name="push_settings">通知设置</string>
+    <string name="push_permission_title">随时打开清理工具</string>
+    <string name="push_permission_message">允许通知后，可从通知栏快速打开清理、流量、照片和闲置文件，并接收清理提醒。</string>
+    <string name="push_reminder_title">为重要内容腾出空间</string>
+    <string name="push_reminder_body">方便时查看文件和照片，由你决定保留或删除哪些内容。</string>
+</resources>

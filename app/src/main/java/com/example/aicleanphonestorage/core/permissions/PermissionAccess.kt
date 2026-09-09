@@ -17,6 +17,7 @@ import com.example.aicleanphonestorage.core.coroutines.TaskExecutor
 internal enum class PermissionKind {
     USAGE,
     NOTIFICATIONS,
+    POST_NOTIFICATIONS,
     ALL_FILES,
     PHOTOS,
     PHONE,
@@ -55,6 +56,9 @@ internal object PermissionChecks {
 
     fun runtimePermissions(kind: PermissionKind): Array<String> =
         when (kind) {
+            PermissionKind.POST_NOTIFICATIONS ->
+                if (Build.VERSION.SDK_INT >= 33) arrayOf(Manifest.permission.POST_NOTIFICATIONS)
+                else emptyArray()
             PermissionKind.PHONE ->
                 if (Build.VERSION.SDK_INT <= 28) arrayOf(Manifest.permission.READ_PHONE_STATE)
                 else emptyArray()
@@ -107,6 +111,9 @@ internal class AndroidPermissionAccess(
                 PermissionKind.USAGE -> PermissionChecks.usage(app)
                 PermissionKind.NOTIFICATIONS ->
                     PermissionChecks.notifications(app, notificationComponent)
+                PermissionKind.POST_NOTIFICATIONS ->
+                    NotificationManagerCompat.from(app).areNotificationsEnabled() &&
+                        PermissionChecks.grantedRuntime(app, kind)
                 PermissionKind.ALL_FILES ->
                     Build.VERSION.SDK_INT >= 30 && Environment.isExternalStorageManager()
                 PermissionKind.PHOTOS,

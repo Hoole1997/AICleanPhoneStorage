@@ -19,6 +19,13 @@ internal object PermissionSettingsNavigator {
     ): List<Intent> =
         buildList {
                 when (kind) {
+                    PermissionKind.POST_NOTIFICATIONS -> {
+                        if (Build.VERSION.SDK_INT >= 26)
+                            add(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                                .putExtra(Settings.EXTRA_APP_PACKAGE, packageName))
+                        add(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            Uri.fromParts("package", packageName, null)))
+                    }
                     PermissionKind.USAGE -> {
                         add(
                             Intent(

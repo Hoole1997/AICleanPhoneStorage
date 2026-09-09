@@ -1,0 +1,11 @@
+{
+  "organic_channel": {
+    "total_push_count": 3,
+    "unlock_push_interval": "10",
+    "background_push_interval": "10",
+    "new_user_cooldown": "24",
+    "do_not_disturb_start": "02:00",
+    "do_not_disturb_end": "08:00",
+    "notification_enabled": 1
+  }
+}

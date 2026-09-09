@@ -29,6 +29,8 @@
         android:supportsRtl="false"
         android:localeConfig="@xml/locales_config"
         android:theme="@style/Theme.AICleanPhoneStorage">
+        <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/ic_home_clean" />
+        <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="clean_reminders" />
         <activity android:name=".feature.settings.SettingsActivity" android:exported="false" />
         <activity android:name=".feature.settings.LanguageSettingsActivity" android:exported="false" />
         <activity android:name=".feature.settings.FeedbackActivity" android:exported="false" />

@@ -1,0 +1,13 @@
+<resources>
+    <string name="push_clean">صفائی</string>
+    <string name="push_network">نیٹ ورک</string>
+    <string name="push_photos">تصاویر</string>
+    <string name="push_unused">غیر مستعمل</string>
+    <string name="push_shortcuts_channel">فوری صفائی کے ٹولز</string>
+    <string name="push_reminders_channel">صفائی کی یاد دہانیاں</string>
+    <string name="push_settings">اطلاعات</string>
+    <string name="push_permission_title">صفائی کے ٹولز قریب رکھیں</string>
+    <string name="push_permission_message">اطلاعاتی پینل سے صفائی، نیٹ ورک، تصاویر اور غیر مستعمل فائلیں کھولنے اور یاد دہانیاں حاصل کرنے کے لیے اطلاعات کی اجازت دیں۔</string>
+    <string name="push_reminder_title">اہم چیزوں کے لیے جگہ بنائیں</string>
+    <string name="push_reminder_body">جب مناسب ہو فائلوں اور تصاویر کا جائزہ لیں۔ کیا رکھنا یا حذف کرنا ہے، یہ آپ منتخب کرتے ہیں۔</string>
+</resources>

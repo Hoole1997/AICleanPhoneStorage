@@ -24,3 +24,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "AIClean&PhoneStorage"
 include(":app")
+
+include(":notification")
