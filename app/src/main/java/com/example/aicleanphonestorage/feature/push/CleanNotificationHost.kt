@@ -35,6 +35,10 @@ internal class CleanNotificationHost(context: Context) : NotificationHost {
         })
     }
 
+    override fun onEvent(name: String, properties: Map<String, Any?>) {
+        com.example.aicleanphonestorage.app.ad.AdAnalytics.report(name, properties)
+    }
+
     override val smallIcon = R.drawable.ic_home_clean
     override val appName get() = localized().getString(R.string.app_name)
     override val residentChannelName get() = localized().getString(R.string.push_shortcuts_channel)

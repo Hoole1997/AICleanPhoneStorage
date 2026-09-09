@@ -27,5 +27,6 @@ class CleanApplication : Application(), NotificationRuntimeOwner {
         registerActivityLifecycleCallbacks(LanguageActivityCallbacks(languages))
         languages.initialize()
         notificationRuntime.initialize()
+        com.example.aicleanphonestorage.app.ad.AdSdkInitializer.initialize(this)
     }
 }

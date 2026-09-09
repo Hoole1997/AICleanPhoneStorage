@@ -12,6 +12,15 @@ fun channelConfig(name: String) = Properties().apply {
     file("src/$name/config.properties").inputStream().use { load(InputStreamReader(it, Charsets.UTF_8)) }
 }
 
+// 两个脚本分别导出独立 Map，避免来源项目按任务名选择配置造成多渠道串用。
+apply(from = "src/local/config.gradle")
+apply(from = "src/google/config.gradle")
+
+fun adConfig(channel: String): Map<*, *> = extensions.extraProperties["${channel}AdConfig"] as Map<*, *>
+fun Map<*, *>.section(name: String): Map<*, *> = this[name] as? Map<*, *> ?: emptyMap<String, String>()
+fun Map<*, *>.text(name: String) = this[name]?.toString().orEmpty()
+fun buildString(value: String) = "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
+
 android {
     namespace = "com.example.aicleanphonestorage"
     compileSdk {
@@ -19,7 +28,7 @@ android {
     }
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 26
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
@@ -37,6 +46,29 @@ android {
                 versionCode = config.getProperty("versionCode").toInt()
                 versionName = config.getProperty("versionName")
                 buildConfigField("boolean", "REMOTE_PUSH_ENABLED", config.getProperty("remotePushEnabled"))
+                val ads = adConfig(channel)
+                val platforms = listOf("admob", "gam", "pangle", "topon", "max")
+                val slots = mapOf("splash" to "SPLASH", "banner" to "BANNER", "interstitial" to "INTERSTITIAL",
+                    "native" to "NATIVE", "full_native" to "FULL_NATIVE", "rewarded" to "REWARDED")
+                platforms.forEach { platform ->
+                    val item = ads.section(platform)
+                    val prefix = platform.uppercase()
+                    buildConfigField("String", "${prefix}_APPLICATION_ID", buildString(item.text("applicationId")))
+                    val units = item.section("adUnitIds")
+                    slots.forEach { (key, suffix) ->
+                        val value = units.text(key).ifEmpty { if (key == "full_native") units.text("fullNative") else "" }
+                        buildConfigField("String", "${prefix}_${suffix}_ID", buildString(value))
+                    }
+                }
+                buildConfigField("String", "TOPON_APP_KEY", buildString(ads.section("topon").text("appKey")))
+                buildConfigField("String", "MAX_SDK_KEY", buildString(ads.section("max").text("sdkKey")))
+                val analytics = ads.section("analytics")
+                buildConfigField("String", "DEFAULT_USER_CHANNEL", buildString(analytics.text("defaultUserChannel")))
+                buildConfigField("String", "ADJUST_APP_TOKEN", buildString(analytics.text("adjustAppToken")))
+                buildConfigField("String", "THINKING_DATA_APP_ID", buildString(analytics.text("thinkingDataAppId")))
+                buildConfigField("String", "THINKING_DATA_SERVER_URL", buildString(analytics.text("thinkingDataServerUrl")))
+                manifestPlaceholders["ADMOB_APPLICATION_ID"] = ads.section("admob").text("applicationId")
+
             }
         }
     }
@@ -58,12 +90,23 @@ android {
     }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
 dependencies {
+    implementation("com.github.toukaremax:core:1.0.15")
+    implementation("com.github.toukaremax:bill:1.0.51") {
+        // 保留 Unity Mediation 9.2.0，排除旧 IronSource 坐标，避免同包类冲突。
+        exclude(group = "com.ironsource.sdk", module = "mediationsdk")
+    }
+    implementation(platform(libs.firebase.bom))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-config")
+    implementation("cn.thinkingdata.android:ThinkingAnalyticsSDK:3.0.2")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
     implementation(libs.androidx.splashscreen)
     implementation(libs.xxpermissions)
     implementation(libs.device.compat)

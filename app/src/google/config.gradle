@@ -1,0 +1,58 @@
+// Google 渠道占位：填写正式广告和统计配置后再启用；不使用 local 测试 ID。
+ext.googleAdConfig = [
+    // AdMob配置
+    admob: [applicationId: "", // 测试应用ID，请替换为实际的AdMob应用ID
+             adUnitIds    : [banner      : "",        // 横幅广告测试ID
+                             interstitial: "", // 插页广告测试ID
+                             splash      : "",       // 开屏广告测试ID
+                             native      : "",        // 原生广告测试ID
+                             full_native : "",        // 全屏原生广告测试ID
+                             rewarded    : ""         // 激励广告测试ID
+             ]],
+
+    // Google Ad Manager 配置（官方测试 ID）
+    gam: [adUnitIds: [banner      : "",
+                       interstitial: "",
+                       splash      : "",
+                       native      : "",
+                       full_native : "",
+                       rewarded    : ""
+    ]],
+
+    // Pangle配置
+    pangle: [applicationId: "", // Pangle测试应用ID
+              adUnitIds    : [splash      : "",        // 开屏广告测试ID（竖屏）
+                              banner      : "",        // 横幅广告测试ID（320x50）
+                              interstitial: "",       // 插页广告测试ID（竖屏）
+                              native      : "",        // 原生广告测试ID
+                              full_native : "",        // 全屏原生广告测试ID
+                              rewarded    : ""         // 激励视频测试ID（竖屏）
+              ]],
+
+    // TopOn配置
+    topon: [applicationId: "",           // TopOn 应用 ID（需替换为实际值）
+             appKey       : "",          // TopOn 应用密钥（需替换为实际值）
+             adUnitIds    : [interstitial: "",  // 插页广告位 ID（需替换为实际值）
+                             rewarded    : "",  // 激励广告位 ID
+                             native      : "",  // 原生广告位 ID（需替换为实际值）
+                             splash      : "",  // 开屏广告位 ID（需替换为实际值）
+                             full_native : "",  // 全屏原生广告位 ID（需替换为实际值）
+                             banner      : ""]  // 横幅广告位 ID（需替换为实际值）
+    ],
+
+    // MAX (AppLovin) 配置
+    max: [sdkKey   : "",  // Demo SDK Key（测试用）
+           adUnitIds: [splash      : "",      // 开屏广告位 ID
+                       banner      : "",      // 横幅广告位 ID
+                       interstitial: "",// 插页广告位 ID
+                       native      : "",      // 原生广告位 ID
+                       fullNative  : "", // 全屏原生广告位 ID
+                       rewarded    : ""]    // 激励广告位 ID
+    ],
+
+    // 统计归因配置
+    analytics: [adjustAppToken: "",           // Adjust App Token
+                 thinkingDataAppId: "",   // 数数 SDK APP ID
+                 thinkingDataServerUrl: "",     // 数数上报域名
+                 defaultUserChannel: "natural"]                           // 默认用户渠道，internal默认paid
+]
