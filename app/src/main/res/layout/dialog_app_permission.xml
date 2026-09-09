@@ -68,15 +68,6 @@
                 android:insetBottom="0dp"
                 app:cornerRadius="100dp" />
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/permission_folder"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:textAllCaps="false"
-                android:text="@string/cleanup_choose_folder"
-                android:visibility="gone" />
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/permission_cancel"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="match_parent"

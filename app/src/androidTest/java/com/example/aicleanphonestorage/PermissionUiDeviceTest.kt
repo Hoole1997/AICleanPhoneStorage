@@ -147,7 +147,7 @@ class PermissionUiDeviceTest {
     }
 
     @Test
-    fun folderAlternativeReturnsChoiceWithoutGrantingOrOpeningSystemPages() {
+    fun filePermissionDialogCanBeCancelledWithoutOpeningSystemPages() {
         assumeTrue(
             context.getSystemService(PowerManager::class.java).isInteractive &&
                 !context.getSystemService(KeyguardManager::class.java).isKeyguardLocked
@@ -164,8 +164,11 @@ class PermissionUiDeviceTest {
                 val dialog =
                     PermissionDialogFragment.create("test", PermissionKind.ALL_FILES, false)
                 dialog.showNow(activity.supportFragmentManager, "permission.ui.test")
-                dialog.requireView().findViewById<View>(R.id.permission_folder).performClick()
-                assertEquals("folder", action)
+                val binding = DialogAppPermissionBinding.bind(dialog.requireView())
+                assertEquals(context.getString(R.string.permission_open_settings),
+                    binding.permissionContinue.text.toString())
+                binding.permissionCancel.performClick()
+                assertEquals("cancel", action)
             }
         }
     }

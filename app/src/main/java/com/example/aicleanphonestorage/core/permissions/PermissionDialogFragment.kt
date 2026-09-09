@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.core.graphics.drawable.toDrawable
-import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.databinding.DialogAppPermissionBinding
@@ -90,17 +89,13 @@ class PermissionDialogFragment : DialogFragment() {
             if (kind == PermissionKind.PHONE) R.string.traffic_wifi_only
             else R.string.permission_not_now
         )
-        binding.permissionFolder.isVisible = kind == PermissionKind.ALL_FILES
+        // 文件访问说明只引导当前权限申请，不混入目录选择这一独立授权流程。
         binding.permissionContinue.setOnClickListener {
             result(if (settings) "settings" else "continue")
             dismiss()
         }
         binding.permissionCancel.setOnClickListener {
             result(if (kind == PermissionKind.PHONE) "skip" else "cancel")
-            dismiss()
-        }
-        binding.permissionFolder.setOnClickListener {
-            result("folder")
             dismiss()
         }
         return binding.root

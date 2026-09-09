@@ -58,7 +58,6 @@ internal class PermissionCoordinator(
                 "continue",
                 "settings" ->
                     request(route, kind, result.getString("action") == "settings" || kind.special)
-                "folder" -> request(route, PermissionKind.DIRECTORY, false)
                 "skip" ->
                     handlers[route]?.result?.invoke(PermissionOutcome(kind, false, skipped = true))
                 else ->
