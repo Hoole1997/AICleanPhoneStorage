@@ -56,7 +56,6 @@ class MainActivity : AppCompatActivity() {
     }
     private lateinit var homeActions: HomeEntryActions
     private lateinit var pushPermission: PushPermissionCoordinator
-    private var allowPushPrompt = true
     private lateinit var permissions: PermissionCoordinator
     private lateinit var renderer: HomeRenderer
     private var previewSelection: String? = null
@@ -165,14 +164,13 @@ class MainActivity : AppCompatActivity() {
         }
         homeActions = HomeEntryActions(
             permissions, trafficEntry, notificationEntry, cleanupEntry, appManagerEntry,
-            beforeNavigation = { allowPushPrompt = false },
             openSettings = {
                 startActivity(Intent(this, com.example.aicleanphonestorage.feature.settings.SettingsActivity::class.java)
                     .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP))
             },
         )
         renderer = HomeRenderer(binding, homeActions)
-        pushPermission = PushPermissionCoordinator(this, permissions,
+        pushPermission = PushPermissionCoordinator(this,
             (application as CleanApplication).notificationRuntime)
         binding.retryButton.setOnClickListener { homeViewModel.retry() }
         previewSelection = HomePreviewSupport.initialSelection(intent, savedInstanceState)
@@ -215,7 +213,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         renderer.setResumed(true)
-        pushPermission.onResume { allowPushPrompt && previewSelection == null }
+        pushPermission.onResume(otherPermissionPending = permissions.pending)
         if (!permissions.pending) {
             trafficEntry.onForeground()
             notificationEntry.onForeground()
@@ -270,7 +268,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleNotificationIntent(intent: Intent) {
         val destination = NotificationNavigation.consume(intent) ?: return
-        allowPushPrompt = false
         when (destination) {
             NotificationDestination.HOME -> homeActions.cancelPending()
             NotificationDestination.CLEAN -> homeActions.onSmartClean()

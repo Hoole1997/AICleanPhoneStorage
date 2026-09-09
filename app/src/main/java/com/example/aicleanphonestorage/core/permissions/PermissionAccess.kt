@@ -112,8 +112,7 @@ internal class AndroidPermissionAccess(
                 PermissionKind.NOTIFICATIONS ->
                     PermissionChecks.notifications(app, notificationComponent)
                 PermissionKind.POST_NOTIFICATIONS ->
-                    NotificationManagerCompat.from(app).areNotificationsEnabled() &&
-                        PermissionChecks.grantedRuntime(app, kind)
+                    com.remax.notification.NotificationPermissionAccess.isGranted(app)
                 PermissionKind.ALL_FILES ->
                     Build.VERSION.SDK_INT >= 30 && Environment.isExternalStorageManager()
                 PermissionKind.PHOTOS,

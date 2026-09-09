@@ -53,7 +53,7 @@ Clean 原图来自节点 5666:1803 的透明 image fill，存档于 `design/figm
 
 ## 权限与推送测试
 
-首次首页复用统一权限说明 UI，并通过 Android POST_NOTIFICATIONS 系统回调授权；拒绝后不循环弹框。设置 → 通知设置可管理应用与两个通知通道。
+首页每次 `onResume` 通过 XXPermissions 28.3 判断通知权限，未授权时用 `getPostNotificationsPermission()` 请求。Android 13 以下由库兼容通知设置页；运行时权限已授予而 OEM 通知总开关关闭时改用 `getNotificationServicePermission()`。已授权则刷新常驻通知，进行中的请求不会因系统页面返回而重入；不再读取旧的 `push_permission/explained` 首次申请标记。回调再次检查真实权限，拒绝后不在回调内重试。设置 → 通知设置使用 XXPermissions 的设置页入口，系统已不允许再次弹出运行时权限时可在此管理。发布通知前的权限和通道检查也共用同一库。
 
 默认普通推送策略：每日 3 次，前后台/解锁间隔各 10 分钟，新安装冷却 24 分钟，02:00–08:00 免打扰，前台不提示。原源码 `new_user_cooldown` 的单位为分钟。按本地日历惰性换日，不用午夜唤醒。只有成功发布才计数；FCM messageId 最多保留 32 个作去重，不记录正文或 token。
 
@@ -83,3 +83,7 @@ FCM 后台集成使用 **data-only** 消息，经客户端策略、版本过滤�
 - `FirebaseRegistrationTest`：在线确认测试包名、Firebase 初始化、成功获取非空 FCM token；不输出 token，不向 ALL 或其他设备发送消息。
 - 截图来自 Android 15 真机。没有将渲染测试或架构设计表述为 ANR/功耗性能测量。
 - 未从服务端发出端到端 FCM 消息；设备注册成功不等于服务端投递联调已完成。
+
+XXPermissions 接入依据：[官方示例](https://github.com/getActivity/XXPermissions/blob/master/app/src/main/java/com/hjq/permissions/demo/MainActivity.java)。DeviceCompat 2.6，JitPack 仓库仅允许这两个库的坐标。
+
+本次 XXPermissions 验证：Debug/Release 构建、单元测试和 Lint 通过；真机通道关闭判断通过。首次授权弹框用例因设备已授权且 ADB 撤权受限而跳过，需在未授权测试环境运行 `NotificationPermissionDeviceTest` 完成该项核验。

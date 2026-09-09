@@ -14,11 +14,9 @@ internal class HomeEntryActions(
     private val notifications: NotificationCleanerViewModel,
     private val cleanup: CleanupEntryViewModel,
     private val apps: AppManagerEntryViewModel,
-    private val beforeNavigation: () -> Unit,
     private val openSettings: () -> Unit,
 ) : HomeUiActions {
     fun cancelPending() {
-        beforeNavigation()
         permissions.cancel()
         traffic.cancelEntry()
         notifications.cancelEntry()

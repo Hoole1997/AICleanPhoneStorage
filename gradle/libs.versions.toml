@@ -21,6 +21,9 @@ exif = "1.4.2"
 firebaseBom = "34.18.0"
 googleServices = "4.5.0"
 
+xxpermissions = "28.3"
+deviceCompat = "2.6"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -46,6 +49,9 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-config = { module = "com.google.firebase:firebase-config" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle" }
+
+xxpermissions = { module = "com.github.getActivity:XXPermissions", version.ref = "xxpermissions" }
+device-compat = { module = "com.github.getActivity:DeviceCompat", version.ref = "deviceCompat" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

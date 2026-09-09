@@ -13,8 +13,8 @@ class SettingsActivity : AppCompatActivity() {
         val page = SettingsPage.install(this, R.string.home_settings)
         val menu = ViewSettingsMenuBinding.inflate(layoutInflater, page.settingsBody, true)
         menu.settingsNotifications.setOnClickListener {
-            com.example.aicleanphonestorage.core.permissions.PermissionSettingsNavigator.open(
-                this, com.example.aicleanphonestorage.core.permissions.PermissionKind.POST_NOTIFICATIONS, null)
+            com.hjq.permissions.XXPermissions.startPermissionActivity(
+                this, com.hjq.permissions.permission.PermissionLists.getPostNotificationsPermission())
         }
         menu.settingsLanguage.setOnClickListener { open(LanguageSettingsActivity::class.java) }
         menu.settingsFeedback.setOnClickListener { open(FeedbackActivity::class.java) }

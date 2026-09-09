@@ -12,6 +12,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.xxpermissions)
+    implementation(libs.device.compat)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.process)

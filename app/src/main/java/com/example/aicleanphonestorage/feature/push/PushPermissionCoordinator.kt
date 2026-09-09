@@ -1,53 +1,39 @@
 package com.example.aicleanphonestorage.feature.push
 
-import android.content.Context
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationManagerCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import com.example.aicleanphonestorage.core.permissions.PermissionCoordinator
-import com.example.aicleanphonestorage.core.permissions.PermissionKind
+import com.hjq.permissions.XXPermissions
 import com.remax.notification.NotificationRuntime
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.remax.notification.NotificationPermissionAccess
 
-/** 复用统一说明 UI 和系统回调；首次只解释一次，拒绝后用户可从设置页再次管理。 */
+/** Activity 级协调器，只由首页 onResume 调用；不保留 Activity 到应用级对象，不进行后台轮询。 */
 internal class PushPermissionCoordinator(
     private val activity: AppCompatActivity,
-    private val permissions: PermissionCoordinator,
     private val runtime: NotificationRuntime,
 ) {
-    private var checking = false
-    init {
-        permissions.register(ROUTE, before = {}) { runtime.refreshResident() }
-    }
+    private var requesting = false
 
-    fun onResume(allowPrompt: () -> Boolean) {
-        runtime.refreshResident()
-        if (!allowPrompt() || checking || Build.VERSION.SDK_INT < 33 || permissions.pending ||
-            NotificationManagerCompat.from(activity).areNotificationsEnabled()) return
-        checking = true
-        activity.lifecycleScope.launch {
-            try {
-                val shown = withContext(Dispatchers.IO) {
-                    activity.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-                        .getBoolean("explained", false)
-                }
-                if (shown || !allowPrompt() || permissions.pending || activity.supportFragmentManager.isStateSaved ||
-                    !activity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) return@launch
-                permissions.rationale(ROUTE, PermissionKind.POST_NOTIFICATIONS)
-                withContext(Dispatchers.IO) {
-                    activity.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-                        .edit().putBoolean("explained", true).commit()
-                }
-            } finally { checking = false }
+    fun onResume(otherPermissionPending: Boolean) {
+        if (NotificationPermissionAccess.isGranted(activity)) {
+            runtime.refreshResident()
+            return
         }
-    }
-
-    companion object {
-        private const val ROUTE = "permission.push"
-        private const val PREFS = "push_permission"
+        // 系统授权界面返回时也会触发 onResume；等原请求回调结束，避免嵌套申请。
+        if (requesting || otherPermissionPending || activity.isFinishing || activity.isDestroyed ||
+            activity.supportFragmentManager.isStateSaved) return
+        requesting = true
+        try {
+            XXPermissions.with(activity)
+                .permission(NotificationPermissionAccess.permissionToRequest(activity))
+                .request { _, deniedList ->
+                    requesting = false
+                    if (deniedList.isEmpty() && NotificationPermissionAccess.isGranted(activity)) {
+                        runtime.refreshResident()
+                    }
+                    // 拒绝后不在回调里重试；下次首页 onResume 再按真实状态判断。
+                }
+        } catch (error: RuntimeException) {
+            requesting = false
+            throw error
+        }
     }
 }

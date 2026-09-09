@@ -19,6 +19,13 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // 仅这两项依赖从官方示例使用的 JitPack 解析，避免影响其他库的来源。
+        maven("https://jitpack.io") {
+            content {
+                includeModule("com.github.getActivity", "XXPermissions")
+                includeModule("com.github.getActivity", "DeviceCompat")
+            }
+        }
     }
 }
 

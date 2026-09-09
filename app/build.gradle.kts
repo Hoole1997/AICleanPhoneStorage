@@ -41,6 +41,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.xxpermissions)
+    implementation(libs.device.compat)
     implementation(project(":notification"))
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.fragment.ktx)

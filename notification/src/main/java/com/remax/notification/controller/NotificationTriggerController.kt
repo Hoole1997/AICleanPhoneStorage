@@ -1,14 +1,11 @@
 package com.remax.notification.controller
 
-import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import com.remax.notification.NotificationDestination
 import com.remax.notification.NotificationHost
 import com.remax.notification.PushMessage
@@ -30,11 +27,7 @@ internal class NotificationTriggerController(
     }
 
     fun permitted(channel: String): Boolean {
-        if (Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(context,
-                Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return false
-        if (!NotificationManagerCompat.from(context).areNotificationsEnabled()) return false
-        return Build.VERSION.SDK_INT < 26 || context.getSystemService(NotificationManager::class.java)
-            .getNotificationChannel(channel)?.importance != NotificationManager.IMPORTANCE_NONE
+        return com.remax.notification.NotificationPermissionAccess.isGranted(context, channel)
     }
 
     fun resident(): Boolean {
