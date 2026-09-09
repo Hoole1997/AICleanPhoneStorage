@@ -17,7 +17,7 @@ import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.databinding.ItemCleanupFileBinding
 import com.example.aicleanphonestorage.databinding.ItemCleanupPhotoBinding
 import com.example.aicleanphonestorage.feature.filecleaner.data.*
-import java.text.SimpleDateFormat
+import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
 import kotlinx.coroutines.*
@@ -36,7 +36,7 @@ internal class CleanupFilesAdapter(
         photoGrid ||
             feature == CleanupFeature.PHOTO_COMPRESS ||
             feature == CleanupFeature.SCREENSHOTS
-    private val date = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
+    private val date = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault())
     private val holders = mutableSetOf<Holder>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {

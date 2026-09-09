@@ -1,0 +1,6 @@
+<androidx.appcompat.widget.AppCompatRadioButton xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/language_radio"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="6dp" android:minHeight="64dp"
+    android:button="@null" android:background="@drawable/quality_option_background" android:gravity="center_vertical|start"
+    android:layoutDirection="ltr" android:textDirection="firstStrong" android:textAlignment="viewStart" android:drawablePadding="16dp"
+    android:paddingStart="16dp" android:paddingEnd="16dp" android:paddingTop="12dp" android:paddingBottom="12dp"
+    android:fontFamily="@font/home_roboto_regular" android:textSize="16sp" android:textColor="@color/quality_option_text" />

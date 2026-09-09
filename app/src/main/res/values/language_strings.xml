@@ -1,0 +1,8 @@
+<resources>
+    <string name="language_follow_system">Follow system</string>
+    <string name="language_system_description">System language: %1$s</string>
+    <string name="language_select_hint">Choose the language used throughout the app.</string>
+    <string name="language_saving">Applying language…</string>
+    <string name="language_save_failed">Couldn’t change the language. Please try again.</string>
+    <string name="language_selected">Selected</string>
+</resources>

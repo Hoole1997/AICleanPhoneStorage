@@ -1,0 +1,164 @@
+{
+  "zh-CN": {
+    "language_follow_system": "跟随系统",
+    "app_manager_title": "应用管理",
+    "app_manager_scanning": "正在扫描…",
+    "app_manager_loading_prepare": "正在读取已安装应用",
+    "app_manager_loading_apps": "正在准备应用 · %1$d / %2$d",
+    "cleanup_clean": "清理",
+    "cleanup_unused": "闲置文件",
+    "cleanup_deselect_all": "取消全选",
+    "cleanup_photo_summary": "压缩照片，预计可节省：",
+    "cleanup_estimate": "预计节省 %1$s",
+    "cleanup_archives": "压缩包",
+    "cleanup_documents": "文档",
+    "cleanup_recent_days": "最近 %1$d 天",
+    "cleanup_all_time": "不限时间",
+    "cleanup_remove_originals": "删除原图",
+    "cleanup_keep_originals": "保留原图",
+    "cleanup_originals_confirm": "压缩副本已验证，是否删除对应的原图？",
+    "cleanup_compress_confirm": "为所选的 %1$d 张照片创建更小的 JPEG 副本？副本最大边长为 2048 像素，低内存设备上可能更小。原图会保留，透明区域将变为白色。",
+    "cleanup_all_access": "允许访问所有文件，以查找共享存储中的大文件和较旧文件，包括文档、压缩包和 APK。不会访问其他应用的私有文件夹。",
+    "home_metric_reading": "正在读取…",
+    "home_metric_access": "需要授权",
+    "home_used": "已用",
+    "home_smart_clean": "立即智能清理",
+    "home_manual_clean": "手动清理",
+    "home_tool_apps": "应用管理",
+    "home_tool_unused_files": "闲置文件",
+    "home_total_storage": "总共 %1$s",
+    "junk_title": "智能清理",
+    "junk_clean": "智能清理",
+    "junk_files_section": "垃圾文件",
+    "junk_logs": "旧日志",
+    "junk_duplicates": "重复照片",
+    "junk_similar": "相似照片",
+    "junk_quality": "待检查照片",
+    "junk_scope": "%1$s · 已跳过 %2$d 项照片分析，清理前请检查候选文件。",
+    "junk_similar_description": "按视觉相似程度分组的候选照片，每组保留一张参考图。删除前请逐张检查。",
+    "junk_quality_description": "小尺寸或细节较少的候选照片，可能仍有价值，请在删除前检查。",
+    "quality_small_title": "更小体积",
+    "quality_small_description": "提高压缩程度",
+    "quality_balanced_title": "均衡",
+    "quality_balanced_description": "兼顾体积和细节",
+    "quality_high_title": "更高画质",
+    "quality_high_description": "保留更多细节",
+    "completion_page_title": "已完成",
+    "completion_result_title": "处理结果",
+    "completion_partial_title": "部分项目未完成",
+    "completion_no_changes_title": "未处理任何文件",
+    "completion_no_changes_message": "没有文件处理成功，剩余文件仍可在列表中查看。",
+    "completion_copies_smaller": "压缩副本的总体积减少了 %1$s。",
+    "completion_originals_remaining#one": "已保留 %1$d 张原图，删除原图后可释放空间。",
+    "completion_originals_remaining#other": "已保留 %1$d 张原图，删除原图后可释放空间。",
+    "completion_files#one": "个文件已清理",
+    "completion_files#other": "个文件已清理",
+    "completion_photos#one": "张照片已压缩",
+    "completion_photos#other": "张照片已压缩",
+    "completion_apps#one": "个应用已开启通知自动清理",
+    "completion_apps#other": "个应用已开启通知自动清理",
+    "completion_notifications_message": "通知访问服务连接后，将自动清理这些应用的新通知。",
+    "completion_notifications_off": "通知自动清理已关闭，当前没有选中的应用。",
+    "permission_usage_title": "使用情况访问权限",
+    "permission_usage_message": "允许访问使用情况，以查看应用网络流量和存储统计。请在下一页为本应用开启权限。",
+    "permission_notification_title": "通知访问权限",
+    "permission_files_title": "文件访问权限",
+    "permission_photos_title": "照片访问权限",
+    "permission_phone_title": "移动流量访问",
+    "permission_phone_message": "此 Android 版本需要电话权限来识别 SIM 卡并统计移动流量。你也可以仅查看 Wi-Fi 流量。",
+    "permission_not_now": "暂不授权",
+    "language_select_hint": "选择应用使用的语言。",
+    "language_saving": "正在切换语言…",
+    "language_save_failed": "无法切换语言，请重试。",
+    "settings_feedback": "反馈建议",
+    "settings_privacy": "隐私政策",
+    "settings_feedback_email": "打开邮件应用",
+    "settings_feedback_description": "发现问题或有改进建议？欢迎告诉我们。",
+    "settings_feedback_note": "将打开邮件草稿，由你确认发送。",
+    "notification_title": "通知清理",
+    "notification_select_apps": "选择需要自动清理通知的应用",
+    "notification_loading_access": "正在检查通知访问权限",
+    "notification_access_title": "允许通知访问",
+    "notification_connection_wait": "通知服务尚未连接，请在系统设置中检查通知访问权限。",
+    "notification_access_message": "允许 AI Clean 清理你所选应用的通知。新通知到达后会被移除；常驻和受保护的通知会保留。不会保存通知内容。",
+    "traffic_this_month": "本月",
+    "traffic_last_month": "上月",
+    "traffic_24_hours": "近 24 小时",
+    "traffic_mobile": "移动流量",
+    "traffic_wifi": "Wi-Fi",
+    "traffic_apps": "应用",
+    "traffic_loading": "正在读取流量…",
+    "traffic_checking_access": "正在检查使用情况访问权限",
+    "traffic_access_title": "允许使用情况访问",
+    "traffic_reading_mobile": "正在读取移动流量",
+    "traffic_reading_wifi": "正在读取 Wi-Fi 流量",
+    "traffic_phone_needed": "此 Android 版本需要电话权限来读取移动流量，你也可以仅查看 Wi-Fi 流量。",
+    "traffic_phone_action": "允许读取移动流量",
+    "traffic_no_sim": "没有可用的 SIM 卡，无法读取移动流量。",
+    "traffic_access_message": "要查看各应用的移动和 Wi-Fi 流量，请在系统设置中为 AI Clean 开启使用情况访问权限。统计数据仅保存在此设备上。",
+    "cleanup_scope_shared": "共享存储",
+    "cleanup_scope_folder": "所选文件夹"
+  },
+  "hi": {
+    "language_follow_system": "सिस्टम की भाषा"
+  },
+  "es": {
+    "language_follow_system": "Seguir el idioma del sistema"
+  },
+  "ar": {
+    "language_follow_system": "اتباع لغة النظام",
+    "home_app_count#zero": "لا توجد تطبيقات",
+    "home_app_count#one": "تطبيق واحد",
+    "home_app_count#two": "تطبيقان",
+    "home_app_count#few": "%1$d تطبيقات",
+    "home_app_count#many": "%1$d تطبيقًا",
+    "home_app_count#other": "%1$d تطبيق",
+    "home_selected_apps#zero": "لم يتم تحديد أي تطبيق",
+    "home_selected_apps#one": "تم تحديد تطبيق واحد",
+    "home_selected_apps#two": "تم تحديد تطبيقين",
+    "home_selected_apps#few": "تم تحديد %1$d تطبيقات",
+    "home_selected_apps#many": "تم تحديد %1$d تطبيقًا",
+    "home_selected_apps#other": "تم تحديد %1$d تطبيق"
+  },
+  "pt": {
+    "language_follow_system": "Usar idioma do sistema"
+  },
+  "bn": {
+    "language_follow_system": "সিস্টেমের ভাষা অনুসরণ করুন"
+  },
+  "ur": {
+    "language_follow_system": "سسٹم کی زبان استعمال کریں"
+  },
+  "id": {
+    "language_follow_system": "Ikuti bahasa sistem"
+  },
+  "ru": {
+    "language_follow_system": "Как в системе",
+    "home_app_count#one": "%1$d приложение",
+    "home_app_count#few": "%1$d приложения",
+    "home_app_count#many": "%1$d приложений",
+    "home_app_count#other": "%1$d приложения",
+    "home_selected_apps#one": "Выбрано %1$d приложение",
+    "home_selected_apps#few": "Выбрано %1$d приложения",
+    "home_selected_apps#many": "Выбрано %1$d приложений",
+    "home_selected_apps#other": "Выбрано %1$d приложения"
+  },
+  "fr": {
+    "language_follow_system": "Suivre la langue du système"
+  },
+  "de": {
+    "language_follow_system": "Systemsprache verwenden"
+  },
+  "ja": {
+    "language_follow_system": "システムの言語を使用"
+  },
+  "ko": {
+    "language_follow_system": "시스템 언어 사용"
+  },
+  "vi": {
+    "language_follow_system": "Theo ngôn ngữ hệ thống"
+  },
+  "tr": {
+    "language_follow_system": "Sistem dilini kullan"
+  }
+}

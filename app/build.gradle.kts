@@ -28,6 +28,10 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    // 应用内切换可离线完成，避免语言资源只随安装时的系统语言拆分交付。
+    bundle {
+        language { enableSplit = false }
+    }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_11

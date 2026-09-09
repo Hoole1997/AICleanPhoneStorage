@@ -1,5 +1,5 @@
 <resources>
-    <string name="home_preview_hint">Design preview. Long press to switch states.</string>
-    <string name="home_preview_initial">Design preview · Not scanned</string>
-    <string name="home_preview_scanned">Design preview · Scan complete</string>
+    <string translatable="false" name="home_preview_hint">Design preview. Long press to switch states.</string>
+    <string translatable="false" name="home_preview_initial">Design preview · Not scanned</string>
+    <string translatable="false" name="home_preview_scanned">Design preview · Scan complete</string>
 </resources>

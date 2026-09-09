@@ -134,7 +134,7 @@ class JunkCleaningActivity : AppCompatActivity() {
             binding.junkScope.text =
                 getString(
                     R.string.junk_scope,
-                    snapshot.handle?.scopeLabel.orEmpty(),
+                    scanScopeText(snapshot.handle?.scopeLabel.orEmpty()),
                     snapshot.handle?.analysisSkipped ?: 0,
                 )
             binding.junkScope.isVisible =

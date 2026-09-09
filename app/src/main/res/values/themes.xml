@@ -1,6 +1,8 @@
 <resources>
     <!-- 设计只提供浅色稿，固定浅色避免系统/OEM 强制深色破坏原版图片和对比度。 -->
     <style name="Theme.Home.Base" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- 用户要求关闭镜像布局；文字仍按 Unicode 双向算法显示。 -->
+        <item name="android:layoutDirection">ltr</item>
         <item name="colorPrimary">@color/home_blue</item>
         <item name="colorPrimaryVariant">@color/home_blue</item>
         <item name="colorOnPrimary">@color/home_surface</item>

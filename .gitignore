@@ -12,3 +12,6 @@ local.properties
 
 # Local asset conversion environment
 .venv-assets/
+
+# Development-only translation response cache
+tools/i18n/cache/

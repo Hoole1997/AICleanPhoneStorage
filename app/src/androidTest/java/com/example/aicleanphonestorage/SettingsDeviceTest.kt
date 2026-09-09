@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.test.core.app.ActivityScenario
@@ -44,8 +45,7 @@ class SettingsDeviceTest {
                 screenshot("settings")
                 onView(withId(R.id.settings_language)).perform(click())
                 waitFor(LanguageSettingsActivity::class.java)
-                onView(withId(R.id.settings_info_heading))
-                    .check(matches(withText(R.string.settings_language_pending_title)))
+                onView(withId(R.id.language_list)).check(matches(isDisplayed()))
                 onView(withId(R.id.settings_back)).perform(click())
                 waitFor(SettingsActivity::class.java)
                 onView(withId(R.id.settings_about)).perform(click())
@@ -115,11 +115,14 @@ class SettingsDeviceTest {
 
     @Test
     fun menuHasFourReadableTouchTargetsAtNormalAndDoubleFontSize() {
-        for (scale in listOf(1f, 2f)) {
+        for (tag in listOf("en", "zh-Hans", "ar", "de")) for (scale in listOf(1f, 2f)) {
             var bitmap: Bitmap? = null
             instrumentation.runOnMainSync {
                 val configuration =
-                    Configuration(context.resources.configuration).apply { fontScale = scale }
+                    Configuration(context.resources.configuration).apply {
+                        fontScale = scale
+                        setLocale(java.util.Locale.forLanguageTag(tag))
+                    }
                 val themed =
                     ContextThemeWrapper(
                         context.createConfigurationContext(configuration),
@@ -146,10 +149,13 @@ class SettingsDeviceTest {
                         binding.settingsAbout,
                     )) {
                     assertTrue(row.height >= 48 * density)
-                    assertTrue(
-                        row.height >=
-                            row.layout.height + row.compoundPaddingTop + row.compoundPaddingBottom
-                    )
+                    val title = row.findViewById<TextView>(R.id.settings_item_title)
+                    val icon = row.findViewById<View>(R.id.settings_item_icon)
+                    val arrow = row.findViewById<View>(R.id.settings_item_arrow)
+                    assertTrue(title.height >= title.layout.height)
+                    assertTrue("$tag: icon overlaps title", icon.right <= title.left)
+                    assertTrue("$tag: title overlaps arrow", title.right <= arrow.left)
+                    assertEquals(View.LAYOUT_DIRECTION_LTR, row.layoutDirection)
                 }
                 bitmap =
                     Bitmap.createBitmap(
@@ -159,7 +165,7 @@ class SettingsDeviceTest {
                         )
                         .also { binding.root.draw(Canvas(it)) }
             }
-            save(bitmap!!, "menu_$scale")
+            save(bitmap!!, "menu_${tag}_$scale")
         }
     }
 

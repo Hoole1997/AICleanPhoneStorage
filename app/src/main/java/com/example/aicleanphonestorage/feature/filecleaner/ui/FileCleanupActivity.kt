@@ -167,7 +167,7 @@ class FileCleanupActivity : AppCompatActivity() {
             binding.cleanupScope.isVisible =
                 handle.partial || handle.scopeLabel == "Selected folder"
             binding.cleanupScope.text =
-                if (handle.partial) getString(R.string.cleanup_limited) else handle.scopeLabel
+                if (handle.partial) getString(R.string.cleanup_limited) else scanScopeText(handle.scopeLabel)
             if (handle.feature == CleanupFeature.SMART_CLEAN && junkKind != null) {
                 binding.cleanupScope.isVisible = true
                 binding.cleanupScope.setText(junkKind.descriptionRes)

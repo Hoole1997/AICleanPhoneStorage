@@ -1,0 +1,6 @@
+<resources>
+    <declare-styleable name="SettingsItemView">
+        <attr name="settingTitle" format="string" />
+        <attr name="settingIcon" format="reference" />
+    </declare-styleable>
+</resources>

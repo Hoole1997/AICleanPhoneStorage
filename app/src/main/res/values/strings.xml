@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AI Clean &amp;Phone Storage</string>
+    <string name="app_name" translatable="false">AI Clean &amp;Phone Storage</string>
     <string name="home_settings">Settings</string>
     <string name="home_storage_used">Storage Used</string>
     <string name="home_scan_complete">Scan Complete</string>

@@ -35,7 +35,7 @@
 <string name="traffic_app_missing">This app is no longer available.</string>
 <string name="task_loading_cancel">Cancel loading</string>
 <string name="task_loading_unknown">—</string>
-<string name="task_ad_label">AD</string>
+<string name="task_ad_label" translatable="false">AD</string>
 <string name="task_ad_placeholder">Advertisement</string>
 <string name="traffic_wifi_only">Continue with Wi-Fi</string>
 <string name="traffic_updating">Updating network usage</string>

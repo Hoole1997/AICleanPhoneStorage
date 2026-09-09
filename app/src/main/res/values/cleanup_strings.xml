@@ -1,5 +1,7 @@
 <?xml version="1.0" ?>
 <resources>
+    <string name="cleanup_scope_shared">Shared storage</string>
+    <string name="cleanup_scope_folder">Selected folder</string>
     <string name="cleanup_photo">Photo Compress</string>
     <string name="cleanup_large">Large Files</string>
     <string name="cleanup_unused">Unused Files</string>
