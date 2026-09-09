@@ -53,15 +53,17 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
-        <activity
-            android:name=".app.MainActivity"
-            android:launchMode="singleTask"
-            android:exported="true">
+        <activity android:name=".app.MainActivity" android:launchMode="singleTask" android:exported="false" />
+        <activity android:name=".feature.startup.StartupActivity" android:launchMode="singleTop"
+            android:exported="true" android:theme="@style/Theme.AICleanPhoneStorage.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="io.docview.push.ACTION_OPEN_APP" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
     </application>
-
 </manifest>

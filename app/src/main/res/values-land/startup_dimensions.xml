@@ -1,0 +1,5 @@
+<resources>
+    <dimen name="startup_brand_start">24dp</dimen>
+    <dimen name="startup_brand_end">24dp</dimen>
+    <dimen name="startup_footer_side">24dp</dimen>
+</resources>

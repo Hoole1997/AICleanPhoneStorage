@@ -1,0 +1,23 @@
+{
+  "fileKey": "dVsTL6ggoDPXVPcEKg856G",
+  "squareNode": "5619:3150",
+  "roundedNode": "5619:3156",
+  "sourcePixels": [
+    512,
+    512
+  ],
+  "displaySizesDp": {
+    "app_logo_square": 128,
+    "app_logo_rounded": 128,
+    "startup_logo": 58,
+    "legacy_launcher": 48
+  },
+  "adaptiveForegroundInset": "25% to keep the full original artwork inside circular and OEM masks",
+  "roundedAlpha": "Exact 106px Figma corner clip, canvas gray excluded",
+  "usage": {
+    "launcher": "square + native adaptive background/mask",
+    "startup_brand": "rounded",
+    "system_splash": "rounded",
+    "about": "rounded"
+  }
+}

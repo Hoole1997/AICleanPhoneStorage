@@ -1,0 +1,24 @@
+<resources>
+    <color name="startup_background_color">#EDF6FF</color>
+    <color name="startup_blue">#0D60F1</color>
+    <color name="startup_title">#031962</color>
+    <color name="startup_secondary">#737F9E</color>
+    <color name="startup_progress_track">#99FFFFFF</color>
+    <!-- 保持 Figma 的左侧起点；右侧使用安全边距，让 Android 字体自然测量，不强制套用设计文本框宽度。 -->
+    <dimen name="startup_brand_start">38dp</dimen>
+    <dimen name="startup_brand_end">16dp</dimen>
+    <dimen name="startup_logo_size">58dp</dimen>
+    <dimen name="startup_brand_gap">16dp</dimen>
+    <dimen name="startup_footer_side">48dp</dimen>
+    <dimen name="startup_footer_bottom">32dp</dimen>
+    <dimen name="startup_content_gap">24dp</dimen>
+    <style name="Theme.AICleanPhoneStorage.Startup" parent="Theme.Home.Base">
+        <item name="android:windowBackground">@color/startup_background_color</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+    <style name="Theme.AICleanPhoneStorage.Launcher" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/startup_background_color</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/app_logo_rounded</item>
+        <item name="postSplashScreenTheme">@style/Theme.AICleanPhoneStorage.Startup</item>
+    </style>
+</resources>

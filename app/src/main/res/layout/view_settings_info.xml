@@ -15,7 +15,7 @@
             android:id="@+id/settings_info_image"
             android:layout_width="112dp"
             android:layout_height="112dp"
-            android:src="@drawable/home_robot"
+            android:src="@drawable/app_logo_rounded"
             android:scaleType="fitCenter"
             android:contentDescription="@null"
             android:importantForAccessibility="no"

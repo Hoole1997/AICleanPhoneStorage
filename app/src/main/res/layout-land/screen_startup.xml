@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/startup_background_color">
+    <!-- 原始插画与装饰背景，无状态栏、文字或整页截图；固定上限尺寸的本地 WebP。 -->
+    <ImageView android:id="@+id/startup_background" android:layout_width="0dp" android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:importantForAccessibility="no" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/startup_split" app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/startup_split" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.48" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/startup_brand_anchor"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.30" />
+    <LinearLayout android:id="@+id/startup_brand" android:layout_width="0dp" android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp" android:orientation="horizontal"
+        android:gravity="center_vertical" android:baselineAligned="false"
+        app:layout_constraintWidth_max="440dp" app:layout_constraintTop_toTopOf="@id/startup_brand_anchor"
+        app:layout_constraintStart_toStartOf="@id/startup_split" app:layout_constraintEnd_toEndOf="parent">
+        <ImageView android:id="@+id/startup_logo" android:layout_width="@dimen/startup_logo_size"
+            android:layout_height="@dimen/startup_logo_size" android:src="@drawable/startup_logo"
+            android:scaleType="fitCenter" android:importantForAccessibility="no" />
+        <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/startup_brand_gap" android:orientation="vertical">
+            <TextView android:id="@+id/startup_title" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="@string/app_name" android:textSize="20sp" android:letterSpacing="0" android:textColor="@color/startup_title"
+                android:fontFamily="@font/home_roboto_bold" />
+            <TextView android:id="@+id/startup_tagline" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" android:text="@string/startup_tagline" android:textSize="12sp" android:letterSpacing="0"
+                android:textColor="@color/startup_secondary" android:fontFamily="@font/home_roboto_regular" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/startup_footer" android:layout_width="0dp" android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp" android:layout_marginBottom="@dimen/startup_footer_bottom"
+        android:gravity="center_horizontal" android:orientation="vertical" app:layout_constraintWidth_max="320dp"
+        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="@id/startup_split" app:layout_constraintEnd_toEndOf="parent">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp" android:text="@string/startup_loading" android:textSize="12sp" android:letterSpacing="0"
+            android:textColor="@color/startup_secondary" android:fontFamily="@font/home_roboto_regular" />
+        <com.google.android.material.progressindicator.LinearProgressIndicator android:id="@+id/startup_progress"
+            android:layout_width="match_parent" android:layout_height="wrap_content" android:max="1000"
+            android:indeterminate="false" android:contentDescription="@string/startup_loading"
+            app:indicatorColor="@color/startup_blue" app:trackColor="@color/startup_progress_track"
+            app:trackThickness="6dp" app:trackCornerRadius="3dp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

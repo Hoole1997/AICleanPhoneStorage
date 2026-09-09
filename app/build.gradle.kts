@@ -64,6 +64,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.splashscreen)
     implementation(libs.xxpermissions)
     implementation(libs.device.compat)
     implementation(project(":notification"))

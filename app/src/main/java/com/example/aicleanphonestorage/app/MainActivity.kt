@@ -34,6 +34,7 @@ import kotlinx.coroutines.launch
 import com.example.aicleanphonestorage.feature.push.NotificationNavigation
 import com.example.aicleanphonestorage.feature.push.PushPermissionCoordinator
 import io.docview.push.NotificationDestination
+import com.example.aicleanphonestorage.feature.startup.StartupNavigation
 
 /** 只负责窗口和生命周期。系统状态栏由 Android 绘制，不用设计稿的 iOS 图标/时间冒充。 */
 class MainActivity : AppCompatActivity() {
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    private var redirectedToStartup = false
     private lateinit var homeActions: HomeEntryActions
     private lateinit var pushPermission: PushPermissionCoordinator
     private lateinit var permissions: PermissionCoordinator
@@ -109,6 +111,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // 兼容升级前已经存在的、仍指向 MainActivity 的通知 PendingIntent。
+        if (StartupNavigation.needsStartup(intent)) {
+            redirectedToStartup = true
+            startActivity(StartupNavigation.startupIntent(this, StartupNavigation.read(intent)))
+            finish()
+            return
+        }
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.BLACK),
@@ -212,6 +221,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (redirectedToStartup) return
         renderer.setResumed(true)
         pushPermission.onResume(otherPermissionPending = permissions.pending)
         if (!permissions.pending) {
@@ -222,7 +232,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
-        renderer.setResumed(false)
+        if (this::renderer.isInitialized) renderer.setResumed(false)
         super.onPause()
     }
 
@@ -233,6 +243,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResumeFragments() {
         super.onResumeFragments()
+        if (redirectedToStartup) return
         trafficEntryCoordinator.render(trafficEntry.state.value)
         notificationCoordinator.render(notificationEntry.state.value)
         cleanupCoordinator.render(cleanupEntry.state.value)
@@ -240,7 +251,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStop() {
-        if (!isChangingConfigurations) {
+        if (!redirectedToStartup && !isChangingConfigurations) {
             trafficEntry.onBackground()
             notificationEntry.onBackground()
             cleanupEntry.onBackground()
@@ -251,7 +262,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        if (redirectedToStartup) return
         if (permissions.onReturnIntent(intent)) return
+        if (StartupNavigation.needsStartup(intent)) {
+            homeActions.cancelPending()
+            startActivity(StartupNavigation.startupIntent(this, StartupNavigation.read(intent)))
+            return
+        }
         setIntent(intent)
         handleNotificationIntent(intent)
         if (intent.getBooleanExtra(NetworkTrafficActivity.EXTRA_REENTER, false)) {
@@ -285,7 +302,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        renderer.dispose()
+        if (this::renderer.isInitialized) renderer.dispose()
         super.onDestroy()
     }
 }
