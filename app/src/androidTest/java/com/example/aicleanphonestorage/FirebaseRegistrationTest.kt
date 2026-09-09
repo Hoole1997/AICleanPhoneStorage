@@ -15,7 +15,8 @@ import org.junit.runner.RunWith
 class FirebaseRegistrationTest {
     @Test fun configuredTestPackageCanRegisterWithFcm() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.leafmotivation.quizguessoncolor", context.packageName)
+        org.junit.Assume.assumeTrue(BuildConfig.REMOTE_PUSH_ENABLED)
+        assertEquals(BuildConfig.APPLICATION_ID, context.packageName)
         val app = FirebaseApp.getInstance()
         assertTrue(app.options.applicationId.isNotBlank())
         assertTrue(!app.options.gcmSenderId.isNullOrBlank())

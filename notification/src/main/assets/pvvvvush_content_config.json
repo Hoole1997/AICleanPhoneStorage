@@ -1,0 +1,34 @@
+[
+  {
+    "id": "clean_review",
+    "title": "Review your storage",
+    "desc": "Choose which files to keep or clean.",
+    "buttonText": "Review",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "network_review",
+    "title": "Check network traffic",
+    "desc": "View your network usage.",
+    "buttonText": "Open",
+    "iconType": 2,
+    "actionType": 2
+  },
+  {
+    "id": "photo_review",
+    "title": "Make room for photos",
+    "desc": "Create compressed copies of selected photos.",
+    "buttonText": "Open",
+    "iconType": 3,
+    "actionType": 3
+  },
+  {
+    "id": "unused_review",
+    "title": "Review older files",
+    "desc": "Review files by last modified time. You choose what to delete.",
+    "buttonText": "Review",
+    "iconType": 4,
+    "actionType": 4
+  }
+]

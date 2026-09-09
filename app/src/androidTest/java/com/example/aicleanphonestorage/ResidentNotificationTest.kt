@@ -16,7 +16,7 @@ import com.example.aicleanphonestorage.app.CleanApplication
 import com.example.aicleanphonestorage.feature.push.CleanNotificationHost
 import com.example.aicleanphonestorage.feature.push.NotificationNavigation
 import com.example.aicleanphonestorage.feature.push.ResidentBadges
-import com.remax.notification.NotificationDestination
+import io.docview.push.NotificationDestination
 import java.io.File
 import org.junit.Assert.*
 import org.junit.Test
@@ -34,10 +34,10 @@ class ResidentNotificationTest {
         (context.applicationContext as CleanApplication).notificationRuntime.refreshResident()
         val manager = context.getSystemService(NotificationManager::class.java)
         val deadline = android.os.SystemClock.elapsedRealtime() + 5_000
-        var posted = manager.activeNotifications.firstOrNull { it.id == 4101 }
+        var posted = manager.activeNotifications.firstOrNull { it.id == io.docview.push.controller.TriggerCtrl.getResidentNotificationId() }
         while (posted == null && android.os.SystemClock.elapsedRealtime() < deadline) {
             Thread.sleep(50)
-            posted = manager.activeNotifications.firstOrNull { it.id == 4101 }
+            posted = manager.activeNotifications.firstOrNull { it.id == io.docview.push.controller.TriggerCtrl.getResidentNotificationId() }
         }
         val notification = requireNotNull(posted).notification
         assertTrue(notification.flags and Notification.FLAG_ONGOING_EVENT != 0)

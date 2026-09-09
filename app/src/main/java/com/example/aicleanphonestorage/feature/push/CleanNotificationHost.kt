@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.RemoteViews
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.aicleanphonestorage.R
-import com.remax.notification.*
+import io.docview.push.*
 
 /** 仅保存四个短角标，默认全空；业务有真实结果时按事件更新，不使用设计中的示例数字。 */
 internal data class ResidentBadges(
@@ -44,6 +44,15 @@ internal class CleanNotificationHost(context: Context) : NotificationHost {
         app.packageManager.getPackageInfo(app.packageName, 0).versionName.orEmpty()
     }
 
+    override fun contentIcon(destination: NotificationDestination): Int = when (destination) {
+        NotificationDestination.CLEAN -> R.drawable.ic_resident_clean
+        NotificationDestination.NETWORK -> R.drawable.ic_tool_network
+        NotificationDestination.PHOTOS -> R.drawable.ic_tool_compress
+        NotificationDestination.UNUSED_FILES -> R.drawable.ic_tool_unused_files
+        NotificationDestination.SCREENSHOTS -> R.drawable.ic_tool_screenshots
+        NotificationDestination.HOME -> R.mipmap.ic_launcher
+    }
+
     override fun contentIntent(destination: NotificationDestination) = NotificationNavigation.pendingIntent(app, destination)
 
     override fun residentViews(compact: Boolean): RemoteViews = residentViews(compact, localized())
@@ -70,10 +79,6 @@ internal class CleanNotificationHost(context: Context) : NotificationHost {
         }
         views.setOnClickPendingIntent(R.id.notification_shortcuts, contentIntent(NotificationDestination.HOME))
         return views
-    }
-
-    override fun defaultContent() = localized().let {
-        PushMessage(it.getString(R.string.push_reminder_title), it.getString(R.string.push_reminder_body))
     }
 
     private data class Item(val root: Int, val text: Int, val badgeView: Int, val label: Int,

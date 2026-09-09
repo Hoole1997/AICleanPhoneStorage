@@ -33,7 +33,7 @@ import com.example.aicleanphonestorage.feature.notifications.ui.NotificationEntr
 import kotlinx.coroutines.launch
 import com.example.aicleanphonestorage.feature.push.NotificationNavigation
 import com.example.aicleanphonestorage.feature.push.PushPermissionCoordinator
-import com.remax.notification.NotificationDestination
+import io.docview.push.NotificationDestination
 
 /** 只负责窗口和生命周期。系统状态栏由 Android 绘制，不用设计稿的 iOS 图标/时间冒充。 */
 class MainActivity : AppCompatActivity() {

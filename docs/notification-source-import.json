@@ -1,0 +1,411 @@
+{
+  "source": "/Users/apple/StudioProjects/Remax_Browser",
+  "commit": "9d7e51bdc29e2f88a0691f41b0bf874abd9f381b",
+  "importedFilesBeforeAdaptation": [
+    {
+      "path": "notification/.gitignore",
+      "sha256": "5c3174b74edc6f2b9e0743594b8bd3c7f31e4f4405758cc9872b3fe1de1d28b4"
+    },
+    {
+      "path": "notification/build.gradle.kts",
+      "sha256": "cb5fb684ab6d3fbf968dc8da51ac9e2b9c82c4af3aa1c41fd70e5d6f4ab993e8"
+    },
+    {
+      "path": "notification/proguard-rules.pro",
+      "sha256": "7af5126177b2a12d9c2203007211adae76642f146e6604ceaac670dd1552359d"
+    },
+    {
+      "path": "notification/src/main/AndroidManifest.xml",
+      "sha256": "cb3db07b6511408b45e8a2d83f4b6007e4b7d9f6f73078d138feac77f81580fc"
+    },
+    {
+      "path": "notification/src/main/assets/pvvvush_config.json",
+      "sha256": "90db030375f0b7e8b59cd8511bd23fe5838d8c400c2c598d551cf4fde658242a"
+    },
+    {
+      "path": "notification/src/main/assets/pvvvvush_content_config.json",
+      "sha256": "5fc4b2b924c9e974a0b5f540bcb291eae4692a185248dc4d4232fac70bf4fedc"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/builder/MsgBuilder.kt",
+      "sha256": "6b06bf46ae4e7307ac352632327da75900246a89580e711821a05114a77f56f0"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/check/BlockReason.kt",
+      "sha256": "0964b79934ae0b18023c16f6161dae309cb5f19ed11a5e4e3bdc46c3952a8dcc"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/check/CheckCtrl.kt",
+      "sha256": "03e52997a1d1e45c885c4570c01d5952aa2606a8a1613dcc26ae841bafa6b0bf"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/config/Config.kt",
+      "sha256": "5a4b715514fc4114adf1a3d0b62091c1f88cb183800068bdb72381be576ccf54"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/config/ConfigCtrl.kt",
+      "sha256": "65379b6bfe0a2f6ddb3fd23bdbf06215d5468c667278302483d6a2b4306b2165"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/config/Content.kt",
+      "sha256": "4ca19b50925ff7f637840f7d3a1d54dc9b9f949dd93e528f6c24348466c1cb87"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/config/ContentCtrl.kt",
+      "sha256": "30956795bd19f336f1d2d56a7789a0dd59964a9178bd282c5972a46a838b358d"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/controller/BgNotiInterceptController.kt",
+      "sha256": "30780e3c7f6cc2603b3a6f931c772a912f3706c3dd43292241d4a543ce1170d8"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/controller/LandingCtrl.kt",
+      "sha256": "e77d2cd4d41e3b2f7f5c3ef82877182ebd9aaa65f3c5613f5972b90f73caffb1"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/controller/TokenUploadCtrl.kt",
+      "sha256": "16e3f5bb7e0c885543ff5b19f3071c50548d7945e4c93c8d5ad46cef47de9ada"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/controller/TriggerCtrl.kt",
+      "sha256": "a0b9e5722e7e4b2c7244e9ec0350b5733ee4f4cf64f9d51f6e82d0f1aad056d9"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/earthquake/Earthquake.kt",
+      "sha256": "0bef8f32049dfa85aa8ec026bd82917cd87c3dec7d8246effcaedb4e0d83648c"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/earthquake/EarthquakeController.kt",
+      "sha256": "913e71764265b9b2fca4dcfd2de88b1f643ed545647542783e1fc171e0e61972"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/news/NewsDataFetcher.kt",
+      "sha256": "a291885b097be98cbd024adf2e994bba3692f63d1e65175ff71e80110cd35366"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/news/NewsNotificationBuilder.kt",
+      "sha256": "b7c0d3e28c6ff5341d3715e87a8e5126feab0f1acf9f7f0fad7b26526f02a47a"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/news/NewsNotificationChecker.kt",
+      "sha256": "2bc7ca81858bbd09473f3c5caefdd458ecf0515dfb7f3bf55e5a031668628e80"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/news/NewsNotificationConfig.kt",
+      "sha256": "c6f5e4ade2b0b5da1f608c8c9a1572806abb451a98639a73c3f04584be26a555"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/news/NewsNotificationController.kt",
+      "sha256": "841c3e290679b617a60741f0dac42bda45c81afef887cb12bde9d08ebeaeff7f"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/provider/Provider.kt",
+      "sha256": "186d008f131db234be0f7c2fbd198f3eff766943386ec3d755a88cbc76b2757e"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/receiver/DeleteReceiver.kt",
+      "sha256": "07cb253c99bd25e116f4e8a6d4ceb91bd85d8a93baee8b77076b096657717eef"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/service/CoreService.kt",
+      "sha256": "643d2abab847b02a570209fdf3e7f3cfc6ded6fa1f7d92afff46522aa10f8003"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/service/MessageService.kt",
+      "sha256": "3769f7d2b74bf7766551c2e3a8aecfaa930e57dd85c0bc0ce18b1ac3e1a1b407"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/service/ServiceMgr.kt",
+      "sha256": "3c53ac595756f8fedc37ce627c9c5d6158c97b0543ff82e87a779bfb2a9f202c"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/timing/TimingCtrl.kt",
+      "sha256": "eb160e7ea0e375fe7e92e6320b6b364004164155d851f5831dca00e878d989ed"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/utils/DataValidator.kt",
+      "sha256": "bc542865b2f918379b3f4b40b386f00e259b4fa8fbbf90160be5de19ead860c1"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/utils/DateUtil.kt",
+      "sha256": "8d80857e060e1a4c54ec675c2c8b50d4bf76218128ac7d9fd37a01c2de7d0317"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/utils/Logger.kt",
+      "sha256": "b6f9409ea84546781f5ca8d9bfee03103c5bf42b514c2819883dcc8b0f4143b2"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/utils/NotiLogger.kt",
+      "sha256": "dcfa3e1b34322f55c17ba3963c9a29108674382e48712e42633d82a7f4b253de"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/utils/ResetCtrl.kt",
+      "sha256": "5df4a8319d9f40b1cc0ca94a279b65ac8566c827d6037af02243e321d9571888"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/utils/SecurityHelper.kt",
+      "sha256": "7b3b55fdcef71fb329623c4d4bf95043049eb8fe9397c8ae9f833d9fc3ee9655"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/utils/StringProcessor.kt",
+      "sha256": "f08513b8cf4ee069fb1cd435c5287120d743a1c6b044268fbbc192686f0acc1a"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/utils/Topic.kt",
+      "sha256": "d3775c15db541a8d43b4df85c41384ef12281b2e8606c350c26b7451a67a677d"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/utils/TopicMgr.kt",
+      "sha256": "0ae11deae652d4b971ca020085a9736fcfaf4148e97bdc354a64758dcf61cef4"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/utils/ViewBuilder.kt",
+      "sha256": "a7797f6141d6f19b6f1d15f7b7fe3e85251c1193f8d27e04341a44c50da67671"
+    },
+    {
+      "path": "notification/src/main/java/io/docview/push/worker/KeepAliveWorker.kt",
+      "sha256": "fcf0cc71243c8b3552857e322ab3393ae2e6bd0e64562038073e3638680a8d81"
+    },
+    {
+      "path": "notification/src/main/res/drawable/ic_noti_cleaner.xml",
+      "sha256": "1dc4722c1790bf852e7c0c72119a00c7c74f77ab646fcc346375e501e5a008f8"
+    },
+    {
+      "path": "notification/src/main/res/drawable/ic_noti_decrypt.xml",
+      "sha256": "9407a07e9ec720b9cc7e5c1c244fd9c124144b6ad96a261674f5156997bb11d6"
+    },
+    {
+      "path": "notification/src/main/res/drawable/ic_noti_encrypt.xml",
+      "sha256": "bf5b8b75b4ab861b65d64bcb01978b4b7241b6e9051870e125d7a250ec942f3a"
+    },
+    {
+      "path": "notification/src/main/res/drawable/ic_noti_fav.xml",
+      "sha256": "8c36c8ef54f93e06b12c9ad1cf90f6330ef4da2daa18f80429b44bcf6a016419"
+    },
+    {
+      "path": "notification/src/main/res/drawable/ic_noti_icon.png",
+      "sha256": "97c63188a111c3dd3fcf92472ba1e31d0cdc0098f4b1e21f541a3cef15eaa575"
+    },
+    {
+      "path": "notification/src/main/res/drawable/ic_noti_image2_pdf.xml",
+      "sha256": "b14c0d42c1f780198a783dde445595f6d7eb23251d7c2e1df4b0f541329c7124"
+    },
+    {
+      "path": "notification/src/main/res/drawable/ic_noti_merge.xml",
+      "sha256": "fa7f74f31cb54ad4ba8773128e58d7ac634e2e3e0ca3d586e6d72140ca9d2521"
+    },
+    {
+      "path": "notification/src/main/res/drawable/ic_noti_process.xml",
+      "sha256": "8068d16ac6ffca62462395c0a2091710f8ffd76d166624538a583516d2b87e26"
+    },
+    {
+      "path": "notification/src/main/res/drawable/ic_noti_scan.xml",
+      "sha256": "167e0ae2d06c487156685b87ab4c63cd48e056c4ede9d40b3e2189635d2b3cb7"
+    },
+    {
+      "path": "notification/src/main/res/drawable/ic_noti_search.xml",
+      "sha256": "004049050775f811efee83cbf3513c270a2b4cc2ccd8b11b2cce75ccf55980ab"
+    },
+    {
+      "path": "notification/src/main/res/drawable/ic_noti_split.xml",
+      "sha256": "69ce46ba347a5b2b27260785c689293fc3114d11e7db6e77d95f17ec87fbe8ec"
+    },
+    {
+      "path": "notification/src/main/res/drawable/ic_resident_restore.xml",
+      "sha256": "5d6a9da0dd4187e833c122a25de80cc9ee50d2992b1cf61fcfa92d234c30bd8a"
+    },
+    {
+      "path": "notification/src/main/res/drawable/ic_resident_restored.xml",
+      "sha256": "28614d04cbf4fa62de8b4549af4359257456827873f49edd2af78c064c005737"
+    },
+    {
+      "path": "notification/src/main/res/drawable/ic_resident_tip.xml",
+      "sha256": "3cc30919e2587f35ce5bf2ea623a94e53b4f7b65c81b9ce0675996aa3838ac3b"
+    },
+    {
+      "path": "notification/src/main/res/drawable/noti_bg_badge.xml",
+      "sha256": "616138ca7469424b0a4009cc754750792fb76f734bd64df811be15d2b35dad8e"
+    },
+    {
+      "path": "notification/src/main/res/drawable/noti_bg_button_primary.xml",
+      "sha256": "63720052d119e0c9647d6aabad6a9f6aaf4e80da43fdaa1e12a14ab9633e4404"
+    },
+    {
+      "path": "notification/src/main/res/drawable/noti_bg_r12_red.xml",
+      "sha256": "7ed843fb899a4118aabaafddfbd8f0eefb45c400b354f837318a6b4c5111adff"
+    },
+    {
+      "path": "notification/src/main/res/drawable/noti_bg_r16_white.xml",
+      "sha256": "e0220e797745d20311213f4ca2dcb887733a41102e760fc090f1bd5b41c5c5b9"
+    },
+    {
+      "path": "notification/src/main/res/drawable/noti_bg_r8_blue.xml",
+      "sha256": "bfa1a3b4ec5bdcab80e2a42f4ac48bda3b87a66c2d0a60b9f4c267683d1a1cfb"
+    },
+    {
+      "path": "notification/src/main/res/drawable/noti_bg_r8_green.xml",
+      "sha256": "1871b549f7c92f7d62451e757b3dd167b316269fb3a83ffdbca9ea102da23d82"
+    },
+    {
+      "path": "notification/src/main/res/drawable/noti_circle_red.xml",
+      "sha256": "af7b5b91e1fefa573f9e0c0c6ee2066d0be4bfb26a6ef70fb8dc052e3d6e903f"
+    },
+    {
+      "path": "notification/src/main/res/drawable/noti_timing_notify_btn_long.xml",
+      "sha256": "acfd984a686bcd252b46bacffd87cbaca70c397e7be19edc33e58814a11f41bd"
+    },
+    {
+      "path": "notification/src/main/res/drawable/noti_timing_notify_btn_simple.xml",
+      "sha256": "a132f06296dd6d314c22b625ad8c305e3ac65a8c7907a825b9df021c2bc6c711"
+    },
+    {
+      "path": "notification/src/main/res/layout-v33/layout_notification_general_big_12.xml",
+      "sha256": "8ad9dcb5e61cf0e44777837e7f83f4132336ee2fffce613ea0fbde07a3142aea"
+    },
+    {
+      "path": "notification/src/main/res/layout/layout_notification_earthquake.xml",
+      "sha256": "d48cea027c62a688f3c0e01acbf4e012af816b30a268f350ca00c4e62d931d01"
+    },
+    {
+      "path": "notification/src/main/res/layout/layout_notification_earthquake_12.xml",
+      "sha256": "9ba80a2948a85d7c285a77c07c918027276007b31152e172ba155abe19aec62a"
+    },
+    {
+      "path": "notification/src/main/res/layout/layout_notification_general.xml",
+      "sha256": "f36b1c65f317dba583cda13af7b63edbef33acaa2dddb48552ab408721fe8e82"
+    },
+    {
+      "path": "notification/src/main/res/layout/layout_notification_general_12.xml",
+      "sha256": "2a033453b1d70ee06c693eb3dec851e5980a0466dffef29e09e50906c6037854"
+    },
+    {
+      "path": "notification/src/main/res/layout/layout_notification_general_big.xml",
+      "sha256": "b65de363bfe20f98911f9e7b72b074de46c78472bd9d209bc61f15ec3495a441"
+    },
+    {
+      "path": "notification/src/main/res/layout/layout_notification_general_big_12.xml",
+      "sha256": "053fc77f5e1f2b9a07fff64584e9bdd37481cdbd891481ee171ce3426701efa1"
+    },
+    {
+      "path": "notification/src/main/res/layout/layout_notification_news.xml",
+      "sha256": "5735bbf90f1a29ef26bcea75f47efb66af925320ab31a9e37e950c3ccfa81b84"
+    },
+    {
+      "path": "notification/src/main/res/layout/layout_notification_news_12.xml",
+      "sha256": "6599c4d2af09c06f6119c31d288dc635a3026d73b4bcd391c0b4ea1efb80eaf2"
+    },
+    {
+      "path": "notification/src/main/res/layout/layout_notification_news_big.xml",
+      "sha256": "be82be926c3bf26acd54d73be3d58aa53d1df59110f4dd7957b1a491b89194e2"
+    },
+    {
+      "path": "notification/src/main/res/layout/layout_notification_news_big_12.xml",
+      "sha256": "be82be926c3bf26acd54d73be3d58aa53d1df59110f4dd7957b1a491b89194e2"
+    },
+    {
+      "path": "notification/src/main/res/layout/layout_notification_resident.xml",
+      "sha256": "1a8d6e15df96f05ab3d00e08e02e094cc60918f7cc47fe3731f98f399783e75b"
+    },
+    {
+      "path": "notification/src/main/res/layout/layout_notification_resident_12.xml",
+      "sha256": "14beff07343536bac35059e59e18d5d6b69ffd03739d6556f999878295cd7193"
+    },
+    {
+      "path": "notification/src/main/res/mipmap-xxhdpi/ic_home_duplicate.webp",
+      "sha256": "ed57f5103741b21905ab01b9fcd990fc18d61182a9d347ab1f98c749654c09ea"
+    },
+    {
+      "path": "notification/src/main/res/mipmap-xxhdpi/ic_home_similar.webp",
+      "sha256": "b6fb64fe703ffe7b3a512bf5cbf63d51a5958a1daa3481041e819d4b1b190b0e"
+    },
+    {
+      "path": "notification/src/main/res/mipmap-xxhdpi/ic_home_speed.webp",
+      "sha256": "1f8ae3cba96fe9de372f80553670221f5eec83363684543c7c5909cd290dc100"
+    },
+    {
+      "path": "notification/src/main/res/mipmap-xxhdpi/ic_noti_arrow_right.webp",
+      "sha256": "0236468cbe35bf3e27b843652bac71d9ef0bb5b5ca98c0b947b0efb698782e92"
+    },
+    {
+      "path": "notification/src/main/res/mipmap-xxhdpi/ic_noti_bookmark.webp",
+      "sha256": "b41d030fe2182cd546f833aa6d3416268d9c8c23d94421496d3edd707c6ea4d6"
+    },
+    {
+      "path": "notification/src/main/res/mipmap-xxhdpi/ic_noti_earthquake.webp",
+      "sha256": "526993244fd9bf021b6f7edf9c143c94faae8e29b43354abd42627b335af3d03"
+    },
+    {
+      "path": "notification/src/main/res/mipmap-xxhdpi/ic_noti_junk.webp",
+      "sha256": "56baf51b7b53c38c1bb29f95b9c263076f4b0c60a6d7fe81bc88376b6fe4516b"
+    },
+    {
+      "path": "notification/src/main/res/mipmap-xxhdpi/ic_noti_main.webp",
+      "sha256": "f4df1749b940d73b301861ea0b461b634fd051cbdc3199b1fa888aecc4e28760"
+    },
+    {
+      "path": "notification/src/main/res/mipmap-xxhdpi/ic_noti_news.webp",
+      "sha256": "a4046a100ed5c5cb4da882e31cd3abf562255f11780079bf9de0d75f198e91c8"
+    },
+    {
+      "path": "notification/src/main/res/mipmap-xxhdpi/ic_noti_process.webp",
+      "sha256": "99c3016364000cd5e270580bd94e667cb0020600dde8b3f196caa8cb6823f02a"
+    },
+    {
+      "path": "notification/src/main/res/mipmap-xxhdpi/ic_noti_scan.webp",
+      "sha256": "a8fd027dfbd329a6104e6058ee6bb4984c28fe1ac9c6f70a304a42fc1ec21c1a"
+    },
+    {
+      "path": "notification/src/main/res/mipmap-xxhdpi/ic_noti_short_video.webp",
+      "sha256": "239c6dc07ca0b2b82e6b6dc8f398df814b1651e77c77e5096bcc441c4b531123"
+    },
+    {
+      "path": "notification/src/main/res/mipmap-xxhdpi/ic_noti_small_icon.webp",
+      "sha256": "08189c9721d09ff14e66e75ec377f41ad061dbb4e12c5013786279c66d5a515d"
+    },
+    {
+      "path": "notification/src/main/res/mipmap-xxhdpi/ic_noti_weather.webp",
+      "sha256": "f23f6eb03b7ceb4925a0484ab636f0b329281b837f275327c7d74fa342c564eb"
+    },
+    {
+      "path": "notification/src/main/res/values-ja/strings.xml",
+      "sha256": "0aed495e21a70cab045e3b4792a02f2c7ad68fc1687d73474a09db0b269bc041"
+    },
+    {
+      "path": "notification/src/main/res/values-ko/strings.xml",
+      "sha256": "0aed495e21a70cab045e3b4792a02f2c7ad68fc1687d73474a09db0b269bc041"
+    },
+    {
+      "path": "notification/src/main/res/values-night/themes.xml",
+      "sha256": "76ee76b0e4d78bd2c08dad2416009aa2f8e478bbc6c915c692d8e05fbe7a2345"
+    },
+    {
+      "path": "notification/src/main/res/values-zh-rTW/strings.xml",
+      "sha256": "0aed495e21a70cab045e3b4792a02f2c7ad68fc1687d73474a09db0b269bc041"
+    },
+    {
+      "path": "notification/src/main/res/values-zh/strings.xml",
+      "sha256": "0aed495e21a70cab045e3b4792a02f2c7ad68fc1687d73474a09db0b269bc041"
+    },
+    {
+      "path": "notification/src/main/res/values/colors.xml",
+      "sha256": "a677d5c6989c6a2c99c6721b7614fef1d915718d8499bcda60158280b98768fc"
+    },
+    {
+      "path": "notification/src/main/res/values/strings.xml",
+      "sha256": "665fb859fe0b1402f8292e74426aeb95c57bfe92004d21f3898d3701d9b8d064"
+    },
+    {
+      "path": "notification/src/main/res/values/ta_public_config.xml",
+      "sha256": "70e4df544966ca36745c0e4f733002dee1dd8cefbc55a29a16c83b8c965fbf8f"
+    },
+    {
+      "path": "notification/src/main/res/values/themes.xml",
+      "sha256": "c867f555620e1095250ab34fe4634722b3c8e719f426ca85e27129a8305ce86f"
+    }
+  ],
+  "removedByRequest": [
+    "notification/src/main/java/io/docview/push/news/",
+    "news-specific layouts, icons, routing, configuration and proguard rules",
+    "Glide dependency used only by news"
+  ]
+}

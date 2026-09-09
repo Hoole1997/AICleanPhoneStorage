@@ -1,0 +1,9 @@
+{
+  "repository": "Remax_Browser",
+  "path": "notification/src/main/res/drawable/ic_noti_process.xml",
+  "sizeDp": [
+    60,
+    60
+  ],
+  "reason": "Source pathData exceeds Android resource UTF-8 limit; exact paths rendered at build time."
+}

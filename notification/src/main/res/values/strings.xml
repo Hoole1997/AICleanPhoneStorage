@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="noti_resident_title">OpenBrowser</string>
+    <string name="noti_resident_service_running">Service is running</string>
+    <string name="noti_earthquake_click_text">- See Impact Radius…… </string>
+</resources>

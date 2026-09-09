@@ -1,89 +1,95 @@
-# Notification 模块接入
+# Notification 新版迁移
 
-## 来源与边界
+## 来源与替换顺序
 
-源项目： http://v4.9ms.co:3000/ReMax/ReMax_PhotoRecovery_variant_1
+来源：`/Users/apple/StudioProjects/Remax_Browser`，commit `9d7e51b`。
 
-提取依据：commit `6ddd26cd684a4b7fc8cd87d0e74695e0c943e690` 的 `notification/`。这是适配后的独立 Android Library，保留 `com.remax.notification` 包和来源职责，不依赖源项目 `base`、广告归因或照片恢复页面。
+先把来源 notification 的 100 个受版本管理文件完整复制到当前模块，再做构建与业务适配。原始文件 SHA-256 清单见 `docs/notification-source-import.json`。旧 `com.remax.notification` 实现已经删除，现在使用来源 `io.docview.push` 包下的控制器与服务。
 
-- `service/FCMService`：FCM 数据消息接收、恢复生效的 version 匹配，通过宿主接口导航。
-- `timing/NotificationTimingController`：保留前后台和系统解锁事件。
-- `check/NotificationCheckController`：纯策略，保留冷却、间隔、免打扰、每天额度；常驻通知独立于推送额度。
-- `config/PushConfig`、`assets/push_config.json`：沿用 organic_channel 协议；没有接入付费渠道归因。
-- `config/NotificationConfigController`：支持原 `pushConfigJson` Remote Config 键。启动时冻结已激活缓存/本地默认策略，异步获取下一次进程启动使用的值；12 小时最短请求间隔，10 秒超时。无实时后台监听。
-- `utils/Topic`、`utils/DateUtil`：直接提取原 ALL 与时区主题命名规则（整数 UTC 偏移 + 24）。`FCMTopicManager` 改为 SDK 任务，时区变化取消旧主题。
-- `controller/NotificationTriggerController`：保留双通道与 RemoteViews，改为注入 NotificationHost。
+按用户最新要求，news 模块已经移除，包括新闻请求/模型/检查/构建/调度代码、触发枚举、Remote Config 入口、新闻专用布局和图标、混淆规则及仅用于新闻图片加载的 Glide 依赖。
 
-依据本项目开发规则，去掉原轮询保活 Service/Worker、午夜计时器、重复悬浮推送、统计 SDK、设备标识上传及原照片恢复文案。没有复制来源项目的 FCM 项目、服务器地址或签名密钥。设备注册通过当前测试 Firebase 项目和主题订阅完成；未接入来源项目的私有 token 上传 API。原 `pushContentJson` 的照片恢复动作/随机文案没有直接迁入本 App；当前采用 App 多语言默认文案或 FCM data 明确提供的内容。
+## 渠道配置
 
-## 测试渠道和版本
+| 配置 | local | google |
+| --- | --- | --- |
+| 文件 | `app/src/local/config.properties` | `app/src/google/config.properties` |
+| applicationId | `com.leafmotivation.quizguessoncolor` | `com.example.aicleanphonestorage.google`（示例） |
+| Firebase | 原 `app/google-services.json` 原样移动到 `app/src/local/google-services.json` | 仅有 `google-services.json.example` |
+| fcmUrl / fcmPkg | 来源 dev 的值 | 来源 prod 的值，启用前替换/确认 |
+| remotePushEnabled | true | false（示例渠道不注册 Firebase、不上传 token） |
+| userChannel | natural | natural |
 
-`applicationId = com.leafmotivation.quizguessoncolor`，使用用户放在 `app/google-services.json` 的配置。Kotlin namespace 保留 `com.example.aicleanphonestorage`，无需移动所有业务源码；FileProvider authority 由 applicationId 生成。
+配置和 JSON 直接放在与渠道同名的 `app/src/local/` 和 `app/src/google/`。Google Services 显式按 flavor 选择 JSON：localDebug/localRelease 共用 local 配置，googleDebug/googleRelease 共用 google 配置。不再保留 `src/debug` / `src/release` 目录；预览和诊断实现集中在 main，由 `BuildConfig.DEBUG` 控制是否启用。
 
-2026-09-09 核对 Firebase 官方发布记录与 Google Maven 元数据：
+app 与 notification 都定义 `distribution` 维度的 `local` / `google` flavor。模块各自读取对应配置，生成独立的 `BuildConfig.FCM_URL`、`FCM_PKG`、`REMOTE_PUSH_ENABLED`、`USER_CHANNEL`。不使用 taskNames 猜测渠道，因此同一次 Gradle 调用构建两个渠道也不会串配置。
 
-- Firebase BoM 34.18.0
-- Firebase Messaging 25.1.2
-- Firebase Remote Config 23.1.0
-- Google Services Gradle 插件 4.5.0
+`fcmPkg` 是后端的包路由标识，保留来源值，不会擅自用 applicationId 替代。安装分发 flavor 与付费/自然用户归因渠道分别配置；归因 SDK 未接入时，userChannel 决定默认 premium_tier / standard_tier。
 
-版本集中在 `gradle/libs.versions.toml`，Firebase 库由 BoM 锁定，使用主模块，不使用停止发布的 `-ktx` 模块。
+google 的启用步骤：替换示例 applicationId，放入匹配的 `app/src/google/google-services.json`，确认 fcmUrl/fcmPkg，然后将 remotePushEnabled 改为 true。不要把示例 JSON 直接改后缀当成真实凭据。没有真实 JSON 时 Google Services 任务跳过，google 示例 APK 仍可编译运行。
 
-## 常驻通知
+Firebase 保持当前核验的版本：BoM 34.18.0（Messaging 25.1.2、Remote Config 23.1.0）、Google Services 插件 4.5.0。
 
-`app/feature/push/CleanNotificationHost` 负责布局、图标、文案与四个可选角标；模块不认识首页 ViewModel 或扫描数据。
+## 完整迁入的推送链路
+
+- `provider/Provider` 保留模块初始化入口，转交 Application 级 `NotificationRuntime` 在 IO 初始化配置、偏好和检查器；主线程只注册生命周期。
+- `timing/TimingCtrl` 保留前后台、解锁、消息、token 注册和来源主题逻辑，使用 `DefaultLifecycleObserver`。
+- `service/MessageService` 保留源消息触发流程，并适配新版 Firebase `onRegistered` 回调；兼容原 `onNewToken`。
+- `utils/TopicMgr` 订阅 `ALL_TOKEN` 与 `ALL_TOKEN_(整数 UTC 偏移+24)`。
+- `config/ConfigCtrl` / `ContentController` 保留来源资产文件名、缓存键和 Remote Config 的 `pushConfigJson` / `pushContentJson`。
+- `check/CheckCtrl` / `ResetCtrl` 保留来源限次、免打扰、冷却、间隔与状态。
+- `controller/TriggerCtrl` 保留来源常驻/普通/静音通道和发布流程。
+- `controller/TokenUploadCtrl` 完整接入新版 token 上报协议，详见下节。
+- `controller/LandingCtrl` 保留来源通知参数处理；宿主同时兼容当前常驻通知的语义路由。
+
+来源 `common` 中的语言、偏好、配置、用户归因和事件上报接口通过 `host/` 适配，不引入整个浏览器和广告依赖。事件上报通过 `NotificationHost.onEvent` 注入；本 App 没有配置额外统计后端，不将该回调视为第三方统计已上报。
+
+来源的地震、CoreService、ServiceMgr、Worker 和重复通知实现仍保留。当前清理 App 没有地震页面和相应数据源，且项目规则不允许为通知栏保活，因此宿主 `earthquakeEnabled`、`backgroundServiceEnabled`、`repeatNotificationsEnabled` 为 false。常驻通知仍可直接由系统 NotificationManager 展示，不需要启动前台保活服务或定时 Worker。news 已按要求实际删除。
+
+## Token 上报协议
+
+- GET：`${FCM_URL}/browser/wnfree`
+- 参数：`wndk` = token、`weid` = 本地持久化用户 ID、`dfk` = FCM_PKG。
+- Header：`seg`。
+- 签名：来源同一客户端签名常量 + 参数按字母顺序拼接 + MD5，保持与新版后端一致。
+
+传输实现进行了工程适配：OkHttp 复用客户端，URL 参数编码，单消费者/最新 token 合并，25 秒总超时，响应最多 64 KiB，关闭响应资源，保留当前成功上报的 SHA-256 指纹，重复 token 不重复成功上传。HTTP 或业务 code 失败不记成功，损坏 JSON 不误记成功。日志不打印 token、签名、用户 ID 或完整请求 URL；相关偏好排除备份。
+
+## 通知业务
+
+常驻通知由宿主 `CleanNotificationHost` 提供原生 RemoteViews，保留 Figma 四项布局、首页 WebP 资源和可选角标：
 
 | 入口 | 目标 |
 | --- | --- |
-| 通知内容背景 / contentIntent | 首页 |
-| Clean | SMART_CLEAN 垃圾扫描清理 |
-| Network | Network Traffic 流量监控 |
-| Photos | PHOTO_COMPRESS 照片压缩 |
-| Unused / 闲置文件 | UNUSED_FILES 候选扫描 |
+| 内容背景 / contentIntent | 首页 |
+| Clean | Smart Cleaning 垃圾扫描 |
+| Network | 网络流量 |
+| Photos | 照片压缩 |
+| Unused | 闲置文件候选 |
 
-原需求“限制文件”暂按首页已有“闲置文件”实现。点击使用不同 requestCode 与 action 的 immutable Activity PendingIntent。冷启动与 onNewIntent 都复用首页入口；旧的授权/扫描互斥取消，Intent extra 只消费一次，旋转不会重扫。真正删除仍走已有用户选择和确认流程。
+每个 PendingIntent 独立且不可变，直接打开首页 Activity，不通过广播/Service 中转。所有清理仍复用既有授权、扫描、选择和确认流程。通知 extra 消费一次，重建不重复扫描。通知标题区的展开行为由系统/OEM 决定。
 
-`CleanApplication.updateResidentBadges(ResidentBadges(...))` 提供事件更新接口，四项独立，null/空字符串隐藏，最长 8 字符。默认没有设计示例数据；不会为角标进行扫描或后台采样。
+普通推送沿用源模块从 ContentController 轮转配置内容的行为；FCM data 消息负责触发，不直接拿 data.title/body 替换配置文案。源模块 version 过滤原本注释关闭，这次没有改变此服务端兼容行为。后台带 notification 字段的 Firebase Console 消息仍由 Firebase SDK/系统展示。
 
-Figma： https://www.figma.com/design/dVsTL6ggoDPXVPcEKg856G/lcb?node-id=5666-1611
+当前业务类型只在 `Content.TYPE_*` 中定义：1 清理、2 流量、3 照片压缩、4 闲置文件、5 截图、6 首页。`NotificationDestination` 绑定这些常量，内容解析、图标选择、普通通知 PendingIntent、常驻入口和首页消费共享该业务表。`Content.destination` 与 `iconDestination` 将原 JSON 整数转为强类型；无效动作整条过滤，未知图标回退到该动作的业务图标。外部缺失/未知落地参数回首页，不触发默认清理。普通通知按业务动作区分 PendingIntent，避免更新另一类卡片时覆盖路由；操作按钮也显式绑定同一 PendingIntent。配置最多载入 64 条，限制单条文本长度，拒绝无效配置并回退本地内容。默认文案不伪造扫描结果。来源的随机角标已移除，真实角标通过 `CleanApplication.updateResidentBadges` 更新。
 
-Clean 原图来自节点 5666:1803 的透明 image fill，存档于 `design/figma/resident/source/clean.png`，开发时生成五档 WebP。其余图标复用首页资源。系统绘制通知标题区、背景和展开箭头；部分 OEM 点击系统标题区会展开通知，属于系统行为，内容空白区和 contentIntent 返回首页；展开内容采用 36dp 图标、12sp 自然高度文字、红色 11sp 角标。收起状态适配 Android 最小 48dp 限制；大字号采用更小图标，角标在展开状态显示，辅助功能描述保留附属信息。文字使用系统通知主题支持浅色/深色背景。
+首页 onResume 的通知判断/请求继续使用 XXPermissions 28.3；发送前再检查权限/通道，处理撤权竞态。通知监听清理功能的权限独立不变。
 
-使用 ongoing 通知，不假借前台服务保活。用户关闭通道/撤回权限时不发送；系统允许用户划走时遵循系统行为，下次主动打开 App 才会刷新常驻入口。不是后台强行不可移除的通知。
+## 资源转换
 
-## 权限与推送测试
+来源 `drawable/ic_noti_process.xml` 有约 96 万字符的 pathData，超出 Android 字符串编码限制。原始文件存档在 `design/notification-source/`，按原始路径开发时渲染为 60dp 五档透明 WebP，不进行运行时转换。转换脚本为 `tools/convert_notification_assets.py`。
 
-首页每次 `onResume` 通过 XXPermissions 28.3 判断通知权限，未授权时用 `getPostNotificationsPermission()` 请求。Android 13 以下由库兼容通知设置页；运行时权限已授予而 OEM 通知总开关关闭时改用 `getNotificationServicePermission()`。已授权则刷新常驻通知，进行中的请求不会因系统页面返回而重入；不再读取旧的 `push_permission/explained` 首次申请标记。回调再次检查真实权限，拒绝后不在回调内重试。设置 → 通知设置使用 XXPermissions 的设置页入口，系统已不允许再次弹出运行时权限时可在此管理。发布通知前的权限和通道检查也共用同一库。
+## 构建和验证
 
-默认普通推送策略：每日 3 次，前后台/解锁间隔各 10 分钟，新安装冷却 24 分钟，02:00–08:00 免打扰，前台不提示。原源码 `new_user_cooldown` 的单位为分钟。按本地日历惰性换日，不用午夜唤醒。只有成功发布才计数；FCM messageId 最多保留 32 个作去重，不记录正文或 token。
-
-FCM 后台集成使用 **data-only** 消息，经客户端策略、版本过滤和导航白名单处理。示例 HTTP v1 的 message 内容（token 在服务端填入当前测试设备 token）：
-
-```json
-{
-  "message": {
-    "token": "<current-test-device-token>",
-    "android": { "priority": "HIGH" },
-    "data": {
-      "version": "1.0",
-      "title": "Review your storage",
-      "body": "Choose which files you want to keep.",
-      "destination": "home"
-    }
-  }
-}
+```sh
+./gradlew :app:assembleLocalDebug :app:assembleGoogleDebug
+./gradlew :app:assembleLocalRelease :app:assembleGoogleRelease
+./gradlew :app:testLocalDebugUnitTest :notification:testLocalDebugUnitTest :notification:testGoogleDebugUnitTest
+./gradlew :app:lintLocalDebug :notification:lintLocalDebug
+./gradlew :app:assembleLocalDebugAndroidTest
 ```
 
-白名单 destination：`home`, `clean`, `network`, `photos`, `unused_files`, `screenshots`。未知值回首页。省略 version 为全量版本，指定时必须等于 versionName。只有 version 的原触发消息也可工作，文案回落到本 App 的多语言资源。带 notification 字段的 Firebase Console 消息在后台由 Firebase SDK/系统直接展示，不经过此 data-only 策略；其默认点击回首页。
+协议测试使用本机 MockWebServer 检查路径、参数转义、来源签名 golden 值和返回码；不会将伪造 token 发往真实后端。配置测试验证新 premium_tier / standard_tier 结构及旧结构拒绝。Android 测试验证常驻通知属性、布局/大字号/角标、PendingIntent 和 Firebase 注册。注册成功、协议单测通过与真实 token 后端确认分别核验，不混为一个结论。
 
-## 验证
+业务协调验证：`ContentBusinessContractTest` 覆盖六种类型、无效浏览器动作、未知图标和实际 assets 配置；`NotificationBusinessRoutingTest` 在真机验证内容构建、六种资源映射、两类 Intent 的统一消费与独立 PendingIntent。
 
-- `./gradlew :app:assembleDebug :app:assembleDebugAndroidTest :app:testDebugUnitTest :notification:testDebugUnitTest :app:lintDebug :notification:lintDebug`
-- `ResidentNotificationTest`：RemoteViews 真机 apply、280/343/600dp × 1/1.3/2 倍字体 × 收起/展开，文字裁切检查、独立 PendingIntent、角标边界和系统通知属性。
-- `FirebaseRegistrationTest`：在线确认测试包名、Firebase 初始化、成功获取非空 FCM token；不输出 token，不向 ALL 或其他设备发送消息。
-- 截图来自 Android 15 真机。没有将渲染测试或架构设计表述为 ANR/功耗性能测量。
-- 未从服务端发出端到端 FCM 消息；设备注册成功不等于服务端投递联调已完成。
-
-XXPermissions 接入依据：[官方示例](https://github.com/getActivity/XXPermissions/blob/master/app/src/main/java/com/hjq/permissions/demo/MainActivity.java)。DeviceCompat 2.6，JitPack 仓库仅允许这两个库的坐标。
-
-本次 XXPermissions 验证：Debug/Release 构建、单元测试和 Lint 通过；真机通道关闭判断通过。首次授权弹框用例因设备已授权且 ADB 撤权受限而跳过，需在未授权测试环境运行 `NotificationPermissionDeviceTest` 完成该项核验。
+本次实测结果：local/google 的 Debug 和 Release 均构建通过；Lint 通过；app 78 个单元测试，notification 每个渠道 9 个单元测试通过；7 个真机测试通过，包含新增业务映射用例。Firebase token 获取和 ALL_TOKEN 主题订阅成功。真实 token 上报请求得到 HTTP 200，但当前响应未通过业务成功校验，尚不能宣称上报成功；不会将此结果计为成功或伪造成功记录。

@@ -10,7 +10,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SdkSuppress
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.aicleanphonestorage.app.MainActivity
-import com.remax.notification.NotificationPermissionAccess
+import io.docview.push.NotificationPermissionAccess
 import java.io.File
 import org.junit.Assert.*
 import org.junit.Test
@@ -39,7 +39,7 @@ class NotificationPermissionDeviceTest {
                     .performAction(AccessibilityNodeInfo.ACTION_CLICK))
                 await { NotificationPermissionAccess.isGranted(context) }
                 val manager = context.getSystemService(NotificationManager::class.java)
-                await { manager.activeNotifications.any { it.id == 4101 } }
+                await { manager.activeNotifications.any { it.id == io.docview.push.controller.TriggerCtrl.getResidentNotificationId() } }
                 // 再进入首页只检查并刷新，不再显示系统权限请求。
                 scenario.moveToState(Lifecycle.State.CREATED)
                 scenario.moveToState(Lifecycle.State.RESUMED)

@@ -1,4 +1,4 @@
 <full-backup-content>
- <exclude domain="sharedpref" path="push_delivery.xml" /><exclude domain="sharedpref" path="push_permission.xml" /><exclude domain="database" path="cleanup_index.db" />
+ <exclude domain="sharedpref" path="push_delivery.xml" /><exclude domain="sharedpref" path="token_upload_status.xml" /><exclude domain="sharedpref" path="browser_push_preferences.xml" /><exclude domain="sharedpref" path="reset_at_midnight_prefs.xml" /><exclude domain="sharedpref" path="push_permission.xml" /><exclude domain="database" path="cleanup_index.db" />
  <exclude domain="file" path="datastore/cleanup_access.preferences_pb" />
 </full-backup-content>

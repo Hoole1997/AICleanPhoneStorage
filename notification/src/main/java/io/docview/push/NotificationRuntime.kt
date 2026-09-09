@@ -1,0 +1,62 @@
+package io.docview.push
+
+import android.app.Application
+import android.content.Context
+import androidx.core.app.NotificationManagerCompat
+import com.blankj.utilcode.util.Utils
+import io.docview.push.check.CheckCtrl
+import io.docview.push.config.ConfigCtrl
+import io.docview.push.config.ContentController
+import io.docview.push.controller.TriggerCtrl
+import io.docview.push.host.PushEnvironment
+import io.docview.push.host.PushPreferences
+import io.docview.push.host.PushRemoteConfig
+import io.docview.push.timing.TimingCtrl
+import io.docview.push.utils.ResetCtrl
+import kotlinx.coroutines.*
+import java.util.concurrent.atomic.AtomicBoolean
+
+/** 生命周期适配器；推送实际执行仍使用迁入的 ConfigCtrl/CheckCtrl/TimingCtrl/TriggerCtrl。 */
+class NotificationRuntime(context: Context, host: NotificationHost) {
+    private val app = context.applicationContext
+    private val started = AtomicBoolean(false)
+    private val ready = CompletableDeferred<Unit>()
+    init { PushEnvironment.install(app, host) }
+
+    fun initialize() {
+        if (started.getAndSet(true)) return
+        Utils.init(app as Application)
+        PushEnvironment.scope.launch {
+            try {
+                PushPreferences.initialize(app)
+                ResetCtrl.getInstance().initialize(app)
+                ConfigCtrl.initialize(app)
+                ContentController.initialize(app)
+                CheckCtrl.getInstance().initialize(app)
+                TriggerCtrl.initializeChannels(app)
+                // 清除旧实现的两个固定通知，迁移后只由新模块发布。
+                NotificationManagerCompat.from(app).cancel(4101)
+                NotificationManagerCompat.from(app).cancel(4102)
+                ready.complete(Unit)
+                withContext(Dispatchers.Main.immediate) { TimingCtrl.getInstance().initialize(app) }
+                PushRemoteConfig.initialize()
+                ConfigCtrl.initialize(app)
+                ContentController.initialize(app)
+            } catch (error: CancellationException) { throw error }
+            catch (error: Exception) {
+                ready.completeExceptionally(error)
+                android.util.Log.e("CleanPush", "Notification initialization failed", error)
+            }
+        }
+    }
+
+    fun refreshResident() {
+        initialize()
+        PushEnvironment.scope.launch {
+            ready.await()
+            TriggerCtrl.triggerResidentNotification()
+        }
+    }
+
+    suspend fun awaitReady() { initialize(); ready.await() }
+}

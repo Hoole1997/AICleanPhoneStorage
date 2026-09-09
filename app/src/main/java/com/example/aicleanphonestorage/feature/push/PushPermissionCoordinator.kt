@@ -2,8 +2,8 @@ package com.example.aicleanphonestorage.feature.push
 
 import androidx.appcompat.app.AppCompatActivity
 import com.hjq.permissions.XXPermissions
-import com.remax.notification.NotificationRuntime
-import com.remax.notification.NotificationPermissionAccess
+import io.docview.push.NotificationRuntime
+import io.docview.push.NotificationPermissionAccess
 
 /** Activity 级协调器，只由首页 onResume 调用；不保留 Activity 到应用级对象，不进行后台轮询。 */
 internal class PushPermissionCoordinator(

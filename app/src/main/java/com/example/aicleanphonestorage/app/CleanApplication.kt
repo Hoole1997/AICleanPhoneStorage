@@ -6,9 +6,8 @@ import com.example.aicleanphonestorage.core.locale.AppLanguageController
 import com.example.aicleanphonestorage.core.locale.LanguageActivityCallbacks
 import com.example.aicleanphonestorage.feature.push.CleanNotificationHost
 import com.example.aicleanphonestorage.feature.push.ResidentBadges
-import com.remax.notification.NotificationRuntime
-import com.remax.notification.NotificationRuntimeOwner
-import com.remax.notification.timing.NotificationTimingController
+import io.docview.push.NotificationRuntime
+import io.docview.push.NotificationRuntimeOwner
 
 class CleanApplication : Application(), NotificationRuntimeOwner {
     // 数据源按需初始化；语言偏好仅进行一次异步恢复，不扫描或启动常驻协程。
@@ -27,6 +26,6 @@ class CleanApplication : Application(), NotificationRuntimeOwner {
         PerformanceDiagnostics.install()
         registerActivityLifecycleCallbacks(LanguageActivityCallbacks(languages))
         languages.initialize()
-        NotificationTimingController(this, notificationRuntime).initialize()
+        notificationRuntime.initialize()
     }
 }
