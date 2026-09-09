@@ -5,6 +5,8 @@ data class HomeOverview(
     val storage: StorageSummary? = null,
     val scan: ScanSummary = ScanSummary.NotScanned,
     val tools: HomeToolMetrics = HomeToolMetrics(),
+    /** 与 Network Traffic 默认本月视图相同的 Wi-Fi 收发总量；无访问权/不可用时为 null。 */
+    val wifiBytes: Long? = null,
 )
 
 data class StorageSummary(val totalBytes: Long, val usedBytes: Long) {

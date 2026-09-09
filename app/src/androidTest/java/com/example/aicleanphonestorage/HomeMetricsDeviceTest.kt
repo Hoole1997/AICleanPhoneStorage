@@ -133,6 +133,8 @@ class HomeMetricsDeviceTest {
         val result = HomePlatformMetricsSource(context, executor).observe().toList().last()
         assertNotEquals(HomeToolMetric.Reading, result.network)
         assertNotEquals(HomeToolMetric.Reading, result.apps)
+        if (result.network == HomeToolMetric.AccessRequired) assertNull(result.wifiBytes)
+        result.wifiBytes?.let { assertTrue(it >= 0) }
         if (result.apps is HomeToolMetric.Bytes)
             assertTrue((result.apps as HomeToolMetric.Bytes).value >= 0)
         if (result.apps is HomeToolMetric.AppCount)

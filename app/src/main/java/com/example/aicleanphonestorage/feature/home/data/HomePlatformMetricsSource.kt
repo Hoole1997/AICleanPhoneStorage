@@ -19,6 +19,7 @@ import kotlinx.coroutines.sync.withLock
 internal data class HomePlatformMetrics(
     val network: HomeToolMetric = HomeToolMetric.Reading,
     val apps: HomeToolMetric = HomeToolMetric.Reading,
+    val wifiBytes: Long? = null,
 )
 
 /** 每次首页订阅时读取系统摘要，串行占用一个 I/O 许可；不查应用明细，不轮询或请求新权限。 */
@@ -39,6 +40,8 @@ internal class HomePlatformMetricsSource(context: Context, private val executor:
             val window = periods.resolve(TrafficPeriod.THIS_MONTH)
             if (granted == cachedAccess && cachedMonth == window.startMillis)
                 cached?.let { emit(it) }
+            // 复用同一次本月摘要读取；未知/未授权用 null，与实际 0 字节区分。
+            var wifiBytes: Long? = null
             val network =
                 if (!granted) HomeToolMetric.AccessRequired
                 else
@@ -47,6 +50,7 @@ internal class HomePlatformMetricsSource(context: Context, private val executor:
                             val mobile =
                                 traffic.readMobile(window, includeApplications = false).usage
                             val wifi = traffic.readWifi(window, includeApplications = false).usage
+                            wifiBytes = wifi.bytes
                             if (mobile.bytes == null && wifi.bytes == null)
                                 HomeToolMetric.Unavailable
                             else
@@ -60,11 +64,12 @@ internal class HomePlatformMetricsSource(context: Context, private val executor:
                 HomePlatformMetrics(
                     network,
                     cached?.takeIf { cachedAccess == granted }?.apps ?: HomeToolMetric.Reading,
+                    wifiBytes = wifiBytes,
                 )
             )
             val apps = safely { executor.io { readApps(granted) } }
             currentCoroutineContext().ensureActive()
-            val result = HomePlatformMetrics(network, apps)
+            val result = HomePlatformMetrics(network, apps, wifiBytes)
             cached = result
             cachedAccess = granted
             cachedMonth = window.startMillis

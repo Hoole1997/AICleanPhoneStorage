@@ -65,6 +65,21 @@ class HomeContentTest {
     }
 
     @Test
+    fun `download uses wifi alone and distinguishes unknown from zero`() {
+        val overview =
+            HomeOverview(
+                tools = HomeToolMetrics(network = HomeToolMetric.Bytes(9_000_000)),
+                wifiBytes = 1_500_000,
+            )
+        assertEquals("1.5MB", overview.toHomeContent(Locale.US).statistics.download)
+        assertEquals(
+            "0B",
+            overview.copy(wifiBytes = 0).toHomeContent(Locale.US).statistics.download,
+        )
+        assertNull(overview.copy(wifiBytes = null).toHomeContent(Locale.US).statistics.download)
+    }
+
+    @Test
     fun `app count fallback is not formatted as occupied bytes`() {
         val app =
             HomeOverview(tools = HomeToolMetrics(apps = HomeToolMetric.AppCount(85)))

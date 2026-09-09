@@ -25,6 +25,7 @@ internal class AndroidHomeOverviewRepository(
                 .catch { if (it is IOException) emit(HomeToolMetric.Unavailable) else throw it },
         ) { overview, fileMetrics, system, notificationMetric ->
             overview.copy(
+                wifiBytes = system.wifiBytes,
                 tools =
                     fileMetrics.copy(
                         network = system.network,

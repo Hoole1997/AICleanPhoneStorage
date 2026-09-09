@@ -102,6 +102,7 @@ internal fun HomeOverview.toHomeContent(locale: Locale): HomeContent {
             },
         statistics =
             HomeStatistics(
+                download = wifiBytes?.let(::compact),
                 available = storage?.let { compact(it.availableBytes) },
                 used = percent?.let { NumberFormat.getPercentInstance(locale).format(it / 100.0) },
             ),
