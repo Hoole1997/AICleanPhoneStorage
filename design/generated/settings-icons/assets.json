@@ -1,0 +1,163 @@
+{
+  "source": "Built-in image_gen, explicitly requested by user",
+  "displayDp": 32,
+  "alphaThresholdForBounds": 16,
+  "assets": [
+    {
+      "name": "language",
+      "source": "design/generated/settings-icons/source/language.png",
+      "sha256": "3565e40af35b270ce2abab886acce3e83ac7f672ea562e66080e1383cf875fb8",
+      "cropBounds": [
+        121,
+        116,
+        1133,
+        1136
+      ],
+      "cutout": "design/generated/settings-icons/cutouts/language.png",
+      "outputs": [
+        {
+          "path": "app/src/main/res/drawable-mdpi/ic_settings_language.webp",
+          "pixels": 32,
+          "bytes": 2594
+        },
+        {
+          "path": "app/src/main/res/drawable-hdpi/ic_settings_language.webp",
+          "pixels": 48,
+          "bytes": 4682
+        },
+        {
+          "path": "app/src/main/res/drawable-xhdpi/ic_settings_language.webp",
+          "pixels": 64,
+          "bytes": 7234
+        },
+        {
+          "path": "app/src/main/res/drawable-xxhdpi/ic_settings_language.webp",
+          "pixels": 96,
+          "bytes": 12970
+        },
+        {
+          "path": "app/src/main/res/drawable-xxxhdpi/ic_settings_language.webp",
+          "pixels": 128,
+          "bytes": 19786
+        }
+      ]
+    },
+    {
+      "name": "privacy",
+      "source": "design/generated/settings-icons/source/privacy.png",
+      "sha256": "aa21914479103d8f8568fe14771632ceb8d45b4b5dc59badea1164303f9a0fed",
+      "cropBounds": [
+        171,
+        78,
+        1101,
+        1172
+      ],
+      "cutout": "design/generated/settings-icons/cutouts/privacy.png",
+      "outputs": [
+        {
+          "path": "app/src/main/res/drawable-mdpi/ic_settings_privacy.webp",
+          "pixels": 32,
+          "bytes": 2014
+        },
+        {
+          "path": "app/src/main/res/drawable-hdpi/ic_settings_privacy.webp",
+          "pixels": 48,
+          "bytes": 3916
+        },
+        {
+          "path": "app/src/main/res/drawable-xhdpi/ic_settings_privacy.webp",
+          "pixels": 64,
+          "bytes": 4990
+        },
+        {
+          "path": "app/src/main/res/drawable-xxhdpi/ic_settings_privacy.webp",
+          "pixels": 96,
+          "bytes": 9114
+        },
+        {
+          "path": "app/src/main/res/drawable-xxxhdpi/ic_settings_privacy.webp",
+          "pixels": 128,
+          "bytes": 14104
+        }
+      ]
+    },
+    {
+      "name": "feedback",
+      "source": "design/generated/settings-icons/source/feedback.png",
+      "sha256": "b56af6cd700b27fe05b2eb70152af6f9f739649a4d102f8e42737a21b58d3ef7",
+      "cropBounds": [
+        140,
+        167,
+        1116,
+        1089
+      ],
+      "cutout": "design/generated/settings-icons/cutouts/feedback.png",
+      "outputs": [
+        {
+          "path": "app/src/main/res/drawable-mdpi/ic_settings_feedback.webp",
+          "pixels": 32,
+          "bytes": 2134
+        },
+        {
+          "path": "app/src/main/res/drawable-hdpi/ic_settings_feedback.webp",
+          "pixels": 48,
+          "bytes": 3772
+        },
+        {
+          "path": "app/src/main/res/drawable-xhdpi/ic_settings_feedback.webp",
+          "pixels": 64,
+          "bytes": 5672
+        },
+        {
+          "path": "app/src/main/res/drawable-xxhdpi/ic_settings_feedback.webp",
+          "pixels": 96,
+          "bytes": 10182
+        },
+        {
+          "path": "app/src/main/res/drawable-xxxhdpi/ic_settings_feedback.webp",
+          "pixels": 128,
+          "bytes": 15728
+        }
+      ]
+    },
+    {
+      "name": "about",
+      "source": "design/generated/settings-icons/source/about.png",
+      "sha256": "d47b0f4482a258ff2f514e622cb4332c4e90710e39f3bd676f4dc17d9add041e",
+      "cropBounds": [
+        92,
+        82,
+        1175,
+        1170
+      ],
+      "cutout": "design/generated/settings-icons/cutouts/about.png",
+      "outputs": [
+        {
+          "path": "app/src/main/res/drawable-mdpi/ic_settings_about.webp",
+          "pixels": 32,
+          "bytes": 2144
+        },
+        {
+          "path": "app/src/main/res/drawable-hdpi/ic_settings_about.webp",
+          "pixels": 48,
+          "bytes": 3914
+        },
+        {
+          "path": "app/src/main/res/drawable-xhdpi/ic_settings_about.webp",
+          "pixels": 64,
+          "bytes": 5824
+        },
+        {
+          "path": "app/src/main/res/drawable-xxhdpi/ic_settings_about.webp",
+          "pixels": 96,
+          "bytes": 10712
+        },
+        {
+          "path": "app/src/main/res/drawable-xxxhdpi/ic_settings_about.webp",
+          "pixels": 128,
+          "bytes": 16910
+        }
+      ]
+    }
+  ]
+}

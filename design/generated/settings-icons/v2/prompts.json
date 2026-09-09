@@ -1,0 +1,21 @@
+{
+  "mode": "built-in image_gen",
+  "prompts": [
+    {
+      "name": "language",
+      "prompt": "Use case: stylized-concept. Asset type: one understated 32dp Android settings icon. Primary request: redesign as a quiet refined flat duotone UI pictogram for a pale blue and white mobile app. Style: FLAT 2D matte icon, consistent medium-fine rounded strokes, restrained muted cornflower blue (#5D87C5) with very pale blue (#E8F0FA) small fills. Clear simple silhouette readable at 32px. Exactly one isolated centered icon occupying 70% of a square canvas, balanced whitespace. Genuinely transparent alpha background. No 3D, no bevel, no highlights, no shine, no shadows, no large colored backing tile, no gradients, no surrounding decoration, no badge, no watermark or caption. Aim for calm everyday utility, never a glossy toy or app-store promotional icon. Subject: a simple circular globe outline, one vertical oval meridian and one horizontal equator. Use only a few precise rounded blue strokes and optional very faint blue interior tint. No continents, stand, or letters."
+    },
+    {
+      "name": "privacy",
+      "prompt": "Use case: stylized-concept. Asset type: one understated 32dp Android settings icon. Primary request: redesign as a quiet refined flat duotone UI pictogram for a pale blue and white mobile app. Style: FLAT 2D matte icon, consistent medium-fine rounded strokes, restrained muted cornflower blue (#5D87C5) with very pale blue (#E8F0FA) small fills. Clear simple silhouette readable at 32px. Exactly one isolated centered icon occupying 70% of a square canvas, balanced whitespace. Genuinely transparent alpha background. No 3D, no bevel, no highlights, no shine, no shadows, no large colored backing tile, no gradients, no surrounding decoration, no badge, no watermark or caption. Aim for calm everyday utility, never a glossy toy or app-store promotional icon. Subject: a simple rounded shield outline containing a small minimal check mark. Muted blue outline with pale blue interior. One shield contour, no nested borders, no padlock, no letters."
+    },
+    {
+      "name": "feedback",
+      "prompt": "Use case: stylized-concept. Asset type: one understated 32dp Android settings icon. Primary request: redesign as a quiet refined flat duotone UI pictogram for a pale blue and white mobile app. Style: FLAT 2D matte icon, consistent medium-fine rounded strokes, restrained muted cornflower blue (#5D87C5) with very pale blue (#E8F0FA) small fills. Clear simple silhouette readable at 32px. Exactly one isolated centered icon occupying 70% of a square canvas, balanced whitespace. Genuinely transparent alpha background. No 3D, no bevel, no highlights, no shine, no shadows, no large colored backing tile, no gradients, no surrounding decoration, no badge, no watermark or caption. Aim for calm everyday utility, never a glossy toy or app-store promotional icon. Subject: a simple rounded rectangular speech bubble outline with one short tail and three small evenly spaced blue dots. Very pale blue interior, thin rounded blue outline."
+    },
+    {
+      "name": "about",
+      "prompt": "Use case: stylized-concept. Asset type: one understated 32dp Android settings icon. Primary request: redesign as a quiet refined flat duotone UI pictogram for a pale blue and white mobile app. Style: FLAT 2D matte icon, consistent medium-fine rounded strokes, restrained muted cornflower blue (#5D87C5) with very pale blue (#E8F0FA) small fills. Clear simple silhouette readable at 32px. Exactly one isolated centered icon occupying 70% of a square canvas, balanced whitespace. Genuinely transparent alpha background. No 3D, no bevel, no highlights, no shine, no shadows, no large colored backing tile, no gradients, no surrounding decoration, no badge, no watermark or caption. Aim for calm everyday utility, never a glossy toy or app-store promotional icon. Subject: a simple circle outline containing a plain sans-serif lowercase information symbol i, using one small dot and one straight stem. Very pale blue interior. Uniform thin outline, no serif letter and no medallion thickness."
+    }
+  ]
+}

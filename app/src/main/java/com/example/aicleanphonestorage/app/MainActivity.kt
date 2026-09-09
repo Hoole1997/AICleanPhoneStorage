@@ -162,6 +162,23 @@ class MainActivity : AppCompatActivity() {
             HomeRenderer(
                 binding,
                 object : HomeUiActions by HomeUiActions.None {
+                    override fun onSettings() {
+                        permissions.cancel()
+                        trafficEntry.cancelEntry()
+                        notificationEntry.cancelEntry()
+                        appManagerEntry.cancel()
+                        cleanupEntry.cancel()
+                        startActivity(
+                            Intent(
+                                    this@MainActivity,
+                                    com.example.aicleanphonestorage.feature.settings
+                                            .SettingsActivity::class
+                                        .java,
+                                )
+                                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                        )
+                    }
+
                     override fun onSmartClean() {
                         permissions.cancel()
                         trafficEntry.cancelEntry()

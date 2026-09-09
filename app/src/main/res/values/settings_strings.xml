@@ -1,0 +1,47 @@
+<resources>
+    <string name="settings_language">Language settings</string>
+    <string name="settings_privacy">Privacy policy</string>
+    <string name="settings_feedback">Feedback</string>
+    <string name="settings_about">About us</string>
+    <string name="settings_language_pending_title">More languages, coming soon</string>
+    <string name="settings_language_pending_message">You’ll be able to choose your preferred language here in a future update.</string>
+    <string name="settings_about_description">A little more space for what matters. Manage files, compress photos, and take control of app notifications.</string>
+    <string name="settings_version">Version %1$s (%2$d)</string>
+    <string name="settings_version_unavailable">Version unavailable</string>
+    <string name="settings_feedback_title">Help us improve</string>
+    <string name="settings_feedback_description">Found a problem or have an idea? We’d love to hear it.</string>
+    <string name="settings_feedback_hint">Your feedback</string>
+    <string name="settings_feedback_email">Open email app</string>
+    <string name="settings_feedback_note">Your message opens as an email draft. You decide when to send it.</string>
+    <string name="settings_feedback_copy">Copy feedback</string>
+    <string name="settings_feedback_copied">Feedback copied</string>
+    <string name="settings_feedback_required">Please enter your feedback.</string>
+    <string name="settings_feedback_subject">Feedback for %1$s</string>
+    <string name="settings_email_unavailable">No email app is available. You can copy your feedback instead.</string>
+    <string name="settings_link_unavailable">This page can’t be opened right now.</string>
+    <style name="Widget.Settings.Row" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">64dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingStart">68dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:gravity">center_vertical|start</item>
+        <item name="android:fontFamily">@font/home_roboto_medium</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/home_title</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="cornerRadius">0dp</item>
+        <item name="icon">@drawable/ic_app_manager_next</item>
+        <item name="iconGravity">end</item>
+        <item name="iconSize">20dp</item>
+        <item name="iconPadding">16dp</item>
+        <item name="iconTint">@null</item>
+    </style>
+</resources>

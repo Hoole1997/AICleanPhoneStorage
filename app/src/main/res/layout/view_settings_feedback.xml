@@ -1,0 +1,89 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.Home.Card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="20dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/feedback_heading"
+                style="@style/Widget.Home.Text.Semibold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/home_title"
+                android:text="@string/settings_feedback_title" />
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/Widget.Home.Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="14sp"
+                android:textColor="@color/home_text_secondary"
+                android:text="@string/settings_feedback_description" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/feedback_input"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:hint="@string/settings_feedback_hint"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="2000">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/feedback_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minLines="6"
+                    android:maxLength="2000"
+                    android:gravity="top|start"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:fontFamily="@font/home_roboto_regular"
+                    android:textSize="16sp"
+                    android:textColor="@color/home_title"
+                    android:importantForAutofill="no" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/feedback_send"
+        style="@style/Widget.Traffic.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:minHeight="48dp"
+        android:text="@string/settings_feedback_email"
+        app:cornerRadius="100dp" />
+    <com.google.android.material.textview.MaterialTextView
+        style="@style/Widget.Home.Text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="12sp"
+        android:textColor="@color/home_text_secondary"
+        android:gravity="center"
+        android:text="@string/settings_feedback_note" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/feedback_copy"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:layout_marginTop="8dp"
+        android:textAllCaps="false"
+        android:text="@string/settings_feedback_copy"
+        android:textColor="@color/traffic_blue" />
+</LinearLayout>

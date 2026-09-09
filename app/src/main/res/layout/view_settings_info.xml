@@ -1,0 +1,52 @@
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.Home.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="20dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="24dp">
+        <ImageView
+            android:id="@+id/settings_info_image"
+            android:layout_width="112dp"
+            android:layout_height="112dp"
+            android:src="@drawable/home_robot"
+            android:scaleType="fitCenter"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:visibility="gone" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/settings_info_heading"
+            style="@style/Widget.Home.Text.Semibold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textSize="20sp"
+            android:textColor="@color/home_title"
+            android:gravity="center" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/settings_info_message"
+            style="@style/Widget.Home.Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textSize="14sp"
+            android:textColor="@color/home_text_secondary"
+            android:gravity="center" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/settings_info_version"
+            style="@style/Widget.Home.Text.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textSize="14sp"
+            android:textColor="@color/traffic_blue"
+            android:gravity="center"
+            android:visibility="gone" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

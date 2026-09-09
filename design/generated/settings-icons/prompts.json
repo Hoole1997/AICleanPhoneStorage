@@ -1,0 +1,21 @@
+{
+  "mode": "built-in image_gen",
+  "prompts": [
+    {
+      "name": "language",
+      "prompt": "Use case: stylized-concept. Asset type: one small Android settings menu icon, designed to be recognizable at 32dp. Style: premium friendly soft 3D molded glossy plastic, gently rounded sculptural edges, subtle bevels and restrained highlights, like colorful polished mobile utility app icons. Near frontal three-quarter view, slight tilt, key light from upper left. Composition: exactly ONE centered isolated icon occupying about 75% of a square canvas, generous transparent margin, cohesive simple silhouette, minimal details. Background: genuinely transparent alpha, no opaque square, no checkerboard pattern, no scene or floor. Only a very subtle tight shadow on the object itself. No decorative sparkles, no surrounding objects, no captions, no watermarks. Subject: a rich sky-blue globe with a few clean white meridian and equator bands, conveying languages and worldwide communication. Simple spherical globe, no stand, no continents, no letters."
+    },
+    {
+      "name": "privacy",
+      "prompt": "Use case: stylized-concept. Asset type: one small Android settings menu icon, designed to be recognizable at 32dp. Style: premium friendly soft 3D molded glossy plastic, gently rounded sculptural edges, subtle bevels and restrained highlights, like colorful polished mobile utility app icons. Near frontal three-quarter view, slight tilt, key light from upper left. Composition: exactly ONE centered isolated icon occupying about 75% of a square canvas, generous transparent margin, cohesive simple silhouette, minimal details. Background: genuinely transparent alpha, no opaque square, no checkerboard pattern, no scene or floor. Only a very subtle tight shadow on the object itself. No decorative sparkles, no surrounding objects, no captions, no watermarks. Subject: a mint-green softly rounded security shield with a raised small white closed padlock centered on its front. Clear shield silhouette, not a square app tile. Minimal lock detail, no letters."
+    },
+    {
+      "name": "feedback",
+      "prompt": "Use case: stylized-concept. Asset type: one small Android settings menu icon, designed to be recognizable at 32dp. Style: premium friendly soft 3D molded glossy plastic, gently rounded sculptural edges, subtle bevels and restrained highlights, like colorful polished mobile utility app icons. Near frontal three-quarter view, slight tilt, key light from upper left. Composition: exactly ONE centered isolated icon occupying about 75% of a square canvas, generous transparent margin, cohesive simple silhouette, minimal details. Background: genuinely transparent alpha, no opaque square, no checkerboard pattern, no scene or floor. Only a very subtle tight shadow on the object itself. No decorative sparkles, no surrounding objects, no captions, no watermarks. Subject: a warm coral-orange rounded speech bubble with three raised white dots, one simple speech tail. Single bubble, glossy front with warm orange sides, no letters."
+    },
+    {
+      "name": "about",
+      "prompt": "Use case: stylized-concept. Asset type: one small Android settings menu icon, designed to be recognizable at 32dp. Style: premium friendly soft 3D molded glossy plastic, gently rounded sculptural edges, subtle bevels and restrained highlights, like colorful polished mobile utility app icons. Near frontal three-quarter view, slight tilt, key light from upper left. Composition: exactly ONE centered isolated icon occupying about 75% of a square canvas, generous transparent margin, cohesive simple silhouette, minimal details. Background: genuinely transparent alpha, no opaque square, no checkerboard pattern, no scene or floor. Only a very subtle tight shadow on the object itself. No decorative sparkles, no surrounding objects, no captions, no watermarks. Subject: a blue-violet softly rounded circular information medallion with a raised white lowercase information letter i at its center. The only text is the universal symbol \"i\". Simple thick rounded disc, restrained violet-blue shading, no square backing tile."
+    }
+  ]
+}
