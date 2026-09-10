@@ -1,12 +1,10 @@
 package com.example.aicleanphonestorage.core.ui.motion
 
-import android.animation.ValueAnimator
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.database.ContentObserver
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
@@ -61,14 +59,12 @@ internal class MotionPreferences(context: Context, private val changed: (Boolean
 
     private fun publish() {
         if (!observing) return
-        val enabled =
-            if (Build.VERSION.SDK_INT >= 26) ValueAnimator.areAnimatorsEnabled()
-            else
-                Settings.Global.getFloat(
-                    app.contentResolver,
-                    Settings.Global.ANIMATOR_DURATION_SCALE,
-                    1f,
-                ) > 0f
+        // ContentObserver 可能先于 ValueAnimator 的进程缓存更新收到通知，直接读设置值才能可靠恢复动效。
+        val enabled = Settings.Global.getFloat(
+            app.contentResolver,
+            Settings.Global.ANIMATOR_DURATION_SCALE,
+            1f,
+        ) > 0f
         changed(enabled && !power.isPowerSaveMode && !accessibility.isTouchExplorationEnabled)
     }
 }

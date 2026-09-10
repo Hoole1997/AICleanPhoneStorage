@@ -96,6 +96,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.lottie)
     implementation("com.github.toukaremax:core:1.0.15")
     implementation("com.github.toukaremax:bill:1.0.51") {
         // 保留 Unity Mediation 9.2.0，排除旧 IronSource 坐标，避免同包类冲突。
@@ -132,6 +133,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.test.core)
+    // SDK 将 XPopup 作为运行时依赖；设备测试需要它的公开窗口 API 采集实际弹框帧耗时。
+    androidTestImplementation("com.github.li-xiaojun:XPopup:2.10.0")
 }
 
 // 配置目录与 distribution flavor 同名，配置和 Firebase JSON 直接放在该目录。

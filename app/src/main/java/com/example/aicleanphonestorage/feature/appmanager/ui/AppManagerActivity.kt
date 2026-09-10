@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.app.CleanApplication
+import com.example.aicleanphonestorage.app.ad.FeatureExitCoordinator
+import com.example.aicleanphonestorage.app.ad.InterstitialPlacements
 import com.example.aicleanphonestorage.core.ui.apps.AppIconLoader
 import com.example.aicleanphonestorage.databinding.ScreenAppManagerBinding
 import com.example.aicleanphonestorage.feature.appmanager.data.AppManagerCatalog
@@ -63,7 +65,8 @@ class AppManagerActivity : AppCompatActivity() {
             insets
         }
         ViewCompat.requestApplyInsets(binding.root)
-        binding.appManagerBack.setOnClickListener { finish() }
+        val exit = FeatureExitCoordinator(this, { InterstitialPlacements.APPS_EXIT })
+        binding.appManagerBack.setOnClickListener { exit.exit() }
         binding.appManagerRetry.setOnClickListener { model.refresh() }
         adapter =
             AppManagerAdapter(lifecycleScope, AppIconLoader(this, container.taskExecutor, 36)) {

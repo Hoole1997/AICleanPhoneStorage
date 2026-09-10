@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.SystemBarStyle
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -29,6 +30,7 @@ class CompletionActivity : AppCompatActivity() {
             return
         }
         report = value
+        onBackPressedDispatcher.addCallback(this) { exitToHome() }
         enableEdgeToEdge(
             SystemBarStyle.dark(Color.TRANSPARENT),
             SystemBarStyle.light(Color.TRANSPARENT, Color.BLACK),
@@ -52,8 +54,8 @@ class CompletionActivity : AppCompatActivity() {
         }
         ViewCompat.requestApplyInsets(binding.root)
         ViewCompat.setAccessibilityHeading(binding.completionTitle, true)
-        binding.completionBack.setOnClickListener { finish() }
-        binding.completionContinue.setOnClickListener { complete(CompletionContract.CONTINUE) }
+        binding.completionBack.setOnClickListener { exitToHome() }
+        binding.completionContinue.setOnClickListener { exitToHome() }
         binding.completionOriginals.setOnClickListener {
             complete(CompletionContract.REMOVE_ORIGINALS)
         }
@@ -66,6 +68,12 @@ class CompletionActivity : AppCompatActivity() {
             }
     }
 
+    private fun exitToHome() {
+        if (leaving) return
+        // 返回结果交给原功能页，它附上业务来源并导航首页；本页不请求退出广告。
+        complete(CompletionContract.CONTINUE)
+    }
+
     private fun complete(action: String) {
         if (leaving) return
         leaving = true
@@ -73,6 +81,7 @@ class CompletionActivity : AppCompatActivity() {
             RESULT_OK,
             Intent()
                 .putExtra(CompletionContract.ACTION, action)
+                .putExtra(CompletionContract.SOURCE, intent.getStringExtra(CompletionContract.SOURCE))
                 .putExtra(CompletionContract.OPERATION, report?.operationId ?: 0),
         )
         finish()

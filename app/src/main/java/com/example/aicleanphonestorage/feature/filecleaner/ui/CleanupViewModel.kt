@@ -169,31 +169,25 @@ internal class CleanupViewModel(
     }
 
     fun prepare() {
-        val value = current.value
-        val handle = value.handle ?: return
-        if (
-            value.editing > 0 ||
-                totalsJob?.isActive == true ||
-                work?.isActive == true ||
-                value.totals.selectedCount == 0 ||
-                value.operation != CleanupOperationState.Idle
-        )
-            return
-        work =
-            viewModelScope.launch(failures) {
-                val op = repository.prepare(handle, value.filter)
-                current.update {
-                    it.copy(
-                        operation =
-                            CleanupOperationState.Confirm(
-                                op.id,
-                                op.count,
-                                op.bytes,
-                                handle.feature == CleanupFeature.PHOTO_COMPRESS,
-                            )
+        if (work?.isActive == true) return
+        work = viewModelScope.launch(failures) {
+            // 页面恢复可能正在刷新总览；等待当前查询完成，再使用最新选择快照准备用户确认。
+            while (totalsJob?.isActive == true) totalsJob?.join()
+            val value = current.value
+            val handle = value.handle ?: return@launch
+            if (
+                value.editing > 0 || value.totals.selectedCount == 0 ||
+                    value.operation != CleanupOperationState.Idle
+            ) return@launch
+            val op = repository.prepare(handle, value.filter)
+            current.update {
+                it.copy(
+                    operation = CleanupOperationState.Confirm(
+                        op.id, op.count, op.bytes, handle.feature == CleanupFeature.PHOTO_COMPRESS
                     )
-                }
+                )
             }
+        }
     }
 
     fun dismissOperation() {

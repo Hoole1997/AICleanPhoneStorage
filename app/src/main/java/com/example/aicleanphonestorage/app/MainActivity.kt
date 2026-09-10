@@ -1,5 +1,7 @@
 package com.example.aicleanphonestorage.app
 
+import com.example.aicleanphonestorage.app.ad.HomeExitAdCoordinator
+
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -56,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private var redirectedToStartup = false
+    private lateinit var homeExitAds: HomeExitAdCoordinator
     private lateinit var homeActions: HomeEntryActions
     private lateinit var pushPermission: PushPermissionCoordinator
     private lateinit var permissions: PermissionCoordinator
@@ -179,6 +182,8 @@ class MainActivity : AppCompatActivity() {
             },
         )
         renderer = HomeRenderer(binding, homeActions)
+        homeExitAds = HomeExitAdCoordinator(this, binding.root)
+        if (homeExitAds.accept(intent)) homeActions.cancelPending()
         pushPermission = PushPermissionCoordinator(this,
             (application as CleanApplication).notificationRuntime)
         binding.retryButton.setOnClickListener { homeViewModel.retry() }
@@ -239,6 +244,7 @@ class MainActivity : AppCompatActivity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (this::renderer.isInitialized) renderer.setWindowFocused(hasFocus)
+        if (this::homeExitAds.isInitialized) homeExitAds.onWindowFocusChanged(hasFocus)
     }
 
     override fun onResumeFragments() {
@@ -270,6 +276,10 @@ class MainActivity : AppCompatActivity() {
             return
         }
         setIntent(intent)
+        if (homeExitAds.accept(intent)) {
+            homeActions.cancelPending()
+            return
+        }
         handleNotificationIntent(intent)
         if (intent.getBooleanExtra(NetworkTrafficActivity.EXTRA_REENTER, false)) {
             permissions.cancel()

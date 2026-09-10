@@ -5,14 +5,16 @@ import android.content.Intent
 
 /** Activity Result 只返回用户选择，删除原图必须交回原业务协调器再次确认。 */
 internal object CompletionContract {
+    const val SOURCE = "completion.source"
     const val ACTION = "completion.action"
     const val OPERATION = "completion.operation"
     const val CONTINUE = "continue"
     const val REMOVE_ORIGINALS = "remove_originals"
 
-    fun intent(context: Context, report: CompletionReport) =
+    fun intent(context: Context, report: CompletionReport, source: String? = null) =
         Intent(context, CompletionActivity::class.java).apply {
             putExtra("completion.kind", report.kind.name)
+            putExtra(SOURCE, source)
             putExtra("completion.count", report.completed)
             putExtra("completion.failed", report.failed)
             putExtra("completion.skipped", report.skipped)

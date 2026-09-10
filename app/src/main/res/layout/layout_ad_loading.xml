@@ -1,23 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="16dp"
-    android:gravity="center"
-    android:background="@android:color/white">
+    android:id="@+id/ad_loading_content"
+    android:maxWidth="248dp"
+    android:background="@drawable/task_dialog_surface"
+    android:clipToOutline="true"
+    android:paddingBottom="28dp">
 
-    <ProgressBar
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_marginEnd="8dp" />
+    <!-- 复用项目原版 WebP 关闭图标；48dp 触控区域独占顶部一行，避免与大字体文案重叠。 -->
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/ad_loading_close"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/task_loading_cancel"
+        android:padding="15dp"
+        android:src="@drawable/ic_task_close"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <com.example.aicleanphonestorage.app.ad.renderer.AdLoadingAnimationView
+        android:id="@+id/ad_loading_progress"
+        android:layout_width="96dp"
+        android:layout_height="48dp"
+        android:importantForAccessibility="no"
+        android:contentDescription="@null"
+        app:lottie_rawRes="@raw/ad_loading_tiles"
+        app:lottie_autoPlay="false"
+        app:lottie_loop="true"
+        app:lottie_useCompositionFrameRate="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ad_loading_close" />
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_loading_text"
-        android:layout_width="wrap_content"
+        style="@style/Widget.Home.Text.Medium"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="24dp"
+        android:gravity="center"
         android:text="@string/bill_ad_loading"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="12sp" />
+        android:textColor="@color/traffic_text"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ad_loading_progress" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

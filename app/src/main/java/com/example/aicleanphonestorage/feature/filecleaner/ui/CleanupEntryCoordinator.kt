@@ -115,6 +115,7 @@ internal class CleanupEntryCoordinator(
                         else FileCleanupActivity::class.java,
                     )
                     .putExtra(FileCleanupActivity.EXTRA_SCAN, handle.id)
+                    .putExtra(FileCleanupActivity.EXTRA_FEATURE, handle.feature.name)
             )
         }
     }

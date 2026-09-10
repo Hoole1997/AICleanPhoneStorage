@@ -1,6 +1,5 @@
 package com.example.aicleanphonestorage.feature.filecleaner.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.format.Formatter
 import android.widget.Toast
@@ -11,15 +10,19 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.example.aicleanphonestorage.R
-import com.example.aicleanphonestorage.app.MainActivity
+import com.example.aicleanphonestorage.app.ad.HomeExitAdContract
+import com.example.aicleanphonestorage.app.ad.InterstitialActions
+import com.example.aicleanphonestorage.app.ad.InterstitialPlacements
 import com.example.aicleanphonestorage.core.ui.completion.CompletionContract
 import com.example.aicleanphonestorage.core.ui.loading.*
+import com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature
 
 /** 所有文件清理页面共享确认、系统删除授权与完成结果；不在页面间复制操作流程。 */
 internal class CleanupOperationCoordinator(
     private val activity: AppCompatActivity,
     private val model: CleanupViewModel,
     saved: Bundle?,
+    private val ads: InterstitialActions,
 ) {
     private var originalsConfirmation: Long? = saved?.getLong("originals")?.takeIf { it > 0 }
     // 保留到 Activity Result 返回，旋转/重建不会重复打开同一份完成页。
@@ -39,11 +42,13 @@ internal class CleanupOperationCoordinator(
             } else {
                 model.dismissOperation()
                 if (action == CompletionContract.CONTINUE) {
+                    // 父页进程重建时索引可能尚未恢复，仍保留完成页携回的来源功能。
+                    val source = CleanupFeature.entries.firstOrNull {
+                        it.name == result.data?.getStringExtra(CompletionContract.SOURCE)
+                    } ?: model.state.value.handle?.feature
                     activity.startActivity(
-                        Intent(activity, MainActivity::class.java)
-                            .addFlags(
-                                Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            )
+                        HomeExitAdContract.intent(activity,
+                            InterstitialPlacements.completionExit(source))
                     )
                     activity.finish()
                 }
@@ -55,6 +60,9 @@ internal class CleanupOperationCoordinator(
         }
 
     init {
+        // 请求中只保存确认时的操作编号；广告回调后 ViewModel 再验证编号，避免执行后来改变的选择。
+        ads.register(CONFIRM_AD) { id -> model.confirm(id) }
+        ads.register(ORIGINALS_AD) { id -> model.removeOriginals(id) }
         // Activity Result 在 STARTED 时分发；回到原图确认时没有新的业务状态发射，需在 RESUMED 补呈现。
         activity.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
@@ -70,6 +78,7 @@ internal class CleanupOperationCoordinator(
             CleanupMessageDialog.RESULT,
             activity,
         ) { _, result ->
+            if (ads.busy) return@setFragmentResultListener
             val identity = result.getString("identity").orEmpty()
             val positive = result.getString("action") == "positive"
             val op = model.state.value.operation
@@ -77,18 +86,24 @@ internal class CleanupOperationCoordinator(
                 identity.startsWith("originals:") -> {
                     val id = originalsConfirmation
                     originalsConfirmation = null
-                    if (positive && id != null) model.removeOriginals(id)
+                    if (positive && id != null) requestConfirmedAction(ORIGINALS_AD, id)
                     else model.dismissOperation()
                 }
-                op is CleanupOperationState.Confirm ->
-                    if (positive) model.confirm(op.id) else model.dismissOperation()
+                op is CleanupOperationState.Confirm && identity == "confirm:${op.id}" ->
+                    if (positive) requestConfirmedAction(CONFIRM_AD, op.id) else model.dismissOperation()
             }
         }
     }
 
+    private fun requestConfirmedAction(action: String, id: Long) {
+        ads.run(action, InterstitialPlacements.clean(model.state.value.handle?.feature), payload = id)
+    }
+
     fun render(operation: CleanupOperationState) {
+        // 退出回调触发 finish 后，生命周期可能尚未降级；此时不能再打开确认框或完成页。
         if (
-            activity.supportFragmentManager.isStateSaved ||
+            ads.busy || activity.isFinishing || activity.isDestroyed ||
+                activity.supportFragmentManager.isStateSaved ||
                 !activity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
         )
             return
@@ -155,6 +170,7 @@ internal class CleanupOperationCoordinator(
                 CompletionContract.intent(
                     activity,
                     operation.summary.completionReport(feature, operation.id),
+                    source = feature.name,
                 )
             )
         }
@@ -177,6 +193,8 @@ internal class CleanupOperationCoordinator(
     }
 
     companion object {
+        private const val CONFIRM_AD = "ad.clean.confirmed"
+        private const val ORIGINALS_AD = "ad.originals.confirmed"
         private const val WORKING = "cleanup.operation.loading"
         private const val WORK_CANCEL = "cleanup.operation.cancel"
     }

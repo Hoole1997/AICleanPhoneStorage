@@ -1,7 +1,5 @@
 package com.example.aicleanphonestorage.feature.networktraffic.ui
 
-import com.example.aicleanphonestorage.core.ui.apps.AppIconLoader
-
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Color
@@ -24,6 +22,9 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.app.CleanApplication
 import com.example.aicleanphonestorage.app.MainActivity
+import com.example.aicleanphonestorage.app.ad.FeatureExitCoordinator
+import com.example.aicleanphonestorage.app.ad.InterstitialPlacements
+import com.example.aicleanphonestorage.core.ui.apps.AppIconLoader
 import com.example.aicleanphonestorage.databinding.ScreenNetworkTrafficBinding
 import com.example.aicleanphonestorage.feature.networktraffic.data.TrafficApp
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -47,7 +48,8 @@ class NetworkTrafficActivity : AppCompatActivity() {
         val binding = ScreenNetworkTrafficBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setAccessibilityHeading(binding.trafficTitle, true)
-        binding.trafficBack.setOnClickListener { finish() }
+        val exit = FeatureExitCoordinator(this, { InterstitialPlacements.NETWORK_EXIT })
+        binding.trafficBack.setOnClickListener { exit.exit() }
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
             binding.trafficContent.setPadding(bars.left, bars.top, bars.right, bars.bottom)

@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
@@ -21,10 +22,14 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import androidx.test.runner.lifecycle.Stage
 import com.example.aicleanphonestorage.app.CleanApplication
+import com.example.aicleanphonestorage.app.MainActivity
+import com.example.aicleanphonestorage.app.ad.InterstitialActionState
 import com.example.aicleanphonestorage.core.ui.completion.*
 import com.example.aicleanphonestorage.databinding.ScreenCompletionBinding
 import com.example.aicleanphonestorage.feature.filecleaner.data.*
 import com.example.aicleanphonestorage.feature.filecleaner.ui.FileCleanupActivity
+import com.example.aicleanphonestorage.feature.filecleaner.ui.CleanupMessageDialog
+import com.example.aicleanphonestorage.feature.filecleaner.ui.CleanupViewModel
 import java.io.File
 import java.util.UUID
 import org.junit.Assert.*
@@ -136,7 +141,7 @@ class CompletionDeviceTest {
     }
 
     @Test
-    fun fileDeletionOpensCommonResultAndBackDoesNotReopenIt() {
+    fun fileDeletionOpensCommonResultAndBackReturnsHome() {
         runFileFlow(compress = false)
     }
 
@@ -205,6 +210,21 @@ class CompletionDeviceTest {
                         ready
                     }
                     onView(withId(R.id.cleanup_action)).perform(click())
+                    // 清理按钮先准备确认；选择统计异步完成，但此时不应请求广告。
+                    var waiting = ""
+                    waitUntil(message = { "Cleanup confirmation timed out: $waiting" }) {
+                        var confirmed = false
+                        scenario.onActivity {
+                            confirmed = it.supportFragmentManager
+                                .findFragmentByTag(CleanupMessageDialog.TAG)?.isResumed == true
+                            val provider = ViewModelProvider(it)
+                            assertNull(provider[InterstitialActionState::class.java].pending.value)
+                            waiting = "ad=${provider[InterstitialActionState::class.java].pending.value}, " +
+                                "cleanup=${provider[CleanupViewModel::class.java].state.value}, " +
+                                "lifecycle=${it.lifecycle.currentState}, saved=${it.supportFragmentManager.isStateSaved}"
+                        }
+                        confirmed
+                    }
                     onView(withId(R.id.confirm_accept)).perform(click())
                     waitUntil { resumedCompletion() != null }
                     var report: CompletionReport? = null
@@ -236,13 +256,35 @@ class CompletionDeviceTest {
                     } else assertEquals(sourceBytes, report!!.freedBytes)
                     assertFalse(file.exists())
                     onView(withId(R.id.completion_back)).perform(click())
-                    waitUntil { resumedCompletion() == null }
-                    scenario.recreate()
+                    // 完成页返回会退出整个功能；本用例可能触发 SDK 广告，空本地 ID 不代表无云端广告。
+                    waitUntil(message = { "Home exit timed out: $waiting" }) {
+                        var home = false
+                        instrumentation.runOnMainSync {
+                            val monitor = ActivityLifecycleMonitorRegistry.getInstance()
+                            // 首次到首页可能弹系统通知授权，此时首页处于 PAUSED；无需为测试授予权限。
+                            home = listOf(Stage.STARTED, Stage.RESUMED, Stage.PAUSED).any { stage ->
+                                monitor.getActivitiesInStage(stage).any { it is MainActivity && !it.isFinishing }
+                            }
+                            waiting = Stage.entries.joinToString { stage ->
+                                "$stage=${monitor.getActivitiesInStage(stage).map { it.javaClass.simpleName }}"
+                            } + ", ad=" + resumedCompletionOnMain()?.let {
+                                ViewModelProvider(it)[InterstitialActionState::class.java].pending.value
+                            }
+                        }
+                        home && scenario.state == Lifecycle.State.DESTROYED
+                    }
                     instrumentation.waitForIdleSync()
                     assertNull(resumedCompletion())
                 }
         } finally {
-            instrumentation.runOnMainSync { resumedCompletionOnMain()?.finish() }
+            instrumentation.runOnMainSync {
+                resumedCompletionOnMain()?.finish()
+                // 关闭测试创建的首页，同时结束它可能打开的系统权限请求，避免污染下一条用例。
+                listOf(Stage.STARTED, Stage.RESUMED, Stage.PAUSED).forEach { stage ->
+                    ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(stage)
+                        .filterIsInstance<MainActivity>().forEach { it.finish() }
+                }
+            }
             output?.let { context.contentResolver.delete(it, null, null) }
             scan?.let { index.discard(it.id) }
             root.deleteRecursively()
@@ -253,7 +295,7 @@ class CompletionDeviceTest {
         ActivityLifecycleMonitorRegistry.getInstance()
             .getActivitiesInStage(Stage.RESUMED)
             .filterIsInstance<CompletionActivity>()
-            .firstOrNull()
+            .firstOrNull { !it.isFinishing }
 
     private fun resumedCompletion(): CompletionActivity? {
         var result: CompletionActivity? = null
@@ -261,9 +303,9 @@ class CompletionDeviceTest {
         return result
     }
 
-    private fun waitUntil(check: () -> Boolean) {
+    private fun waitUntil(message: () -> String = { "Completion flow timed out" }, check: () -> Boolean) {
         val deadline = SystemClock.uptimeMillis() + 15_000
         while (!check() && SystemClock.uptimeMillis() < deadline) SystemClock.sleep(25)
-        assertTrue("Completion flow timed out", check())
+        assertTrue(message(), check())
     }
 }

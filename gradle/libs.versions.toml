@@ -1,4 +1,5 @@
 [versions]
+lottie = "6.7.1"
 agp = "9.3.2"
 coreKtx = "1.19.0"
 junit = "4.13.2"
@@ -33,6 +34,7 @@ utilcodex = "1.31.1"
 splashscreen = "1.2.0"
 
 [libraries]
+lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

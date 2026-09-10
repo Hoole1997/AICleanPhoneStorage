@@ -23,6 +23,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.app.CleanApplication
+import com.example.aicleanphonestorage.app.ad.FeatureExitCoordinator
+import com.example.aicleanphonestorage.app.ad.InterstitialActions
+import com.example.aicleanphonestorage.app.ad.InterstitialPlacements
 import com.example.aicleanphonestorage.core.ui.loading.*
 import com.example.aicleanphonestorage.databinding.ScreenFileCleanupBinding
 import com.example.aicleanphonestorage.feature.filecleaner.data.*
@@ -50,6 +53,8 @@ class FileCleanupActivity : AppCompatActivity() {
             }
         }
     }
+    private lateinit var ads: InterstitialActions
+    private lateinit var exit: FeatureExitCoordinator
     private lateinit var binding: ScreenFileCleanupBinding
     private lateinit var listState: CleanupListStateRenderer
     private lateinit var filters: CleanupFilters
@@ -59,7 +64,20 @@ class FileCleanupActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        operationCoordinator = CleanupOperationCoordinator(this, model, savedInstanceState)
+        ads = InterstitialActions(this)
+        operationCoordinator = CleanupOperationCoordinator(this, model, savedInstanceState, ads)
+        exit = FeatureExitCoordinator(
+            this,
+            position = {
+                // 初次索引读取尚未结束时也能标记快速返回的来源功能。
+                val feature = model.state.value.handle?.feature ?: CleanupFeature.entries.firstOrNull {
+                    it.name == intent.getStringExtra(EXTRA_FEATURE)
+                }
+                InterstitialPlacements.exit(feature)
+            },
+            isBusy = { ads.busy },
+            returnsToParent = { intent.hasExtra(EXTRA_BUCKET) }
+        )
         supportFragmentManager.setFragmentResultListener(CompressionQualityDialog.RESULT, this) {
             _,
             result ->
@@ -85,9 +103,11 @@ class FileCleanupActivity : AppCompatActivity() {
         }
         ViewCompat.requestApplyInsets(binding.root)
         ViewCompat.setAccessibilityHeading(binding.cleanupTitle, true)
-        binding.cleanupBack.setOnClickListener { finish() }
+        binding.cleanupBack.setOnClickListener { exit.exit() }
         binding.cleanupSelectAll.setOnClickListener { model.selectAll() }
-        binding.cleanupAction.setOnClickListener { model.prepare() }
+        binding.cleanupAction.setOnClickListener {
+            if (!ads.busy) model.prepare()
+        }
         binding.cleanupError.setOnClickListener { adapter?.retry() }
         filters = CleanupFilters(binding, model::setFilter)
         lifecycleScope.launch {
@@ -273,6 +293,7 @@ class FileCleanupActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val EXTRA_FEATURE = "cleanup.feature"
         const val EXTRA_SCAN = "cleanup.scan.id"
         const val EXTRA_BUCKET = "cleanup.bucket"
     }

@@ -30,7 +30,7 @@ import com.example.aicleanphonestorage.app.ad.renderer.DefaultPangleNativeAdRend
 import com.example.aicleanphonestorage.app.ad.renderer.DefaultToponFullScreenNativeAdRenderer
 import com.example.aicleanphonestorage.app.ad.renderer.DefaultToponNativeAdRenderer
 
-/** 配置与初始化分离：Google 空广告位也可完成渲染器注册，但不会发起 SDK 网络初始化。 */
+/** 本地配置与渲染器由 SDK 初始化回调安装；云端广告 ID 的获取及覆盖由 SDK 负责。 */
 internal object AdConfiguration {
     fun install() {
     googleMobileAds = BillConfig.GoogleMobileAdsConfig(
@@ -98,14 +98,4 @@ internal object AdConfiguration {
     adLoadingDialogRenderer = DefaultAdLoadingDialogRenderer()
     }
 
-    fun hasConfiguredAds() = listOf(
-        BuildConfig.ADMOB_SPLASH_ID, BuildConfig.ADMOB_BANNER_ID, BuildConfig.ADMOB_INTERSTITIAL_ID,
-        BuildConfig.ADMOB_NATIVE_ID, BuildConfig.ADMOB_FULL_NATIVE_ID, BuildConfig.ADMOB_REWARDED_ID,
-        BuildConfig.GAM_SPLASH_ID, BuildConfig.GAM_BANNER_ID, BuildConfig.GAM_INTERSTITIAL_ID,
-        BuildConfig.GAM_NATIVE_ID, BuildConfig.GAM_FULL_NATIVE_ID, BuildConfig.GAM_REWARDED_ID,
-        BuildConfig.PANGLE_SPLASH_ID, BuildConfig.PANGLE_BANNER_ID, BuildConfig.PANGLE_INTERSTITIAL_ID,
-        BuildConfig.PANGLE_NATIVE_ID, BuildConfig.PANGLE_FULL_NATIVE_ID, BuildConfig.PANGLE_REWARDED_ID,
-        BuildConfig.TOPON_SPLASH_ID, BuildConfig.TOPON_BANNER_ID, BuildConfig.TOPON_INTERSTITIAL_ID,
-        BuildConfig.TOPON_NATIVE_ID, BuildConfig.TOPON_FULL_NATIVE_ID, BuildConfig.TOPON_REWARDED_ID,
-    ).any { it.isNotBlank() }
 }

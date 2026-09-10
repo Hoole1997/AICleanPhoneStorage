@@ -1,6 +1,7 @@
 package com.example.aicleanphonestorage.app
 
 import android.app.Application
+import com.example.aicleanphonestorage.app.ad.AdSdkInitializer
 import com.example.aicleanphonestorage.core.diagnostics.PerformanceDiagnostics
 import com.example.aicleanphonestorage.core.locale.AppLanguageController
 import com.example.aicleanphonestorage.core.locale.LanguageActivityCallbacks
@@ -27,6 +28,6 @@ class CleanApplication : Application(), NotificationRuntimeOwner {
         registerActivityLifecycleCallbacks(LanguageActivityCallbacks(languages))
         languages.initialize()
         notificationRuntime.initialize()
-        com.example.aicleanphonestorage.app.ad.AdSdkInitializer.initialize(this)
+        AdSdkInitializer.initialize(this)
     }
 }

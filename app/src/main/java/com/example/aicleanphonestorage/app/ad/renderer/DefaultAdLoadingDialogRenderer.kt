@@ -17,7 +17,10 @@ class DefaultAdLoadingDialogRenderer : AdLoadingDialogRenderer {
         view.findViewById<TextView>(R.id.tv_loading_text)?.text = text
     }
 
-    override fun findCloseView(view: View): View? = null
+    // 只提供关闭入口，由 SDK 绑定点击事件并结束等待，保证业务 call 回调按 SDK 流程执行。
+    override fun findCloseView(view: View): View? = view.findViewById(R.id.ad_loading_close)
 
-    override fun onDestroy(view: View) = Unit
+    override fun onDestroy(view: View) {
+        view.findViewById<AdLoadingAnimationView>(R.id.ad_loading_progress)?.release()
+    }
 }

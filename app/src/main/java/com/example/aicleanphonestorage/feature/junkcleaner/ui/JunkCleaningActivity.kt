@@ -18,7 +18,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.app.CleanApplication
+import com.example.aicleanphonestorage.app.ad.FeatureExitCoordinator
+import com.example.aicleanphonestorage.app.ad.InterstitialActions
+import com.example.aicleanphonestorage.app.ad.InterstitialPlacements
 import com.example.aicleanphonestorage.databinding.ScreenJunkCleaningBinding
+import com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature
 import com.example.aicleanphonestorage.feature.filecleaner.ui.*
 import com.example.aicleanphonestorage.feature.junkcleaner.data.*
 import kotlinx.coroutines.flow.combine
@@ -50,6 +54,8 @@ class JunkCleaningActivity : AppCompatActivity() {
         }
     }
     private var lastError = 0L
+    private lateinit var ads: InterstitialActions
+    private lateinit var exit: FeatureExitCoordinator
     private lateinit var binding: ScreenJunkCleaningBinding
     private lateinit var operations: CleanupOperationCoordinator
     private lateinit var adapter: JunkCategoriesAdapter
@@ -63,7 +69,9 @@ class JunkCleaningActivity : AppCompatActivity() {
         )
         binding = ScreenJunkCleaningBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        operations = CleanupOperationCoordinator(this, cleanup, savedInstanceState)
+        ads = InterstitialActions(this)
+        operations = CleanupOperationCoordinator(this, cleanup, savedInstanceState, ads)
+        exit = FeatureExitCoordinator(this, { InterstitialPlacements.exit(CleanupFeature.SMART_CLEAN) }, isBusy = { ads.busy })
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val bars =
                 insets.getInsets(
@@ -74,8 +82,10 @@ class JunkCleaningActivity : AppCompatActivity() {
         }
         ViewCompat.requestApplyInsets(binding.root)
         ViewCompat.setAccessibilityHeading(binding.junkTitle, true)
-        binding.junkBack.setOnClickListener { finish() }
-        binding.junkClean.setOnClickListener { cleanup.prepare() }
+        binding.junkBack.setOnClickListener { exit.exit() }
+        binding.junkClean.setOnClickListener {
+            if (!ads.busy) cleanup.prepare()
+        }
         adapter =
             JunkCategoriesAdapter(::open) { kind, selected ->
                 cleanup.selectBucket(kind.name, selected)
@@ -107,6 +117,7 @@ class JunkCleaningActivity : AppCompatActivity() {
         startActivity(
             Intent(this, FileCleanupActivity::class.java)
                 .putExtra(FileCleanupActivity.EXTRA_SCAN, scanId)
+                .putExtra(FileCleanupActivity.EXTRA_FEATURE, CleanupFeature.SMART_CLEAN.name)
                 .putExtra(FileCleanupActivity.EXTRA_BUCKET, kind.name)
         )
     }

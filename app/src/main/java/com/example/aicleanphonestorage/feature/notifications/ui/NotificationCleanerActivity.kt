@@ -18,6 +18,9 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.aicleanphonestorage.app.CleanApplication
 import com.example.aicleanphonestorage.app.MainActivity
+import com.example.aicleanphonestorage.app.ad.FeatureExitCoordinator
+import com.example.aicleanphonestorage.app.ad.HomeExitAdContract
+import com.example.aicleanphonestorage.app.ad.InterstitialPlacements
 import com.example.aicleanphonestorage.core.ui.apps.AppIconLoader
 import com.example.aicleanphonestorage.core.ui.completion.CompletionContract
 import com.example.aicleanphonestorage.databinding.ScreenNotificationCleanerBinding
@@ -50,8 +53,7 @@ class NotificationCleanerActivity : AppCompatActivity() {
                     CompletionContract.CONTINUE
             ) {
                 startActivity(
-                    Intent(this, MainActivity::class.java)
-                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    HomeExitAdContract.intent(this, InterstitialPlacements.NOTIFICATIONS_COMPLETE_EXIT)
                 )
                 finish()
             }
@@ -66,7 +68,8 @@ class NotificationCleanerActivity : AppCompatActivity() {
         val binding = ScreenNotificationCleanerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setAccessibilityHeading(binding.notificationTitle, true)
-        binding.notificationBack.setOnClickListener { finish() }
+        val exit = FeatureExitCoordinator(this, { InterstitialPlacements.NOTIFICATIONS_EXIT })
+        binding.notificationBack.setOnClickListener { exit.exit() }
         binding.notificationDone.setOnClickListener {
             viewModel.completionReport()?.let { report ->
                 completion.launch(CompletionContract.intent(this, report))
