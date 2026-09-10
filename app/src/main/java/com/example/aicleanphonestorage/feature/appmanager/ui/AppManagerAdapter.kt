@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aicleanphonestorage.R
-import com.example.aicleanphonestorage.core.data.apps.InstalledAppSummary
 import com.example.aicleanphonestorage.core.ui.apps.AppIconLoader
 import com.example.aicleanphonestorage.databinding.ItemAppManagerBinding
+import com.example.aicleanphonestorage.feature.appmanager.data.ManagedApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -19,7 +19,8 @@ internal class AppManagerAdapter(
     private val scope: CoroutineScope,
     private val icons: AppIconLoader,
     private val open: (String) -> Unit,
-) : ListAdapter<InstalledAppSummary, AppManagerAdapter.Holder>(DIFF) {
+    private val uninstall: (String) -> Unit,
+) : ListAdapter<ManagedApp, AppManagerAdapter.Holder>(DIFF) {
     private var active = false
     private val attached = mutableSetOf<Holder>()
 
@@ -55,24 +56,49 @@ internal class AppManagerAdapter(
 
     inner class Holder(private val binding: ItemAppManagerBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        private var row: InstalledAppSummary? = null
+        private var row: ManagedApp? = null
         private var request: Job? = null
         private var renderedPackage: String? = null
+        private val presentation = AppManagerPresentation(itemView.context)
 
         init {
             binding.root.setOnClickListener {
                 val position = bindingAdapterPosition
                 if (position != RecyclerView.NO_POSITION) open(getItem(position).packageName)
             }
+            binding.appManagerUninstall.setOnClickListener {
+                val value = row ?: return@setOnClickListener
+                if (value.canUninstall) uninstall(value.packageName) else open(value.packageName)
+            }
             ViewCompat.setScreenReaderFocusable(binding.root, true)
         }
 
-        fun bind(value: InstalledAppSummary) {
+        fun bind(value: ManagedApp) {
             if (row?.packageName != value.packageName) clearIcon()
             row = value
             binding.appManagerName.text = value.label
+            binding.appManagerInstalled.text = presentation.installed(value)
+            binding.appManagerSize.text = presentation.size(value)
+            binding.appManagerUsed.text = presentation.used(value)
+            binding.appManagerUninstall.setText(
+                if (value.canUninstall) R.string.app_manager_uninstall
+                else R.string.app_manager_manage
+            )
+            binding.appManagerUninstall.contentDescription =
+                itemView.context.getString(
+                    if (value.canUninstall) R.string.app_manager_uninstall_app
+                    else R.string.app_manager_open_app,
+                    value.label,
+                )
             binding.root.contentDescription =
-                itemView.context.getString(R.string.app_manager_open_app, value.label)
+                listOf(
+                        value.label,
+                        binding.appManagerInstalled.text,
+                        binding.appManagerSize.text,
+                        binding.appManagerUsed.text,
+                        itemView.context.getString(R.string.app_manager_open_app, value.label),
+                    )
+                    .joinToString(". ")
             if (active && itemView.isAttachedToWindow) loadIcon()
         }
 
@@ -104,14 +130,11 @@ internal class AppManagerAdapter(
 
     companion object {
         val DIFF =
-            object : DiffUtil.ItemCallback<InstalledAppSummary>() {
-                override fun areItemsTheSame(old: InstalledAppSummary, new: InstalledAppSummary) =
+            object : DiffUtil.ItemCallback<ManagedApp>() {
+                override fun areItemsTheSame(old: ManagedApp, new: ManagedApp) =
                     old.packageName == new.packageName
 
-                override fun areContentsTheSame(
-                    old: InstalledAppSummary,
-                    new: InstalledAppSummary,
-                ) = old == new
+                override fun areContentsTheSame(old: ManagedApp, new: ManagedApp) = old == new
             }
     }
 }

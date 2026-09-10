@@ -262,4 +262,20 @@
     <string name="traffic_wifi_only">Lanjutkan dengan Wi-Fi</string>
     <string name="traffic_updating">Memperbarui penggunaan jaringan</string>
     <string name="traffic_preparing_results">Mempersiapkan hasil…</string>
+    <string name="app_manager_sort_used">Terakhir dipakai</string>
+    <string name="app_manager_sort_size">Ukuran</string>
+    <string name="app_manager_sort_name">Nama</string>
+    <string name="app_manager_installed">Diinstal: %1$s</string>
+    <string name="app_manager_size_used">Ruang terpakai: %1$s</string>
+    <string name="app_manager_size_shared">Ruang bersama: %1$s</string>
+    <string name="app_manager_size_apk">Ukuran APK: %1$s</string>
+    <string name="app_manager_last_used">Terakhir dipakai: %1$s</string>
+    <string name="app_manager_no_recent_use">Tidak ada catatan dalam 90 hari terakhir</string>
+    <string name="app_manager_unknown">Tidak tersedia</string>
+    <string name="app_manager_uninstall">Uninstal</string>
+    <string name="app_manager_manage">Kelola</string>
+    <string name="app_manager_uninstall_app">Uninstal %1$s</string>
+    <string name="app_manager_usage_access">Izinkan akses penggunaan untuk melihat penggunaan terakhir dan ukuran total</string>
+    <string name="app_manager_sort_ascending">Menaik</string>
+    <string name="app_manager_sort_descending">Menurun</string>
 </resources>

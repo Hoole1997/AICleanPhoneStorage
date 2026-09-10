@@ -286,4 +286,20 @@
     <string name="traffic_wifi_only">Продолжить работу с Wi-Fi</string>
     <string name="traffic_updating">Обновление использования сети</string>
     <string name="traffic_preparing_results">Подготовка результатов…</string>
+    <string name="app_manager_sort_used">Последний запуск</string>
+    <string name="app_manager_sort_size">Размер</string>
+    <string name="app_manager_sort_name">Имя</string>
+    <string name="app_manager_installed">Установлено: %1$s</string>
+    <string name="app_manager_size_used">Занято: %1$s</string>
+    <string name="app_manager_size_shared">Общий объём: %1$s</string>
+    <string name="app_manager_size_apk">Размер APK: %1$s</string>
+    <string name="app_manager_last_used">Последний запуск: %1$s</string>
+    <string name="app_manager_no_recent_use">Нет записей за последние 90 дней</string>
+    <string name="app_manager_unknown">Недоступно</string>
+    <string name="app_manager_uninstall">Удалить</string>
+    <string name="app_manager_manage">Управление</string>
+    <string name="app_manager_uninstall_app">Удалить %1$s</string>
+    <string name="app_manager_usage_access">Разрешите доступ к статистике для просмотра последнего запуска и полного размера</string>
+    <string name="app_manager_sort_ascending">По возрастанию</string>
+    <string name="app_manager_sort_descending">По убыванию</string>
 </resources>

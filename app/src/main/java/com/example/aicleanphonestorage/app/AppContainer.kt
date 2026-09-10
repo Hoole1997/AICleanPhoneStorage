@@ -38,7 +38,7 @@ class AppContainer(context: Context) {
     }
     internal val appManagerRepository by lazy {
         com.example.aicleanphonestorage.feature.appmanager.data.AndroidAppManagerRepository(
-            installedAppsReader
+            applicationContext, installedAppsReader, taskExecutor
         )
     }
     internal val appManagerTransfer by lazy {

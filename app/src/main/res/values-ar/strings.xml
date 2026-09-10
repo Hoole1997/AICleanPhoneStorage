@@ -302,4 +302,20 @@
     <string name="traffic_wifi_only">تواصل مع الواي فاي</string>
     <string name="traffic_updating">تحديث استخدام الشبكة</string>
     <string name="traffic_preparing_results">تحضير النتائج…</string>
+    <string name="app_manager_sort_used">آخر استخدام</string>
+    <string name="app_manager_sort_size">الحجم</string>
+    <string name="app_manager_sort_name">الاسم</string>
+    <string name="app_manager_installed">التثبيت: %1$s</string>
+    <string name="app_manager_size_used">المساحة المستخدمة: %1$s</string>
+    <string name="app_manager_size_shared">المساحة المشتركة: %1$s</string>
+    <string name="app_manager_size_apk">حجم APK: %1$s</string>
+    <string name="app_manager_last_used">آخر استخدام: %1$s</string>
+    <string name="app_manager_no_recent_use">لا سجلات خلال آخر 90 يومًا</string>
+    <string name="app_manager_unknown">غير متاح</string>
+    <string name="app_manager_uninstall">إلغاء التثبيت</string>
+    <string name="app_manager_manage">إدارة</string>
+    <string name="app_manager_uninstall_app">إلغاء تثبيت %1$s</string>
+    <string name="app_manager_usage_access">اسمح بالوصول إلى الاستخدام لعرض آخر استخدام والحجم الإجمالي</string>
+    <string name="app_manager_sort_ascending">تصاعدي</string>
+    <string name="app_manager_sort_descending">تنازلي</string>
 </resources>

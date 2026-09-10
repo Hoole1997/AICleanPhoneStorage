@@ -1,11 +1,14 @@
 package com.example.aicleanphonestorage.feature.appmanager
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelStore
+import com.example.aicleanphonestorage.core.coroutines.*
 import com.example.aicleanphonestorage.core.data.apps.InstalledAppSummary
 import com.example.aicleanphonestorage.core.ui.loading.TimedEntryLoader
 import com.example.aicleanphonestorage.feature.appmanager.data.*
 import com.example.aicleanphonestorage.feature.appmanager.ui.*
 import java.io.IOException
+import java.util.Locale
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.*
 import org.junit.After
@@ -27,7 +30,8 @@ class AppManagerViewModelTest {
     }
 
     private class Fake : AppManagerRepository {
-        var catalog = AppManagerCatalog((1..85).map { InstalledAppSummary("app.$it", "App $it") })
+        var catalog =
+            AppManagerCatalog((1..85).map { ManagedApp(InstalledAppSummary("app.$it", "App $it")) })
         var calls = 0
         var latency = 0L
         var failed = false
@@ -44,6 +48,19 @@ class AppManagerViewModelTest {
     private fun TestScope.entry(repo: Fake) =
         AppManagerEntryViewModel(repo, TimedEntryLoader({ 2500 }, { testScheduler.currentTime }))
             .also { store.put("entry", it) }
+
+    private fun page(
+        repo: Fake,
+        initial: AppManagerCatalog?,
+        saved: SavedStateHandle = SavedStateHandle(),
+    ) =
+        AppManagerViewModel(
+            repo,
+            initial,
+            TaskExecutor(AppDispatchers(dispatcher, dispatcher)),
+            saved,
+            Locale.US,
+        )
 
     @Test
     fun fastQueryWaitsForSyncedProgressAndTransfersOnlyOnce() = runTest {
@@ -98,7 +115,7 @@ class AppManagerViewModelTest {
     fun initialSnapshotAvoidsDuplicateQueryAndReturnUsesNewCatalog() = runTest {
         val repo = Fake()
         val initial = repo.catalog
-        val vm = AppManagerViewModel(repo, initial).also { store.put("page", it) }
+        val vm = page(repo, initial).also { store.put("page", it) }
         vm.onForeground()
         runCurrent()
         assertEquals(0, repo.calls)
@@ -116,7 +133,7 @@ class AppManagerViewModelTest {
     @Test
     fun failedRefreshPreservesListAndRetryWorks() = runTest {
         val repo = Fake()
-        val vm = AppManagerViewModel(repo, repo.catalog).also { store.put("page", it) }
+        val vm = page(repo, repo.catalog).also { store.put("page", it) }
         repo.failed = true
         vm.refresh()
         advanceUntilIdle()
@@ -131,7 +148,7 @@ class AppManagerViewModelTest {
     @Test
     fun processRecreationLoadsWithoutEntryAdAndBackgroundCancelsRefresh() = runTest {
         val repo = Fake().apply { latency = 1000 }
-        val vm = AppManagerViewModel(repo, null).also { store.put("page", it) }
+        val vm = page(repo, null).also { store.put("page", it) }
         vm.onForeground()
         runCurrent()
         vm.onBackground()
@@ -141,5 +158,34 @@ class AppManagerViewModelTest {
         vm.onForeground()
         advanceUntilIdle()
         assertNotNull(vm.state.value.catalog)
+    }
+
+    @Test
+    fun sortSurvivesRefreshAndProcessRecreationWithoutSavingTheAppList() = runTest {
+        val repo =
+            Fake().apply {
+                catalog =
+                    AppManagerCatalog(
+                        listOf(
+                            ManagedApp(InstalledAppSummary("b", "B"), sizeBytes = 40),
+                            ManagedApp(InstalledAppSummary("a", "A"), sizeBytes = 10),
+                        )
+                    )
+            }
+        val saved = SavedStateHandle()
+        val vm = page(repo, repo.catalog, saved).also { store.put("page", it) }
+        vm.selectSort(AppSortKey.SIZE)
+        vm.selectSort(AppSortKey.SIZE)
+        advanceUntilIdle()
+        assertEquals(listOf("a", "b"), vm.state.value.rows.map { it.packageName })
+        vm.refresh()
+        advanceUntilIdle()
+        assertEquals(listOf("a", "b"), vm.state.value.rows.map { it.packageName })
+        val restored = page(repo, null, saved).also { store.put("restored", it) }
+        restored.onForeground()
+        advanceUntilIdle()
+        assertEquals(vm.state.value.sort, restored.state.value.sort)
+        assertEquals(vm.state.value.rows, restored.state.value.rows)
+        assertEquals(setOf("sort.key", "sort.descending"), saved.keys())
     }
 }

@@ -262,4 +262,20 @@
     <string name="traffic_wifi_only">Tiếp tục với Wi-Fi</string>
     <string name="traffic_updating">Cập nhật sử dụng mạng</string>
     <string name="traffic_preparing_results">Đang chuẩn bị kết quả…</string>
+    <string name="app_manager_sort_used">Dùng gần nhất</string>
+    <string name="app_manager_sort_size">Kích thước</string>
+    <string name="app_manager_sort_name">Tên</string>
+    <string name="app_manager_installed">Đã cài: %1$s</string>
+    <string name="app_manager_size_used">Đã dùng: %1$s</string>
+    <string name="app_manager_size_shared">Dung lượng chung: %1$s</string>
+    <string name="app_manager_size_apk">Kích thước APK: %1$s</string>
+    <string name="app_manager_last_used">Dùng gần nhất: %1$s</string>
+    <string name="app_manager_no_recent_use">Không có bản ghi trong 90 ngày qua</string>
+    <string name="app_manager_unknown">Không có dữ liệu</string>
+    <string name="app_manager_uninstall">Gỡ cài đặt</string>
+    <string name="app_manager_manage">Quản lý</string>
+    <string name="app_manager_uninstall_app">Gỡ cài đặt %1$s</string>
+    <string name="app_manager_usage_access">Cho phép truy cập sử dụng để xem lần dùng cuối và tổng dung lượng</string>
+    <string name="app_manager_sort_ascending">Tăng dần</string>
+    <string name="app_manager_sort_descending">Giảm dần</string>
 </resources>

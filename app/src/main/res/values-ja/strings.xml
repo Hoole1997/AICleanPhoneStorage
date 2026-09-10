@@ -262,4 +262,20 @@
     <string name="traffic_wifi_only">Wi-Fiで続ける</string>
     <string name="traffic_updating">ネットワーク使用状況の更新</string>
     <string name="traffic_preparing_results">結果を準備中…</string>
+    <string name="app_manager_sort_used">最終使用</string>
+    <string name="app_manager_sort_size">サイズ</string>
+    <string name="app_manager_sort_name">名前</string>
+    <string name="app_manager_installed">インストール日：%1$s</string>
+    <string name="app_manager_size_used">使用容量：%1$s</string>
+    <string name="app_manager_size_shared">共有容量：%1$s</string>
+    <string name="app_manager_size_apk">APKサイズ：%1$s</string>
+    <string name="app_manager_last_used">最終使用：%1$s</string>
+    <string name="app_manager_no_recent_use">過去90日間の記録なし</string>
+    <string name="app_manager_unknown">不明</string>
+    <string name="app_manager_uninstall">アンインストール</string>
+    <string name="app_manager_manage">管理</string>
+    <string name="app_manager_uninstall_app">%1$sをアンインストール</string>
+    <string name="app_manager_usage_access">最終使用と合計容量を表示するには使用状況へのアクセスを許可</string>
+    <string name="app_manager_sort_ascending">昇順</string>
+    <string name="app_manager_sort_descending">降順</string>
 </resources>

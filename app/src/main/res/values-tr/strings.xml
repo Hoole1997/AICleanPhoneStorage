@@ -270,4 +270,20 @@
     <string name="traffic_wifi_only">Wi-Fi ile devam et</string>
     <string name="traffic_updating">Ağ kullanımını güncelleme</string>
     <string name="traffic_preparing_results">Sonuçlar hazırlanıyor…</string>
+    <string name="app_manager_sort_used">Son kullanım</string>
+    <string name="app_manager_sort_size">Boyut</string>
+    <string name="app_manager_sort_name">Ad</string>
+    <string name="app_manager_installed">Yüklenme: %1$s</string>
+    <string name="app_manager_size_used">Kullanılan alan: %1$s</string>
+    <string name="app_manager_size_shared">Paylaşılan alan: %1$s</string>
+    <string name="app_manager_size_apk">APK boyutu: %1$s</string>
+    <string name="app_manager_last_used">Son kullanım: %1$s</string>
+    <string name="app_manager_no_recent_use">Son 90 günde kayıt yok</string>
+    <string name="app_manager_unknown">Kullanılamıyor</string>
+    <string name="app_manager_uninstall">Kaldır</string>
+    <string name="app_manager_manage">Yönet</string>
+    <string name="app_manager_uninstall_app">%1$s uygulamasını kaldır</string>
+    <string name="app_manager_usage_access">Son kullanım ve toplam boyut için kullanım erişimine izin verin</string>
+    <string name="app_manager_sort_ascending">Artan</string>
+    <string name="app_manager_sort_descending">Azalan</string>
 </resources>

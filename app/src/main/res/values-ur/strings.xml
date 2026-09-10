@@ -270,4 +270,20 @@
     <string name="traffic_wifi_only">Wi-Fi کے ساتھ جاری رکھیں</string>
     <string name="traffic_updating">نیٹ ورک کے استعمال کو اپ ڈیٹ کرنا</string>
     <string name="traffic_preparing_results">نتائج کی تیاری…</string>
+    <string name="app_manager_sort_used">آخری استعمال</string>
+    <string name="app_manager_sort_size">سائز</string>
+    <string name="app_manager_sort_name">نام</string>
+    <string name="app_manager_installed">انسٹال ہوا: %1$s</string>
+    <string name="app_manager_size_used">استعمال شدہ جگہ: %1$s</string>
+    <string name="app_manager_size_shared">مشترکہ جگہ: %1$s</string>
+    <string name="app_manager_size_apk">APK سائز: %1$s</string>
+    <string name="app_manager_last_used">آخری استعمال: %1$s</string>
+    <string name="app_manager_no_recent_use">گزشتہ 90 دنوں میں کوئی ریکارڈ نہیں</string>
+    <string name="app_manager_unknown">دستیاب نہیں</string>
+    <string name="app_manager_uninstall">ان انسٹال</string>
+    <string name="app_manager_manage">نظم کریں</string>
+    <string name="app_manager_uninstall_app">%1$s ان انسٹال کریں</string>
+    <string name="app_manager_usage_access">آخری استعمال اور کل سائز دیکھنے کے لیے استعمال کی رسائی دیں</string>
+    <string name="app_manager_sort_ascending">صعودی</string>
+    <string name="app_manager_sort_descending">نزولی</string>
 </resources>

@@ -270,4 +270,20 @@
     <string name="traffic_wifi_only">वाई-फ़ाई जारी रखें</string>
     <string name="traffic_updating">नेटवर्क उपयोग अद्यतन कर रहा है</string>
     <string name="traffic_preparing_results">परिणाम तैयार हो रहे हैं...</string>
+    <string name="app_manager_sort_used">अंतिम उपयोग</string>
+    <string name="app_manager_sort_size">आकार</string>
+    <string name="app_manager_sort_name">नाम</string>
+    <string name="app_manager_installed">इंस्टॉल किया: %1$s</string>
+    <string name="app_manager_size_used">इस्तेमाल की जगह: %1$s</string>
+    <string name="app_manager_size_shared">साझा जगह: %1$s</string>
+    <string name="app_manager_size_apk">APK आकार: %1$s</string>
+    <string name="app_manager_last_used">अंतिम उपयोग: %1$s</string>
+    <string name="app_manager_no_recent_use">पिछले 90 दिनों का कोई रिकॉर्ड नहीं</string>
+    <string name="app_manager_unknown">उपलब्ध नहीं</string>
+    <string name="app_manager_uninstall">अनइंस्टॉल करें</string>
+    <string name="app_manager_manage">प्रबंधित करें</string>
+    <string name="app_manager_uninstall_app">%1$s अनइंस्टॉल करें</string>
+    <string name="app_manager_usage_access">अंतिम उपयोग और कुल आकार देखने के लिए उपयोग ऐक्सेस दें</string>
+    <string name="app_manager_sort_ascending">आरोही</string>
+    <string name="app_manager_sort_descending">अवरोही</string>
 </resources>

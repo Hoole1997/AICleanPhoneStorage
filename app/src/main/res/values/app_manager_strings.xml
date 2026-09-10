@@ -13,4 +13,24 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
     </style>
+    <string name="app_manager_sort_used">Last used</string>
+    <string name="app_manager_sort_size">Size</string>
+    <string name="app_manager_sort_name">Name</string>
+    <string name="app_manager_installed">Installed: %1$s</string>
+    <string name="app_manager_size_used">Size used: %1$s</string>
+    <string name="app_manager_size_shared">Shared size: %1$s</string>
+    <string name="app_manager_size_apk">APK size: %1$s</string>
+    <string name="app_manager_last_used">Last used: %1$s</string>
+    <string name="app_manager_no_recent_use">No record in last 90 days</string>
+    <string name="app_manager_unknown">Unavailable</string>
+    <string name="app_manager_uninstall">Uninstall</string>
+    <string name="app_manager_manage">Manage</string>
+    <string name="app_manager_uninstall_app">Uninstall %1$s</string>
+    <string name="app_manager_usage_access">Allow usage access for last used and total app size</string>
+    <string name="app_manager_sort_ascending">Ascending</string>
+    <string name="app_manager_sort_descending">Descending</string>
+    <string name="app_manager_size_value" translatable="false">%1$s %2$s</string>
+    <string-array name="app_manager_size_units" translatable="false">
+        <item>B</item><item>KB</item><item>MB</item><item>GB</item><item>TB</item><item>PB</item><item>EB</item>
+    </string-array>
 </resources>

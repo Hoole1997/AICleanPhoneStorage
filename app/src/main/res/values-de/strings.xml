@@ -270,4 +270,20 @@
     <string name="traffic_wifi_only">Fahren Sie mit WLAN fort</string>
     <string name="traffic_updating">Netzwerknutzung aktualisieren</string>
     <string name="traffic_preparing_results">Ergebnisse vorbereiten…</string>
+    <string name="app_manager_sort_used">Zuletzt genutzt</string>
+    <string name="app_manager_sort_size">Größe</string>
+    <string name="app_manager_sort_name">Name</string>
+    <string name="app_manager_installed">Installiert: %1$s</string>
+    <string name="app_manager_size_used">Belegter Speicher: %1$s</string>
+    <string name="app_manager_size_shared">Geteilter Speicher: %1$s</string>
+    <string name="app_manager_size_apk">APK-Größe: %1$s</string>
+    <string name="app_manager_last_used">Zuletzt genutzt: %1$s</string>
+    <string name="app_manager_no_recent_use">Keine Daten der letzten 90 Tage</string>
+    <string name="app_manager_unknown">Nicht verfügbar</string>
+    <string name="app_manager_uninstall">Deinstallieren</string>
+    <string name="app_manager_manage">Verwalten</string>
+    <string name="app_manager_uninstall_app">%1$s deinstallieren</string>
+    <string name="app_manager_usage_access">Nutzungszugriff für letzte Nutzung und Gesamtgröße erlauben</string>
+    <string name="app_manager_sort_ascending">Aufsteigend</string>
+    <string name="app_manager_sort_descending">Absteigend</string>
 </resources>

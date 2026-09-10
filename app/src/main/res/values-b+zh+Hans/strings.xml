@@ -163,7 +163,7 @@
     <string name="notification_rule_unavailable">无法加载已保存的选择。点击重试。</string>
     <string name="notification_auto_clear_app">自动清除来自 %1$s 的通知</string>
     <string name="permission_usage_title">使用情况访问权限</string>
-    <string name="permission_usage_message">允许访问使用情况，以查看应用网络流量和存储统计。请在下一页为本应用开启权限。</string>
+    <string name="permission_usage_message">允许访问使用情况，以查看应用网络流量、存储统计及最近使用情况。请在下一页为本应用开启权限。</string>
     <string name="permission_notification_title">通知访问权限</string>
     <string name="permission_notification_message">允许通知访问以自动清除您选择的应用程序中的通知。我们不存储通知内容。</string>
     <string name="permission_files_title">文件访问权限</string>
@@ -262,4 +262,20 @@
     <string name="traffic_wifi_only">使用 Wi-Fi 继续</string>
     <string name="traffic_updating">更新网络使用情况</string>
     <string name="traffic_preparing_results">准备结果……</string>
+    <string name="app_manager_sort_used">最近使用</string>
+    <string name="app_manager_sort_size">大小</string>
+    <string name="app_manager_sort_name">名称</string>
+    <string name="app_manager_installed">安装时间：%1$s</string>
+    <string name="app_manager_size_used">占用大小：%1$s</string>
+    <string name="app_manager_size_shared">共享占用：%1$s</string>
+    <string name="app_manager_size_apk">安装包大小：%1$s</string>
+    <string name="app_manager_last_used">最近使用：%1$s</string>
+    <string name="app_manager_no_recent_use">最近90天无记录</string>
+    <string name="app_manager_unknown">未知</string>
+    <string name="app_manager_uninstall">卸载</string>
+    <string name="app_manager_manage">管理</string>
+    <string name="app_manager_uninstall_app">卸载%1$s</string>
+    <string name="app_manager_usage_access">授权查看最近使用和应用总占用</string>
+    <string name="app_manager_sort_ascending">升序</string>
+    <string name="app_manager_sort_descending">降序</string>
 </resources>

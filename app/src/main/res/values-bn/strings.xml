@@ -270,4 +270,20 @@
     <string name="traffic_wifi_only">Wi-Fi দিয়ে চালিয়ে যান</string>
     <string name="traffic_updating">নেটওয়ার্ক ব্যবহার আপডেট করা হচ্ছে</string>
     <string name="traffic_preparing_results">ফলাফল প্রস্তুত করা হচ্ছে...</string>
+    <string name="app_manager_sort_used">শেষ ব্যবহার</string>
+    <string name="app_manager_sort_size">আকার</string>
+    <string name="app_manager_sort_name">নাম</string>
+    <string name="app_manager_installed">ইনস্টল করা: %1$s</string>
+    <string name="app_manager_size_used">ব্যবহৃত স্থান: %1$s</string>
+    <string name="app_manager_size_shared">শেয়ার করা স্থান: %1$s</string>
+    <string name="app_manager_size_apk">APK আকার: %1$s</string>
+    <string name="app_manager_last_used">শেষ ব্যবহার: %1$s</string>
+    <string name="app_manager_no_recent_use">গত 90 দিনে কোনো রেকর্ড নেই</string>
+    <string name="app_manager_unknown">তথ্য নেই</string>
+    <string name="app_manager_uninstall">আনইনস্টল</string>
+    <string name="app_manager_manage">পরিচালনা</string>
+    <string name="app_manager_uninstall_app">%1$s আনইনস্টল করুন</string>
+    <string name="app_manager_usage_access">শেষ ব্যবহার ও মোট আকার দেখতে ব্যবহার অ্যাক্সেস দিন</string>
+    <string name="app_manager_sort_ascending">ঊর্ধ্বক্রম</string>
+    <string name="app_manager_sort_descending">অধঃক্রম</string>
 </resources>

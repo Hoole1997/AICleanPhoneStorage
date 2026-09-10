@@ -1,0 +1,38 @@
+{
+  "fileKey": "dVsTL6ggoDPXVPcEKg856G",
+  "screen": "5803:308",
+  "assets": {
+    "back": {
+      "node": "5803:335",
+      "url": "https://www.figma.com/api/mcp/asset/4ee3d985-7d60-44f3-8c54-7c05ab073a9c.svg",
+      "sizeDp": 24
+    },
+    "sort_active": {
+      "node": "5803:341",
+      "url": "https://www.figma.com/api/mcp/asset/474d2d44-1723-45a7-9598-b25c6d7b5866.svg",
+      "sizeDp": 16
+    },
+    "sort_inactive": {
+      "node": "5803:347",
+      "url": "https://www.figma.com/api/mcp/asset/92ff28ba-3f37-4184-9023-63f57b31cec6.svg",
+      "sizeDp": 16
+    },
+    "installed": {
+      "node": "5803:366",
+      "url": "https://www.figma.com/api/mcp/asset/3480d324-4f1a-409d-94bd-4a96a4f782ae.svg",
+      "sizeDp": 18
+    },
+    "size": {
+      "node": "5803:371",
+      "url": "https://www.figma.com/api/mcp/asset/609c8fda-4b05-4452-b841-dbcd10a5c401.svg",
+      "sizeDp": 14
+    },
+    "last_used": {
+      "node": "5803:377",
+      "url": "https://www.figma.com/api/mcp/asset/783b4350-9af0-4b0e-a68b-1461005001f7.svg",
+      "sizeDp": 15
+    }
+  },
+  "background": "Reuses existing Figma home_header_background",
+  "appIcons": "Runtime PackageManager icons; Figma app thumbnail is illustrative only"
+}
