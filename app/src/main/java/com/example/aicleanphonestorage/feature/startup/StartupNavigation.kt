@@ -1,5 +1,9 @@
 package com.example.aicleanphonestorage.feature.startup
 
+import android.app.Activity
+import android.app.ActivityOptions
+import android.os.Build
+import com.example.aicleanphonestorage.R
 import android.content.Context
 import android.content.Intent
 import com.example.aicleanphonestorage.app.MainActivity
@@ -30,4 +34,19 @@ internal object StartupNavigation {
             .putExtra(HomePreviewSupport.EXTRA_MODE, entry.previewMode)
             .putExtra(COMPLETED, true)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+
+    /** 仅定制启动页到首页；低版本兼容和窗口动画统一放在导航边界，不改变其他业务页面。 */
+    @Suppress("DEPRECATION")
+    fun openHome(activity: Activity, entry: StartupEntry, animate: Boolean) {
+        val enter = if (animate) R.anim.startup_home_enter else 0
+        val exit = if (animate) R.anim.startup_home_exit else 0
+        val intent = homeIntent(activity, entry).apply {
+            if (!animate) addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        }
+        if (Build.VERSION.SDK_INT >= 34) activity.overrideActivityTransition(Activity.OVERRIDE_TRANSITION_CLOSE, enter, exit)
+        activity.startActivity(intent, ActivityOptions.makeCustomAnimation(activity, enter, exit).toBundle())
+        activity.finish()
+        if (Build.VERSION.SDK_INT < 34) activity.overridePendingTransition(enter, exit)
+    }
+
 }

@@ -17,6 +17,32 @@ import org.junit.runner.RunWith
 class StartupNavigationTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
 
+    @Test fun systemSplashUsesApplicationIconAndHomeUsesScopedFade() {
+        val themed = android.view.ContextThemeWrapper(context, R.style.Theme_AICleanPhoneStorage_Launcher)
+        val resolved = android.util.TypedValue()
+        assertTrue(themed.theme.resolveAttribute(androidx.core.splashscreen.R.attr.windowSplashScreenAnimatedIcon, resolved, true))
+        assertEquals(context.applicationInfo.icon, resolved.resourceId)
+        if (android.os.Build.VERSION.SDK_INT >= 31) {
+            assertTrue(themed.theme.resolveAttribute(android.R.attr.windowSplashScreenAnimatedIcon, resolved, true))
+            assertEquals(context.applicationInfo.icon, resolved.resourceId)
+        }
+        val home = StartupNavigation.homeIntent(context, StartupEntry(NotificationDestination.HOME))
+        assertFalse(home.flags and Intent.FLAG_ACTIVITY_NO_ANIMATION != 0)
+        val enter = android.view.animation.AnimationUtils.loadAnimation(context, R.anim.startup_home_enter)
+        val exit = android.view.animation.AnimationUtils.loadAnimation(context, R.anim.startup_home_exit)
+        assertEquals(240L, enter.duration)
+        assertEquals(enter.duration, exit.duration)
+        val frame = android.view.animation.Transformation()
+        enter.getTransformation(0, frame)
+        assertEquals(0f, frame.alpha, 0.001f)
+        enter.getTransformation(240, frame)
+        assertEquals(1f, frame.alpha, 0.001f)
+        exit.getTransformation(0, frame)
+        assertEquals(1f, frame.alpha, 0.001f)
+        exit.getTransformation(240, frame)
+        assertEquals(1f, frame.alpha, 0.001f)
+    }
+
     @Test fun launcherAndModuleNotificationsResolveToStartupActivity() {
         assertEquals(StartupActivity::class.java.name, context.packageManager.getLaunchIntentForPackage(context.packageName)?.component?.className)
         assertEquals(StartupActivity::class.java.name, entryPointIntent(context).component?.className)

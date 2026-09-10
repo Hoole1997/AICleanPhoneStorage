@@ -1,7 +1,5 @@
 package com.example.aicleanphonestorage.feature.startup
 
-import android.animation.ValueAnimator
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.text.SpannableString
 import android.text.Spanned
@@ -14,13 +12,14 @@ import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.core.ui.motion.MotionPreferences
 import com.example.aicleanphonestorage.databinding.ScreenStartupBinding
 
-/** 只负责布局与有限动画；真实跳转由 ViewModel 的单调时钟驱动，不依赖动画回调或系统动画倍率。 */
-internal class StartupRenderer(private val binding: ScreenStartupBinding, private val progress: () -> Int) {
-    private var animator: ValueAnimator? = null
+/** 只负责布局与原生循环进度动画；跳转仅由广告回调状态驱动。 */
+internal class StartupRenderer(private val binding: ScreenStartupBinding) {
+    private var motionEnabled = false
     private var resumed = false
     private var finished = false
     private var windowFocused = true
     private var surfaceShown = false
+    val transitionsEnabled: Boolean get() = resumed && windowFocused && motionEnabled
     private var bars = Insets.NONE
     private val motion = MotionPreferences(binding.root.context, ::motionChanged)
     private val layoutListener = View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> positionBrand() }
@@ -70,26 +69,26 @@ internal class StartupRenderer(private val binding: ScreenStartupBinding, privat
     }
 
     fun render(state: StartupState) {
-        finished = state.ready
-        if (finished) { animator?.cancel(); animator = null }
-        binding.startupProgress.setProgressCompat(if (finished) 1000 else progress(), false)
+        finished = state.ready || state.consumed
+        updateProgress()
     }
 
-    fun start() { resumed = true; motion.start() }
+    fun start() { resumed = true; if (windowFocused) motion.start() else updateProgress() }
     fun windowFocusChanged(focused: Boolean) {
         windowFocused = focused
-        if (resumed) motion.start()
+        if (resumed && focused) motion.start() else motion.stop()
+        updateProgress()
     }
-    fun stop() { resumed = false; motion.stop(); animator?.cancel(); animator = null }
+    fun stop() { resumed = false; motion.stop(); updateProgress() }
     private fun motionChanged(enabled: Boolean) {
-        animator?.cancel()
-        animator = null
-        if (!resumed || !windowFocused || !enabled || finished) return
-        animator = ValueAnimator.ofInt(0, 1000).apply {
-            duration = StartupViewModel.MAXIMUM_MS
-            addUpdateListener { binding.startupProgress.setProgressCompat(progress(), false) }
-            start()
-        }
+        motionEnabled = enabled
+        updateProgress()
+    }
+    private fun updateProgress() {
+        val animate = resumed && windowFocused && motionEnabled && !finished
+        // INVISIBLE 保持占位并让 Material 停止内部动画；静态段不表达任何虚构的百分比。
+        binding.startupProgress.visibility = if (animate) View.VISIBLE else View.INVISIBLE
+        binding.startupProgressStatic.visibility = if (animate) View.GONE else View.VISIBLE
     }
     fun dispose() { stop(); binding.root.removeOnLayoutChangeListener(layoutListener) }
 }

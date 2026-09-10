@@ -18,7 +18,8 @@
     </style>
     <style name="Theme.AICleanPhoneStorage.Launcher" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/startup_background_color</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/app_logo_rounded</item>
+        <!-- 与 Manifest 的应用图标使用同一资源，系统启动画面沿用 AdaptiveIcon 的前景、背景与遮罩。 -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
         <item name="postSplashScreenTheme">@style/Theme.AICleanPhoneStorage.Startup</item>
     </style>
 </resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 关闭系统动画或页面暂停时显示静态加载段，不模拟进度值。 -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item><shape><solid android:color="@color/startup_progress_track"/><corners android:radius="3dp"/></shape></item>
+    <item android:width="72dp" android:height="6dp" android:gravity="center">
+        <shape><solid android:color="@color/startup_blue"/><corners android:radius="3dp"/></shape>
+    </item>
+</layer-list>

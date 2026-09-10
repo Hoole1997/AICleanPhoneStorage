@@ -23,7 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.example.aicleanphonestorage.R
 
-/** 独立原生启动 Activity。未来广告在此页接入，当前仅等待必要的语言初始化和短过渡。 */
+/** 独立原生启动 Activity；广告回调放行后统一进入首页，再由首页处理通知目的地。 */
 class StartupActivity : AppCompatActivity() {
     private val model: StartupViewModel by viewModels {
         viewModelFactory {
@@ -34,6 +34,7 @@ class StartupActivity : AppCompatActivity() {
         }
     }
     private lateinit var renderer: StartupRenderer
+    private lateinit var ads: StartupAdCoordinator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -47,7 +48,7 @@ class StartupActivity : AppCompatActivity() {
         setIntent(StartupNavigation.startupIntent(this, incoming))
         val binding = ScreenStartupBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        renderer = StartupRenderer(binding, model::progress)
+        renderer = StartupRenderer(binding)
         lifecycleScope.launch {
             val appResources = applicationContext.resources
             val image = withContext(Dispatchers.IO) { appResources.getDrawable(R.drawable.startup_background, null) }
@@ -59,6 +60,7 @@ class StartupActivity : AppCompatActivity() {
         }
         ViewCompat.requestApplyInsets(binding.root)
         if (!model.hasEntry()) model.accept(incoming)
+        ads = StartupAdCoordinator(this, binding.root, model)
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 model.state.collect { state ->
@@ -75,34 +77,31 @@ class StartupActivity : AppCompatActivity() {
         val incoming = StartupNavigation.read(intent)
         setIntent(StartupNavigation.startupIntent(this, incoming))
         model.accept(incoming)
-        if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) model.resumed()
         proceedIfReady()
     }
 
     private fun proceedIfReady() {
         if (isFinishing || !hasWindowFocus() || !lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) return
         val entry = model.consume() ?: return
-        startActivity(StartupNavigation.homeIntent(this, entry))
-        finish()
+        StartupNavigation.openHome(this, entry, animate = renderer.transitionsEnabled)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (this::renderer.isInitialized) {
             renderer.windowFocusChanged(hasFocus)
+            if (this::ads.isInitialized) ads.windowFocusChanged(hasFocus)
             if (hasFocus) proceedIfReady()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        model.resumed()
         renderer.start()
     }
 
     override fun onPause() {
         renderer.stop()
-        model.paused()
         super.onPause()
     }
 

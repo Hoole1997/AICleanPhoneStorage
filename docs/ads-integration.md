@@ -10,7 +10,7 @@
 - 按来源注册 AdMob、GAM、Pangle、TopOn 原生/全屏原生渲染器及 loading renderer。来源逐图片创建线程的实现改为 Glide 绑定 View 生命周期并限制图标尺寸。
 - core 的 ReporterData 接入 Firebase 与 ThinkingData；真实收益通过 RevenueAdReporter 接入 Firebase。Adjust 配置键保留，当前不引入来源 Launcher SDK 或伪造归因回调。
 - local、google 均调用 `AppOpenBiddingInitializer.initialize`，在其配置回调中安装本地默认配置及渲染器；本地广告 ID 为空时也由 SDK 拉取云端配置。
-- 展示入口使用 `AdExt.loadInterstitial`，请求、展示资格和频次规则由扩展方法及 SDK 处理。启动页仍按已有无广告过渡逻辑运行。
+- 展示入口使用 `AdExt.loadInterstitial`，请求、展示资格和频次规则由扩展方法及 SDK 处理。启动页使用 `AdExt.loadSplash` 的回调续接首页，详见 `docs/startup-page.md`。
 
 ## 插屏业务入口
 

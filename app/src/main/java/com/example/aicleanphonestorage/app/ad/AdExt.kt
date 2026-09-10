@@ -67,6 +67,28 @@ fun FragmentActivity.loadInterstitial(
     }
 }
 
+fun FragmentActivity.loadSplash(
+    positionName: String,
+    condition: () -> Boolean = { true },
+    call: (Boolean) -> Unit
+) {
+    lifecycleScope.launch {
+        try {
+            if (!condition.invoke() || !isAdSlotEnabled(positionName)) {
+                call.invoke(false)
+                return@launch
+            }
+
+            when (AdShowExt.showAppOpenAd(this@loadSplash)) {
+                is AdResult.Success -> call.invoke(true)
+                is AdResult.Failure -> call.invoke(false)
+            }
+        } catch (_: Exception) {
+            call.invoke(false)
+        }
+    }
+}
+
 private fun isAdSlotEnabled(positionName: String): Boolean {
     // TODO: 临时返回 true
     return true

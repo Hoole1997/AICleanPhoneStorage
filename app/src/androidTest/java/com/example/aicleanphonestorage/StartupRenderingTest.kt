@@ -45,11 +45,11 @@ class StartupRenderingTest {
         instrumentation.runOnMainSync {
             val binding = ScreenStartupBinding.inflate(LayoutInflater.from(themed))
             binding.startupBackground.setImageDrawable(artwork)
-            val renderer = StartupRenderer(binding) { 450 }
+            val renderer = StartupRenderer(binding)
             renderer.insets(Insets.of(insetDp.left * 2, insetDp.top * 2, insetDp.right * 2, insetDp.bottom * 2))
             renderer.render(StartupState())
-            // 离屏测试没有 onAttachedToWindow，显式展示原生进度 Drawable 以核验实际像素。
-            binding.startupProgress.progressDrawable?.setVisible(true, false)
+            assertTrue(binding.startupProgress.isIndeterminate)
+            assertEquals(View.VISIBLE, binding.startupProgressStatic.visibility)
             repeat(2) {
                 binding.root.measure(View.MeasureSpec.makeMeasureSpec(widthDp * 2, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(heightDp * 2, View.MeasureSpec.EXACTLY))
                 binding.root.layout(0, 0, widthDp * 2, heightDp * 2)

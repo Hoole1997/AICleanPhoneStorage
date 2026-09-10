@@ -37,10 +37,16 @@
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_marginBottom="10dp" android:text="@string/startup_loading" android:textSize="12sp" android:letterSpacing="0"
             android:textColor="@color/startup_secondary" android:fontFamily="@font/home_roboto_regular" />
-        <com.google.android.material.progressindicator.LinearProgressIndicator android:id="@+id/startup_progress"
-            android:layout_width="match_parent" android:layout_height="wrap_content" android:max="1000"
-            android:indeterminate="false" android:contentDescription="@string/startup_loading"
-            app:indicatorColor="@color/startup_blue" app:trackColor="@color/startup_progress_track"
-            app:trackThickness="6dp" app:trackCornerRadius="3dp" />
+        <FrameLayout android:layout_width="match_parent" android:layout_height="6dp">
+            <View android:id="@+id/startup_progress_static" android:layout_width="match_parent"
+                android:layout_height="match_parent" android:background="@drawable/startup_loading_static"
+                android:importantForAccessibility="no" />
+            <com.google.android.material.progressindicator.LinearProgressIndicator android:id="@+id/startup_progress"
+                android:layout_width="match_parent" android:layout_height="match_parent"
+                android:indeterminate="true" android:visibility="invisible" android:importantForAccessibility="no"
+                app:indeterminateAnimationType="disjoint"
+                app:indicatorColor="@color/startup_blue" app:trackColor="@color/startup_progress_track"
+                app:trackThickness="6dp" app:trackCornerRadius="3dp" />
+        </FrameLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

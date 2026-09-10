@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 只改变窗口透明度，让首页从完整启动页上渐显；不缩放文字或滑动整个页面。 -->
+<alpha xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fromAlpha="0.0" android:toAlpha="1.0"
+    android:duration="240" android:interpolator="@android:interpolator/fast_out_slow_in"
+    android:zAdjustment="top" />

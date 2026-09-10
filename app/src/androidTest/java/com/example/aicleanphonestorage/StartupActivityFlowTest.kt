@@ -25,6 +25,8 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class StartupActivityFlowTest {
     @Test fun coldWarmAndLegacyNotificationClicksPassThroughStartupThenHome() {
+        // 本用例会展示真实开屏广告；普通自动回归使用 StartupAdCoordinatorTest 的假请求。
+        assumeTrue(InstrumentationRegistry.getArguments().getString("run_live_ads") == "true")
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val context = instrumentation.targetContext
         assumeTrue(context.getSystemService(PowerManager::class.java).isInteractive &&
@@ -58,7 +60,8 @@ class StartupActivityFlowTest {
     }
 
     private fun assertStartupThenHome(trace: ResumeTrace) {
-        val deadline = SystemClock.elapsedRealtime() + 7_000
+        // 真实广告需要人工关闭；这里只限制手动测试等待，不影响产品的广告回调时机。
+        val deadline = SystemClock.elapsedRealtime() + 120_000
         // 旧 PendingIntent 会先短暂恢复已有 Main，再转 Startup；等待完整的有序链路。
         fun completed(): Boolean {
             val startup = trace.resumed.indexOf(StartupActivity::class.java.name)
