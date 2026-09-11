@@ -64,3 +64,5 @@ rootProject.name = "AIClean&PhoneStorage"
 include(":app")
 
 include(":notification")
+
+include(":metrics")

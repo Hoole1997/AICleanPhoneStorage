@@ -50,7 +50,7 @@ ext.googleAdConfig = [
                        rewarded    : ""]    // 激励广告位 ID
     ],
 
-    // 统计归因配置
+    // 统计归因配置：app 与 metrics 共用，按 distribution 渠道分别生成 BuildConfig
     analytics: [adjustAppToken: "",           // Adjust App Token
                  thinkingDataAppId: "",   // 数数 SDK APP ID
                  thinkingDataServerUrl: "",     // 数数上报域名

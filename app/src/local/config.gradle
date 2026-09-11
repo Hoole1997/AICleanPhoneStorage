@@ -49,8 +49,8 @@ ext.localAdConfig = [
                        rewarded    : "YOUR_REWARDED_AD_UNIT_ID"]    // 激励广告位 ID
     ],
 
-    // 统计归因配置
-    analytics: [adjustAppToken: "hopjs50gmuww",           // Adjust App Token
+    // 统计归因配置：app 与 metrics 共用，按 distribution 渠道分别生成 BuildConfig
+    analytics: [adjustAppToken: "nktpi1ta3474",           // Adjust App Token
                  thinkingDataAppId: "871c0ebde6be4329b9b74acb3f08ba36",   // 数数 SDK APP ID
                  thinkingDataServerUrl: "https://ds.devs343.com",     // 数数上报域名
                  defaultUserChannel: "paid"]                           // 默认用户渠道，internal默认paid
