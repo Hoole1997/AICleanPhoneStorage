@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Rect
 import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
@@ -19,10 +20,14 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import androidx.test.runner.lifecycle.Stage
+import com.example.aicleanphonestorage.app.CleanApplication
 import com.example.aicleanphonestorage.app.MainActivity
+import com.example.aicleanphonestorage.core.locale.AppLanguages
+import com.example.aicleanphonestorage.databinding.ScreenSettingsShellBinding
 import com.example.aicleanphonestorage.databinding.ViewSettingsMenuBinding
 import com.example.aicleanphonestorage.feature.settings.*
 import java.io.File
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -114,8 +119,8 @@ class SettingsDeviceTest {
     }
 
     @Test
-    fun menuHasFourReadableTouchTargetsAtNormalAndDoubleFontSize() {
-        for (tag in listOf("en", "zh-Hans", "ar", "de")) for (scale in listOf(1f, 2f)) {
+    fun menuHasFiveReadableTouchTargetsAndCurrentLanguageAtLargeFontSizes() {
+        for (tag in listOf("en", "zh-Hans", "ar", "de", "pt-BR")) for (scale in listOf(1f, 2f)) {
             var bitmap: Bitmap? = null
             instrumentation.runOnMainSync {
                 val configuration =
@@ -129,6 +134,9 @@ class SettingsDeviceTest {
                         R.style.Theme_AICleanPhoneStorage,
                     )
                 val binding = ViewSettingsMenuBinding.inflate(LayoutInflater.from(themed))
+                binding.settingsLanguage.setValue(
+                    themed.getString(R.string.settings_current_language)
+                )
                 val density = themed.resources.displayMetrics.density
                 binding.root.measure(
                     View.MeasureSpec.makeMeasureSpec(
@@ -143,6 +151,7 @@ class SettingsDeviceTest {
                 binding.root.layout(0, 0, binding.root.measuredWidth, binding.root.measuredHeight)
                 for (row in
                     listOf(
+                        binding.settingsNotifications,
                         binding.settingsLanguage,
                         binding.settingsPrivacy,
                         binding.settingsFeedback,
@@ -153,8 +162,22 @@ class SettingsDeviceTest {
                     val icon = row.findViewById<View>(R.id.settings_item_icon)
                     val arrow = row.findViewById<View>(R.id.settings_item_arrow)
                     assertTrue(title.height >= title.layout.height)
-                    assertTrue("$tag: icon overlaps title", icon.right <= title.left)
-                    assertTrue("$tag: title overlaps arrow", title.right <= arrow.left)
+                    val titleBounds = Rect(0, 0, title.width, title.height)
+                    row.offsetDescendantRectToMyCoords(title, titleBounds)
+                    assertTrue("$tag: icon overlaps title", icon.right <= titleBounds.left)
+                    assertTrue("$tag: title overlaps arrow", titleBounds.right <= arrow.left)
+                    if (row === binding.settingsLanguage) {
+                        val value = row.findViewById<TextView>(R.id.settings_item_value)
+                        val valueBounds = Rect(0, 0, value.width, value.height)
+                        row.offsetDescendantRectToMyCoords(value, valueBounds)
+                        assertFalse(
+                            "$tag: title overlaps current language",
+                            Rect.intersects(titleBounds, valueBounds),
+                        )
+                        assertTrue(value.height >= value.layout.height)
+                        assertTrue(valueBounds.right <= arrow.left)
+                        assertTrue(row.contentDescription.contains(value.text))
+                    }
                     assertEquals(View.LAYOUT_DIRECTION_LTR, row.layoutDirection)
                 }
                 bitmap =
@@ -167,6 +190,141 @@ class SettingsDeviceTest {
             }
             save(bitmap!!, "menu_${tag}_$scale")
         }
+    }
+
+    @Test
+    fun languageSummaryUsesResolvedResourceLocaleIncludingSystemFallback() {
+        for (language in AppLanguages.supported) {
+            val configured =
+                context.createConfigurationContext(
+                    Configuration(context.resources.configuration).apply {
+                        setLocale(java.util.Locale.forLanguageTag(language.tag))
+                    }
+                )
+            assertEquals(
+                language.nativeName,
+                configured.getString(R.string.settings_current_language),
+            )
+        }
+        val unsupported =
+            context.createConfigurationContext(
+                Configuration(context.resources.configuration).apply {
+                    setLocale(java.util.Locale.ITALIAN)
+                }
+            )
+        assertEquals("English", unsupported.getString(R.string.settings_current_language))
+    }
+
+    @Test
+    fun settingsSummaryUpdatesAfterLanguageChangeAndRecreation() {
+        val languages = (context.applicationContext as CleanApplication).languages
+        runBlocking { languages.ready.await() }
+        val before = languages.selected.value
+        ActivityScenario.launch(SettingsActivity::class.java).use { scenario ->
+            try {
+                for (tag in listOf("en", "zh-Hans", "pt-BR", "")) {
+                    runBlocking { languages.select(tag) }
+                    waitUntil {
+                        var matched = false
+                        instrumentation.runOnMainSync {
+                            val activity = resumed(SettingsActivity::class.java)
+                            val value =
+                                activity
+                                    ?.findViewById<View>(R.id.settings_language)
+                                    ?.findViewById<TextView>(R.id.settings_item_value)
+                                    ?.text
+                                    ?.toString()
+                            val expected =
+                                if (tag.isEmpty())
+                                    activity?.getString(R.string.settings_current_language)
+                                else AppLanguages.supported.single { it.tag == tag }.nativeName
+                            matched =
+                                value != null &&
+                                    value == expected &&
+                                    languages.selected.value == tag
+                        }
+                        matched
+                    }
+                    screenshot("current_language_${tag.ifEmpty { "system" }}")
+                }
+                scenario.recreate()
+                waitFor(SettingsActivity::class.java)
+                scenario.onActivity { activity ->
+                    assertEquals(
+                        activity.getString(R.string.settings_current_language),
+                        activity
+                            .findViewById<View>(R.id.settings_language)
+                            .findViewById<TextView>(R.id.settings_item_value)
+                            .text
+                            .toString(),
+                    )
+                }
+            } finally {
+                runBlocking { languages.select(before.takeIf(AppLanguages::valid).orEmpty()) }
+            }
+        }
+    }
+
+    @Test
+    fun figmaLayoutUsesOriginalIconSizesAndSpacing() {
+        var bitmap: Bitmap? = null
+        instrumentation.runOnMainSync {
+            val configured =
+                context.createConfigurationContext(
+                    Configuration(context.resources.configuration).apply {
+                        fontScale = 1f
+                        setLocale(java.util.Locale.US)
+                    }
+                )
+            val themed = ContextThemeWrapper(configured, R.style.Theme_AICleanPhoneStorage)
+            val density = themed.resources.displayMetrics.density
+            val screen = ScreenSettingsShellBinding.inflate(LayoutInflater.from(themed))
+            screen.settingsTitle.setText(R.string.home_settings)
+            screen.settingsContent.setPadding(0, (44 * density).toInt(), 0, 0)
+            screen.settingsBody.setPadding(
+                (16 * density).toInt(),
+                (12 * density).toInt(),
+                (16 * density).toInt(),
+                (24 * density).toInt(),
+            )
+            val menu =
+                ViewSettingsMenuBinding.inflate(
+                    LayoutInflater.from(themed),
+                    screen.settingsBody,
+                    true,
+                )
+            menu.settingsLanguage.setValue(themed.getString(R.string.settings_current_language))
+            val width = (375 * density).toInt()
+            val height = (812 * density).toInt()
+            screen.root.measure(
+                View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY),
+            )
+            screen.root.layout(0, 0, width, height)
+            assertEquals(296f, menu.root.height / density, 2f)
+            val card = Rect(0, 0, menu.root.width, menu.root.height)
+            screen.root.offsetDescendantRectToMyCoords(menu.root, card)
+            assertEquals(104f, card.top / density, 1f)
+            assertEquals(16f, card.left / density, 1f)
+            assertEquals(
+                24f,
+                menu.settingsLanguage.findViewById<View>(R.id.settings_item_icon).width / density,
+                1f,
+            )
+            assertEquals(
+                16f,
+                menu.settingsLanguage.findViewById<View>(R.id.settings_item_arrow).width / density,
+                1f,
+            )
+            bitmap =
+                Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).also {
+                    Canvas(it).apply {
+                        drawColor(android.graphics.Color.rgb(246, 246, 246))
+                        screen.root.draw(this)
+                    }
+                }
+        }
+        save(bitmap!!, "figma_375")
     }
 
     private fun <T : AppCompatActivity> resumed(type: Class<T>): T? =

@@ -179,10 +179,10 @@
     <string name="permission_open_settings">설정 열기</string>
     <string name="permission_not_now">지금은 아님</string>
     <string name="permission_unavailable">이 권한 요청을 열거나 완료할 수 없습니다. 다시 시도해 주세요.</string>
-    <string name="settings_language">언어 설정</string>
+    <string name="settings_language">언어</string>
     <string name="settings_privacy">개인 정보 보호 정책</string>
     <string name="settings_feedback">피드백</string>
-    <string name="settings_about">회사 소개</string>
+    <string name="settings_about">정보</string>
     <string name="settings_language_pending_title">더 많은 언어가 곧 제공될 예정입니다.</string>
     <string name="settings_language_pending_message">향후 업데이트에서는 여기에서 원하는 언어를 선택할 수 있습니다.</string>
     <string name="settings_about_description">중요한 내용을 위한 공간이 조금 더 필요합니다. 파일을 관리하고, 사진을 압축하고, 앱 알림을 제어하세요.</string>
@@ -278,4 +278,5 @@
     <string name="app_manager_usage_access">최근 사용 및 전체 용량을 보려면 사용 정보 접근 허용</string>
     <string name="app_manager_sort_ascending">오름차순</string>
     <string name="app_manager_sort_descending">내림차순</string>
+    <string name="settings_current_language">한국어</string>
 </resources>

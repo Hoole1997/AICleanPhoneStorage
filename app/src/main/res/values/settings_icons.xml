@@ -1,0 +1,4 @@
+<resources>
+    <!-- 两份 Figma 的返回图标完全一致，使用资源别名复用，避免重复打包相同 WebP。 -->
+    <item type="drawable" name="ic_settings_back">@drawable/ic_app_manager_back</item>
+</resources>

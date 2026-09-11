@@ -195,10 +195,10 @@
     <string name="permission_open_settings">Abrir configuración</string>
     <string name="permission_not_now">Ahora no</string>
     <string name="permission_unavailable">No se pudo abrir ni completar esta solicitud de permiso. Por favor inténtalo de nuevo.</string>
-    <string name="settings_language">Configuración de idioma</string>
+    <string name="settings_language">Idioma</string>
     <string name="settings_privacy">Política de privacidad</string>
     <string name="settings_feedback">Comentarios</string>
-    <string name="settings_about">Acerca de nosotros</string>
+    <string name="settings_about">Acerca de</string>
     <string name="settings_language_pending_title">Más idiomas, próximamente</string>
     <string name="settings_language_pending_message">Podrás elegir tu idioma preferido aquí en una actualización futura.</string>
     <string name="settings_about_description">Un poco más de espacio para lo que importa. Administre archivos, comprima fotos y tome el control de las notificaciones de aplicaciones.</string>
@@ -294,4 +294,5 @@
     <string name="app_manager_usage_access">Permite el acceso de uso para ver el último uso y el tamaño total</string>
     <string name="app_manager_sort_ascending">Ascendente</string>
     <string name="app_manager_sort_descending">Descendente</string>
+    <string name="settings_current_language">Español</string>
 </resources>

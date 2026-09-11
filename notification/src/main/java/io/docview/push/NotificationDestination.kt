@@ -9,7 +9,10 @@ enum class NotificationDestination(val key: String, val contentType: Int) {
     NETWORK("network", Content.TYPE_NETWORK),
     PHOTOS("photos", Content.TYPE_PHOTO_COMPRESS),
     UNUSED_FILES("unused_files", Content.TYPE_UNUSED_FILES),
-    SCREENSHOTS("screenshots", Content.TYPE_SCREENSHOTS);
+    SCREENSHOTS("screenshots", Content.TYPE_SCREENSHOTS),
+    LARGE_FILES("large_files", Content.TYPE_LARGE_FILES),
+    NOTIFICATION_CLEANER("notification_cleaner", Content.TYPE_NOTIFICATION_CLEANER),
+    APP_MANAGER("app_manager", Content.TYPE_APP_MANAGER);
 
     companion object {
         fun fromKey(key: String?) = entries.firstOrNull { it.key == key } ?: HOME

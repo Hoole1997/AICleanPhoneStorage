@@ -179,10 +179,10 @@
     <string name="permission_open_settings">打开设置</string>
     <string name="permission_not_now">暂不授权</string>
     <string name="permission_unavailable">无法打开或完成此权限请求。请再试一次。</string>
-    <string name="settings_language">语言设置</string>
+    <string name="settings_language">语言</string>
     <string name="settings_privacy">隐私政策</string>
     <string name="settings_feedback">反馈建议</string>
-    <string name="settings_about">关于我们</string>
+    <string name="settings_about">关于</string>
     <string name="settings_language_pending_title">更多语言，即将推出</string>
     <string name="settings_language_pending_message">在未来的更新中，您将能够在此处选择您的首选语言。</string>
     <string name="settings_about_description">为重要的事情多一点空间。管理文件、压缩照片并控制应用程序通知。</string>
@@ -278,4 +278,5 @@
     <string name="app_manager_usage_access">授权查看最近使用和应用总占用</string>
     <string name="app_manager_sort_ascending">升序</string>
     <string name="app_manager_sort_descending">降序</string>
+    <string name="settings_current_language">简体中文</string>
 </resources>

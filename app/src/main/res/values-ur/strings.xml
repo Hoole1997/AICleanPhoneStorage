@@ -187,10 +187,10 @@
     <string name="permission_open_settings">ترتیبات کھولیں۔</string>
     <string name="permission_not_now">ابھی نہیں۔</string>
     <string name="permission_unavailable">اجازت کی اس درخواست کو کھول یا مکمل نہیں کیا جا سکا۔ براہ کرم دوبارہ کوشش کریں۔</string>
-    <string name="settings_language">زبان کی ترتیبات</string>
+    <string name="settings_language">زبان</string>
     <string name="settings_privacy">رازداری کی پالیسی</string>
     <string name="settings_feedback">تاثرات</string>
-    <string name="settings_about">ہمارے بارے میں</string>
+    <string name="settings_about">تعارف</string>
     <string name="settings_language_pending_title">مزید زبانیں، جلد آرہی ہیں۔</string>
     <string name="settings_language_pending_message">آپ مستقبل کی تازہ کاری میں یہاں اپنی پسند کی زبان کا انتخاب کر سکیں گے۔</string>
     <string name="settings_about_description">اہمیت کے لیے تھوڑی اور جگہ۔ فائلوں کا نظم کریں، تصاویر کو سکیڑیں، اور ایپ کی اطلاعات کو کنٹرول کریں۔</string>
@@ -286,4 +286,5 @@
     <string name="app_manager_usage_access">آخری استعمال اور کل سائز دیکھنے کے لیے استعمال کی رسائی دیں</string>
     <string name="app_manager_sort_ascending">صعودی</string>
     <string name="app_manager_sort_descending">نزولی</string>
+    <string name="settings_current_language">اردو</string>
 </resources>

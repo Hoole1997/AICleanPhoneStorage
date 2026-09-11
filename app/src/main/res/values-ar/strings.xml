@@ -219,10 +219,10 @@
     <string name="permission_open_settings">افتح الإعدادات</string>
     <string name="permission_not_now">ليس الآن</string>
     <string name="permission_unavailable">تعذر فتح طلب الإذن هذا أو إكماله. يرجى المحاولة مرة أخرى.</string>
-    <string name="settings_language">إعدادات اللغة</string>
+    <string name="settings_language">اللغة</string>
     <string name="settings_privacy">سياسة الخصوصية</string>
     <string name="settings_feedback">ردود الفعل</string>
-    <string name="settings_about">عنا</string>
+    <string name="settings_about">حول</string>
     <string name="settings_language_pending_title">المزيد من اللغات، قريبًا</string>
     <string name="settings_language_pending_message">ستتمكن من اختيار لغتك المفضلة هنا في التحديث المستقبلي.</string>
     <string name="settings_about_description">مساحة أكبر قليلاً لما يهم. إدارة الملفات وضغط الصور والتحكم في إشعارات التطبيق.</string>
@@ -318,4 +318,5 @@
     <string name="app_manager_usage_access">اسمح بالوصول إلى الاستخدام لعرض آخر استخدام والحجم الإجمالي</string>
     <string name="app_manager_sort_ascending">تصاعدي</string>
     <string name="app_manager_sort_descending">تنازلي</string>
+    <string name="settings_current_language">العربية</string>
 </resources>

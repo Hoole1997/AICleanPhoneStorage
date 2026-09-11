@@ -1,34 +1,826 @@
 [
   {
-    "id": "clean_review",
-    "title": "Review your storage",
-    "desc": "Choose which files to keep or clean.",
-    "buttonText": "Review",
+    "id": "local_001_clean",
+    "title": "Junk scan is ready",
+    "desc": "Tap to review accessible temporary and leftover files taking up space.",
+    "buttonText": "Clean",
     "iconType": 1,
     "actionType": 1
   },
   {
-    "id": "network_review",
-    "title": "Check network traffic",
-    "desc": "View your network usage.",
-    "buttonText": "Open",
-    "iconType": 2,
-    "actionType": 2
+    "id": "local_002_clean",
+    "title": "Your storage needs attention",
+    "desc": "A quick scan can reveal files you may no longer need.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
   },
   {
-    "id": "photo_review",
-    "title": "Make room for photos",
-    "desc": "Create compressed copies of selected photos.",
+    "id": "local_003_clean",
+    "title": "Temporary files may be growing",
+    "desc": "Open Cleaner to review temporary files in shared storage.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_004_large",
+    "title": "Free up storage space",
+    "desc": "Review large files and choose what you no longer need.",
+    "buttonText": "Free",
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_005_clean",
+    "title": "Quick cleanup available",
+    "desc": "Scan your phone and choose what you want to remove.",
     "buttonText": "Open",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_006_large",
+    "title": "Large files may be hiding",
+    "desc": "Check videos and downloads that use the most space.",
+    "buttonText": "Review",
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_007_clean",
+    "title": "Duplicate photos check",
+    "desc": "Find duplicate or similar photos and review what to keep.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_008_clean",
+    "title": "Temporary file scan ready",
+    "desc": "Review accessible temporary files in shared storage.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_009_unused",
+    "title": "Make room for new files",
+    "desc": "Review old downloads, images, and videos now.",
+    "buttonText": "Review",
+    "iconType": 4,
+    "actionType": 4
+  },
+  {
+    "id": "local_010_clean",
+    "title": "Cleaner is waiting",
+    "desc": "Start a storage scan and review the results.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_011_clean",
+    "title": "Storage scan recommended",
+    "desc": "Check for removable files before storage runs low.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_012_clean",
+    "title": "Review unnecessary temporary files",
+    "desc": "Check temporary files in shared storage before cleaning.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_013_unused",
+    "title": "Old files may be piling up",
+    "desc": "Open to inspect downloads and unused media.",
+    "buttonText": "Review",
+    "iconType": 4,
+    "actionType": 4
+  },
+  {
+    "id": "local_014_clean",
+    "title": "Your phone could use a cleanup",
+    "desc": "Run a quick scan to organize your storage.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_015_large",
+    "title": "Media cleanup is ready",
+    "desc": "Review large photos and videos using your space.",
+    "buttonText": "Free",
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_016_clean",
+    "title": "Find storage you can reclaim",
+    "desc": "A quick check may uncover unnecessary files.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_017_clean",
+    "title": "Temporary file reminder",
+    "desc": "Scan accessible temporary files and decide what to clean.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_018_clean",
+    "title": "Keep your storage organized",
+    "desc": "Scan for clutter and review it by category.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_019_unused",
+    "title": "Downloads folder check",
+    "desc": "Old downloads may be taking up useful space.",
+    "buttonText": "Free",
+    "iconType": 4,
+    "actionType": 4
+  },
+  {
+    "id": "local_020_clean",
+    "title": "Cleanup reminder",
+    "desc": "Open Cleaner for a quick storage check.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_021_clean",
+    "title": "Junk files scan available",
+    "desc": "Review accessible temporary files, leftover files, and old downloads.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_022_large",
+    "title": "Need more free space?",
+    "desc": "Check which files are using the most storage.",
+    "buttonText": "Free",
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_023_clean",
+    "title": "Cleanup tools are ready",
+    "desc": "Scan and review files before removing anything.",
+    "buttonText": "Open",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_024_clean",
+    "title": "Storage clutter check",
+    "desc": "See what has accumulated on your phone.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_025_large",
+    "title": "Large media review",
+    "desc": "Find space-heavy videos and images quickly.",
+    "buttonText": "Free",
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_026_unused",
+    "title": "Older files may remain",
+    "desc": "Review files by last modified time and choose what to keep.",
+    "buttonText": "Review",
+    "iconType": 4,
+    "actionType": 4
+  },
+  {
+    "id": "local_027_clean",
+    "title": "One-tap scan available",
+    "desc": "Start a scan and review the files you want to remove.",
+    "buttonText": "Open",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_028_home",
+    "title": "Your storage overview is available",
+    "desc": "Open Cleaner to review your storage and choose a cleanup tool.",
+    "buttonText": "Free",
+    "iconType": 6,
+    "actionType": 6
+  },
+  {
+    "id": "local_029_unused",
+    "title": "Create space for what matters",
+    "desc": "Review unnecessary files and old media.",
+    "buttonText": "Free",
+    "iconType": 4,
+    "actionType": 4
+  },
+  {
+    "id": "local_030_clean",
+    "title": "Smart cleanup suggestion",
+    "desc": "Scan for cleanup candidates and review them before cleaning.",
+    "buttonText": "Open",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_031_clean",
+    "title": "Storage cleanup is ready",
+    "desc": "Scan for clutter and reclaim useful space.",
+    "buttonText": "Free",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_032_clean",
+    "title": "Photo library check",
+    "desc": "Find duplicate or similar photos for review.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_033_large",
+    "title": "Video files use more space",
+    "desc": "Review your largest videos in one place.",
+    "buttonText": "Free",
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_034_home",
+    "title": "Storage overview available",
+    "desc": "See what is filling your phone right now.",
+    "buttonText": "Check",
+    "iconType": 6,
+    "actionType": 6
+  },
+  {
+    "id": "local_035_clean",
+    "title": "Cleaner scan ready",
+    "desc": "Check accessible temporary files, photos, and downloads by category.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_036_clean",
+    "title": "Clutter can build up quickly",
+    "desc": "Take a moment to review unnecessary files.",
+    "buttonText": "Open",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_037_apps",
+    "title": "App storage check",
+    "desc": "Review installed apps and their storage sizes.",
+    "buttonText": "Clean",
+    "iconType": 1003,
+    "actionType": 1003
+  },
+  {
+    "id": "local_038_clean",
+    "title": "Duplicate cleaner is ready",
+    "desc": "Review duplicate photos and choose which copies to keep.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_039_clean",
+    "title": "Residual files may remain",
+    "desc": "Scan for files left behind after app use.",
+    "buttonText": "Open",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_040_clean",
+    "title": "Review before you clean",
+    "desc": "Choose exactly which files you want to remove.",
+    "buttonText": "Open",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_041_clean",
+    "title": "Your phone has more to review",
+    "desc": "Open Cleaner to inspect storage categories.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_042_clean",
+    "title": "Quick storage refresh",
+    "desc": "Scan temporary files and old downloads.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_043_clean",
+    "title": "Shared storage cleanup check",
+    "desc": "Review accessible temporary files in shared storage.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_044_home",
+    "title": "Cleaner tools are available",
+    "desc": "Open to review storage, photos, and installed apps.",
+    "buttonText": "Clean",
+    "iconType": 6,
+    "actionType": 6
+  },
+  {
+    "id": "local_045_clean",
+    "title": "Storage care reminder",
+    "desc": "A regular review helps keep files organized.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_046_large",
+    "title": "Low storage can slow you down",
+    "desc": "Review large files and make room when needed.",
+    "buttonText": "Review",
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_047_clean",
+    "title": "Clean smarter today",
+    "desc": "Scan first, review results, then choose what to remove.",
+    "buttonText": "Open",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_048_home",
+    "title": "Storage usage check",
+    "desc": "Open to review your storage and available cleanup tools.",
+    "buttonText": "Check",
+    "iconType": 6,
+    "actionType": 6
+  },
+  {
+    "id": "local_049_unused",
+    "title": "A cleanup opportunity is ready",
+    "desc": "Review files that may no longer be useful.",
+    "buttonText": "Open",
+    "iconType": 4,
+    "actionType": 4
+  },
+  {
+    "id": "local_050_clean",
+    "title": "Keep more storage available",
+    "desc": "Run a quick scan and manage unnecessary files.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_053_large",
+    "title": "Identify Space-Hogging Files",
+    "desc": "Actively scan for and locate files consuming excessive disk space.",
+    "buttonText": "Free",
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_054_clean",
+    "title": "Detect identical photo duplicates",
+    "desc": "Find identical photo copies and review them before deletion.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_056_clean",
+    "title": "Pinpoint redundant photo copies",
+    "desc": "Scan for duplicate photos and choose which copies to keep.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_058_home",
+    "title": "Continue with your cleanup tools",
+    "desc": "Open Cleaner to choose a tool and review your storage.",
+    "buttonText": "Open",
+    "iconType": 6,
+    "actionType": 6
+  },
+  {
+    "id": "local_060_clean",
+    "title": "Junk Reminder",
+    "desc": "Scan for junk candidates and review what you want to clean.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_061_clean",
+    "title": "Junk Reminder",
+    "desc": "Review accessible temporary and leftover files before cleaning.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_065_clean",
+    "title": "SMART STORAGE ASSISTANT",
+    "desc": "Tap to open Storage Cleanup Tool.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_066_photos",
+    "title": "Reduce photo size, save space!",
+    "desc": "Create compressed copies of selected photos. You choose whether to keep the originals.",
+    "buttonText": "Free",
     "iconType": 3,
     "actionType": 3
   },
   {
-    "id": "unused_review",
-    "title": "Review older files",
-    "desc": "Review files by last modified time. You choose what to delete.",
+    "id": "local_067_clean",
+    "title": "Optimize storage, delete duplicates!",
+    "desc": "Scan for duplicate photos and review which copies to keep.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_068_clean",
+    "title": "Clear copies, expand your storage!",
+    "desc": "Scan for duplicate photos and review which copies to keep.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_069_clean",
+    "title": "Clear duplicates, declutter your album!",
+    "desc": "Scan for duplicate photos and review which copies to keep.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_070_large",
+    "title": "Reclaim storage space by cleaning large files!",
+    "desc": "Review large files and select the ones you want to remove.",
     "buttonText": "Review",
-    "iconType": 4,
-    "actionType": 4
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_072_clean",
+    "title": "Storage cleanup reminder",
+    "desc": "Tap to review your storage and choose what to clean.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_074_clean",
+    "title": "Purge duplicates, breathe easy with more space!",
+    "desc": "Scan for duplicate photos and review which copies to keep.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_076_large",
+    "title": "Large file cleanup reminder",
+    "desc": "Large files occupying storage? Tap to review and clean up.",
+    "buttonText": "Review",
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_077_clean",
+    "title": "Boost storage, erase duplicate photos!",
+    "desc": "Scan for duplicate photos and review which copies to keep.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_078_clean",
+    "title": "Keep your storage tidy",
+    "desc": "Open Cleaner for a storage scan and review.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_079_clean",
+    "title": "Clean up duplicates, free up space!",
+    "desc": "Scan for duplicate photos and review which copies to keep.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_080_clean",
+    "title": "Ready for a storage scan",
+    "desc": "Tap to scan and review cleanup candidates.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_081_photos",
+    "title": "Compress images, save storage space!",
+    "desc": "Create compressed copies of selected photos. You choose whether to keep the originals.",
+    "buttonText": "Shrink",
+    "iconType": 3,
+    "actionType": 3
+  },
+  {
+    "id": "local_082_clean",
+    "title": "Remove duplicate photos, optimize storage!",
+    "desc": "Scan for duplicate photos and review which copies to keep.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_083_large",
+    "title": "Clear large files to reclaim storage space!",
+    "desc": "Review large files and select the ones you want to remove.",
+    "buttonText": "Review",
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_084_clean",
+    "title": "Check your phone for junk",
+    "desc": "Scan for accessible temporary files and review the results.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_085_clean",
+    "title": "Delete duplicates, organize your gallery!",
+    "desc": "Scan for duplicate photos and review which copies to keep.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_088_photos",
+    "title": "Shrink images, enhance storage capacity!",
+    "desc": "Create compressed copies of selected photos. You choose whether to keep the originals.",
+    "buttonText": "Shrink",
+    "iconType": 3,
+    "actionType": 3
+  },
+  {
+    "id": "local_090_clean",
+    "title": "Ditch duplicates, gain back storage!",
+    "desc": "Scan for duplicate photos and review which copies to keep.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_091_large",
+    "title": "Free up storage space by removing large files!",
+    "desc": "Review large files and select the ones you want to remove.",
+    "buttonText": "Review",
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_092_large",
+    "title": "Large file cleanup reminder",
+    "desc": "Purge big files, free up space",
+    "buttonText": "Free",
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_094_large",
+    "title": "Large file cleanup reminder",
+    "desc": "Low on storage? Clear large files!",
+    "buttonText": "Review",
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_095_photos",
+    "title": "Optimize storage space, compress images!",
+    "desc": "Create compressed copies of selected photos. You choose whether to keep the originals.",
+    "buttonText": "Shrink",
+    "iconType": 3,
+    "actionType": 3
+  },
+  {
+    "id": "local_096_clean",
+    "title": "Storage scan reminder",
+    "desc": "Tap to scan and review your storage.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_097_clean",
+    "title": "Storage check-up reminder",
+    "desc": "Run a storage scan and review the results whenever you like.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_098_clean",
+    "title": "Routine cleanup reminder",
+    "desc": "Scan for cleanup candidates and choose what to remove.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_100_large",
+    "title": "Delete large files, reclaim storage space!",
+    "desc": "Review large files and select the ones you want to remove.",
+    "buttonText": "Review",
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_103_clean",
+    "title": "Keep your storage tidy",
+    "desc": "Run a periodic scan and review cleanup candidates.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_104_large",
+    "title": "Large file cleanup reminder",
+    "desc": "Clean large files and free up space on your phone",
+    "buttonText": "Review",
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_105_clean",
+    "title": "Make room when you need it",
+    "desc": "Review cleanup candidates and choose what to keep.",
+    "buttonText": "Free",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_106_photos",
+    "title": "Compress photos, maximize storage efficiency!",
+    "desc": "Create compressed copies of selected photos. You choose whether to keep the originals.",
+    "buttonText": "Shrink",
+    "iconType": 3,
+    "actionType": 3
+  },
+  {
+    "id": "local_107_clean",
+    "title": "Temporary file check",
+    "desc": "Review accessible temporary files in shared storage.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_109_clean",
+    "title": "Quick cleanup reminder",
+    "desc": "Run a scan and review your files whenever you like.",
+    "buttonText": "Open",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_110_large",
+    "title": "Large file cleanup reminder",
+    "desc": "Running out of storage? Clean up large files to free space.",
+    "buttonText": "Review",
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_111_clean",
+    "title": "Time for a storage check?",
+    "desc": "Run a routine scan and review your files whenever you like.",
+    "buttonText": "Open",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_112_large",
+    "title": "Free up storage space by cleaning out large files!",
+    "desc": "Review large files and select the ones you want to remove.",
+    "buttonText": "Review",
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_113_clean",
+    "title": "Storage check reminder",
+    "desc": "Tap to scan your storage and review the results.",
+    "buttonText": "Check",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_114_photos",
+    "title": "Condense photos, liberate your space!",
+    "desc": "Create compressed copies of selected photos. You choose whether to keep the originals.",
+    "buttonText": "Shrink",
+    "iconType": 3,
+    "actionType": 3
+  },
+  {
+    "id": "local_115_clean",
+    "title": "Refresh your storage review",
+    "desc": "Run a scan and choose what you want to keep or clean.",
+    "buttonText": "Open",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_116_large",
+    "title": "Clear large files to free up storage space!",
+    "desc": "Review large files and select the ones you want to remove.",
+    "buttonText": "Review",
+    "iconType": 1001,
+    "actionType": 1001
+  },
+  {
+    "id": "local_118_photos",
+    "title": "Image compression, optimize storage!",
+    "desc": "Create compressed copies of selected photos. You choose whether to keep the originals.",
+    "buttonText": "Shrink",
+    "iconType": 3,
+    "actionType": 3
+  },
+  {
+    "id": "local_121_clean",
+    "title": "Routine cleanup reminder",
+    "desc": "Tap to scan accessible temporary files and review the results.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_122_photos",
+    "title": "Easily compress photos, free up space!",
+    "desc": "Create compressed copies of selected photos. You choose whether to keep the originals.",
+    "buttonText": "Shrink",
+    "iconType": 3,
+    "actionType": 3
+  },
+  {
+    "id": "local_123_clean",
+    "title": "Ready to check your storage",
+    "desc": "Tap to scan and review cleanup candidates.",
+    "buttonText": "Open",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_126_clean",
+    "title": "Save space, remove duplicate photos!",
+    "desc": "Scan for duplicate photos and review which copies to keep.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1
+  },
+  {
+    "id": "local_127_notifications",
+    "title": "Notification cleanup reminder",
+    "desc": "Tidy notifications from apps you select with a tap.",
+    "buttonText": "Open",
+    "iconType": 1002,
+    "actionType": 1002
   }
 ]

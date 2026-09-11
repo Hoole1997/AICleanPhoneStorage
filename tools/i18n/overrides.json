@@ -113,7 +113,10 @@
     "app_manager_uninstall_app": "卸载%1$s",
     "app_manager_usage_access": "授权查看最近使用和应用总占用",
     "app_manager_sort_ascending": "升序",
-    "app_manager_sort_descending": "降序"
+    "app_manager_sort_descending": "降序",
+    "settings_current_language": "简体中文",
+    "settings_language": "语言",
+    "settings_about": "关于"
   },
   "hi": {
     "language_follow_system": "सिस्टम की भाषा",
@@ -132,7 +135,10 @@
     "app_manager_uninstall_app": "%1$s अनइंस्टॉल करें",
     "app_manager_usage_access": "अंतिम उपयोग और कुल आकार देखने के लिए उपयोग ऐक्सेस दें",
     "app_manager_sort_ascending": "आरोही",
-    "app_manager_sort_descending": "अवरोही"
+    "app_manager_sort_descending": "अवरोही",
+    "settings_current_language": "हिन्दी",
+    "settings_language": "भाषा",
+    "settings_about": "परिचय"
   },
   "es": {
     "language_follow_system": "Seguir el idioma del sistema",
@@ -151,7 +157,10 @@
     "app_manager_uninstall_app": "Desinstalar %1$s",
     "app_manager_usage_access": "Permite el acceso de uso para ver el último uso y el tamaño total",
     "app_manager_sort_ascending": "Ascendente",
-    "app_manager_sort_descending": "Descendente"
+    "app_manager_sort_descending": "Descendente",
+    "settings_current_language": "Español",
+    "settings_language": "Idioma",
+    "settings_about": "Acerca de"
   },
   "ar": {
     "language_follow_system": "اتباع لغة النظام",
@@ -182,7 +191,10 @@
     "app_manager_uninstall_app": "إلغاء تثبيت %1$s",
     "app_manager_usage_access": "اسمح بالوصول إلى الاستخدام لعرض آخر استخدام والحجم الإجمالي",
     "app_manager_sort_ascending": "تصاعدي",
-    "app_manager_sort_descending": "تنازلي"
+    "app_manager_sort_descending": "تنازلي",
+    "settings_current_language": "العربية",
+    "settings_language": "اللغة",
+    "settings_about": "حول"
   },
   "pt": {
     "language_follow_system": "Usar idioma do sistema",
@@ -201,7 +213,10 @@
     "app_manager_uninstall_app": "Desinstalar %1$s",
     "app_manager_usage_access": "Permita acesso ao uso para ver o último uso e o tamanho total",
     "app_manager_sort_ascending": "Crescente",
-    "app_manager_sort_descending": "Decrescente"
+    "app_manager_sort_descending": "Decrescente",
+    "settings_current_language": "Português (Brasil)",
+    "settings_language": "Idioma",
+    "settings_about": "Sobre"
   },
   "bn": {
     "language_follow_system": "সিস্টেমের ভাষা অনুসরণ করুন",
@@ -220,7 +235,10 @@
     "app_manager_uninstall_app": "%1$s আনইনস্টল করুন",
     "app_manager_usage_access": "শেষ ব্যবহার ও মোট আকার দেখতে ব্যবহার অ্যাক্সেস দিন",
     "app_manager_sort_ascending": "ঊর্ধ্বক্রম",
-    "app_manager_sort_descending": "অধঃক্রম"
+    "app_manager_sort_descending": "অধঃক্রম",
+    "settings_current_language": "বাংলা",
+    "settings_language": "ভাষা",
+    "settings_about": "সম্পর্কে"
   },
   "ur": {
     "language_follow_system": "سسٹم کی زبان استعمال کریں",
@@ -239,7 +257,10 @@
     "app_manager_uninstall_app": "%1$s ان انسٹال کریں",
     "app_manager_usage_access": "آخری استعمال اور کل سائز دیکھنے کے لیے استعمال کی رسائی دیں",
     "app_manager_sort_ascending": "صعودی",
-    "app_manager_sort_descending": "نزولی"
+    "app_manager_sort_descending": "نزولی",
+    "settings_current_language": "اردو",
+    "settings_language": "زبان",
+    "settings_about": "تعارف"
   },
   "id": {
     "language_follow_system": "Ikuti bahasa sistem",
@@ -258,7 +279,10 @@
     "app_manager_uninstall_app": "Uninstal %1$s",
     "app_manager_usage_access": "Izinkan akses penggunaan untuk melihat penggunaan terakhir dan ukuran total",
     "app_manager_sort_ascending": "Menaik",
-    "app_manager_sort_descending": "Menurun"
+    "app_manager_sort_descending": "Menurun",
+    "settings_current_language": "Bahasa Indonesia",
+    "settings_language": "Bahasa",
+    "settings_about": "Tentang"
   },
   "ru": {
     "language_follow_system": "Как в системе",
@@ -285,7 +309,10 @@
     "app_manager_uninstall_app": "Удалить %1$s",
     "app_manager_usage_access": "Разрешите доступ к статистике для просмотра последнего запуска и полного размера",
     "app_manager_sort_ascending": "По возрастанию",
-    "app_manager_sort_descending": "По убыванию"
+    "app_manager_sort_descending": "По убыванию",
+    "settings_current_language": "Русский",
+    "settings_language": "Язык",
+    "settings_about": "О приложении"
   },
   "fr": {
     "language_follow_system": "Suivre la langue du système",
@@ -304,7 +331,10 @@
     "app_manager_uninstall_app": "Désinstaller %1$s",
     "app_manager_usage_access": "Autorisez l’accès aux usages pour voir la dernière utilisation et la taille totale",
     "app_manager_sort_ascending": "Croissant",
-    "app_manager_sort_descending": "Décroissant"
+    "app_manager_sort_descending": "Décroissant",
+    "settings_current_language": "Français",
+    "settings_language": "Langue",
+    "settings_about": "À propos"
   },
   "de": {
     "language_follow_system": "Systemsprache verwenden",
@@ -323,7 +353,10 @@
     "app_manager_uninstall_app": "%1$s deinstallieren",
     "app_manager_usage_access": "Nutzungszugriff für letzte Nutzung und Gesamtgröße erlauben",
     "app_manager_sort_ascending": "Aufsteigend",
-    "app_manager_sort_descending": "Absteigend"
+    "app_manager_sort_descending": "Absteigend",
+    "settings_current_language": "Deutsch",
+    "settings_language": "Sprache",
+    "settings_about": "Über"
   },
   "ja": {
     "language_follow_system": "システムの言語を使用",
@@ -342,7 +375,10 @@
     "app_manager_uninstall_app": "%1$sをアンインストール",
     "app_manager_usage_access": "最終使用と合計容量を表示するには使用状況へのアクセスを許可",
     "app_manager_sort_ascending": "昇順",
-    "app_manager_sort_descending": "降順"
+    "app_manager_sort_descending": "降順",
+    "settings_current_language": "日本語",
+    "settings_language": "言語",
+    "settings_about": "このアプリについて"
   },
   "ko": {
     "language_follow_system": "시스템 언어 사용",
@@ -361,7 +397,10 @@
     "app_manager_uninstall_app": "%1$s 제거",
     "app_manager_usage_access": "최근 사용 및 전체 용량을 보려면 사용 정보 접근 허용",
     "app_manager_sort_ascending": "오름차순",
-    "app_manager_sort_descending": "내림차순"
+    "app_manager_sort_descending": "내림차순",
+    "settings_current_language": "한국어",
+    "settings_language": "언어",
+    "settings_about": "정보"
   },
   "vi": {
     "language_follow_system": "Theo ngôn ngữ hệ thống",
@@ -380,7 +419,10 @@
     "app_manager_uninstall_app": "Gỡ cài đặt %1$s",
     "app_manager_usage_access": "Cho phép truy cập sử dụng để xem lần dùng cuối và tổng dung lượng",
     "app_manager_sort_ascending": "Tăng dần",
-    "app_manager_sort_descending": "Giảm dần"
+    "app_manager_sort_descending": "Giảm dần",
+    "settings_current_language": "Tiếng Việt",
+    "settings_language": "Ngôn ngữ",
+    "settings_about": "Giới thiệu"
   },
   "tr": {
     "language_follow_system": "Sistem dilini kullan",
@@ -399,6 +441,9 @@
     "app_manager_uninstall_app": "%1$s uygulamasını kaldır",
     "app_manager_usage_access": "Son kullanım ve toplam boyut için kullanım erişimine izin verin",
     "app_manager_sort_ascending": "Artan",
-    "app_manager_sort_descending": "Azalan"
+    "app_manager_sort_descending": "Azalan",
+    "settings_current_language": "Türkçe",
+    "settings_language": "Dil",
+    "settings_about": "Hakkında"
   }
 }

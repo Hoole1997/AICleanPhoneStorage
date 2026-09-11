@@ -187,10 +187,10 @@
     <string name="permission_open_settings">Einstellungen öffnen</string>
     <string name="permission_not_now">Nicht jetzt</string>
     <string name="permission_unavailable">Diese Berechtigungsanfrage konnte nicht geöffnet oder abgeschlossen werden. Bitte versuchen Sie es erneut.</string>
-    <string name="settings_language">Spracheinstellungen</string>
+    <string name="settings_language">Sprache</string>
     <string name="settings_privacy">Datenschutzerklärung</string>
     <string name="settings_feedback">Rückmeldung</string>
-    <string name="settings_about">Über uns</string>
+    <string name="settings_about">Über</string>
     <string name="settings_language_pending_title">Weitere Sprachen folgen in Kürze</string>
     <string name="settings_language_pending_message">In einem zukünftigen Update können Sie hier Ihre bevorzugte Sprache auswählen.</string>
     <string name="settings_about_description">Etwas mehr Platz für das Wesentliche. Verwalten Sie Dateien, komprimieren Sie Fotos und übernehmen Sie die Kontrolle über App-Benachrichtigungen.</string>
@@ -286,4 +286,5 @@
     <string name="app_manager_usage_access">Nutzungszugriff für letzte Nutzung und Gesamtgröße erlauben</string>
     <string name="app_manager_sort_ascending">Aufsteigend</string>
     <string name="app_manager_sort_descending">Absteigend</string>
+    <string name="settings_current_language">Deutsch</string>
 </resources>

@@ -187,10 +187,10 @@
     <string name="permission_open_settings">सेटिंग्स खोलें</string>
     <string name="permission_not_now">अभी नहीं</string>
     <string name="permission_unavailable">इस अनुमति अनुरोध को खोला या पूरा नहीं किया जा सका। कृपया पुन: प्रयास करें।</string>
-    <string name="settings_language">भाषा सेटिंग्स</string>
+    <string name="settings_language">भाषा</string>
     <string name="settings_privacy">गोपनीयता नीति</string>
     <string name="settings_feedback">प्रतिक्रिया</string>
-    <string name="settings_about">हमारे बारे में</string>
+    <string name="settings_about">परिचय</string>
     <string name="settings_language_pending_title">अधिक भाषाएँ, जल्द ही आ रही हैं</string>
     <string name="settings_language_pending_message">आप भविष्य के अपडेट में यहां अपनी पसंदीदा भाषा चुन सकेंगे।</string>
     <string name="settings_about_description">जो मायने रखता है उसके लिए थोड़ी और जगह। फ़ाइलें प्रबंधित करें, फ़ोटो संपीड़ित करें और ऐप सूचनाओं पर नियंत्रण रखें।</string>
@@ -286,4 +286,5 @@
     <string name="app_manager_usage_access">अंतिम उपयोग और कुल आकार देखने के लिए उपयोग ऐक्सेस दें</string>
     <string name="app_manager_sort_ascending">आरोही</string>
     <string name="app_manager_sort_descending">अवरोही</string>
+    <string name="settings_current_language">हिन्दी</string>
 </resources>

@@ -179,10 +179,10 @@
     <string name="permission_open_settings">Mở cài đặt</string>
     <string name="permission_not_now">Không phải bây giờ</string>
     <string name="permission_unavailable">Không thể mở hoặc hoàn thành yêu cầu cấp quyền này. Vui lòng thử lại.</string>
-    <string name="settings_language">Cài đặt ngôn ngữ</string>
+    <string name="settings_language">Ngôn ngữ</string>
     <string name="settings_privacy">Chính sách bảo mật</string>
     <string name="settings_feedback">Phản hồi</string>
-    <string name="settings_about">Về chúng tôi</string>
+    <string name="settings_about">Giới thiệu</string>
     <string name="settings_language_pending_title">Nhiều ngôn ngữ hơn, sắp ra mắt</string>
     <string name="settings_language_pending_message">Bạn sẽ có thể chọn ngôn ngữ ưa thích của mình tại đây trong bản cập nhật sau này.</string>
     <string name="settings_about_description">Thêm một chút không gian cho những điều quan trọng. Quản lý tệp, nén ảnh và kiểm soát thông báo ứng dụng.</string>
@@ -278,4 +278,5 @@
     <string name="app_manager_usage_access">Cho phép truy cập sử dụng để xem lần dùng cuối và tổng dung lượng</string>
     <string name="app_manager_sort_ascending">Tăng dần</string>
     <string name="app_manager_sort_descending">Giảm dần</string>
+    <string name="settings_current_language">Tiếng Việt</string>
 </resources>

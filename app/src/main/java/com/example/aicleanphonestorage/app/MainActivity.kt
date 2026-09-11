@@ -302,6 +302,9 @@ class MainActivity : AppCompatActivity() {
             NotificationDestination.PHOTOS -> homeActions.onToolSelected(HomeTool.Compress)
             NotificationDestination.UNUSED_FILES -> homeActions.onToolSelected(HomeTool.UnusedFiles)
             NotificationDestination.SCREENSHOTS -> homeActions.onToolSelected(HomeTool.Screenshots)
+            NotificationDestination.LARGE_FILES -> homeActions.onToolSelected(HomeTool.LargeFiles)
+            NotificationDestination.NOTIFICATION_CLEANER -> homeActions.onToolSelected(HomeTool.Notifications)
+            NotificationDestination.APP_MANAGER -> homeActions.onToolSelected(HomeTool.Apps)
         }
     }
 

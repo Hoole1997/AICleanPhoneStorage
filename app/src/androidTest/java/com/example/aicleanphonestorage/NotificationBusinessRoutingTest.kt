@@ -17,7 +17,7 @@ import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** 检查配置 → 普通通知构建 → 首页消费，覆盖六个动作，包含以前遗漏的截图/首页图标。 */
+/** 检查配置 → 普通通知构建 → 首页消费，覆盖所有业务动作，包含以前遗漏的截图/首页图标。 */
 @RunWith(AndroidJUnit4::class)
 class NotificationBusinessRoutingTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -32,6 +32,9 @@ class NotificationBusinessRoutingTest {
             NotificationDestination.UNUSED_FILES to R.drawable.ic_tool_unused_files,
             NotificationDestination.SCREENSHOTS to R.drawable.ic_tool_screenshots,
             NotificationDestination.HOME to R.mipmap.ic_launcher,
+            NotificationDestination.LARGE_FILES to R.drawable.ic_tool_large_files,
+            NotificationDestination.NOTIFICATION_CLEANER to R.drawable.ic_tool_notifications,
+            NotificationDestination.APP_MANAGER to R.drawable.ic_tool_apps,
         )
         val pendingIntents = NotificationDestination.entries.map { destination ->
             val content = Content("test", "Review", "Choose what to keep", "Open", destination.contentType, destination.contentType)

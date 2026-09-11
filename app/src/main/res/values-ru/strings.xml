@@ -203,10 +203,10 @@
     <string name="permission_open_settings">Открыть настройки</string>
     <string name="permission_not_now">Не сейчас</string>
     <string name="permission_unavailable">Не удалось открыть или завершить этот запрос на разрешение. Пожалуйста, попробуйте еще раз.</string>
-    <string name="settings_language">Настройки языка</string>
+    <string name="settings_language">Язык</string>
     <string name="settings_privacy">Политика конфиденциальности</string>
     <string name="settings_feedback">Обратная связь</string>
-    <string name="settings_about">О нас</string>
+    <string name="settings_about">О приложении</string>
     <string name="settings_language_pending_title">Скоро появятся новые языки</string>
     <string name="settings_language_pending_message">В будущем обновлении вы сможете выбрать предпочитаемый язык здесь.</string>
     <string name="settings_about_description">Немного больше места для важного. Управляйте файлами, сжимайте фотографии и контролируйте уведомления приложений.</string>
@@ -302,4 +302,5 @@
     <string name="app_manager_usage_access">Разрешите доступ к статистике для просмотра последнего запуска и полного размера</string>
     <string name="app_manager_sort_ascending">По возрастанию</string>
     <string name="app_manager_sort_descending">По убыванию</string>
+    <string name="settings_current_language">Русский</string>
 </resources>

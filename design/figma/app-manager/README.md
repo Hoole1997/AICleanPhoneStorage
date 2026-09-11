@@ -2,7 +2,7 @@
 
 Source: [Figma 5803:308](https://www.figma.com/design/dVsTL6ggoDPXVPcEKg856G/lcb-%E9%A1%B5%E9%9D%A2UI?node-id=5803-308&m=dev).
 
-`source.json` records the original node IDs and downloaded SVG exports. Regenerate the six icons at mdpi through xxxhdpi with `tools/convert_app_manager_assets.py` using `tools/requirements-app-manager-assets.txt` (CairoSVG also requires Cairo). Conversion is development-only; the application reads local WebP resources. The gradient reuses `home_header_background`; installed app icons come from PackageManager. The older arrow export remains used by Settings.
+`source.json` records the original node IDs and downloaded SVG exports. Regenerate the six icons at mdpi through xxxhdpi with `tools/convert_app_manager_assets.py` using `tools/requirements-app-manager-assets.txt` (CairoSVG also requires Cairo). Conversion is development-only; the application reads local WebP resources. The gradient reuses `home_header_background`; installed app icons come from PackageManager. The older arrow export is retained as a reference for the previous Settings design.
 
 The native layout retains 48dp touch targets, natural text heights and Flow wrapping for sort controls. Last used defaults to newest first, size to largest first, and name to ascending; selecting the same key reverses the order. Unknown values stay at the end in either direction.
 

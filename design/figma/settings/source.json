@@ -1,0 +1,46 @@
+{
+  "fileKey": "dVsTL6ggoDPXVPcEKg856G",
+  "nodeId": "5811:482",
+  "assets": {
+    "back": {
+      "nodeId": "5811:509",
+      "url": "https://www.figma.com/api/mcp/asset/ea0cfb5d-c025-46cc-923e-eb342d03daf9.svg",
+      "sizeDp": 24,
+      "reuseDrawable": "ic_app_manager_back"
+    },
+    "notifications": {
+      "nodeId": "5811:515",
+      "url": "https://www.figma.com/api/mcp/asset/20b60853-8105-4acd-9665-ebe56c3fc49f.svg",
+      "sizeDp": 24
+    },
+    "more": {
+      "nodeId": "5811:519",
+      "url": "https://www.figma.com/api/mcp/asset/d3102518-7127-4f11-a5a7-591d5e4213b6.svg",
+      "sizeDp": 16
+    },
+    "language": {
+      "nodeId": "5811:523",
+      "url": "https://www.figma.com/api/mcp/asset/dc539c82-4a81-47d2-9fa0-9923d2c72616.svg",
+      "sizeDp": 24
+    },
+    "privacy": {
+      "nodeId": "5811:533",
+      "url": "https://www.figma.com/api/mcp/asset/c297ebcd-d629-4d97-876d-35c68b015231.svg",
+      "sizeDp": 24
+    },
+    "feedback": {
+      "nodeId": "5811:541",
+      "url": "https://www.figma.com/api/mcp/asset/9774075d-9935-43ec-8701-388183d3085f.svg",
+      "sizeDp": 24
+    },
+    "about": {
+      "nodeId": "5811:549",
+      "url": "https://www.figma.com/api/mcp/asset/df8d1963-daa3-469e-a83e-5d76b92c6612.svg",
+      "sizeDp": 24
+    }
+  },
+  "background": {
+    "reuseDrawable": "home_header_background",
+    "nodeId": "5811:483"
+  }
+}

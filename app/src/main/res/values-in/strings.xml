@@ -179,10 +179,10 @@
     <string name="permission_open_settings">Buka pengaturan</string>
     <string name="permission_not_now">Jangan sekarang</string>
     <string name="permission_unavailable">Tidak dapat membuka atau menyelesaikan permintaan izin ini. Silakan coba lagi.</string>
-    <string name="settings_language">Pengaturan bahasa</string>
+    <string name="settings_language">Bahasa</string>
     <string name="settings_privacy">Kebijakan privasi</string>
     <string name="settings_feedback">Umpan Balik</string>
-    <string name="settings_about">Tentang kami</string>
+    <string name="settings_about">Tentang</string>
     <string name="settings_language_pending_title">Bahasa lainnya, segera hadir</string>
     <string name="settings_language_pending_message">Anda akan dapat memilih bahasa pilihan Anda di sini pada pembaruan mendatang.</string>
     <string name="settings_about_description">Sedikit lebih banyak ruang untuk hal yang penting. Kelola file, kompres foto, dan kendalikan notifikasi aplikasi.</string>
@@ -278,4 +278,5 @@
     <string name="app_manager_usage_access">Izinkan akses penggunaan untuk melihat penggunaan terakhir dan ukuran total</string>
     <string name="app_manager_sort_ascending">Menaik</string>
     <string name="app_manager_sort_descending">Menurun</string>
+    <string name="settings_current_language">Bahasa Indonesia</string>
 </resources>

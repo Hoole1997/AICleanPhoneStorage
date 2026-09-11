@@ -187,10 +187,10 @@
     <string name="permission_open_settings">Ayarları aç</string>
     <string name="permission_not_now">Şimdi değil</string>
     <string name="permission_unavailable">Bu izin isteği açılamadı veya tamamlanamadı. Lütfen tekrar deneyin.</string>
-    <string name="settings_language">Dil ayarları</string>
+    <string name="settings_language">Dil</string>
     <string name="settings_privacy">Gizlilik politikası</string>
     <string name="settings_feedback">Geribildirim</string>
-    <string name="settings_about">Hakkımızda</string>
+    <string name="settings_about">Hakkında</string>
     <string name="settings_language_pending_title">Daha fazla dil yakında gelecek</string>
     <string name="settings_language_pending_message">Gelecekteki bir güncellemede tercih ettiğiniz dili burada seçebileceksiniz.</string>
     <string name="settings_about_description">Önemli olan için biraz daha fazla alan. Dosyaları yönetin, fotoğrafları sıkıştırın ve uygulama bildirimlerinin kontrolünü elinize alın.</string>
@@ -286,4 +286,5 @@
     <string name="app_manager_usage_access">Son kullanım ve toplam boyut için kullanım erişimine izin verin</string>
     <string name="app_manager_sort_ascending">Artan</string>
     <string name="app_manager_sort_descending">Azalan</string>
+    <string name="settings_current_language">Türkçe</string>
 </resources>

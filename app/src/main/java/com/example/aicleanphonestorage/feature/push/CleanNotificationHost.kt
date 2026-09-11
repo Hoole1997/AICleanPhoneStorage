@@ -55,6 +55,9 @@ internal class CleanNotificationHost(context: Context) : NotificationHost {
         NotificationDestination.UNUSED_FILES -> R.drawable.ic_tool_unused_files
         NotificationDestination.SCREENSHOTS -> R.drawable.ic_tool_screenshots
         NotificationDestination.HOME -> R.mipmap.ic_launcher
+        NotificationDestination.LARGE_FILES -> R.drawable.ic_tool_large_files
+        NotificationDestination.NOTIFICATION_CLEANER -> R.drawable.ic_tool_notifications
+        NotificationDestination.APP_MANAGER -> R.drawable.ic_tool_apps
     }
 
     override fun contentIntent(destination: NotificationDestination) = NotificationNavigation.pendingIntent(app, destination)

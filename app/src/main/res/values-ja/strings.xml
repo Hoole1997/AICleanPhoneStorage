@@ -179,10 +179,10 @@
     <string name="permission_open_settings">設定を開く</string>
     <string name="permission_not_now">今じゃない</string>
     <string name="permission_unavailable">この許可リクエストを開いたり完了したりできませんでした。もう一度試してください。</string>
-    <string name="settings_language">言語設定</string>
+    <string name="settings_language">言語</string>
     <string name="settings_privacy">プライバシーポリシー</string>
     <string name="settings_feedback">フィードバック</string>
-    <string name="settings_about">私たちについて</string>
+    <string name="settings_about">このアプリについて</string>
     <string name="settings_language_pending_title">他の言語も近日公開予定</string>
     <string name="settings_language_pending_message">将来のアップデートでは、ここで好みの言語を選択できるようになります。</string>
     <string name="settings_about_description">重要なことのためのもう少しスペース。ファイルの管理、写真の圧縮、アプリの通知の制御を行います。</string>
@@ -278,4 +278,5 @@
     <string name="app_manager_usage_access">最終使用と合計容量を表示するには使用状況へのアクセスを許可</string>
     <string name="app_manager_sort_ascending">昇順</string>
     <string name="app_manager_sort_descending">降順</string>
+    <string name="settings_current_language">日本語</string>
 </resources>

@@ -1,0 +1,891 @@
+[
+  {
+    "title": "Junk scan is ready",
+    "描述": "Tap to find cache and leftover files taking up space.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Your storage needs attention",
+    "描述": "A quick scan can reveal files you may no longer need.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Hidden cache may be growing",
+    "描述": "Open Cleaner to review temporary app files.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Free up storage space",
+    "描述": "Review large and unused files in a few taps.",
+    "按钮文案": [
+      "Free"
+    ]
+  },
+  {
+    "title": "Quick cleanup available",
+    "描述": "Scan your phone and choose what you want to remove.",
+    "按钮文案": [
+      "Open"
+    ]
+  },
+  {
+    "title": "Large files may be hiding",
+    "描述": "Check videos and downloads that use the most space.",
+    "按钮文案": [
+      "Review"
+    ]
+  },
+  {
+    "title": "Duplicate photos check",
+    "描述": "Find similar media and keep only what matters.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "App cache scan ready",
+    "描述": "See which apps have accumulated temporary files.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Make room for new files",
+    "描述": "Review old downloads, images, and videos now.",
+    "按钮文案": [
+      "Review"
+    ]
+  },
+  {
+    "title": "Cleaner is waiting",
+    "描述": "Start a storage scan and review the results.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Storage scan recommended",
+    "描述": "Check for removable files before storage runs low.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Clear unnecessary cache",
+    "描述": "Review temporary files left behind by apps.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Old files may be piling up",
+    "描述": "Open to inspect downloads and unused media.",
+    "按钮文案": [
+      "Review"
+    ]
+  },
+  {
+    "title": "Your phone could use a cleanup",
+    "描述": "Run a quick scan to organize your storage.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Media cleanup is ready",
+    "描述": "Review large photos and videos using your space.",
+    "按钮文案": [
+      "Free"
+    ]
+  },
+  {
+    "title": "Find storage you can reclaim",
+    "描述": "A quick check may uncover unnecessary files.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Temporary files detected",
+    "描述": "Review cached data and decide what to clean.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Keep your storage organized",
+    "描述": "Scan for clutter and review it by category.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Downloads folder check",
+    "描述": "Old downloads may be taking up useful space.",
+    "按钮文案": [
+      "Free"
+    ]
+  },
+  {
+    "title": "Cleanup reminder",
+    "描述": "Open Cleaner for a quick storage check.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Junk files scan available",
+    "描述": "Find cache, residual files, and old downloads.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Need more free space?",
+    "描述": "Check which files are using the most storage.",
+    "按钮文案": [
+      "Free"
+    ]
+  },
+  {
+    "title": "Cleanup tools are ready",
+    "描述": "Scan and review files before removing anything.",
+    "按钮文案": [
+      "Open"
+    ]
+  },
+  {
+    "title": "Storage clutter check",
+    "描述": "See what has accumulated on your phone.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Large media review",
+    "描述": "Find space-heavy videos and images quickly.",
+    "按钮文案": [
+      "Free"
+    ]
+  },
+  {
+    "title": "Unused files may remain",
+    "描述": "Review leftover files from apps and downloads.",
+    "按钮文案": [
+      "Review"
+    ]
+  },
+  {
+    "title": "One-tap scan available",
+    "描述": "Start a scan and choose what is safe to remove.",
+    "按钮文案": [
+      "Open"
+    ]
+  },
+  {
+    "title": "Your storage report is ready",
+    "描述": "See how photos, videos, and apps use your space.",
+    "按钮文案": [
+      "Free"
+    ]
+  },
+  {
+    "title": "Create space for what matters",
+    "描述": "Review unnecessary files and old media.",
+    "按钮文案": [
+      "Free"
+    ]
+  },
+  {
+    "title": "Smart cleanup suggestion",
+    "描述": "Check recommended files before cleaning.",
+    "按钮文案": [
+      "Open"
+    ]
+  },
+  {
+    "title": "Storage cleanup is ready",
+    "描述": "Scan for clutter and reclaim useful space.",
+    "按钮文案": [
+      "Free"
+    ]
+  },
+  {
+    "title": "Photo library check",
+    "描述": "Find duplicate or similar photos for review.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Video files use more space",
+    "描述": "Review your largest videos in one place.",
+    "按钮文案": [
+      "Free"
+    ]
+  },
+  {
+    "title": "Storage overview available",
+    "描述": "See what is filling your phone right now.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Cleaner scan ready",
+    "描述": "Check cache, media, and downloads by category.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Clutter can build up quickly",
+    "描述": "Take a moment to review unnecessary files.",
+    "按钮文案": [
+      "Open"
+    ]
+  },
+  {
+    "title": "App storage check",
+    "描述": "See which apps and caches occupy the most space.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Duplicate cleaner is ready",
+    "描述": "Review repeated photos and media files.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Residual files may remain",
+    "描述": "Scan for files left behind after app use.",
+    "按钮文案": [
+      "Open"
+    ]
+  },
+  {
+    "title": "Review before you clean",
+    "描述": "Choose exactly which files you want to remove.",
+    "按钮文案": [
+      "Open"
+    ]
+  },
+  {
+    "title": "Your phone has more to review",
+    "描述": "Open Cleaner to inspect storage categories.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Quick storage refresh",
+    "描述": "Scan temporary files and old downloads.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Background cache check",
+    "描述": "Review cache created by frequently used apps.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Cleaner tools are available",
+    "描述": "Open to scan junk, media, and app storage.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Storage care reminder",
+    "描述": "A regular review helps keep files organized.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Low storage can slow you down",
+    "描述": "Review large files and make room when needed.",
+    "按钮文案": [
+      "Review"
+    ]
+  },
+  {
+    "title": "Clean smarter today",
+    "描述": "Scan first, review results, then choose what to remove.",
+    "按钮文案": [
+      "Open"
+    ]
+  },
+  {
+    "title": "Storage usage has changed",
+    "描述": "Open to see which categories are growing.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "A cleanup opportunity is ready",
+    "描述": "Review files that may no longer be useful.",
+    "按钮文案": [
+      "Open"
+    ]
+  },
+  {
+    "title": "Keep more storage available",
+    "描述": "Run a quick scan and manage unnecessary files.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Ready for a Better Home Screen?",
+    "描述": "Set  Active File Cleaner as your default launcher in seconds.",
+    "按钮文案": [
+      "Set"
+    ]
+  },
+  {
+    "title": "Battery Temp:",
+    "描述": "Monitor live thermal data and temperature readings of the power unit.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Identify Space-Hogging Files",
+    "描述": "Actively scan for and locate files consuming excessive disk space.",
+    "按钮文案": [
+      "Free"
+    ]
+  },
+  {
+    "title": "Detect Identical File Duplicates",
+    "描述": "Systematically identify files with 100% identical content.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Memory Utilization:",
+    "描述": "Analyze memory allocation trends and consumption behavior.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Pinpoint Redundant File Copies",
+    "描述": "Accurately locate and report instances of duplicated data storage.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Declutter your gallery by sliding to organize photos and videos.",
+    "按钮文案": [
+      "Review"
+    ]
+  },
+  {
+    "title": "Continue using %s",
+    "描述": "It looks like you haven’t finished what you started—tap to return and continue.",
+    "按钮文案": [
+      "Open"
+    ]
+  },
+  {
+    "title": "Battery Reminder",
+    "描述": "Remind of battery charging status",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Junk Reminder",
+    "描述": "Remind when overfull junk files",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Junk Reminder",
+    "描述": "Found %1$s junk files that need cleaning!",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "RAM Reminder",
+    "描述": "Remind when RAM is too high",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "RAM Reminder",
+    "描述": "RAM usage is %1$s.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Low Battery Reminder",
+    "描述": "Remind battery is low",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "SMART STORAGE ASSISTANT",
+    "描述": "Tap to open Storage Cleanup Tool.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Reduce photo size, save space!",
+    "描述": "",
+    "按钮文案": [
+      "Free"
+    ]
+  },
+  {
+    "title": "Optimize storage, delete duplicates!",
+    "描述": "",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Clear copies, expand your storage!",
+    "描述": "",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Clear duplicates, declutter your album!",
+    "描述": "",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Reclaim storage space by cleaning large files!",
+    "描述": "",
+    "按钮文案": [
+      "Review"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Routine virus check-up. Stay informed about your device‘s security.",
+    "按钮文案": [
+      "Scan"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "All clear—tap to freshen up storage anytime.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "No virus detected; run a free preventive scan anytime.",
+    "按钮文案": [
+      "Scan"
+    ]
+  },
+  {
+    "title": "Purge duplicates, breathe easy with more space!",
+    "描述": "",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Threat-free! Run a periodic scan for peace of mind.",
+    "按钮文案": [
+      "Scan"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Large files occupying storage? Tap to review and clean up.",
+    "按钮文案": [
+      "Review"
+    ]
+  },
+  {
+    "title": "Boost storage, erase duplicate photos!",
+    "描述": "",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "System tidy—click to maintain clean storage.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Clean up duplicates, free up space!",
+    "描述": "",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Scan done—tap to maintain clean storage.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Compress images, save storage space!",
+    "描述": "",
+    "按钮文案": [
+      "Shrink"
+    ]
+  },
+  {
+    "title": "Remove duplicate photos, optimize storage!",
+    "描述": "",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Clear large files to reclaim storage space!",
+    "描述": "",
+    "按钮文案": [
+      "Review"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Your phone is clean and no junk is found",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Delete duplicates, organize your gallery!",
+    "描述": "",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "No threats found. Run a free security check?",
+    "按钮文案": [
+      "Scan"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Run a routine security check for peace of mind.",
+    "按钮文案": [
+      "Scan"
+    ]
+  },
+  {
+    "title": "Shrink images, enhance storage capacity!",
+    "描述": "",
+    "按钮文案": [
+      "Shrink"
+    ]
+  },
+  {
+    "title": "Clear photo privacy in one click,worry-free!",
+    "描述": "",
+    "按钮文案": [
+      "Review"
+    ]
+  },
+  {
+    "title": "Ditch duplicates, gain back storage!",
+    "描述": "",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Free up storage space by removing large files!",
+    "描述": "",
+    "按钮文案": [
+      "Review"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Purge big files, free up space",
+    "按钮文案": [
+      "Free"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "No infections here.tap to run a routine scan.",
+    "按钮文案": [
+      "Scan"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Low on storage? Clear large files!",
+    "按钮文案": [
+      "Review"
+    ]
+  },
+  {
+    "title": "Optimize storage space, compress images!",
+    "描述": "",
+    "按钮文案": [
+      "Shrink"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Scan complete—tap to freshen up storage.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Storage tidy—run a quick check-up anytime.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Routine clean-up: no junk found.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Routine security check: no threats found.tap to scan again.",
+    "按钮文案": [
+      "Scan"
+    ]
+  },
+  {
+    "title": "Delete large files, reclaim storage space!",
+    "描述": "",
+    "按钮文案": [
+      "Review"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Security is up to date.run a routine check whenever you like",
+    "按钮文案": [
+      "Scan"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "No virus detected. Tap to run a preventive scan",
+    "按钮文案": [
+      "Scan"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Junk-free! Run a periodic clean-up to keep things tidy.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Clean large files and free up space on your phone",
+    "按钮文案": [
+      "Review"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "No trash found—free up space anytime.",
+    "按钮文案": [
+      "Free"
+    ]
+  },
+  {
+    "title": "Compress photos, maximize storage efficiency!",
+    "描述": "",
+    "按钮文案": [
+      "Shrink"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "0 cache files—run a free check-up.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Security check complete: no threats found. Scan again?",
+    "按钮文案": [
+      "Scan"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "All clear! Run a quick tidy whenever you like.",
+    "按钮文案": [
+      "Open"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Running out of storage? Clean up large files to free space.",
+    "按钮文案": [
+      "Review"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Long time no check? Run a routine clean whenever you like.",
+    "按钮文案": [
+      "Open"
+    ]
+  },
+  {
+    "title": "Free up storage space by cleaning out large files!",
+    "描述": "",
+    "按钮文案": [
+      "Review"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Storage check done—tap for a quick tidy-up.",
+    "按钮文案": [
+      "Check"
+    ]
+  },
+  {
+    "title": "Condense photos, liberate your space!",
+    "描述": "",
+    "按钮文案": [
+      "Shrink"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "All tidy—run a quick refresh for peace of mind.",
+    "按钮文案": [
+      "Open"
+    ]
+  },
+  {
+    "title": "Clear large files to free up storage space!",
+    "描述": "",
+    "按钮文案": [
+      "Review"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "No threats found in this scan; tap to check again.",
+    "按钮文案": [
+      "Scan"
+    ]
+  },
+  {
+    "title": "Image compression, optimize storage!",
+    "描述": "",
+    "按钮文案": [
+      "Shrink"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "%s days since last security scan",
+    "按钮文案": [
+      "Scan"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Scan for viruses, stay secure",
+    "按钮文案": [
+      "Scan"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Routine clean-up: no junk found. Tap to rescan anytime.",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "Easily compress photos, free up space!",
+    "描述": "",
+    "按钮文案": [
+      "Shrink"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "No trash detected. Tap to scan anytime.",
+    "按钮文案": [
+      "Open"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Scan found no viruses.",
+    "按钮文案": [
+      "Scan"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Routine scan complete.no viruses found.",
+    "按钮文案": [
+      "Scan"
+    ]
+  },
+  {
+    "title": "Save space, remove duplicate photos!",
+    "描述": "",
+    "按钮文案": [
+      "Clean"
+    ]
+  },
+  {
+    "title": "",
+    "描述": "Tidy your notifications with a tap",
+    "按钮文案": [
+      "Open"
+    ]
+  }
+]
