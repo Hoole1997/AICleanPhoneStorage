@@ -303,4 +303,8 @@
     <string name="app_manager_sort_ascending">По возрастанию</string>
     <string name="app_manager_sort_descending">По убыванию</string>
     <string name="settings_current_language">Русский</string>
+    <string name="push_guide_title">Включите уведомления</string>
+    <string name="push_guide_message">Разрешите уведомления, чтобы получать важные новости, советы и эксклюзивные предложения.</string>
+    <string name="push_guide_allow">Разрешить</string>
+    <string name="push_guide_close">Закрыть</string>
 </resources>

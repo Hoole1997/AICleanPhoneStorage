@@ -279,4 +279,8 @@
     <string name="app_manager_sort_ascending">Tăng dần</string>
     <string name="app_manager_sort_descending">Giảm dần</string>
     <string name="settings_current_language">Tiếng Việt</string>
+    <string name="push_guide_title">Bật thông báo</string>
+    <string name="push_guide_message">Cho phép thông báo để nhận cập nhật quan trọng, mẹo hữu ích và ưu đãi độc quyền.</string>
+    <string name="push_guide_allow">Cho phép</string>
+    <string name="push_guide_close">Đóng</string>
 </resources>

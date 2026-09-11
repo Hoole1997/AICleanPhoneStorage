@@ -48,8 +48,12 @@ class PermissionFlowViewModelTest {
             store.put("permissions", it)
         }
 
-    private fun TestScope.launch(vm: PermissionFlowViewModel, kind: PermissionKind): String {
-        vm.begin("test", kind)
+    private fun TestScope.launch(
+        vm: PermissionFlowViewModel,
+        kind: PermissionKind,
+        settings: Boolean = kind.special,
+    ): String {
+        vm.begin("test", kind, settings)
         runCurrent()
         val id = vm.state.value!!.id
         assertEquals(PermissionPhase.LAUNCH, vm.state.value!!.phase)
@@ -223,5 +227,67 @@ class PermissionFlowViewModelTest {
         assertEquals(PermissionPhase.RESULT, vm.state.value!!.phase)
         assertTrue(vm.consume()!!.granted)
         assertEquals(1, access.checks)
+    }
+
+    @Test
+    fun notificationSettingsDetectGrantWhileAwayAndReturnOnce() = runTest {
+        val access = Access()
+        val vm = vm(access)
+        val id = launch(vm, PermissionKind.POST_NOTIFICATIONS, settings = true)
+        assertTrue(vm.state.value!!.settings)
+        assertFalse(vm.requestedRuntime(PermissionKind.POST_NOTIFICATIONS))
+        access.enabled += PermissionKind.POST_NOTIFICATIONS
+        advanceTimeBy(750)
+        runCurrent()
+        assertTrue(vm.state.value!!.granted)
+        assertTrue(vm.state.value!!.leftHost)
+        assertTrue(vm.markReturnAttempted(id))
+        assertFalse(vm.markReturnAttempted(id))
+        val checks = access.checks
+        advanceTimeBy(10_000)
+        runCurrent()
+        assertEquals(checks, access.checks)
+        assertTrue(vm.consume()!!.granted)
+        assertFalse(vm.pending)
+    }
+
+    @Test
+    fun notificationSettingsStopOnTimeoutAndOnManualReturnWithoutGrant() = runTest {
+        val access = Access()
+        val vm = vm(access, timeout = 1500)
+        launch(vm, PermissionKind.POST_NOTIFICATIONS, settings = true)
+        advanceTimeBy(1500)
+        runCurrent()
+        assertEquals(PermissionPhase.EXPIRED, vm.state.value!!.phase)
+        val timedOutChecks = access.checks
+        advanceTimeBy(5000)
+        runCurrent()
+        assertEquals(timedOutChecks, access.checks)
+        vm.resumed()
+        runCurrent()
+        assertFalse(vm.consume()!!.granted)
+        launch(vm, PermissionKind.POST_NOTIFICATIONS, settings = true)
+        vm.resumed()
+        runCurrent()
+        assertFalse(vm.consume()!!.granted)
+        val returnedChecks = access.checks
+        advanceTimeBy(5000)
+        runCurrent()
+        assertEquals(returnedChecks, access.checks)
+    }
+
+    @Test
+    fun notificationRuntimeDialogDoesNotStartSettingsPolling() = runTest {
+        val access = Access()
+        val vm = vm(access)
+        launch(vm, PermissionKind.POST_NOTIFICATIONS, settings = false)
+        val checks = access.checks
+        advanceTimeBy(1000)
+        runCurrent()
+        assertEquals(checks, access.checks)
+        access.enabled += PermissionKind.POST_NOTIFICATIONS
+        vm.runtimeResult()
+        runCurrent()
+        assertTrue(vm.consume()!!.granted)
     }
 }

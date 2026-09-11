@@ -14,6 +14,7 @@ import io.docview.push.NotificationDestination
 /** 启动页只转交白名单目标与一个调试标记，绝不复制通知正文、任意 URI 或完整 extras。 */
 internal object StartupNavigation {
     const val COMPLETED = "startup.completed"
+    const val PERMISSION_COMPLETED = "startup.permission.completed"
 
     fun read(intent: Intent) = StartupEntry(
         NotificationNavigation.read(intent) ?: NotificationDestination.HOME,
@@ -33,6 +34,7 @@ internal object StartupNavigation {
             .putExtra(NotificationNavigation.EXTRA_DESTINATION, entry.destination.key)
             .putExtra(HomePreviewSupport.EXTRA_MODE, entry.previewMode)
             .putExtra(COMPLETED, true)
+            .putExtra(PERMISSION_COMPLETED, true)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
     /** 仅定制启动页到首页；低版本兼容和窗口动画统一放在导航边界，不改变其他业务页面。 */

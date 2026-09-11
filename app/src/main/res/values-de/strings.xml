@@ -287,4 +287,8 @@
     <string name="app_manager_sort_ascending">Aufsteigend</string>
     <string name="app_manager_sort_descending">Absteigend</string>
     <string name="settings_current_language">Deutsch</string>
+    <string name="push_guide_title">Benachrichtigungen aktivieren</string>
+    <string name="push_guide_message">Erlaube Benachrichtigungen, um wichtige Neuigkeiten, Tipps und exklusive Angebote zu erhalten.</string>
+    <string name="push_guide_allow">Erlauben</string>
+    <string name="push_guide_close">Schließen</string>
 </resources>

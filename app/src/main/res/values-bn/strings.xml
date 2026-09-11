@@ -287,4 +287,8 @@
     <string name="app_manager_sort_ascending">ঊর্ধ্বক্রম</string>
     <string name="app_manager_sort_descending">অধঃক্রম</string>
     <string name="settings_current_language">বাংলা</string>
+    <string name="push_guide_title">বিজ্ঞপ্তি চালু করুন</string>
+    <string name="push_guide_message">গুরুত্বপূর্ণ আপডেট, পরামর্শ এবং বিশেষ অফার পেতে বিজ্ঞপ্তির অনুমতি দিন।</string>
+    <string name="push_guide_allow">অনুমতি দিন</string>
+    <string name="push_guide_close">বন্ধ করুন</string>
 </resources>

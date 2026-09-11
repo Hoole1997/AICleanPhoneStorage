@@ -295,4 +295,8 @@
     <string name="app_manager_sort_ascending">Crescente</string>
     <string name="app_manager_sort_descending">Decrescente</string>
     <string name="settings_current_language">Português (Brasil)</string>
+    <string name="push_guide_title">Ativar notificações</string>
+    <string name="push_guide_message">Permita notificações para receber atualizações importantes, dicas e ofertas exclusivas.</string>
+    <string name="push_guide_allow">Permitir</string>
+    <string name="push_guide_close">Fechar</string>
 </resources>

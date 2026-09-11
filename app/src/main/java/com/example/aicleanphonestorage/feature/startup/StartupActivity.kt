@@ -16,12 +16,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.aicleanphonestorage.app.CleanApplication
-import com.example.aicleanphonestorage.databinding.ScreenStartupBinding
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import com.example.aicleanphonestorage.R
+import com.example.aicleanphonestorage.app.CleanApplication
+import com.example.aicleanphonestorage.core.permissions.PermissionCoordinator
+import com.example.aicleanphonestorage.core.permissions.PermissionFlowViewModel
+import com.example.aicleanphonestorage.databinding.ScreenStartupBinding
+import com.example.aicleanphonestorage.feature.push.PushPermissionCoordinator
+import com.example.aicleanphonestorage.feature.push.PushPermissionViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /** 独立原生启动 Activity；广告回调放行后统一进入首页，再由首页处理通知目的地。 */
 class StartupActivity : AppCompatActivity() {
@@ -33,6 +37,21 @@ class StartupActivity : AppCompatActivity() {
             }
         }
     }
+    private val permissionFlow: PermissionFlowViewModel by viewModels {
+        viewModelFactory {
+            initializer {
+                PermissionFlowViewModel(
+                    (application as CleanApplication).container.permissionAccess,
+                    createSavedStateHandle(),
+                )
+            }
+        }
+    }
+    private val pushPermissionModel: PushPermissionViewModel by viewModels {
+        viewModelFactory { initializer { PushPermissionViewModel(createSavedStateHandle()) } }
+    }
+    private lateinit var permissions: PermissionCoordinator
+    private lateinit var pushPermission: PushPermissionCoordinator
     private lateinit var renderer: StartupRenderer
     private lateinit var ads: StartupAdCoordinator
 
@@ -51,19 +70,44 @@ class StartupActivity : AppCompatActivity() {
         renderer = StartupRenderer(binding)
         lifecycleScope.launch {
             val appResources = applicationContext.resources
-            val image = withContext(Dispatchers.IO) { appResources.getDrawable(R.drawable.startup_background, null) }
+            val image =
+                withContext(Dispatchers.IO) {
+                    appResources.getDrawable(R.drawable.startup_background, null)
+                }
             binding.startupBackground.setImageDrawable(image)
         }
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
-            renderer.insets(insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()))
+            renderer.insets(
+                insets.getInsets(
+                    WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+                )
+            )
             insets
         }
         ViewCompat.requestApplyInsets(binding.root)
         if (!model.hasEntry()) model.accept(incoming)
+        val app = application as CleanApplication
+        permissions = PermissionCoordinator(this, permissionFlow, app.container.permissionAccess)
+        pushPermission =
+            PushPermissionCoordinator.attach(
+                this,
+                app.notificationRuntime,
+                pushPermissionModel,
+                permissions,
+            )
         ads = StartupAdCoordinator(this, binding.root, model)
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                pushPermissionModel.state.collect { state ->
+                    if (state.completed) model.permissionFinished()
+                }
+            }
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 model.state.collect { state ->
+                    if (state.prepared && !pushPermissionModel.state.value.completed)
+                        pushPermission.onResume()
                     renderer.render(state)
                     if (state.consumed && !isFinishing) finish()
                     proceedIfReady()
@@ -74,6 +118,8 @@ class StartupActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        // 权限返回只恢复当前流程，不能把原通知目标重置为 HOME 或开启另一轮广告。
+        if (permissions.onReturnIntent(intent)) return
         val incoming = StartupNavigation.read(intent)
         setIntent(StartupNavigation.startupIntent(this, incoming))
         model.accept(incoming)
@@ -81,7 +127,12 @@ class StartupActivity : AppCompatActivity() {
     }
 
     private fun proceedIfReady() {
-        if (isFinishing || !hasWindowFocus() || !lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) return
+        if (
+            isFinishing ||
+                !hasWindowFocus() ||
+                !lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
+        )
+            return
         val entry = model.consume() ?: return
         StartupNavigation.openHome(this, entry, animate = renderer.transitionsEnabled)
     }
@@ -98,6 +149,13 @@ class StartupActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         renderer.start()
+        if (model.state.value.prepared && !pushPermissionModel.state.value.completed)
+            pushPermission.onResume()
+    }
+
+    override fun onResumeFragments() {
+        super.onResumeFragments()
+        pushPermission.drain()
     }
 
     override fun onPause() {

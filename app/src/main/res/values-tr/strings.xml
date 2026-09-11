@@ -287,4 +287,8 @@
     <string name="app_manager_sort_ascending">Artan</string>
     <string name="app_manager_sort_descending">Azalan</string>
     <string name="settings_current_language">Türkçe</string>
+    <string name="push_guide_title">Bildirimleri aç</string>
+    <string name="push_guide_message">Önemli güncellemeler, ipuçları ve özel teklifler almak için bildirimlere izin verin.</string>
+    <string name="push_guide_allow">İzin ver</string>
+    <string name="push_guide_close">Kapat</string>
 </resources>

@@ -35,6 +35,7 @@ import com.example.aicleanphonestorage.feature.notifications.ui.NotificationEntr
 import kotlinx.coroutines.launch
 import com.example.aicleanphonestorage.feature.push.NotificationNavigation
 import com.example.aicleanphonestorage.feature.push.PushPermissionCoordinator
+import com.example.aicleanphonestorage.feature.push.PushPermissionViewModel
 import io.docview.push.NotificationDestination
 import com.example.aicleanphonestorage.feature.startup.StartupNavigation
 
@@ -56,6 +57,9 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
+    }
+    private val pushPermissionModel: PushPermissionViewModel by viewModels {
+        viewModelFactory { initializer { PushPermissionViewModel(createSavedStateHandle()) } }
     }
     private var redirectedToStartup = false
     private lateinit var homeExitAds: HomeExitAdCoordinator
@@ -184,8 +188,11 @@ class MainActivity : AppCompatActivity() {
         renderer = HomeRenderer(binding, homeActions)
         homeExitAds = HomeExitAdCoordinator(this, binding.root)
         if (homeExitAds.accept(intent)) homeActions.cancelPending()
-        pushPermission = PushPermissionCoordinator(this,
-            (application as CleanApplication).notificationRuntime)
+        if (intent.getBooleanExtra(StartupNavigation.PERMISSION_COMPLETED, false))
+            pushPermissionModel.completeFromPreviousHost()
+        pushPermission = PushPermissionCoordinator.attach(this,
+            (application as CleanApplication).notificationRuntime, pushPermissionModel, permissions,
+            beforeSettings = homeActions::cancelPending)
         binding.retryButton.setOnClickListener { homeViewModel.retry() }
         previewSelection = HomePreviewSupport.initialSelection(intent, savedInstanceState)
         HomePreviewSupport.attach(binding.pageTitle) { selection ->
@@ -228,7 +235,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         if (redirectedToStartup) return
         renderer.setResumed(true)
-        pushPermission.onResume(otherPermissionPending = permissions.pending)
+        pushPermission.onResume()
         if (!permissions.pending) {
             trafficEntry.onForeground()
             notificationEntry.onForeground()
@@ -254,6 +261,7 @@ class MainActivity : AppCompatActivity() {
         notificationCoordinator.render(notificationEntry.state.value)
         cleanupCoordinator.render(cleanupEntry.state.value)
         appManagerCoordinator.render(appManagerEntry.state.value)
+        pushPermission.drain()
     }
 
     override fun onStop() {
@@ -276,6 +284,8 @@ class MainActivity : AppCompatActivity() {
             return
         }
         setIntent(intent)
+        if (intent.getBooleanExtra(StartupNavigation.PERMISSION_COMPLETED, false))
+            pushPermissionModel.completeFromPreviousHost()
         if (homeExitAds.accept(intent)) {
             homeActions.cancelPending()
             return

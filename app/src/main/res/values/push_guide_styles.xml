@@ -1,0 +1,16 @@
+<resources>
+    <style name="ThemeOverlay.Clean.PushGuide" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.Clean.PushGuide</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
+        <item name="android:backgroundDimAmount">0.63</item>
+    </style>
+    <style name="Widget.Clean.PushGuide" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="backgroundTint">@android:color/white</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Clean.PushGuide</item>
+    </style>
+    <style name="ShapeAppearance.Clean.PushGuide" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">16dp</item><item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item><item name="cornerSizeBottomRight">0dp</item>
+    </style>
+</resources>

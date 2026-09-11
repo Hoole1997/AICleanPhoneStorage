@@ -91,6 +91,7 @@ class PermissionUiDeviceTest {
         val activityInfo = context.packageManager.getActivityInfo(component, 0)
         assertEquals(ActivityInfo.LAUNCH_SINGLE_TASK, activityInfo.launchMode)
         val kinds = buildList {
+            add(PermissionKind.POST_NOTIFICATIONS)
             add(PermissionKind.USAGE)
             add(PermissionKind.NOTIFICATIONS)
             add(PermissionKind.PHOTOS)

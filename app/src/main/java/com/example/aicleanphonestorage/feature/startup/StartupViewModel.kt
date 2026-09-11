@@ -7,28 +7,34 @@ import io.docview.push.NotificationDestination
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
-internal data class StartupEntry(val destination: NotificationDestination, val previewMode: String? = null)
+internal data class StartupEntry(
+    val destination: NotificationDestination,
+    val previewMode: String? = null,
+)
+
 internal data class StartupState(
     val prepared: Boolean = false,
+    val permissionCompleted: Boolean = false,
     val adCompleted: Boolean = false,
     val minimumStayComplete: Boolean = false,
     val consumed: Boolean = false,
 ) {
-    val ready: Boolean get() = prepared && adCompleted && minimumStayComplete
+    val ready: Boolean
+        get() = prepared && permissionCompleted && adCompleted && minimumStayComplete
 }
 
-/** 广告回调与页面最短停留共同放行；等待按进入页面计算，不从 call 回调重新计时。 */
+/** 权限结束且启动页可见后才开始广告阶段；最短停留从广告请求开始计算，不包含系统授权页耗时。 */
 internal class StartupViewModel(
     private val saved: SavedStateHandle,
     private val clock: () -> Long = { android.os.SystemClock.elapsedRealtime() },
     prepare: suspend () -> Unit,
 ) : ViewModel() {
-    // ViewModel 在旋转时保留；进程重建重新进入页面，重新计算最短停留。
-    private var enteredAt = clock()
+    // beginAd 只在前台有焦点并完成首帧后调用；旋转保留起点，进程重建重新开始。
+    private var adStartedAt: Long? = null
     private var minimumStayJob: Job? = null
     private var sequence = 0L
     private var requestId: Long? = null
@@ -39,9 +45,13 @@ internal class StartupViewModel(
     init {
         // 应用级语言恢复已自行限时；广告等待和旋转不取消这次准备，不在这里截断 SDK 请求。
         viewModelScope.launch {
-            try { prepare() }
-            catch (error: CancellationException) { throw error }
-            catch (_: Exception) { /* 准备失败保留系统默认，仍按正常广告回调流程进入首页。 */ }
+            try {
+                prepare()
+            } catch (error: CancellationException) {
+                throw error
+            } catch (_: Exception) {
+                /* 准备失败保留系统默认，仍按正常广告回调流程进入首页。 */
+            }
             current.value = current.value.copy(prepared = true)
         }
     }
@@ -52,35 +62,54 @@ internal class StartupViewModel(
         // 等待中的新通知只更新目标；已交接后的新入口才开启下一次广告请求。
         if (current.value.consumed) {
             minimumStayJob?.cancel()
-            enteredAt = clock()
+            adStartedAt = null
             saved[CONSUMED] = false
             requestId = null
-            current.value = StartupState(prepared = current.value.prepared)
+            current.value =
+                StartupState(
+                    prepared = current.value.prepared,
+                    permissionCompleted = current.value.permissionCompleted,
+                )
         }
     }
 
     fun hasEntry() = saved.contains(DESTINATION)
+
     fun entry() = StartupEntry(NotificationDestination.fromKey(saved[DESTINATION]), saved[PREVIEW])
 
-    fun canRequestAd() = !cleared && current.value.prepared &&
-        !current.value.consumed && !current.value.adCompleted && requestId == null
+    fun permissionFinished() {
+        if (!cleared) current.value = current.value.copy(permissionCompleted = true)
+    }
+
+    fun canRequestAd() =
+        !cleared &&
+            current.value.prepared &&
+            current.value.permissionCompleted &&
+            !current.value.consumed &&
+            !current.value.adCompleted &&
+            requestId == null
 
     fun beginAd(): Long? {
         if (!canRequestAd()) return null
+        adStartedAt = clock()
         return (++sequence).also { requestId = it }
     }
 
     fun adFinished(id: Long) {
         if (cleared || requestId != id || current.value.consumed) return
+        val startedAt = adStartedAt ?: return
         requestId = null
-        val remaining = (MINIMUM_STAY_MS - (clock() - enteredAt).coerceAtLeast(0)).coerceAtLeast(0)
-        current.value = current.value.copy(adCompleted = true, minimumStayComplete = remaining == 0L)
+        // SDK 立即回调时仍展示启动页至少 3 秒；真实广告已经耗时足够则无需再等。
+        val remaining = (MINIMUM_STAY_MS - (clock() - startedAt).coerceAtLeast(0)).coerceAtLeast(0)
+        current.value =
+            current.value.copy(adCompleted = true, minimumStayComplete = remaining == 0L)
         if (remaining > 0) {
             // 单次延迟，无轮询；等待期间循环进度继续，不干预 SDK 本身的广告展示。
-            minimumStayJob = viewModelScope.launch {
-                delay(remaining)
-                current.value = current.value.copy(minimumStayComplete = true)
-            }
+            minimumStayJob =
+                viewModelScope.launch {
+                    delay(remaining)
+                    current.value = current.value.copy(minimumStayComplete = true)
+                }
         }
     }
 
@@ -94,6 +123,7 @@ internal class StartupViewModel(
     override fun onCleared() {
         cleared = true
         requestId = null
+        adStartedAt = null
         minimumStayJob?.cancel()
     }
 

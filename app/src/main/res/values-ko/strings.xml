@@ -279,4 +279,8 @@
     <string name="app_manager_sort_ascending">오름차순</string>
     <string name="app_manager_sort_descending">내림차순</string>
     <string name="settings_current_language">한국어</string>
+    <string name="push_guide_title">알림 켜기</string>
+    <string name="push_guide_message">중요한 업데이트, 팁, 특별 혜택을 받으려면 알림을 허용하세요.</string>
+    <string name="push_guide_allow">허용</string>
+    <string name="push_guide_close">닫기</string>
 </resources>

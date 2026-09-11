@@ -287,4 +287,8 @@
     <string name="app_manager_sort_ascending">आरोही</string>
     <string name="app_manager_sort_descending">अवरोही</string>
     <string name="settings_current_language">हिन्दी</string>
+    <string name="push_guide_title">सूचनाएँ चालू करें</string>
+    <string name="push_guide_message">महत्वपूर्ण अपडेट, सुझाव और खास ऑफ़र पाने के लिए सूचनाओं की अनुमति दें।</string>
+    <string name="push_guide_allow">अनुमति दें</string>
+    <string name="push_guide_close">बंद करें</string>
 </resources>

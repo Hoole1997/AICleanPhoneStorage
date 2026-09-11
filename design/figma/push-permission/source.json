@@ -1,0 +1,16 @@
+{
+  "fileKey": "dVsTL6ggoDPXVPcEKg856G",
+  "nodeId": "5816:4453",
+  "assets": {
+    "bell": {
+      "nodeId": "5816:4455",
+      "url": "https://www.figma.com/api/mcp/asset/07e082f9-a28b-4ef8-b4e6-7b9b877cf77c.png",
+      "viewportDp": 100
+    },
+    "close": {
+      "nodeId": "5816:4456",
+      "url": "https://www.figma.com/api/mcp/asset/f0943e1b-1ecd-40bc-8156-83c078af69e9.svg",
+      "sizeDp": 24
+    }
+  }
+}

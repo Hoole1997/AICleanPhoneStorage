@@ -116,7 +116,11 @@
     "app_manager_sort_descending": "降序",
     "settings_current_language": "简体中文",
     "settings_language": "语言",
-    "settings_about": "关于"
+    "settings_about": "关于",
+    "push_guide_title": "开启通知",
+    "push_guide_message": "允许通知，以便接收重要更新、实用提示和专属优惠。",
+    "push_guide_allow": "允许",
+    "push_guide_close": "关闭"
   },
   "hi": {
     "language_follow_system": "सिस्टम की भाषा",
@@ -138,7 +142,11 @@
     "app_manager_sort_descending": "अवरोही",
     "settings_current_language": "हिन्दी",
     "settings_language": "भाषा",
-    "settings_about": "परिचय"
+    "settings_about": "परिचय",
+    "push_guide_title": "सूचनाएँ चालू करें",
+    "push_guide_message": "महत्वपूर्ण अपडेट, सुझाव और खास ऑफ़र पाने के लिए सूचनाओं की अनुमति दें।",
+    "push_guide_allow": "अनुमति दें",
+    "push_guide_close": "बंद करें"
   },
   "es": {
     "language_follow_system": "Seguir el idioma del sistema",
@@ -160,7 +168,11 @@
     "app_manager_sort_descending": "Descendente",
     "settings_current_language": "Español",
     "settings_language": "Idioma",
-    "settings_about": "Acerca de"
+    "settings_about": "Acerca de",
+    "push_guide_title": "Activa las notificaciones",
+    "push_guide_message": "Permite las notificaciones para recibir novedades importantes, consejos y ofertas exclusivas.",
+    "push_guide_allow": "Permitir",
+    "push_guide_close": "Cerrar"
   },
   "ar": {
     "language_follow_system": "اتباع لغة النظام",
@@ -194,7 +206,11 @@
     "app_manager_sort_descending": "تنازلي",
     "settings_current_language": "العربية",
     "settings_language": "اللغة",
-    "settings_about": "حول"
+    "settings_about": "حول",
+    "push_guide_title": "تفعيل الإشعارات",
+    "push_guide_message": "اسمح بالإشعارات لتلقي التحديثات المهمة والنصائح والعروض الحصرية.",
+    "push_guide_allow": "السماح",
+    "push_guide_close": "إغلاق"
   },
   "pt": {
     "language_follow_system": "Usar idioma do sistema",
@@ -216,7 +232,11 @@
     "app_manager_sort_descending": "Decrescente",
     "settings_current_language": "Português (Brasil)",
     "settings_language": "Idioma",
-    "settings_about": "Sobre"
+    "settings_about": "Sobre",
+    "push_guide_title": "Ativar notificações",
+    "push_guide_message": "Permita notificações para receber atualizações importantes, dicas e ofertas exclusivas.",
+    "push_guide_allow": "Permitir",
+    "push_guide_close": "Fechar"
   },
   "bn": {
     "language_follow_system": "সিস্টেমের ভাষা অনুসরণ করুন",
@@ -238,7 +258,11 @@
     "app_manager_sort_descending": "অধঃক্রম",
     "settings_current_language": "বাংলা",
     "settings_language": "ভাষা",
-    "settings_about": "সম্পর্কে"
+    "settings_about": "সম্পর্কে",
+    "push_guide_title": "বিজ্ঞপ্তি চালু করুন",
+    "push_guide_message": "গুরুত্বপূর্ণ আপডেট, পরামর্শ এবং বিশেষ অফার পেতে বিজ্ঞপ্তির অনুমতি দিন।",
+    "push_guide_allow": "অনুমতি দিন",
+    "push_guide_close": "বন্ধ করুন"
   },
   "ur": {
     "language_follow_system": "سسٹم کی زبان استعمال کریں",
@@ -260,7 +284,11 @@
     "app_manager_sort_descending": "نزولی",
     "settings_current_language": "اردو",
     "settings_language": "زبان",
-    "settings_about": "تعارف"
+    "settings_about": "تعارف",
+    "push_guide_title": "اطلاعات فعال کریں",
+    "push_guide_message": "اہم اپ ڈیٹس، تجاویز اور خصوصی پیشکشیں حاصل کرنے کے لیے اطلاعات کی اجازت دیں۔",
+    "push_guide_allow": "اجازت دیں",
+    "push_guide_close": "بند کریں"
   },
   "id": {
     "language_follow_system": "Ikuti bahasa sistem",
@@ -282,7 +310,11 @@
     "app_manager_sort_descending": "Menurun",
     "settings_current_language": "Bahasa Indonesia",
     "settings_language": "Bahasa",
-    "settings_about": "Tentang"
+    "settings_about": "Tentang",
+    "push_guide_title": "Aktifkan notifikasi",
+    "push_guide_message": "Izinkan notifikasi untuk menerima pembaruan penting, tips, dan penawaran eksklusif.",
+    "push_guide_allow": "Izinkan",
+    "push_guide_close": "Tutup"
   },
   "ru": {
     "language_follow_system": "Как в системе",
@@ -312,7 +344,11 @@
     "app_manager_sort_descending": "По убыванию",
     "settings_current_language": "Русский",
     "settings_language": "Язык",
-    "settings_about": "О приложении"
+    "settings_about": "О приложении",
+    "push_guide_title": "Включите уведомления",
+    "push_guide_message": "Разрешите уведомления, чтобы получать важные новости, советы и эксклюзивные предложения.",
+    "push_guide_allow": "Разрешить",
+    "push_guide_close": "Закрыть"
   },
   "fr": {
     "language_follow_system": "Suivre la langue du système",
@@ -334,7 +370,11 @@
     "app_manager_sort_descending": "Décroissant",
     "settings_current_language": "Français",
     "settings_language": "Langue",
-    "settings_about": "À propos"
+    "settings_about": "À propos",
+    "push_guide_title": "Activez les notifications",
+    "push_guide_message": "Autorisez les notifications pour recevoir des nouveautés importantes, des conseils et des offres exclusives.",
+    "push_guide_allow": "Autoriser",
+    "push_guide_close": "Fermer"
   },
   "de": {
     "language_follow_system": "Systemsprache verwenden",
@@ -356,7 +396,11 @@
     "app_manager_sort_descending": "Absteigend",
     "settings_current_language": "Deutsch",
     "settings_language": "Sprache",
-    "settings_about": "Über"
+    "settings_about": "Über",
+    "push_guide_title": "Benachrichtigungen aktivieren",
+    "push_guide_message": "Erlaube Benachrichtigungen, um wichtige Neuigkeiten, Tipps und exklusive Angebote zu erhalten.",
+    "push_guide_allow": "Erlauben",
+    "push_guide_close": "Schließen"
   },
   "ja": {
     "language_follow_system": "システムの言語を使用",
@@ -378,7 +422,11 @@
     "app_manager_sort_descending": "降順",
     "settings_current_language": "日本語",
     "settings_language": "言語",
-    "settings_about": "このアプリについて"
+    "settings_about": "このアプリについて",
+    "push_guide_title": "通知をオンにする",
+    "push_guide_message": "重要なお知らせ、ヒント、限定オファーを受け取るには通知を許可してください。",
+    "push_guide_allow": "許可",
+    "push_guide_close": "閉じる"
   },
   "ko": {
     "language_follow_system": "시스템 언어 사용",
@@ -400,7 +448,11 @@
     "app_manager_sort_descending": "내림차순",
     "settings_current_language": "한국어",
     "settings_language": "언어",
-    "settings_about": "정보"
+    "settings_about": "정보",
+    "push_guide_title": "알림 켜기",
+    "push_guide_message": "중요한 업데이트, 팁, 특별 혜택을 받으려면 알림을 허용하세요.",
+    "push_guide_allow": "허용",
+    "push_guide_close": "닫기"
   },
   "vi": {
     "language_follow_system": "Theo ngôn ngữ hệ thống",
@@ -422,7 +474,11 @@
     "app_manager_sort_descending": "Giảm dần",
     "settings_current_language": "Tiếng Việt",
     "settings_language": "Ngôn ngữ",
-    "settings_about": "Giới thiệu"
+    "settings_about": "Giới thiệu",
+    "push_guide_title": "Bật thông báo",
+    "push_guide_message": "Cho phép thông báo để nhận cập nhật quan trọng, mẹo hữu ích và ưu đãi độc quyền.",
+    "push_guide_allow": "Cho phép",
+    "push_guide_close": "Đóng"
   },
   "tr": {
     "language_follow_system": "Sistem dilini kullan",
@@ -444,6 +500,10 @@
     "app_manager_sort_descending": "Azalan",
     "settings_current_language": "Türkçe",
     "settings_language": "Dil",
-    "settings_about": "Hakkında"
+    "settings_about": "Hakkında",
+    "push_guide_title": "Bildirimleri aç",
+    "push_guide_message": "Önemli güncellemeler, ipuçları ve özel teklifler almak için bildirimlere izin verin.",
+    "push_guide_allow": "İzin ver",
+    "push_guide_close": "Kapat"
   }
 }

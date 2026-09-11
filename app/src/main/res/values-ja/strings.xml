@@ -279,4 +279,8 @@
     <string name="app_manager_sort_ascending">昇順</string>
     <string name="app_manager_sort_descending">降順</string>
     <string name="settings_current_language">日本語</string>
+    <string name="push_guide_title">通知をオンにする</string>
+    <string name="push_guide_message">重要なお知らせ、ヒント、限定オファーを受け取るには通知を許可してください。</string>
+    <string name="push_guide_allow">許可</string>
+    <string name="push_guide_close">閉じる</string>
 </resources>

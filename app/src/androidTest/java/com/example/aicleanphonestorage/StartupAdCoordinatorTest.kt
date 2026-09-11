@@ -20,27 +20,34 @@ import org.junit.runner.RunWith
 /** 使用假开屏请求验证回调和生命周期，不请求真实广告。About 仅作为原生 Activity 测试宿主。 */
 @RunWith(AndroidJUnit4::class)
 class StartupAdCoordinatorTest {
-    @Test fun failedAdCallbackReleasesStartupAndBackgroundStopsLoopWithoutRequestingAgain() {
+    @Test
+    fun failedAdCallbackReleasesStartupAndBackgroundStopsLoopWithoutRequestingAgain() {
         ActivityScenario.launch(AboutActivity::class.java).use { scenario ->
             lateinit var host: Host
             lateinit var complete: (Boolean) -> Unit
             var requests = 0
             scenario.moveToState(Lifecycle.State.CREATED)
             scenario.onActivity { activity ->
-                host = bind(activity) { position, call ->
-                    assertEquals("startup_splash", position)
-                    assertTrue(activity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED))
-                    assertTrue(activity.hasWindowFocus())
-                    requests++
-                    complete = call
-                }
+                host =
+                    bind(activity) { position, call ->
+                        assertEquals("startup_splash", position)
+                        assertTrue(
+                            activity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
+                        )
+                        assertTrue(activity.hasWindowFocus())
+                        requests++
+                        complete = call
+                    }
                 host.model.accept(StartupEntry(NotificationDestination.CLEAN))
                 assertEquals(0, requests)
             }
             scenario.moveToState(Lifecycle.State.RESUMED)
             waitUntil {
                 var shown = false
-                scenario.onActivity { host.ads.windowFocusChanged(it.hasWindowFocus()); shown = requests == 1 }
+                scenario.onActivity {
+                    host.ads.windowFocusChanged(it.hasWindowFocus())
+                    shown = requests == 1
+                }
                 shown
             }
             scenario.onActivity {
@@ -70,20 +77,28 @@ class StartupAdCoordinatorTest {
         }
     }
 
-    @Test fun rotationKeepsPendingRequestAndCallbackUsesLatestNotification() {
+    @Test
+    fun rotationKeepsPendingRequestAndCallbackUsesLatestNotification() {
         ActivityScenario.launch(AboutActivity::class.java).use { scenario ->
             lateinit var host: Host
             lateinit var originalModel: StartupViewModel
             lateinit var complete: (Boolean) -> Unit
             var requests = 0
             scenario.onActivity { activity ->
-                host = bind(activity) { _, call -> requests++; complete = call }
+                host =
+                    bind(activity) { _, call ->
+                        requests++
+                        complete = call
+                    }
                 originalModel = host.model
                 host.model.accept(StartupEntry(NotificationDestination.PHOTOS))
             }
             waitUntil {
                 var shown = false
-                scenario.onActivity { host.ads.windowFocusChanged(it.hasWindowFocus()); shown = requests == 1 }
+                scenario.onActivity {
+                    host.ads.windowFocusChanged(it.hasWindowFocus())
+                    shown = requests == 1
+                }
                 shown
             }
             scenario.recreate()
@@ -108,20 +123,68 @@ class StartupAdCoordinatorTest {
         }
     }
 
-    private data class Host(val model: StartupViewModel, val ads: StartupAdCoordinator, val binding: ScreenStartupBinding)
+    @Test
+    fun splashRequestWaitsForPermissionFlowCompletion() {
+        ActivityScenario.launch(AboutActivity::class.java).use { scenario ->
+            lateinit var host: Host
+            var requests = 0
+            scenario.onActivity { activity ->
+                host = bind(activity, permissionsComplete = false) { _, _ -> requests++ }
+            }
+            androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()
+                .waitForIdleSync()
+            scenario.onActivity { activity ->
+                host.ads.windowFocusChanged(activity.hasWindowFocus())
+                assertTrue(host.model.state.value.prepared)
+                assertFalse(host.model.state.value.permissionCompleted)
+                assertEquals(0, requests)
+                host.model.permissionFinished()
+            }
+            waitUntil {
+                scenario.onActivity { host.ads.windowFocusChanged(it.hasWindowFocus()) }
+                requests == 1
+            }
+            scenario.onActivity {
+                host.model.permissionFinished()
+                assertNull(host.model.beginAd())
+                assertEquals(1, requests)
+            }
+        }
+    }
 
-    private fun bind(activity: AppCompatActivity, request: (String, (Boolean) -> Unit) -> Unit): Host {
-        val model = ViewModelProvider(activity, viewModelFactory {
-            initializer { StartupViewModel(SavedStateHandle()) {} }
-        })[StartupViewModel::class.java]
+    private data class Host(
+        val model: StartupViewModel,
+        val ads: StartupAdCoordinator,
+        val binding: ScreenStartupBinding,
+    )
+
+    private fun bind(
+        activity: AppCompatActivity,
+        permissionsComplete: Boolean = true,
+        request: (String, (Boolean) -> Unit) -> Unit,
+    ): Host {
+        val model =
+            ViewModelProvider(
+                activity,
+                viewModelFactory {
+                    initializer {
+                        StartupViewModel(SavedStateHandle()) {}
+                            .also { if (permissionsComplete) it.permissionFinished() }
+                    }
+                },
+            )[StartupViewModel::class.java]
         val binding = ScreenStartupBinding.inflate(activity.layoutInflater)
         activity.setContentView(binding.root)
         val renderer = StartupRenderer(binding)
-        activity.lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onResume(owner: LifecycleOwner) = renderer.start()
-            override fun onPause(owner: LifecycleOwner) = renderer.stop()
-            override fun onDestroy(owner: LifecycleOwner) = renderer.dispose()
-        })
+        activity.lifecycle.addObserver(
+            object : DefaultLifecycleObserver {
+                override fun onResume(owner: LifecycleOwner) = renderer.start()
+
+                override fun onPause(owner: LifecycleOwner) = renderer.stop()
+
+                override fun onDestroy(owner: LifecycleOwner) = renderer.dispose()
+            }
+        )
         activity.lifecycleScope.launch { model.state.collect(renderer::render) }
         return Host(model, StartupAdCoordinator(activity, binding.root, model, request), binding)
     }

@@ -287,4 +287,8 @@
     <string name="app_manager_sort_ascending">صعودی</string>
     <string name="app_manager_sort_descending">نزولی</string>
     <string name="settings_current_language">اردو</string>
+    <string name="push_guide_title">اطلاعات فعال کریں</string>
+    <string name="push_guide_message">اہم اپ ڈیٹس، تجاویز اور خصوصی پیشکشیں حاصل کرنے کے لیے اطلاعات کی اجازت دیں۔</string>
+    <string name="push_guide_allow">اجازت دیں</string>
+    <string name="push_guide_close">بند کریں</string>
 </resources>

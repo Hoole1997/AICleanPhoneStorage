@@ -279,4 +279,8 @@
     <string name="app_manager_sort_ascending">Menaik</string>
     <string name="app_manager_sort_descending">Menurun</string>
     <string name="settings_current_language">Bahasa Indonesia</string>
+    <string name="push_guide_title">Aktifkan notifikasi</string>
+    <string name="push_guide_message">Izinkan notifikasi untuk menerima pembaruan penting, tips, dan penawaran eksklusif.</string>
+    <string name="push_guide_allow">Izinkan</string>
+    <string name="push_guide_close">Tutup</string>
 </resources>

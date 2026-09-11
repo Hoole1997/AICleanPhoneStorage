@@ -45,7 +45,7 @@ class StartupTransitionDeviceTest {
                     binding.startupBackground.setImageDrawable(artwork)
                     activity.setContentView(binding.root)
                     renderer = StartupRenderer(binding).also {
-                        it.render(StartupState(prepared = true, adCompleted = true, minimumStayComplete = true))
+                        it.render(StartupState(prepared = true, permissionCompleted = true, adCompleted = true, minimumStayComplete = true))
                     }
                 }
                 // 等待测试宿主的系统启动窗口退出，避免把前一段系统转场混入采样。
