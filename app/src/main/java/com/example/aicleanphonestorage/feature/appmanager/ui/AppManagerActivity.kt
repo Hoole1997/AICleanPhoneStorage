@@ -1,5 +1,6 @@
 package com.example.aicleanphonestorage.feature.appmanager.ui
 
+import com.example.aicleanphonestorage.app.analytics.FeatureTelemetry
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -71,6 +72,8 @@ class AppManagerActivity : AppCompatActivity() {
         )
         binding = ScreenAppManagerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        com.example.aicleanphonestorage.core.analytics.PageTelemetry.attach(this, "apps",
+            com.example.aicleanphonestorage.app.analytics.FeatureTelemetry.permission(application as CleanApplication, "apps"))
         NativeAdCoordinator(this, binding.nativeAd, NativeAdFeature.APPS.featureSlot)
         ViewCompat.setAccessibilityHeading(binding.appManagerTitle, true)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
@@ -105,7 +108,7 @@ class AppManagerActivity : AppCompatActivity() {
                 lifecycleScope,
                 AppIconLoader(this, container.taskExecutor, 36),
                 actions::details,
-                actions::remove,
+                { app -> actions.remove(app.packageName, app.sizeBytes) },
             )
         binding.appManagerList.layoutManager = LinearLayoutManager(this)
         binding.appManagerList.adapter = adapter
@@ -118,6 +121,11 @@ class AppManagerActivity : AppCompatActivity() {
 
     private fun render(state: AppManagerUiState) {
         latestState = state
+        if (state.catalog != null && !state.refreshing && !state.sorting &&
+            androidx.lifecycle.ViewModelProvider(this)[com.example.aicleanphonestorage.core.analytics.PageVisitState::class.java].once("apps_page_show")) {
+            com.example.aicleanphonestorage.core.analytics.BusinessTelemetry.emit(com.example.aicleanphonestorage.core.analytics.MetricEvent.APPS_PAGE_SHOW,
+                mapOf("app_count" to state.catalog.apps.size))
+        }
         sortControls.render(state.sort)
         binding.appManagerUsageAccess.isVisible = state.catalog?.usageAccess == false
         if (state.rows !== submitted) {

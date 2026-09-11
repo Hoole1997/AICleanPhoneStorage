@@ -16,7 +16,10 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 /** 四种清理共享扫描、批量写索引、分页和选择；扫描是只读操作，真正写文件由操作引擎负责。 */
-internal class FileScanRepository(context: Context, private val executor: TaskExecutor) {
+internal class FileScanRepository(
+    context: Context, private val executor: TaskExecutor,
+    private val telemetry: com.example.aicleanphonestorage.feature.filecleaner.analytics.CleanupTelemetry = com.example.aicleanphonestorage.feature.filecleaner.analytics.CleanupTelemetry(),
+) {
     val index = ScanIndex(context)
     val access = CleanupAccess(context)
     private val junkIndex =
@@ -92,7 +95,11 @@ internal class FileScanRepository(context: Context, private val executor: TaskEx
                             null -> ""
                         }
                     ScanHandle(session, feature, count, label, permission.limited, skipped)
-                        .also(index::finishScan)
+                        .also { handle ->
+                            index.finishScan(handle)
+                            if (feature == CleanupFeature.SMART_CLEAN) telemetry.junkScan(junkIndex.categories(session))
+                            else telemetry.scan(feature, index.totals(handle, CleanupFilter(minimumBytes = 0)))
+                        }
                 } catch (error: Exception) {
                     // 取消或失败只移除本应用的临时索引，绝不触碰原文件。
                     withContext(NonCancellable) { index.discard(session) }

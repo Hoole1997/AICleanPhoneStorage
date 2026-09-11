@@ -1,0 +1,944 @@
+{
+  "source": "https://pic6ktmsyi.feishu.cn/wiki/GvgKwIzPeiWUmVk0BQFc31dNnVh?sheet=0pRVXK",
+  "sheets": [
+    {
+      "sheet": "01-启动与首页",
+      "events": [
+        {
+          "event": "app_launch",
+          "title": "App 启动",
+          "description": "App 启动时上报；启动链路：启动页 → （系统推送权限询问）→ 开屏 → 首页",
+          "module": "启动与首页",
+          "row": 2,
+          "parameters": {
+            "launch_type": {
+              "title": "启动类型",
+              "type": "字符串",
+              "description": "冷启动或热启动",
+              "enums": {
+                "cold": "冷启动",
+                "hot": "热启动"
+              }
+            },
+            "user_type": {
+              "title": "用户类型",
+              "type": "字符串",
+              "description": "买量/自然分流，与首页分流口径一致",
+              "enums": {
+                "paid": "买量用户（B 面）",
+                "organic": "自然用户（A 面）"
+              }
+            }
+          }
+        },
+        {
+          "event": "page_show",
+          "title": "页面展示",
+          "description": "全局页面曝光事件，所有页面进入时上报；权限引导弹窗不单独设事件，由 perm_granted 参数覆盖",
+          "module": "全局",
+          "row": 6,
+          "parameters": {
+            "page": {
+              "title": "页面标识",
+              "type": "字符串",
+              "description": "页面唯一标识",
+              "enums": {
+                "home": "首页",
+                "junk": "垃圾清理二级页",
+                "junk_detail": "垃圾清理三级页",
+                "junk_result": "垃圾清理完成页",
+                "traffic": "流量使用",
+                "notify": "通知清理",
+                "screenshots": "截图清理",
+                "screenshots_result": "截图清理完成页",
+                "photo": "照片压缩",
+                "photo_result": "照片压缩完成页",
+                "large": "大文件清理",
+                "large_result": "大文件完成页",
+                "apps": "应用管理",
+                "unused": "未使用文件二级页",
+                "unused_detail": "未使用文件三级页",
+                "unused_result": "未使用文件完成页"
+              }
+            },
+            "perm_granted": {
+              "title": "权限状态",
+              "type": "字符串",
+              "description": "进入页面前是否已持有该功能所需权限（存储/用量访问/通知使用权）",
+              "enums": {
+                "true": "已授权",
+                "false": "未授权",
+                "none": "该页面无需权限"
+              }
+            }
+          }
+        },
+        {
+          "event": "page_leave",
+          "title": "页面离开",
+          "description": "离开页面时上报，与 page_show 配对",
+          "module": "全局",
+          "row": 25,
+          "parameters": {
+            "page": {
+              "title": "页面标识",
+              "type": "字符串",
+              "description": "同 page_show 的 page 枚举",
+              "enums": {}
+            },
+            "stay_duration": {
+              "title": "停留时长",
+              "type": "数值",
+              "description": "页面停留时长，单位秒",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "home_state_show",
+          "title": "首页状态展示",
+          "description": "首页展示时上报当前状态；清理完成 3 分钟内为已清理态，其余为未清理态",
+          "module": "启动与首页",
+          "row": 27,
+          "parameters": {
+            "state": {
+              "title": "首页状态",
+              "type": "字符串",
+              "description": "首页两态",
+              "enums": {
+                "dirty": "未清理",
+                "cleaned": "已清理（3 分钟窗口内）"
+              }
+            },
+            "junk_size": {
+              "title": "垃圾量",
+              "type": "数值",
+              "description": "未清理态展示的可清理垃圾量，单位 MB；已清理态不传",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "clean_now_click",
+          "title": "点击首页清理按钮",
+          "description": "点击首页主卡清理按钮；未清理态诱导清理，已清理态不展示具体垃圾量但仍可点击",
+          "module": "启动与首页",
+          "row": 30,
+          "parameters": {
+            "state": {
+              "title": "首页状态",
+              "type": "字符串",
+              "description": "点击时首页所处状态",
+              "enums": {
+                "dirty": "未清理",
+                "cleaned": "已清理"
+              }
+            }
+          }
+        },
+        {
+          "event": "feature_entry_click",
+          "title": "点击功能入口",
+          "description": "点击首页功能入口；点击后先检测对应权限，未授权先弹权限引导",
+          "module": "启动与首页",
+          "row": 32,
+          "parameters": {
+            "entry": {
+              "title": "功能入口",
+              "type": "字符串",
+              "description": "被点击的功能入口",
+              "enums": {
+                "junk": "垃圾清理（存储权限）",
+                "traffic": "流量使用（用量访问权限）",
+                "notify": "通知清理（通知使用权）",
+                "screenshots": "截图清理（存储权限）",
+                "photo": "照片压缩（存储权限）",
+                "large": "大文件（存储权限）",
+                "apps": "应用管理（免权限，queries 声明）",
+                "unused": "未使用文件（存储权限）"
+              }
+            },
+            "perm_granted": {
+              "title": "权限状态",
+              "type": "字符串",
+              "description": "进入页面前是否已持有该功能所需权限（存储/用量访问/通知使用权）",
+              "enums": {
+                "true": "已授权",
+                "false": "未授权",
+                "none": "该页面无需权限"
+              }
+            }
+          }
+        },
+        {
+          "event": "rate_show",
+          "title": "好评弹窗展示",
+          "description": "好评弹窗展示，全局仅展示一次（首次冷启动进入首页后）",
+          "module": "启动与首页",
+          "row": 43,
+          "parameters": {}
+        },
+        {
+          "event": "rate_click",
+          "title": "好评弹窗点击",
+          "description": "好评弹窗打分/操作；默认 5 星，4-5 星跳转商店评论，1-3 星不跳转仅关闭",
+          "module": "启动与首页",
+          "row": 44,
+          "parameters": {
+            "stars": {
+              "title": "评星",
+              "type": "数值",
+              "description": "用户选择的星数，1-5",
+              "enums": {}
+            },
+            "action": {
+              "title": "动作",
+              "type": "字符串",
+              "description": "打分后的行为",
+              "enums": {
+                "store": "跳转商店评论（4-5 星）",
+                "close": "关闭弹窗（1-3 星）"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sheet": "02-垃圾清理",
+      "events": [
+        {
+          "event": "junk_scan_result",
+          "title": "垃圾扫描完成",
+          "description": "二级页扫描完成时上报；扫描无文件时按钮变为 Got it，完成页展示「您的手机很干净」",
+          "module": "垃圾清理",
+          "row": 2,
+          "parameters": {
+            "result": {
+              "title": "扫描结果",
+              "type": "字符串",
+              "description": "是否扫描到垃圾",
+              "enums": {
+                "has_junk": "扫描到垃圾",
+                "empty": "未扫描到垃圾"
+              }
+            },
+            "total_size": {
+              "title": "垃圾总大小",
+              "type": "数值",
+              "description": "扫描出的垃圾总大小，单位 MB",
+              "enums": {}
+            },
+            "apk_size": {
+              "title": "APK 大小",
+              "type": "数值",
+              "description": "APK 分组大小，单位 MB",
+              "enums": {}
+            },
+            "temp_size": {
+              "title": "临时文件大小",
+              "type": "数值",
+              "description": "Temporary Files 分组大小，单位 MB",
+              "enums": {}
+            },
+            "empty_folder_size": {
+              "title": "空文件夹大小",
+              "type": "数值",
+              "description": "Empty Folders 分组大小，单位 MB",
+              "enums": {}
+            },
+            "ad_file_size": {
+              "title": "广告文件大小",
+              "type": "数值",
+              "description": "Ad Files 分组大小，单位 MB",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "junk_group_click",
+          "title": "点击垃圾分组",
+          "description": "点击 Junk 分组进入三级页（该类型文件列表，支持勾选/取消）",
+          "module": "垃圾清理",
+          "row": 9,
+          "parameters": {
+            "group": {
+              "title": "分组",
+              "type": "字符串",
+              "description": "固定 4 个分组",
+              "enums": {
+                "apk": "APK",
+                "temp": "Temporary Files",
+                "empty_folder": "Empty Folders",
+                "ad_file": "Ad Files"
+              }
+            }
+          }
+        },
+        {
+          "event": "junk_detail_check",
+          "title": "三级页勾选",
+          "description": "三级页勾选/取消文件；默认全选，底部按钮数值随勾选实时变化",
+          "module": "垃圾清理",
+          "row": 13,
+          "parameters": {
+            "group": {
+              "title": "分组",
+              "type": "字符串",
+              "description": "同 junk_group_click 枚举",
+              "enums": {}
+            },
+            "action": {
+              "title": "勾选动作",
+              "type": "字符串",
+              "description": "勾选或取消勾选",
+              "enums": {
+                "check": "勾选",
+                "uncheck": "取消勾选"
+              }
+            },
+            "selected_size": {
+              "title": "已选大小",
+              "type": "数值",
+              "description": "当前已勾选文件总大小，单位 MB",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "junk_clean_click",
+          "title": "点击清理按钮",
+          "description": "点击底部按钮；无确认弹窗，点击直接展示插屏，关闭后执行清理并进入完成页；空扫描时 Got it 也正常展示插屏",
+          "module": "垃圾清理",
+          "row": 17,
+          "parameters": {
+            "button": {
+              "title": "按钮形态",
+              "type": "字符串",
+              "description": "点击时的按钮文案",
+              "enums": {
+                "smart_clean": "Smart Clean（有垃圾）",
+                "got_it": "Got it（空扫描）"
+              }
+            },
+            "selected_size": {
+              "title": "已选大小",
+              "type": "数值",
+              "description": "当前已勾选文件总大小，单位 MB",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "junk_result_show",
+          "title": "清理完成页展示",
+          "description": "完成页展示；空扫描时为「您的手机很干净」文案",
+          "module": "垃圾清理",
+          "row": 20,
+          "parameters": {
+            "type": {
+              "title": "完成页类型",
+              "type": "字符串",
+              "description": "完成页形态",
+              "enums": {
+                "cleaned": "清理完成",
+                "already_clean": "手机很干净（空扫描）"
+              }
+            },
+            "deleted_size": {
+              "title": "清理大小",
+              "type": "数值",
+              "description": "本次实际清理/删除的文件大小，单位 MB",
+              "enums": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sheet": "03-流量使用",
+      "events": [
+        {
+          "event": "traffic_page_show",
+          "title": "流量页展示",
+          "description": "进入流量使用二级页；需用量访问权限（NetworkStatsManager），未授权先弹权限引导",
+          "module": "流量使用",
+          "row": 2,
+          "parameters": {
+            "perm_granted": {
+              "title": "权限状态",
+              "type": "字符串",
+              "description": "进入页面前是否已持有该功能所需权限（存储/用量访问/通知使用权）",
+              "enums": {
+                "true": "已授权",
+                "false": "未授权",
+                "none": "该页面无需权限"
+              }
+            }
+          }
+        },
+        {
+          "event": "traffic_manager_click",
+          "title": "点击 Manager",
+          "description": "点击 Manager 按钮，跳转系统设置界面",
+          "module": "流量使用",
+          "row": 5,
+          "parameters": {}
+        }
+      ]
+    },
+    {
+      "sheet": "04-通知清理",
+      "events": [
+        {
+          "event": "notify_page_show",
+          "title": "通知清理页展示",
+          "description": "进入通知清理二级页；需通知使用权，未授权先弹权限引导",
+          "module": "通知清理",
+          "row": 2,
+          "parameters": {
+            "perm_granted": {
+              "title": "权限状态",
+              "type": "字符串",
+              "description": "进入页面前是否已持有该功能所需权限（存储/用量访问/通知使用权）",
+              "enums": {
+                "true": "已授权",
+                "false": "未授权",
+                "none": "该页面无需权限"
+              }
+            }
+          }
+        },
+        {
+          "event": "notify_clean_click",
+          "title": "点击通知清理",
+          "description": "勾选后点击清理按钮",
+          "module": "通知清理",
+          "row": 5,
+          "parameters": {
+            "selected_count": {
+              "title": "已选数量",
+              "type": "数值",
+              "description": "已勾选的通知来源数量",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "notify_clean_result",
+          "title": "通知清理完成",
+          "description": "通知清理执行完成",
+          "module": "通知清理",
+          "row": 6,
+          "parameters": {
+            "cleared_count": {
+              "title": "清理数量",
+              "type": "数值",
+              "description": "实际清理的通知来源数量",
+              "enums": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sheet": "05-截图清理",
+      "events": [
+        {
+          "event": "shot_scan_result",
+          "title": "截图扫描完成",
+          "description": "截图扫描完成；需存储权限",
+          "module": "截图清理",
+          "row": 2,
+          "parameters": {
+            "count": {
+              "title": "截图数量",
+              "type": "数值",
+              "description": "扫描出的截图张数",
+              "enums": {}
+            },
+            "total_size": {
+              "title": "截图总大小",
+              "type": "数值",
+              "description": "扫描出的截图总大小，单位 MB",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "shot_check",
+          "title": "截图勾选",
+          "description": "勾选/取消某张截图；默认全选；底部 Clean 按钮只展示已选总大小，不展示数量",
+          "module": "截图清理",
+          "row": 4,
+          "parameters": {
+            "action": {
+              "title": "勾选动作",
+              "type": "字符串",
+              "description": "勾选或取消勾选",
+              "enums": {
+                "check": "勾选",
+                "uncheck": "取消勾选"
+              }
+            },
+            "selected_size": {
+              "title": "已选大小",
+              "type": "数值",
+              "description": "当前已勾选文件总大小，单位 MB",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "shot_clean_click",
+          "title": "点击截图清理",
+          "description": "点击 Clean 按钮，展示插屏后执行删除",
+          "module": "截图清理",
+          "row": 7,
+          "parameters": {
+            "selected_size": {
+              "title": "已选大小",
+              "type": "数值",
+              "description": "当前已勾选文件总大小，单位 MB",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "shot_result_show",
+          "title": "截图完成页展示",
+          "description": "截图清理完成页展示",
+          "module": "截图清理",
+          "row": 8,
+          "parameters": {
+            "deleted_size": {
+              "title": "清理大小",
+              "type": "数值",
+              "description": "本次实际清理/删除的文件大小，单位 MB",
+              "enums": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sheet": "06-照片压缩",
+      "events": [
+        {
+          "event": "photo_scan_result",
+          "title": "照片扫描完成",
+          "description": "可压缩照片扫描完成；需存储权限",
+          "module": "照片压缩",
+          "row": 2,
+          "parameters": {
+            "count": {
+              "title": "照片数量",
+              "type": "数值",
+              "description": "扫描出的可压缩照片张数",
+              "enums": {}
+            },
+            "total_size": {
+              "title": "照片总大小",
+              "type": "数值",
+              "description": "扫描出的照片总大小，单位 MB",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "photo_check",
+          "title": "照片勾选",
+          "description": "勾选/取消某张照片",
+          "module": "照片压缩",
+          "row": 4,
+          "parameters": {
+            "action": {
+              "title": "勾选动作",
+              "type": "字符串",
+              "description": "勾选或取消勾选",
+              "enums": {
+                "check": "勾选",
+                "uncheck": "取消勾选"
+              }
+            },
+            "selected_count": {
+              "title": "已选数量",
+              "type": "数值",
+              "description": "当前已勾选照片张数",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "photo_compress_click",
+          "title": "点击压缩",
+          "description": "点击压缩按钮执行压缩",
+          "module": "照片压缩",
+          "row": 7,
+          "parameters": {
+            "selected_count": {
+              "title": "已选数量",
+              "type": "数值",
+              "description": "本次压缩的照片张数",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "photo_result_show",
+          "title": "压缩完成页展示",
+          "description": "完成页展示已压缩张数与本次实际节省容量（Saved XX MB，不足 1MB 用 KB）",
+          "module": "照片压缩",
+          "row": 8,
+          "parameters": {
+            "compressed_count": {
+              "title": "压缩数量",
+              "type": "数值",
+              "description": "实际压缩完成的照片张数",
+              "enums": {}
+            },
+            "saved_size": {
+              "title": "节省容量",
+              "type": "数值",
+              "description": "本次压缩节省的容量，单位 MB",
+              "enums": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sheet": "07-大文件清理",
+      "events": [
+        {
+          "event": "large_scan_result",
+          "title": "大文件扫描完成",
+          "description": "大文件扫描完成；需存储权限（MANAGE_EXTERNAL_STORAGE）",
+          "module": "大文件清理",
+          "row": 2,
+          "parameters": {
+            "count": {
+              "title": "文件数量",
+              "type": "数值",
+              "description": "扫描出的文件数量",
+              "enums": {}
+            },
+            "total_size": {
+              "title": "文件总大小",
+              "type": "数值",
+              "description": "扫描出的文件总大小，单位 MB",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "large_filter_change",
+          "title": "切换筛选",
+          "description": "切换三维筛选（类型/大小/时间），实时刷新列表；默认 All types · 10MB · All time",
+          "module": "大文件清理",
+          "row": 4,
+          "parameters": {
+            "filter_type": {
+              "title": "类型筛选",
+              "type": "字符串",
+              "description": "文件类型",
+              "enums": {
+                "all": "All types",
+                "photos": "Photos",
+                "videos": "Videos",
+                "audio": "Audio",
+                "document": "Document",
+                "archives": "Archives",
+                "apk": "Apk",
+                "other": "Other"
+              }
+            },
+            "filter_size": {
+              "title": "大小筛选",
+              "type": "字符串",
+              "description": "大小阈值",
+              "enums": {
+                "10mb": "10MB",
+                "50mb": "50MB",
+                "100mb": "100MB",
+                "500mb": "500MB",
+                "1gb": "1GB"
+              }
+            },
+            "filter_time": {
+              "title": "时间筛选",
+              "type": "字符串",
+              "description": "距今时间",
+              "enums": {
+                "all": "All time",
+                "1w": "1 week",
+                "1m": "1 month",
+                "3m": "3 months",
+                "6m": "6 months",
+                "1y": "1 year"
+              }
+            }
+          }
+        },
+        {
+          "event": "large_file_check",
+          "title": "大文件勾选",
+          "description": "勾选/取消某个大文件",
+          "module": "大文件清理",
+          "row": 23,
+          "parameters": {
+            "action": {
+              "title": "勾选动作",
+              "type": "字符串",
+              "description": "勾选或取消勾选",
+              "enums": {
+                "check": "勾选",
+                "uncheck": "取消勾选"
+              }
+            },
+            "selected_size": {
+              "title": "已选大小",
+              "type": "数值",
+              "description": "当前已勾选文件总大小，单位 MB",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "large_clean_click",
+          "title": "点击大文件清理",
+          "description": "点击清理按钮，展示插屏后执行删除",
+          "module": "大文件清理",
+          "row": 26,
+          "parameters": {
+            "selected_size": {
+              "title": "已选大小",
+              "type": "数值",
+              "description": "当前已勾选文件总大小，单位 MB",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "large_result_show",
+          "title": "大文件完成页展示",
+          "description": "大文件清理完成页展示",
+          "module": "大文件清理",
+          "row": 27,
+          "parameters": {
+            "deleted_size": {
+              "title": "清理大小",
+              "type": "数值",
+              "description": "本次实际清理/删除的文件大小，单位 MB",
+              "enums": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sheet": "08-应用管理",
+      "events": [
+        {
+          "event": "apps_page_show",
+          "title": "应用管理页展示",
+          "description": "进入应用管理二级页；免权限，清单文件 <queries> 声明即可获取应用列表",
+          "module": "应用管理",
+          "row": 2,
+          "parameters": {
+            "app_count": {
+              "title": "应用数量",
+              "type": "数值",
+              "description": "设备已安装应用总数（与通知栏 App 角标同值）",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "apps_uninstall_click",
+          "title": "点击去卸载",
+          "description": "点击「去卸载」；不支持应用内直接卸载，需跳转系统设置/卸载界面；不采集包名",
+          "module": "应用管理",
+          "row": 3,
+          "parameters": {
+            "size_band": {
+              "title": "应用大小区间",
+              "type": "字符串",
+              "description": "被卸载应用的大小区间（脱敏，不采集包名）",
+              "enums": {
+                "lt50mb": "<50MB",
+                "50_200mb": "50-200MB",
+                "200_500mb": "200-500MB",
+                "gt500mb": ">500MB"
+              }
+            }
+          }
+        },
+        {
+          "event": "apps_uninstall_jump",
+          "title": "跳转系统卸载",
+          "description": "跳转系统设置/卸载界面时上报",
+          "module": "应用管理",
+          "row": 7,
+          "parameters": {}
+        }
+      ]
+    },
+    {
+      "sheet": "09-未使用文件与通知栏",
+      "events": [
+        {
+          "event": "unused_scan_result",
+          "title": "未使用文件扫描完成",
+          "description": "未使用文件扫描完成；需存储权限（MANAGE_EXTERNAL_STORAGE）；只扫三类",
+          "module": "未使用文件",
+          "row": 2,
+          "parameters": {
+            "installed_apk_size": {
+              "title": "已安装APK大小",
+              "type": "数值",
+              "description": "已安装的安装包大小，单位 MB",
+              "enums": {}
+            },
+            "residue_size": {
+              "title": "卸载残留大小",
+              "type": "数值",
+              "description": "已卸载应用的文件残留大小，单位 MB",
+              "enums": {}
+            },
+            "download_size": {
+              "title": "沉睡文件大小",
+              "type": "数值",
+              "description": "下载目录 90 天未访问的沉睡文件大小，单位 MB",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "unused_group_click",
+          "title": "点击未使用文件分组",
+          "description": "点击分组进入三级页",
+          "module": "未使用文件",
+          "row": 5,
+          "parameters": {
+            "group": {
+              "title": "分组",
+              "type": "字符串",
+              "description": "固定 3 个分组",
+              "enums": {
+                "installed_apk": "已安装的安装包",
+                "residue": "卸载残留",
+                "download": "下载目录沉睡文件"
+              }
+            }
+          }
+        },
+        {
+          "event": "unused_check",
+          "title": "未使用文件勾选",
+          "description": "三级页勾选/取消文件",
+          "module": "未使用文件",
+          "row": 8,
+          "parameters": {
+            "group": {
+              "title": "分组",
+              "type": "字符串",
+              "description": "同 unused_group_click 枚举",
+              "enums": {}
+            },
+            "action": {
+              "title": "勾选动作",
+              "type": "字符串",
+              "description": "勾选或取消勾选",
+              "enums": {
+                "check": "勾选",
+                "uncheck": "取消勾选"
+              }
+            },
+            "selected_size": {
+              "title": "已选大小",
+              "type": "数值",
+              "description": "当前已勾选文件总大小，单位 MB",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "unused_clean_click",
+          "title": "点击未使用文件清理",
+          "description": "点击清理按钮，展示插屏后执行删除",
+          "module": "未使用文件",
+          "row": 12,
+          "parameters": {
+            "selected_size": {
+              "title": "已选大小",
+              "type": "数值",
+              "description": "当前已勾选文件总大小，单位 MB",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "unused_result_show",
+          "title": "未使用文件完成页展示",
+          "description": "未使用文件清理完成页展示",
+          "module": "未使用文件",
+          "row": 13,
+          "parameters": {
+            "deleted_size": {
+              "title": "清理大小",
+              "type": "数值",
+              "description": "本次实际清理/删除的文件大小，单位 MB",
+              "enums": {}
+            }
+          }
+        },
+        {
+          "event": "notifbar_entry_click",
+          "title": "点击常驻通知栏入口",
+          "description": "点击常驻通知栏功能入口：Clean→垃圾清理（冷启动链路：启动页→开屏→首页→清理）；App→应用管理；Photos→截图清理；Accelerate→应用管理",
+          "module": "常驻通知栏",
+          "row": 14,
+          "parameters": {
+            "entry": {
+              "title": "通知栏入口",
+              "type": "字符串",
+              "description": "被点击的入口",
+              "enums": {
+                "clean": "Clean → 垃圾清理",
+                "app": "App → 应用管理",
+                "photos": "Photos → 截图清理",
+                "accelerate": "Accelerate → 应用管理"
+              }
+            },
+            "user_type": {
+              "title": "用户类型",
+              "type": "字符串",
+              "description": "买量/自然分流，与首页分流口径一致",
+              "enums": {
+                "paid": "买量用户（B 面）",
+                "organic": "自然用户（A 面）"
+              }
+            },
+            "clean_badge": {
+              "title": "Clean角标状态",
+              "type": "字符串",
+              "description": "点击时 Clean 角标是否展示（与首页状态同源：未清理态展示 xxMB，已清理态隐藏）",
+              "enums": {
+                "shown": "展示（未清理态）",
+                "hidden": "隐藏（已清理态）",
+                "none": "A 面无角标"
+              }
+            },
+            "app_badge_count": {
+              "title": "App角标数量",
+              "type": "数值",
+              "description": "点击时 App 角标展示的应用数量（常驻展示，与首页同源）",
+              "enums": {}
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

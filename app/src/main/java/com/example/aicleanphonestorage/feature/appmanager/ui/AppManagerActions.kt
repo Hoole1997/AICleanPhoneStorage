@@ -1,5 +1,7 @@
 package com.example.aicleanphonestorage.feature.appmanager.ui
 
+import com.example.aicleanphonestorage.app.analytics.FeatureTelemetry
+import com.example.aicleanphonestorage.core.analytics.*
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.ApplicationInfo
@@ -29,12 +31,18 @@ internal class AppManagerActions(
             refresh()
         }
 
-    fun details(packageName: String) {
+    fun details(packageName: String) = openDetails(packageName, false)
+
+    private fun openDetails(packageName: String, fromUninstall: Boolean) {
         if (!AppDetailsSettings.open(activity, packageName)) unavailable()
+        else if (fromUninstall) BusinessTelemetry.emit(MetricEvent.APPS_UNINSTALL_JUMP)
     }
 
-    fun remove(packageName: String) {
+    fun remove(packageName: String, sizeBytes: Long? = null) {
         if (checking?.isActive == true || awaitingResult) return
+        // 只上传大小区间；大小未知时省略，不伪造为小于 50MB，也不上传包名。
+        BusinessTelemetry.emit(MetricEvent.APPS_UNINSTALL_CLICK,
+            FeatureTelemetry.sizeBand(sizeBytes)?.let { mapOf("size_band" to it) } ?: emptyMap())
         checking =
             activity.lifecycleScope.launch {
                 // 点击时重新验证应用仍在且允许卸载，扫描结果不能作为删除授权。
@@ -58,17 +66,18 @@ internal class AppManagerActions(
                         unavailable()
                         refresh()
                     }
-                    false -> details(packageName)
+                    false -> openDetails(packageName, true)
                     true ->
                         try {
                             awaitingResult = true
                             uninstall.launch(uninstallIntent(packageName))
+                            BusinessTelemetry.emit(MetricEvent.APPS_UNINSTALL_JUMP)
                         } catch (_: ActivityNotFoundException) {
                             awaitingResult = false
-                            details(packageName)
+                            openDetails(packageName, true)
                         } catch (_: SecurityException) {
                             awaitingResult = false
-                            details(packageName)
+                            openDetails(packageName, true)
                         }
                 }
             }

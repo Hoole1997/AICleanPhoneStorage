@@ -1,5 +1,6 @@
 package com.example.aicleanphonestorage.app
 
+import com.example.aicleanphonestorage.app.analytics.FeatureTelemetry
 import com.example.aicleanphonestorage.app.ad.HomeExitAdCoordinator
 
 import android.content.Intent
@@ -24,6 +25,8 @@ import com.example.aicleanphonestorage.databinding.ScreenHomeBinding
 import com.example.aicleanphonestorage.feature.appmanager.ui.*
 import com.example.aicleanphonestorage.feature.filecleaner.ui.*
 import com.example.aicleanphonestorage.feature.home.preview.HomePreviewSupport
+import com.example.aicleanphonestorage.core.analytics.*
+import com.example.aicleanphonestorage.feature.home.ui.HomeUiActions
 import com.example.aicleanphonestorage.feature.home.ui.HomeRenderer
 import com.example.aicleanphonestorage.feature.home.ui.HomeTool
 import com.example.aicleanphonestorage.feature.home.ui.HomeEntryActions
@@ -181,7 +184,29 @@ class MainActivity : AppCompatActivity() {
             },
         )
         val nativeHome = layoutInflater.inflate(R.layout.view_native_ad_slot, binding.homeContent, false) as android.view.ViewGroup
-        renderer = HomeRenderer(binding, homeActions, nativeHome)
+        val app = application as CleanApplication
+        val trackedActions = object : HomeUiActions by homeActions {
+            override fun onSmartClean() {
+                if (previewSelection == null) {
+                    BusinessTelemetry.emit(MetricEvent.CLEAN_NOW_CLICK, mapOf("state" to if (app.homeCleaning.state.value.dirty) "dirty" else "cleaned"))
+                    FeatureTelemetry.entry(app, "junk")
+                }
+                homeActions.onSmartClean()
+            }
+            override fun onToolSelected(tool: HomeTool) {
+                val entry = when (tool) {
+                    HomeTool.Network -> "traffic"; HomeTool.Notifications -> "notify"; HomeTool.Apps -> "apps"
+                    HomeTool.Compress -> "photo"; HomeTool.LargeFiles -> "large"; HomeTool.UnusedFiles -> "unused"; HomeTool.Screenshots -> "screenshots"
+                }
+                if (previewSelection == null) FeatureTelemetry.entry(app, entry)
+                homeActions.onToolSelected(tool)
+            }
+        }
+        renderer = HomeRenderer(binding, trackedActions, nativeHome)
+        PageTelemetry.attach(this, "home")
+        lifecycle.addObserver(object : androidx.lifecycle.DefaultLifecycleObserver {
+            override fun onResume(owner: androidx.lifecycle.LifecycleOwner) = trackHomeState()
+        })
         com.example.aicleanphonestorage.app.ad.NativeAdCoordinator(this, nativeHome,
             com.example.aicleanphonestorage.app.ad.NativeAdPlacements.HOME)
         homeExitAds = HomeExitAdCoordinator(this, binding.root)
@@ -213,8 +238,21 @@ class MainActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homeViewModel.uiState.collect { state ->
                     renderer.render(state, HomePreviewSupport.content(previewSelection))
+                    trackHomeState()
                 }
             }
+        }
+    }
+
+    private val homeExposure by viewModels<HomeExposureState>()
+
+    private fun trackHomeState() {
+        if (previewSelection != null || !lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) ||
+            homeViewModel.uiState.value !is com.example.aicleanphonestorage.feature.home.ui.HomeUiState.Ready) return
+        val params = FeatureTelemetry.homeState((application as CleanApplication).homeCleaning.state.value)
+        if (params != homeExposure.last) {
+            homeExposure.last = params
+            BusinessTelemetry.emit(MetricEvent.HOME_STATE_SHOW, params)
         }
     }
 
@@ -226,6 +264,7 @@ class MainActivity : AppCompatActivity() {
         if (redirectedToStartup) return
         (application as CleanApplication).homeCleaning.check()
         renderer.setResumed(true)
+        trackHomeState()
         pushPermission.onResume()
         if (!permissions.pending) {
             trafficEntry.onForeground()
@@ -256,6 +295,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStop() {
+        if (!isChangingConfigurations) homeExposure.last = null
         if (!redirectedToStartup && !isChangingConfigurations) {
             trafficEntry.onBackground()
             notificationEntry.onBackground()

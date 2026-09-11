@@ -32,6 +32,7 @@ import org.junit.runner.RunWith
 /** 请求使用构造注入的假 SDK；删除只操作本用例创建的文件，测试不点击真实广告。 */
 @RunWith(AndroidJUnit4::class)
 class AdTimingDeviceTest {
+    @get:org.junit.Rule val noHotAds = com.example.aicleanphonestorage.testing.NoHotStartAdsRule()
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
 
     @Test fun homeWaitsForResumeAndDrawAndPreservesSourceWithoutReplay() {

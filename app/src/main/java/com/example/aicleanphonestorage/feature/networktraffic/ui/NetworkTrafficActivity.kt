@@ -1,5 +1,6 @@
 package com.example.aicleanphonestorage.feature.networktraffic.ui
 
+import com.example.aicleanphonestorage.app.analytics.FeatureTelemetry
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Color
@@ -49,6 +50,8 @@ class NetworkTrafficActivity : AppCompatActivity() {
         enableEdgeToEdge(SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT), SystemBarStyle.light(Color.TRANSPARENT, Color.BLACK))
         val binding = ScreenNetworkTrafficBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        com.example.aicleanphonestorage.core.analytics.PageTelemetry.attach(this, "traffic",
+            com.example.aicleanphonestorage.app.analytics.FeatureTelemetry.permission(application as CleanApplication, "traffic"))
         NativeAdCoordinator(this, binding.nativeAd, NativeAdFeature.NETWORK.featureSlot)
         ViewCompat.setAccessibilityHeading(binding.trafficTitle, true)
         val exit = FeatureExitCoordinator(this, { InterstitialPlacements.NETWORK_EXIT })
@@ -98,6 +101,7 @@ class NetworkTrafficActivity : AppCompatActivity() {
     }
 
     private fun manageApp(app: TrafficApp) {
+        com.example.aicleanphonestorage.core.analytics.BusinessTelemetry.emit(com.example.aicleanphonestorage.core.analytics.MetricEvent.TRAFFIC_MANAGER_CLICK)
         if (app.packages.size == 1) openAppSettings(app.packages.single().packageName)
         else if (app.packages.size > 1) MaterialAlertDialogBuilder(this)
             .setTitle(R.string.traffic_shared_apps)

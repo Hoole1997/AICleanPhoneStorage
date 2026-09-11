@@ -8,6 +8,7 @@ import net.corekit.metrics.provider.MetricsModuleProvider
 internal object AdAnalytics {
     suspend fun initialize(application: Application) {
         MetricsModuleProvider.initialize(application)
+        com.example.aicleanphonestorage.core.analytics.BusinessTelemetry.start()
     }
 
     fun report(name: String, properties: Map<String, Any?>) {

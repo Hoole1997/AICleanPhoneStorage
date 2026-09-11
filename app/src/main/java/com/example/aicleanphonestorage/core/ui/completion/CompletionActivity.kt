@@ -24,6 +24,7 @@ class CompletionActivity : AppCompatActivity() {
     private var allowed = false
     private var report: CompletionReport? = null
     private var leaving = false
+    private var resultReported = false
     private var visitToken: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +35,23 @@ class CompletionActivity : AppCompatActivity() {
             return
         }
         report = value
+        val source = com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature.entries.firstOrNull {
+            it.name == intent.getStringExtra(CompletionContract.SOURCE)
+        } ?: if (value.kind == CompletionKind.COMPRESSION) com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature.PHOTO_COMPRESS else null
+        if (source != null) {
+            val metrics = com.example.aicleanphonestorage.feature.filecleaner.analytics.CleanupTelemetry()
+            val page = com.example.aicleanphonestorage.feature.filecleaner.analytics.CleanupTelemetry.page(source) + "_result"
+            com.example.aicleanphonestorage.core.analytics.PageTelemetry.attach(this, page)
+            resultReported = savedInstanceState?.getBoolean("metrics.result.reported") ?: false
+            lifecycle.addObserver(object : androidx.lifecycle.DefaultLifecycleObserver {
+                override fun onStart(owner: androidx.lifecycle.LifecycleOwner) {
+                    if (!resultReported) {
+                        resultReported = true
+                        metrics.result(source, value)
+                    }
+                }
+            })
+        }
         // 用户以进入完成页作为展示状态的清理完成点；仅保存去重 token，旋转不延长三分钟。
         visitToken = savedInstanceState?.getString("completion.visit") ?: java.util.UUID.randomUUID().toString()
         (application as CleanApplication).homeCleaning.completed(requireNotNull(visitToken))
@@ -119,6 +137,7 @@ class CompletionActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString("completion.visit", visitToken)
+        outState.putBoolean("metrics.result.reported", resultReported)
         super.onSaveInstanceState(outState)
     }
 

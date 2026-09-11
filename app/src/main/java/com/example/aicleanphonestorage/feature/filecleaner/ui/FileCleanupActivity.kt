@@ -1,5 +1,6 @@
 package com.example.aicleanphonestorage.feature.filecleaner.ui
 
+import com.example.aicleanphonestorage.app.analytics.FeatureTelemetry
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Color
@@ -94,6 +95,12 @@ class FileCleanupActivity : AppCompatActivity() {
         )
         binding = ScreenFileCleanupBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        CleanupFeature.entries.firstOrNull { it.name == intent.getStringExtra(EXTRA_FEATURE) }?.let { feature ->
+            val page = if (feature == CleanupFeature.SMART_CLEAN) "junk_detail"
+                else com.example.aicleanphonestorage.feature.filecleaner.analytics.CleanupTelemetry.page(feature)
+            com.example.aicleanphonestorage.core.analytics.PageTelemetry.attach(this, page,
+                com.example.aicleanphonestorage.app.analytics.FeatureTelemetry.permission(application as CleanApplication, page))
+        }
         listState = CleanupListStateRenderer(binding)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val bars =

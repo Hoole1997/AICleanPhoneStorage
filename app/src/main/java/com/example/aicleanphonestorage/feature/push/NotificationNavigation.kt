@@ -18,6 +18,16 @@ internal object NotificationNavigation {
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
+    fun residentPendingIntent(context: Context, destination: NotificationDestination, entry: String, badge: String): PendingIntent =
+        PendingIntent.getActivity(context, 6100 + destination.contentType,
+            Intent(context, StartupActivity::class.java)
+                .setAction("${context.packageName}.resident.$entry.$badge")
+                .putExtra(EXTRA_DESTINATION, destination.key)
+                .putExtra(ResidentClickTelemetry.ENTRY, entry)
+                .putExtra(ResidentClickTelemetry.BADGE, badge)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
     fun read(intent: Intent): NotificationDestination? = when {
         intent.hasExtra(EXTRA_DESTINATION) -> NotificationDestination.fromKey(intent.getStringExtra(EXTRA_DESTINATION))
         io.docview.push.controller.LandingCtrl.isFromNotification(intent) -> NotificationDestination.fromContentType(

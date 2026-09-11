@@ -63,6 +63,7 @@ class StartupActivity : AppCompatActivity() {
             statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.BLACK),
         )
+        com.example.aicleanphonestorage.feature.push.ResidentClickTelemetry.consume(intent)
         val incoming = StartupNavigation.read(intent)
         // 在创建 SavedStateHandle 前规范化 Intent，避免把通知正文或外部同名状态键存入页面状态。
         setIntent(StartupNavigation.startupIntent(this, incoming))
@@ -125,6 +126,7 @@ class StartupActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         // 权限返回只恢复当前流程，不能把原通知目标重置为 HOME 或开启另一轮广告。
         if (permissions.onReturnIntent(intent)) return
+        com.example.aicleanphonestorage.feature.push.ResidentClickTelemetry.consume(intent)
         val incoming = StartupNavigation.read(intent)
         setIntent(StartupNavigation.startupIntent(this, incoming))
         model.accept(incoming)

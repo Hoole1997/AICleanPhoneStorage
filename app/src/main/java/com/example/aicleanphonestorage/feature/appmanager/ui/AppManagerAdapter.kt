@@ -19,7 +19,7 @@ internal class AppManagerAdapter(
     private val scope: CoroutineScope,
     private val icons: AppIconLoader,
     private val open: (String) -> Unit,
-    private val uninstall: (String) -> Unit,
+    private val uninstall: (ManagedApp) -> Unit,
 ) : ListAdapter<ManagedApp, AppManagerAdapter.Holder>(DIFF) {
     private var active = false
     private val attached = mutableSetOf<Holder>()
@@ -68,7 +68,7 @@ internal class AppManagerAdapter(
             }
             binding.appManagerUninstall.setOnClickListener {
                 val value = row ?: return@setOnClickListener
-                if (value.canUninstall) uninstall(value.packageName) else open(value.packageName)
+                if (value.canUninstall) uninstall(value) else open(value.packageName)
             }
             ViewCompat.setScreenReaderFocusable(binding.root, true)
         }

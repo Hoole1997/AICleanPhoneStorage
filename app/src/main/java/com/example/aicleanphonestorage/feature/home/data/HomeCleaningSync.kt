@@ -23,7 +23,7 @@ internal class HomeCleaningSync(
             // SDK 已在 Application 中安装默认渠道；本地存储读取离开主线程。
             try {
                 val revision = channelRevision
-                val paid = withContext(Dispatchers.IO) { ChannelUserController.isPaidChannel() }
+                val paid = withContext(Dispatchers.IO) { ChannelUserController.getCurrentChannel() == ChannelUserController.UserChannelType.PAID }
                 if (revision == channelRevision) cleaning.setPaidUser(paid)
             } catch (cancelled: CancellationException) { throw cancelled }
             catch (error: Exception) {

@@ -39,6 +39,7 @@ internal class CleanupViewModel(
     private val saved: SavedStateHandle,
     scanId: Long,
     initialFilter: CleanupFilter = CleanupFilter(),
+    private val telemetry: com.example.aicleanphonestorage.feature.filecleaner.analytics.CleanupTelemetry = com.example.aicleanphonestorage.feature.filecleaner.analytics.CleanupTelemetry(),
 ) : ViewModel() {
     private val restoredFilter =
         CleanupFilter(
@@ -102,6 +103,8 @@ internal class CleanupViewModel(
                 current.value.editing > 0
         )
             return
+        if (filter == current.value.filter) return
+        if (current.value.handle?.feature == CleanupFeature.LARGE_FILES) telemetry.filter(filter)
         saved["filter.bucket"] = filter.bucket
         saved["filter.category"] = filter.category.ordinal
         saved["filter.size"] = filter.minimumBytes
@@ -115,15 +118,16 @@ internal class CleanupViewModel(
         }
     }
 
-    fun toggle(id: Long, selected: Boolean) = edit { repository.select(id, selected) }
+    fun toggle(id: Long, selected: Boolean) = edit {
+        repository.select(id, selected)
+        reportSelection(selected)
+    }
 
     fun selectAll() = edit {
         current.value.handle?.let {
-            repository.selectAll(
-                it,
-                current.value.filter,
-                current.value.totals.selectedCount != current.value.totals.count,
-            )
+            val selected = current.value.totals.selectedCount != current.value.totals.count
+            repository.selectAll(it, current.value.filter, selected)
+            reportSelection(selected)
         }
     }
 
@@ -131,6 +135,13 @@ internal class CleanupViewModel(
         current.value.handle?.let {
             repository.selectAll(it, current.value.filter.copy(bucket = bucket), selected)
         }
+    }
+
+    private suspend fun reportSelection(selected: Boolean) {
+        val value = current.value
+        val handle = value.handle ?: return
+        val totals = repository.totals(handle, value.filter)
+        telemetry.selection(handle.feature, value.filter.bucket, selected, totals)
     }
 
     fun quality(id: Long, quality: Int) = edit { repository.quality(id, quality) }
@@ -179,6 +190,7 @@ internal class CleanupViewModel(
                 value.editing > 0 || value.totals.selectedCount == 0 ||
                     value.operation != CleanupOperationState.Idle
             ) return@launch
+            telemetry.cleanClick(handle.feature, value.totals)
             val op = repository.prepare(handle, value.filter)
             current.update {
                 it.copy(

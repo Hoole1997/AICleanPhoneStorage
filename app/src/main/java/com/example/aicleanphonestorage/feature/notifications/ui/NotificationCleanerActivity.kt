@@ -1,5 +1,6 @@
 package com.example.aicleanphonestorage.feature.notifications.ui
 
+import com.example.aicleanphonestorage.app.analytics.FeatureTelemetry
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -69,12 +70,16 @@ class NotificationCleanerActivity : AppCompatActivity() {
         )
         val binding = ScreenNotificationCleanerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        com.example.aicleanphonestorage.core.analytics.PageTelemetry.attach(this, "notify",
+            com.example.aicleanphonestorage.app.analytics.FeatureTelemetry.permission(application as CleanApplication, "notify"))
         NativeAdCoordinator(this, binding.nativeAd, NativeAdFeature.NOTIFY.featureSlot)
         ViewCompat.setAccessibilityHeading(binding.notificationTitle, true)
         val exit = FeatureExitCoordinator(this, { InterstitialPlacements.NOTIFICATIONS_EXIT })
         binding.notificationBack.setOnClickListener { exit.exit() }
         binding.notificationDone.setOnClickListener {
             viewModel.completionReport()?.let { report ->
+                com.example.aicleanphonestorage.core.analytics.BusinessTelemetry.emit(com.example.aicleanphonestorage.core.analytics.MetricEvent.NOTIFY_CLEAN_CLICK, mapOf("selected_count" to report.completed))
+                // Done 的 report.completed 是规则来源数，并非实际清除来源数；不能冒充 cleared_count。
                 completion.launch(CompletionContract.intent(this, report))
                 viewModel.completionPresented()
             }

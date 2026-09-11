@@ -1,5 +1,6 @@
 package com.example.aicleanphonestorage.feature.junkcleaner.ui
 
+import com.example.aicleanphonestorage.app.analytics.FeatureTelemetry
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -71,6 +72,8 @@ class JunkCleaningActivity : AppCompatActivity() {
         )
         binding = ScreenJunkCleaningBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        com.example.aicleanphonestorage.core.analytics.PageTelemetry.attach(this, "junk",
+            com.example.aicleanphonestorage.app.analytics.FeatureTelemetry.permission(application as CleanApplication, "junk"))
         NativeAdCoordinator(this, binding.nativeAd, NativeAdFeature.JUNK.featureSlot)
         ads = InterstitialActions(this)
         operations = CleanupOperationCoordinator(this, cleanup, savedInstanceState, ads)
@@ -106,6 +109,7 @@ class JunkCleaningActivity : AppCompatActivity() {
     }
 
     private fun open(kind: JunkKind) {
+        com.example.aicleanphonestorage.feature.filecleaner.analytics.CleanupTelemetry().junkGroup(kind)
         startActivity(
             Intent(this, FileCleanupActivity::class.java)
                 .putExtra(FileCleanupActivity.EXTRA_SCAN, scanId)

@@ -90,7 +90,18 @@ internal class CleanNotificationHost(
             val label = context.getString(item.label)
             views.setTextViewText(item.text, label)
             views.setContentDescription(item.root, listOfNotNull(label, item.badge).joinToString(", "))
-            views.setOnClickPendingIntent(item.root, contentIntent(item.destination))
+            val entry = when (item.destination) {
+                NotificationDestination.CLEAN -> "clean"
+                NotificationDestination.PHOTOS -> "photos"
+                else -> null // 旧 Network/Unused 入口没有对应的文档枚举，不伪装为 App/Accelerate。
+            }
+            val badgeState = when {
+                cleaning?.state?.value?.paidUser != true -> "none"
+                clean != null -> "shown"
+                else -> "hidden"
+            }
+            views.setOnClickPendingIntent(item.root, if (entry == null) contentIntent(item.destination)
+                else NotificationNavigation.residentPendingIntent(app, item.destination, entry, badgeState))
             views.setTextViewText(item.badgeView, item.badge.orEmpty())
             views.setViewVisibility(item.badgeView, if (item.badge == null || (compact && largeText)) View.GONE else View.VISIBLE)
         }

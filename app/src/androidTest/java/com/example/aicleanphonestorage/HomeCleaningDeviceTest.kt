@@ -25,6 +25,7 @@ import org.junit.runner.RunWith
 /** 页面呈现使用明确的测试存储摘要；虚拟量只来自共享状态，不写入真实扫描或删除结果。 */
 @RunWith(AndroidJUnit4::class)
 class HomeCleaningDeviceTest {
+    @get:org.junit.Rule val noHotAds = com.example.aicleanphonestorage.testing.NoHotStartAdsRule()
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
     private val context get() = instrumentation.targetContext
 
