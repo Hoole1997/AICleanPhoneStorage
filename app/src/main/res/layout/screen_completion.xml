@@ -159,14 +159,7 @@
             android:id="@+id/completion_ad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="137dp"
-            android:padding="16dp"
-            android:background="@android:color/white">
-            <include
-                layout="@layout/view_ad_placeholder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-        </FrameLayout>
+            android:visibility="gone"
+            android:background="@android:color/white" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

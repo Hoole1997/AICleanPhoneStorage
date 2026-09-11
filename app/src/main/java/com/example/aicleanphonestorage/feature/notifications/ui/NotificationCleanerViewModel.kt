@@ -169,6 +169,7 @@ internal class NotificationCleanerViewModel(
                         if (entry)
                             entryLoader.load(
                                 count = { it: NotificationCatalog -> it.apps.size },
+                                onStalled = { failLoading(request) },
                                 onFrame = { frame ->
                                     current.update {
                                         if ((it.phase as? NotificationPhase.Loading)?.id == request)
@@ -205,9 +206,17 @@ internal class NotificationCleanerViewModel(
                         else it
                     }
                 } finally {
+                    failLoading(request)
                     deadline.cancel()
                 }
             }
+    }
+
+    private fun failLoading(request: Long) {
+        current.update {
+            if ((it.phase as? NotificationPhase.Loading)?.id == request)
+                it.copy(phase = NotificationPhase.Failed) else it
+        }
     }
 
     fun setEnabled(packageName: String, enabled: Boolean) {

@@ -36,5 +36,8 @@
                 </LinearLayout>
             </ScrollView>
         </FrameLayout>
+        <!-- 默认收起，由 loadNative 成功/失败回调控制整块广告的显示。 -->
+        <FrameLayout android:id="@+id/native_ad" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:visibility="gone" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

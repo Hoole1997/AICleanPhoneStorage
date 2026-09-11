@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.FrameLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.ViewCompat
 import androidx.core.view.updateLayoutParams
@@ -23,6 +24,7 @@ import java.text.NumberFormat
 internal class HomeListAdapter(
     private val expanded: Boolean,
     private val actions: HomeUiActions,
+    private val nativeContainer: ViewGroup? = null,
 ) : ListAdapter<HomeRow, RecyclerView.ViewHolder>(RowDiff) {
     private val heroes=mutableSetOf<HeroHolder>()
     private var motionActive=false
@@ -42,6 +44,7 @@ internal class HomeListAdapter(
     override fun getItemViewType(position: Int): Int = when (getItem(position)) {
         is HomeRow.Hero -> HERO
         is HomeRow.Statistics -> STATS
+        HomeRow.NativeAd -> NATIVE
         HomeRow.Section -> SECTION
         is HomeRow.Tool -> TOOL
     }
@@ -51,6 +54,9 @@ internal class HomeListAdapter(
         return when (viewType) {
             HERO -> HeroHolder(ItemHomeHeroBinding.inflate(inflater, parent, false), expanded, actions)
             STATS -> StatisticsHolder(ItemHomeStatsBinding.inflate(inflater, parent, false), expanded)
+            NATIVE -> NativeHolder(FrameLayout(parent.context).apply {
+                layoutParams = RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            })
             SECTION -> SectionHolder(ItemHomeSectionTitleBinding.inflate(inflater, parent, false))
             TOOL -> ToolHolder(ItemHomeToolBinding.inflate(inflater, parent, false), actions)
             else -> error("Unknown home row type: $viewType")
@@ -61,6 +67,7 @@ internal class HomeListAdapter(
         when (val row = getItem(position)) {
             is HomeRow.Hero -> (holder as HeroHolder).bind(row.content)
             is HomeRow.Statistics -> (holder as StatisticsHolder).bind(row.content)
+            HomeRow.NativeAd -> (holder as NativeHolder).bind(requireNotNull(nativeContainer))
             HomeRow.Section -> Unit
             is HomeRow.Tool -> (holder as ToolHolder).bind(row.content)
         }
@@ -71,6 +78,20 @@ internal class HomeListAdapter(
         const val STATS = 1
         const val SECTION = 2
         const val TOOL = 3
+        const val NATIVE = 4
+    }
+}
+
+/** 广告容器属于页面，复用同一个实例；列表滚动/数据 Diff 不重新请求或持有多个 SDK 广告。 */
+private class NativeHolder(private val frame: FrameLayout) : RecyclerView.ViewHolder(frame) {
+    fun bind(container: ViewGroup) {
+        if (container.parent === frame) return
+        (container.parent as? ViewGroup)?.removeView(container)
+        frame.removeAllViews()
+        frame.addView(container, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+            // 间距属于首页排版；容器 GONE 时子 View 的 margin 不参与测量，不留下空广告行。
+            bottomMargin = frame.resources.getDimensionPixelSize(R.dimen.home_section_gap)
+        })
     }
 }
 

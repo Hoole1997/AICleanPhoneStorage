@@ -49,6 +49,7 @@ internal class CleanupEntryViewModel(
 
     fun begin(feature: CleanupFeature) {
         if (current.value is CleanupEntryState.Loading) return
+        val id = ++sequence
         job?.cancel()
         current.value = CleanupEntryState.Checking(feature)
         saved[KEY] = feature.name
@@ -56,11 +57,11 @@ internal class CleanupEntryViewModel(
             viewModelScope.launch {
                 try {
                     val permission = repository.resolveAccess(feature)
+                    currentCoroutineContext().ensureActive()
                     if (permission.request != AccessRequest.NONE) {
                         current.value = CleanupEntryState.Permission(feature, permission.request)
                         return@launch
                     }
-                    val id = ++sequence
                     current.value = CleanupEntryState.Loading(feature, id)
                     val handle =
                         TimedEntryLoader().load(
@@ -70,6 +71,7 @@ internal class CleanupEntryViewModel(
                                 if (feature == CleanupFeature.SMART_CLEAN) listOf("FILES", "PHOTOS")
                                 else listOf("FILES"),
                             count = { it: ScanHandle -> it.scannedCount },
+                            onStalled = { failLoading(id, feature) },
                             onFrame = {
                                 if ((current.value as? CleanupEntryState.Loading)?.id == id)
                                     current.value = CleanupEntryState.Loading(feature, id, it)
@@ -85,16 +87,26 @@ internal class CleanupEntryViewModel(
                 } catch (error: CancellationException) {
                     throw error
                 } catch (_: SecurityException) {
-                    val request = repository.resolveAccess(feature).request
-                    current.value =
+                    currentCoroutineContext().ensureActive()
+                    val request = try { repository.resolveAccess(feature).request }
+                        catch (error: CancellationException) { throw error }
+                        catch (_: Exception) { AccessRequest.NONE }
+                    currentCoroutineContext().ensureActive()
+                    if (sequence == id) current.value =
                         if (request == AccessRequest.NONE) CleanupEntryState.Failed(feature)
                         else CleanupEntryState.Permission(feature, request)
-                } catch (_: IOException) {
-                    current.value = CleanupEntryState.Failed(feature)
-                } catch (_: android.database.SQLException) {
-                    current.value = CleanupEntryState.Failed(feature)
+                } catch (_: Exception) {
+                    currentCoroutineContext().ensureActive()
+                    if (sequence == id) current.value = CleanupEntryState.Failed(feature)
+                } finally {
+                    failLoading(id, feature)
                 }
             }
+    }
+
+    private fun failLoading(id: Long, feature: CleanupFeature) {
+        if ((current.value as? CleanupEntryState.Loading)?.id == id)
+            current.value = CleanupEntryState.Failed(feature)
     }
 
     fun awaitPermission(feature: CleanupFeature) {
@@ -115,9 +127,14 @@ internal class CleanupEntryViewModel(
     }
 
     fun cancel() {
+        sequence++
         job?.cancel()
         current.value = CleanupEntryState.Idle
         saved.remove<String>(KEY)
+    }
+
+    fun cancel(id: Long) {
+        if ((current.value as? CleanupEntryState.Loading)?.id == id) cancel()
     }
 
     fun consume(): ScanHandle? {

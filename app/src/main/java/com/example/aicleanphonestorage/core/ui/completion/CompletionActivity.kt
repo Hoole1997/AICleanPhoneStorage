@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.aicleanphonestorage.core.ui.motion.MotionPreferences
+import com.example.aicleanphonestorage.app.ad.NativeAdCoordinator
+import com.example.aicleanphonestorage.app.ad.NativeAdPlacements
 import com.example.aicleanphonestorage.databinding.ScreenCompletionBinding
 
 /** 通用结果页仅呈现不可变摘要；业务确认、写入和返回目的地属于调用方。 */
@@ -42,17 +44,16 @@ class CompletionActivity : AppCompatActivity() {
                 insets.getInsets(
                     WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
                 )
-            binding.completionContent.setPadding(bars.left, bars.top, bars.right, 0)
-            // 广告白底延伸到导航栏，深色导航图标不会落到蓝底；广告内容保留安全距离。
-            val padding = (16 * resources.displayMetrics.density).toInt()
-            binding.completionAd.setPadding(padding, padding, padding, padding + bars.bottom)
-            binding.completionAd.minimumHeight =
-                (137 * resources.displayMetrics.density).toInt() + bars.bottom
+            // 系统栏安全区由页面处理，不给广告容器增加 padding 或外边距。
+            binding.completionContent.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             androidx.core.view.WindowCompat.getInsetsController(window, binding.root)
-                .isAppearanceLightNavigationBars = bars.bottom > 0
+                .isAppearanceLightNavigationBars = false
             insets
         }
         ViewCompat.requestApplyInsets(binding.root)
+        NativeAdPlacements.result(value.kind, intent.getStringExtra(CompletionContract.SOURCE))?.let { slot ->
+            NativeAdCoordinator(this, binding.completionAd, slot)
+        }
         ViewCompat.setAccessibilityHeading(binding.completionTitle, true)
         binding.completionBack.setOnClickListener { exitToHome() }
         binding.completionContinue.setOnClickListener { exitToHome() }

@@ -135,6 +135,7 @@ class NetworkTrafficViewModel(
                 val result = if (entryMode) {
                     TimedEntryLoader({ minimumDisplay }, monotonicMillis).load(
                         initialStage = "MOBILE", count = { it: TrafficSnapshot -> it.apps.size },
+                        onStalled = { failIfCurrent(id) },
                         onFrame = { frame -> publishProgress(id, TrafficProgress(TrafficStage.valueOf(frame.detail.stage), frame.detail.completed, frame.detail.total), frame.percent) },
                     ) { report -> repository.load(period) { report(TaskProgress(it.stage.name, it.completed, it.total)) } }
                 } else repository.load(period) { publishProgress(id, it, it.percent) }
@@ -150,6 +151,7 @@ class NetworkTrafficViewModel(
             } catch (error: IOException) {
                 failIfCurrent(id)
             } finally {
+                failIfCurrent(id)
                 deadline.cancel()
             }
         }

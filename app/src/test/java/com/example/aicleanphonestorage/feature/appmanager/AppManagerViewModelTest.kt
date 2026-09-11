@@ -188,4 +188,52 @@ class AppManagerViewModelTest {
         assertEquals(vm.state.value.rows, restored.state.value.rows)
         assertEquals(setOf("sort.key", "sort.descending"), saved.keys())
     }
+    @Test
+    fun internalCancellationCannotLeaveEntryInLoading() = runTest {
+        val repository = object : AppManagerRepository {
+            override suspend fun load(progress: (Int, Int) -> Unit): AppManagerCatalog {
+                throw CancellationException("provider interrupted itself")
+            }
+        }
+        val vm = AppManagerEntryViewModel(repository, TimedEntryLoader({ 0 }, { testScheduler.currentTime }))
+            .also { store.put("entry", it) }
+        vm.begin(); advanceUntilIdle()
+        assertTrue(vm.state.value is AppManagerEntryState.Failed)
+        assertNull(vm.consume())
+    }
+
+    @Test
+    fun stalledEntryFailsAndCanStartANewRequest() = runTest {
+        val repo = Fake().apply { latency = 10_000 }
+        val vm = AppManagerEntryViewModel(repo, TimedEntryLoader({ 0 }, { testScheduler.currentTime }, 1000))
+            .also { store.put("entry", it) }
+        vm.begin(); advanceTimeBy(1000); runCurrent()
+        assertTrue(vm.state.value is AppManagerEntryState.Failed)
+        repo.latency = 0
+        vm.begin(); advanceUntilIdle()
+        assertNotNull(vm.consume())
+    }
+
+    @Test
+    fun cancelledOldFailureCannotOverwriteNewEntryLoading() = runTest {
+        var calls = 0
+        val repository = object : AppManagerRepository {
+            override suspend fun load(progress: (Int, Int) -> Unit): AppManagerCatalog {
+                if (++calls == 1) {
+                    withContext(NonCancellable) { delay(500) }
+                    throw IOException("late old failure")
+                }
+                delay(1000)
+                return AppManagerCatalog(emptyList())
+            }
+        }
+        val vm = AppManagerEntryViewModel(repository, TimedEntryLoader({ 0 }, { testScheduler.currentTime }))
+            .also { store.put("entry", it) }
+        vm.begin(); runCurrent(); vm.cancel(); vm.begin(); runCurrent()
+        advanceTimeBy(501); runCurrent()
+        assertTrue(vm.state.value is AppManagerEntryState.Loading)
+        advanceUntilIdle()
+        assertTrue(vm.state.value is AppManagerEntryState.Ready)
+    }
+
 }

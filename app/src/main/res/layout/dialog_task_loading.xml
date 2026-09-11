@@ -1,8 +1,8 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.example.aicleanphonestorage.core.ui.loading.LoadingDialogScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/task_dialog_surface"
     android:overScrollMode="never" android:fillViewport="false">
     <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:minHeight="281dp" android:paddingBottom="20dp">
+        android:paddingBottom="20dp">
         <ImageView android:id="@+id/loading_spinner" android:layout_width="50dp" android:layout_height="50dp"
             android:layout_marginTop="28dp" android:src="@drawable/ic_task_spinner" android:contentDescription="@null"
             android:importantForAccessibility="no" app:layout_constraintTop_toTopOf="parent"
@@ -29,9 +29,9 @@
                 android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="10dp"
                 android:minWidth="30dp" android:gravity="end" android:textSize="14sp" android:textColor="@color/traffic_blue"/>
         </LinearLayout>
-        <com.example.aicleanphonestorage.core.ui.loading.AdPlaceholderView android:id="@+id/loading_ad"
-            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:layout_marginTop="20dp"
+        <FrameLayout android:id="@+id/loading_ad"
+            android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/loading_progress_row" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+</com.example.aicleanphonestorage.core.ui.loading.LoadingDialogScrollView>

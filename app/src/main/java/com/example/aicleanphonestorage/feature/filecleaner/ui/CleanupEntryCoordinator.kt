@@ -32,8 +32,8 @@ internal class CleanupEntryCoordinator(
                 else -> model.cancel()
             }
         }
-        activity.supportFragmentManager.setFragmentResultListener(CANCEL, activity) { _, _ ->
-            model.cancel()
+        activity.supportFragmentManager.setFragmentResultListener(CANCEL, activity) { _, result ->
+            model.cancel(result.getLong(TaskLoadingDialogFragment.REQUEST_ID))
         }
         activity.supportFragmentManager.setFragmentResultListener(
             CleanupMessageDialog.RESULT,

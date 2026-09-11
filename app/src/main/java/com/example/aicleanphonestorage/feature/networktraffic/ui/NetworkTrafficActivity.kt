@@ -5,6 +5,8 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import com.example.aicleanphonestorage.app.ad.NativeAdCoordinator
+import com.example.aicleanphonestorage.app.ad.NativeAdFeature
 import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.SystemBarStyle
@@ -47,6 +49,7 @@ class NetworkTrafficActivity : AppCompatActivity() {
         enableEdgeToEdge(SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT), SystemBarStyle.light(Color.TRANSPARENT, Color.BLACK))
         val binding = ScreenNetworkTrafficBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        NativeAdCoordinator(this, binding.nativeAd, NativeAdFeature.NETWORK.featureSlot)
         ViewCompat.setAccessibilityHeading(binding.trafficTitle, true)
         val exit = FeatureExitCoordinator(this, { InterstitialPlacements.NETWORK_EXIT })
         binding.trafficBack.setOnClickListener { exit.exit() }

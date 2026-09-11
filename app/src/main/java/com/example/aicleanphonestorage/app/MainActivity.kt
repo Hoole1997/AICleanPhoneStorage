@@ -18,6 +18,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.aicleanphonestorage.core.permissions.*
+import com.example.aicleanphonestorage.core.ui.loading.observeEntryState
+import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.databinding.ScreenHomeBinding
 import com.example.aicleanphonestorage.feature.appmanager.ui.*
 import com.example.aicleanphonestorage.feature.filecleaner.ui.*
@@ -162,22 +164,14 @@ class MainActivity : AppCompatActivity() {
                 permissions,
             )
         cleanupCoordinator = CleanupEntryCoordinator(this, cleanupEntry, permissions)
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                cleanupEntry.state.collect(cleanupCoordinator::render)
-            }
-        }
+        observeEntryState(cleanupEntry.state, cleanupCoordinator::render)
         appManagerCoordinator =
             AppManagerEntryCoordinator(
                 this,
                 appManagerEntry,
                 (application as CleanApplication).container.appManagerTransfer,
             )
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                appManagerEntry.state.collect(appManagerCoordinator::render)
-            }
-        }
+        observeEntryState(appManagerEntry.state, appManagerCoordinator::render)
         homeActions = HomeEntryActions(
             permissions, trafficEntry, notificationEntry, cleanupEntry, appManagerEntry,
             openSettings = {
@@ -185,7 +179,10 @@ class MainActivity : AppCompatActivity() {
                     .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP))
             },
         )
-        renderer = HomeRenderer(binding, homeActions)
+        val nativeHome = layoutInflater.inflate(R.layout.view_native_ad_slot, binding.homeContent, false) as android.view.ViewGroup
+        renderer = HomeRenderer(binding, homeActions, nativeHome)
+        com.example.aicleanphonestorage.app.ad.NativeAdCoordinator(this, nativeHome,
+            com.example.aicleanphonestorage.app.ad.NativeAdPlacements.HOME)
         homeExitAds = HomeExitAdCoordinator(this, binding.root)
         if (homeExitAds.accept(intent)) homeActions.cancelPending()
         if (intent.getBooleanExtra(StartupNavigation.PERMISSION_COMPLETED, false))
@@ -209,16 +206,8 @@ class MainActivity : AppCompatActivity() {
             intent.removeExtra(NotificationCleanerActivity.EXTRA_REENTER)
             notificationEntry.beginEntry()
         }
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                notificationEntry.state.collect(notificationCoordinator::render)
-            }
-        }
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                trafficEntry.state.collect(trafficEntryCoordinator::render)
-            }
-        }
+        observeEntryState(notificationEntry.state, notificationCoordinator::render)
+        observeEntryState(trafficEntry.state, trafficEntryCoordinator::render)
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homeViewModel.uiState.collect { state ->

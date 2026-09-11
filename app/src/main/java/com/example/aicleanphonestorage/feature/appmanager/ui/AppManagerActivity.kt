@@ -3,6 +3,8 @@ package com.example.aicleanphonestorage.feature.appmanager.ui
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import com.example.aicleanphonestorage.app.ad.NativeAdCoordinator
+import com.example.aicleanphonestorage.app.ad.NativeAdFeature
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -69,6 +71,7 @@ class AppManagerActivity : AppCompatActivity() {
         )
         binding = ScreenAppManagerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        NativeAdCoordinator(this, binding.nativeAd, NativeAdFeature.APPS.featureSlot)
         ViewCompat.setAccessibilityHeading(binding.appManagerTitle, true)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val bars =

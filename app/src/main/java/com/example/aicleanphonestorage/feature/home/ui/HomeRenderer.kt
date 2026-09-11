@@ -12,11 +12,12 @@ import com.example.aicleanphonestorage.databinding.ScreenHomeBinding
 import kotlin.math.ceil
 
 /** 页面渲染与 Activity 生命周期解耦；只处理布局和轻量状态，没有后台任务或平台数据读取。 */
-internal class HomeRenderer(private val binding: ScreenHomeBinding, actions: HomeUiActions) {
+internal class HomeRenderer(private val binding: ScreenHomeBinding, actions: HomeUiActions,
+    private val nativeContainer: android.view.ViewGroup? = null) {
     private val configuration = binding.root.resources.configuration
     private val contentWidthDp = minOf(configuration.screenWidthDp, 600) - 32
     private val expanded = configuration.fontScale > 1.2f || contentWidthDp < 320
-    private val adapter = HomeListAdapter(expanded, actions)
+    private val adapter = HomeListAdapter(expanded, actions, nativeContainer)
     private var lastContent: HomeContent? = null
     private var resumed=false
     private var focused=false
@@ -84,7 +85,7 @@ internal class HomeRenderer(private val binding: ScreenHomeBinding, actions: Hom
         }
         if (content != null && content != lastContent) {
             lastContent = content
-            adapter.submitList(content.rows())
+            adapter.submitList(content.rows(includeNativeAd = nativeContainer != null))
         }
         updateMotion()
     }

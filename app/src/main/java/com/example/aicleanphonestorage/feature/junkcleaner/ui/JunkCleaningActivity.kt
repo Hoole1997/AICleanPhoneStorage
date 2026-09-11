@@ -3,6 +3,8 @@ package com.example.aicleanphonestorage.feature.junkcleaner.ui
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import com.example.aicleanphonestorage.app.ad.NativeAdCoordinator
+import com.example.aicleanphonestorage.app.ad.NativeAdFeature
 import android.widget.Toast
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
@@ -69,6 +71,7 @@ class JunkCleaningActivity : AppCompatActivity() {
         )
         binding = ScreenJunkCleaningBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        NativeAdCoordinator(this, binding.nativeAd, NativeAdFeature.JUNK.featureSlot)
         ads = InterstitialActions(this)
         operations = CleanupOperationCoordinator(this, cleanup, savedInstanceState, ads)
         exit = FeatureExitCoordinator(this, { InterstitialPlacements.exit(CleanupFeature.SMART_CLEAN) }, isBusy = { ads.busy })
@@ -92,17 +95,6 @@ class JunkCleaningActivity : AppCompatActivity() {
             }
         binding.junkCategories.layoutManager = LinearLayoutManager(this)
         binding.junkCategories.adapter = adapter
-        // 底栏文案在大字体/目录范围下可能增高，列表留白跟随实测高度，保证最后一项能滚到按钮上方。
-        binding.junkFooter.addOnLayoutChangeListener { _, _, top, _, bottom, _, oldTop, _, oldBottom
-            ->
-            if (bottom - top != oldBottom - oldTop)
-                binding.junkCategories.setPadding(
-                    0,
-                    0,
-                    0,
-                    bottom - top + (12 * resources.displayMetrics.density).toInt(),
-                )
-        }
         (binding.junkCategories.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations =
             false
         lifecycleScope.launch {

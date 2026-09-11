@@ -15,6 +15,8 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import com.example.aicleanphonestorage.R
+import com.example.aicleanphonestorage.app.ad.NativeAdCoordinator
+import com.example.aicleanphonestorage.app.ad.NativeAdPlacements
 import com.example.aicleanphonestorage.databinding.DialogTaskLoadingBinding
 import java.text.NumberFormat
 
@@ -32,23 +34,38 @@ data class LoadingUiState(
 class TaskLoadingDialogFragment : DialogFragment() {
     private var binding: DialogTaskLoadingBinding? = null
     private var spinner: ObjectAnimator? = null
+    private var nativeAd: NativeAdCoordinator? = null
+    private var viewReady = false
     private lateinit var model: LoadingUiState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val state = savedInstanceState ?: requireArguments()
-        model = LoadingUiState(state.getLong("id"), state.getString("title").orEmpty(), state.getString("message").orEmpty(),
-            state.getInt("percent", -1).takeIf { it >= 0 }, state.getBoolean("cancellable", true), state.getBoolean("ad", true), state.getString("result_key") ?: RESULT_KEY)
+        model =
+            LoadingUiState(
+                state.getLong("id"),
+                state.getString("title").orEmpty(),
+                state.getString("message").orEmpty(),
+                state.getInt("percent", -1).takeIf { it >= 0 },
+                state.getBoolean("cancellable", true),
+                state.getBoolean("ad", true),
+                state.getString("result_key") ?: RESULT_KEY,
+            )
         isCancelable = model.cancellable
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = Dialog(requireContext()).apply {
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setCanceledOnTouchOutside(false)
-        window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
-    }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        Dialog(requireContext()).apply {
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
+            setCanceledOnTouchOutside(false)
+            window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+        }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
         val viewBinding = DialogTaskLoadingBinding.inflate(inflater, container, false)
         binding = viewBinding
         viewBinding.loadingClose.setOnClickListener {
@@ -61,6 +78,31 @@ class TaskLoadingDialogFragment : DialogFragment() {
         return viewBinding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewReady = true
+        syncNativeAd()
+    }
+
+    private fun syncNativeAd() {
+        if (!viewReady) return
+        val container = binding?.loadingAd ?: return
+        if (model.showAd) {
+            if (nativeAd == null)
+                nativeAd =
+                    NativeAdCoordinator(
+                        requireActivity(),
+                        container,
+                        NativeAdPlacements.SCAN_DIALOG,
+                        lifecycleOwner = viewLifecycleOwner,
+                    )
+        } else {
+            nativeAd?.dispose()
+            nativeAd = null
+            container.visibility = View.GONE
+        }
+    }
+
     fun render(state: LoadingUiState) {
         model = state
         isCancelable = state.cancellable
@@ -68,7 +110,6 @@ class TaskLoadingDialogFragment : DialogFragment() {
             loadingTitle.text = state.title
             loadingMessage.text = state.message
             loadingClose.isVisible = state.cancellable
-            loadingAd.isVisible = state.showAd
             if (state.percent == null) {
                 if (!loadingProgress.isIndeterminate) {
                     loadingProgress.visibility = View.INVISIBLE
@@ -80,34 +121,61 @@ class TaskLoadingDialogFragment : DialogFragment() {
                 // 同一帧切换模式并赋值，避免等待 indeterminate 动画结束，导致进度条落后于计数。
                 if (loadingProgress.isIndeterminate) loadingProgress.isIndeterminate = false
                 loadingProgress.setProgressCompat(state.percent.coerceIn(0, 100), false)
-                loadingPercentage.text = NumberFormat.getPercentInstance(resources.configuration.locales[0]).format(state.percent / 100.0)
+                loadingPercentage.text =
+                    NumberFormat.getPercentInstance(resources.configuration.locales[0])
+                        .format(state.percent / 100.0)
             }
         }
+        syncNativeAd()
     }
 
     override fun onStart() {
         super.onStart()
         val metrics = resources.displayMetrics
-        val width = minOf((315 * metrics.density).toInt(), metrics.widthPixels - (48 * metrics.density).toInt())
-        val maxHeight = metrics.heightPixels - (80 * metrics.density).toInt()
-        binding?.root?.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(maxHeight, View.MeasureSpec.AT_MOST))
+        val width =
+            minOf(
+                (315 * metrics.density).toInt(),
+                metrics.widthPixels - (48 * metrics.density).toInt(),
+            )
         dialog?.window?.apply {
-            setLayout(width, binding?.root?.measuredHeight ?: ViewGroup.LayoutParams.WRAP_CONTENT)
+            // 高度随广告填充/隐藏自然变化，ScrollView 自身限制最大高度并允许滚动。
+            setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
             addFlags(android.view.WindowManager.LayoutParams.FLAG_DIM_BEHIND)
             setDimAmount(0.7f)
         }
-        spinner = ObjectAnimator.ofFloat(binding?.loadingSpinner, View.ROTATION, 0f, 360f).apply {
-            duration = 1000L
-            interpolator = LinearInterpolator()
-            repeatCount = ValueAnimator.INFINITE
-            start()
-        }
+        spinner =
+            ObjectAnimator.ofFloat(binding?.loadingSpinner, View.ROTATION, 0f, 360f).apply {
+                duration = 1000L
+                interpolator = LinearInterpolator()
+                repeatCount = ValueAnimator.INFINITE
+                start()
+            }
     }
 
-    override fun onStop() { spinner?.cancel(); spinner = null; super.onStop() }
-    override fun onDestroyView() { binding = null; super.onDestroyView() }
-    override fun onCancel(dialog: DialogInterface) { publishCancellation(); super.onCancel(dialog) }
-    private fun publishCancellation() = parentFragmentManager.setFragmentResult(model.resultKey, Bundle().apply { putLong(REQUEST_ID, model.requestId) })
+    override fun onStop() {
+        spinner?.cancel()
+        spinner = null
+        super.onStop()
+    }
+
+    override fun onDestroyView() {
+        viewReady = false
+        nativeAd?.dispose()
+        nativeAd = null
+        binding = null
+        super.onDestroyView()
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        publishCancellation()
+        super.onCancel(dialog)
+    }
+
+    private fun publishCancellation() =
+        parentFragmentManager.setFragmentResult(
+            model.resultKey,
+            Bundle().apply { putLong(REQUEST_ID, model.requestId) },
+        )
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putAll(model.toBundle())
@@ -118,10 +186,19 @@ class TaskLoadingDialogFragment : DialogFragment() {
         const val TAG = "task_loading"
         const val RESULT_KEY = "task_loading.cancelled"
         const val REQUEST_ID = "request_id"
-        fun newInstance(state: LoadingUiState) = TaskLoadingDialogFragment().apply { arguments = state.toBundle() }
-        private fun LoadingUiState.toBundle() = Bundle().apply {
-            putLong("id", requestId); putString("title", title); putString("message", message)
-            putInt("percent", percent ?: -1); putBoolean("cancellable", cancellable); putBoolean("ad", showAd); putString("result_key", resultKey)
-        }
+
+        fun newInstance(state: LoadingUiState) =
+            TaskLoadingDialogFragment().apply { arguments = state.toBundle() }
+
+        private fun LoadingUiState.toBundle() =
+            Bundle().apply {
+                putLong("id", requestId)
+                putString("title", title)
+                putString("message", message)
+                putInt("percent", percent ?: -1)
+                putBoolean("cancellable", cancellable)
+                putBoolean("ad", showAd)
+                putString("result_key", resultKey)
+            }
     }
 }

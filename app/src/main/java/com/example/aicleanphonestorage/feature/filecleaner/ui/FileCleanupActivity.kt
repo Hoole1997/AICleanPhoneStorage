@@ -5,6 +5,8 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import com.example.aicleanphonestorage.app.ad.NativeAdCoordinator
+import com.example.aicleanphonestorage.app.ad.NativeAdPlacements
 import android.text.format.Formatter
 import android.widget.Toast
 import androidx.activity.SystemBarStyle
@@ -121,6 +123,9 @@ class FileCleanupActivity : AppCompatActivity() {
                 intent.getStringExtra(EXTRA_BUCKET)
             )
         if (adapter != null) return
+        // Smart Cleaning 的三级分类页不是新的功能页广告位；四个独立清理功能共用本布局。
+        if (feature != CleanupFeature.SMART_CLEAN)
+            NativeAdCoordinator(this, binding.nativeAd, NativeAdPlacements.feature(feature).featureSlot)
         val columns =
             if (feature == CleanupFeature.SMART_CLEAN && junkKind?.photos == true) 3
             else

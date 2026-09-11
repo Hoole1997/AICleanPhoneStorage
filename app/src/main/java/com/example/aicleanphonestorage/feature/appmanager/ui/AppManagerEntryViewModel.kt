@@ -42,6 +42,7 @@ internal class AppManagerEntryViewModel(
                     val result =
                         loader.load(
                             count = { it: AppManagerCatalog -> it.apps.size },
+                            onStalled = { failIfCurrent(id) },
                             onFrame = { frame ->
                                 if ((current.value as? AppManagerEntryState.Loading)?.id == id)
                                     current.value = AppManagerEntryState.Loading(id, frame)
@@ -57,9 +58,17 @@ internal class AppManagerEntryViewModel(
                 } catch (error: CancellationException) {
                     throw error
                 } catch (_: Exception) {
-                    current.value = AppManagerEntryState.Failed
+                    failIfCurrent(id)
+                } finally {
+                    // 自取消、内部异常等出口也必须结束仍属于本次请求的 Loading。
+                    failIfCurrent(id)
                 }
             }
+    }
+
+    private fun failIfCurrent(id: Long) {
+        if ((current.value as? AppManagerEntryState.Loading)?.id == id)
+            current.value = AppManagerEntryState.Failed
     }
 
     fun cancel() {

@@ -27,6 +27,9 @@
             <com.google.android.material.progressindicator.LinearProgressIndicator android:id="@+id/notification_page_progress"
                 android:layout_width="match_parent" android:layout_height="3dp" android:indeterminate="true" android:visibility="gone" app:indicatorColor="@color/traffic_blue"/>
         </FrameLayout>
+        <!-- 默认收起，由 loadNative 成功/失败回调控制整块广告的显示。 -->
+        <FrameLayout android:id="@+id/native_ad" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:visibility="gone" />
         <com.google.android.material.button.MaterialButton android:id="@+id/notification_done" style="@style/Widget.Traffic.Button"
             android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="24dp" android:layout_marginEnd="24dp"
             android:layout_marginBottom="16dp" android:minHeight="48dp" android:text="@string/completion_notification_done" android:visibility="gone" app:cornerRadius="100dp" />

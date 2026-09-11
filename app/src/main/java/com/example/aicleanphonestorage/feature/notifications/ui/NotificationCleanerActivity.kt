@@ -3,6 +3,8 @@ package com.example.aicleanphonestorage.feature.notifications.ui
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import com.example.aicleanphonestorage.app.ad.NativeAdCoordinator
+import com.example.aicleanphonestorage.app.ad.NativeAdFeature
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -67,6 +69,7 @@ class NotificationCleanerActivity : AppCompatActivity() {
         )
         val binding = ScreenNotificationCleanerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        NativeAdCoordinator(this, binding.nativeAd, NativeAdFeature.NOTIFY.featureSlot)
         ViewCompat.setAccessibilityHeading(binding.notificationTitle, true)
         val exit = FeatureExitCoordinator(this, { InterstitialPlacements.NOTIFICATIONS_EXIT })
         binding.notificationBack.setOnClickListener { exit.exit() }
