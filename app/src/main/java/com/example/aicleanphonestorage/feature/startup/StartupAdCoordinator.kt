@@ -8,6 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.example.aicleanphonestorage.app.ad.loadSplash
+import com.example.aicleanphonestorage.app.ad.HotStartAdLog
 import kotlinx.coroutines.launch
 
 /** 等启动页可见、语言准备完成后调用用户提供的 loadSplash；SDK 管理加载、展示和失败规则。 */
@@ -27,7 +28,12 @@ internal class StartupAdCoordinator(
             val id = model.beginAd() ?: return@Runnable
             // 回调只捕获 ViewModel 和请求编号，旋转后的新 Activity 可续接，彻底退出后忽略迟到回调。
             val state = model
-            request(PLACEMENT) { state.adFinished(id) }
+            val hot = state.entry().hotStart
+            if (hot) HotStartAdLog.event("splash_request slot=$PLACEMENT requestId=$id")
+            request(PLACEMENT) { success ->
+                if (hot) HotStartAdLog.event("splash_callback slot=$PLACEMENT requestId=$id success=$success")
+                state.adFinished(id)
+            }
         }
     }
 

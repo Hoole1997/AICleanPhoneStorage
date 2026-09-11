@@ -12,7 +12,7 @@
 
 | # | 位置 | 类型 | 当前代码 / 后台 Key | 状态 |
 | --- | --- | --- | --- | --- |
-| 1 | 开屏 | 开屏广告 | `splash` | 已接入冷启动、通知入口；普通回前台场景待补 |
+| 1 | 开屏 | 开屏广告 | `splash` | 已接入冷启动、通知入口、满足总控且任一平台限频的热启动 |
 | 2 | 垃圾清理 · 功能内 | 插屏 | `clean_confirm_junk` | 确认后请求；回调后执行业务 |
 | 3 | 截图清理 · 功能内 | 插屏 | `clean_confirm_screenshots` | 确认后请求；回调后执行业务 |
 | 4 | 照片压缩 · 功能内 | 插屏 | `clean_confirm_photo` | 确认后请求；回调后执行业务 |
@@ -51,7 +51,7 @@
 - `InterstitialPlacements.clean()` 集中映射 5 个清理功能，`exit()` 集中映射同一功能的全部首页出口。通知清理两种出口统一使用 `back_home_notify`；应用管理、流量保留返回广告，不接入功能内插屏。
 - `HomeExitAdContract` 仅接受 8 个 `back_home_*`。首页恢复、获得焦点并绘制后才请求；同一 token 先消费后展示，避免回调、旋转和重复 Intent 重放。
 - 来源缺失时不再生成 `file_cleanup_*` 兜底 Key：正常继续业务/返回首页，跳过无法归属的广告。恢复旧版本待展示状态时，旧 Key 会被过滤；不会再向 SDK 发送历史 Key。
-- `StartupAdCoordinator` 使用 `splash`。本次仅同步 Key 与 SDK 参数，通知授权先于开屏请求、最短停留和 SDK 回调续接逻辑保持现有实现。
+- `StartupAdCoordinator` 使用 `splash`。冷启动/通知仍先处理推送权限；热启动须通过 APP_OPEN 总控且任一平台限频，广告回调后仅关闭启动页返回原 Activity。详见 [热启动说明](hot-start.md)。
 
 ## 原生广告接入约定
 

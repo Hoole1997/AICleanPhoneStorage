@@ -37,11 +37,9 @@
 
 ## 仍存在的场景差异
 
-### P2：普通后台回前台的开屏触发尚未在 APP 层接入
+### 已修复：普通后台回前台的开屏触发
 
-总表 `splash` 包含冷启动、热启动回前台、通知入口。当前业务调用来自 [StartupAdCoordinator](../../app/src/main/java/com/example/aicleanphonestorage/feature/startup/StartupAdCoordinator.kt)，由启动页触发；冷启动和通知通过 [StartupNavigation](../../app/src/main/java/com/example/aicleanphonestorage/feature/startup/StartupNavigation.kt) 进入该链路。没有找到普通后台任务恢复时主动请求 `splash` 的业务入口。
-
-因此，Key 已正确，但普通任务回前台这一场景不能认定已完成。SDK 是否自主展示回前台广告未实测；本次没有新增前后台监听或改变启动策略。
+后续已接入进程前后台监听，分别读取 APP_OPEN 总控与 AdPlatform 各平台状态，总控 canShow 且任一平台 canBid 后才打开启动页。热启动遵循用户新要求：结束后返回原 Activity；冷启动与通知入口仍进入首页。详见 [热启动实现与验证](hot-start.md)。
 
 ### P2：垃圾扫描为空时缺少 Got it 广告路径
 
@@ -73,4 +71,4 @@
 
 模拟器广告请求使用构造注入的假 SDK，不点击真实广告。三种 AdExt 的 SDK position 转发由实际依赖编译和字节码核验；真实填充、后台统计归因、线上开关值与 SDK 频控没有完成联调。不能据此声明 30 个位都已实际展示。未改动 UI 资源，布局回归采用模拟器测量断言；本次未另做视觉截图审阅。
 
-后续后台应配置本清单中的新 Key；测试结束再去掉 `isAdSlotEnabled()` 的临时 `return true`。普通回前台和垃圾空扫描两条缺口需要另行补齐业务触发。
+后续后台应配置本清单中的新 Key；测试结束再去掉 `isAdSlotEnabled()` 的临时 `return true`。热启动已在后续接入，垃圾空扫描仍需另行补齐业务触发。

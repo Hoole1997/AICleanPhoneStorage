@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.android.common.bill.ads.AdResult
 import com.android.common.bill.ads.ext.AdShowExt
 import com.android.common.bill.ui.NativeAdStyleType
+import com.example.aicleanphonestorage.core.lifecycle.ForegroundTransitionGuard
 import kotlin.coroutines.coroutineContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ensureActive
@@ -63,6 +64,7 @@ fun FragmentActivity.loadInterstitial(
     call: (Boolean) -> Unit,
 ) {
     lifecycleScope.launch {
+        val transition = ForegroundTransitionGuard.hold("interstitial:$positionName")
         try {
             if (!condition.invoke() || !isAdSlotEnabled(positionName)) {
                 call.invoke(false)
@@ -75,6 +77,8 @@ fun FragmentActivity.loadInterstitial(
             }
         } catch (_: Exception) {
             call.invoke(false)
+        } finally {
+            transition.close()
         }
     }
 }
@@ -85,6 +89,7 @@ fun FragmentActivity.loadSplash(
     call: (Boolean) -> Unit,
 ) {
     lifecycleScope.launch {
+        val transition = ForegroundTransitionGuard.hold("splash:$positionName")
         try {
             if (!condition.invoke() || !isAdSlotEnabled(positionName)) {
                 call.invoke(false)
@@ -97,11 +102,13 @@ fun FragmentActivity.loadSplash(
             }
         } catch (_: Exception) {
             call.invoke(false)
+        } finally {
+            transition.close()
         }
     }
 }
 
-private fun isAdSlotEnabled(positionName: String): Boolean {
+internal fun isAdSlotEnabled(positionName: String): Boolean {
     // 测试阶段刻意放行所有广告位；线上参数尚未配置。Slot Key 清单见 docs/ads/slots.md。
     // 联调完成后移除这一行 return true，恢复下面的远程开关判断。
     return true

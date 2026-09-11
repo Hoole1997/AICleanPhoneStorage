@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 internal data class StartupEntry(
     val destination: NotificationDestination,
     val previewMode: String? = null,
+    val hotStart: Boolean = false,
 )
 
 internal data class StartupState(
@@ -59,6 +60,7 @@ internal class StartupViewModel(
     fun accept(entry: StartupEntry) {
         saved[DESTINATION] = entry.destination.key
         saved[PREVIEW] = entry.previewMode
+        saved[HOT_START] = entry.hotStart
         // 等待中的新通知只更新目标；已交接后的新入口才开启下一次广告请求。
         if (current.value.consumed) {
             minimumStayJob?.cancel()
@@ -75,7 +77,7 @@ internal class StartupViewModel(
 
     fun hasEntry() = saved.contains(DESTINATION)
 
-    fun entry() = StartupEntry(NotificationDestination.fromKey(saved[DESTINATION]), saved[PREVIEW])
+    fun entry() = StartupEntry(NotificationDestination.fromKey(saved[DESTINATION]), saved[PREVIEW], saved[HOT_START] ?: false)
 
     fun permissionFinished() {
         if (!cleared) current.value = current.value.copy(permissionCompleted = true)
@@ -131,6 +133,7 @@ internal class StartupViewModel(
         const val MINIMUM_STAY_MS = 3_000L
         const val DESTINATION = "startup.destination"
         const val PREVIEW = "startup.preview"
+        const val HOT_START = "startup.hot"
         const val CONSUMED = "startup.consumed"
     }
 }

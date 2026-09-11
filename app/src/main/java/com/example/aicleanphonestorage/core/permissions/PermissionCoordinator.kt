@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.example.aicleanphonestorage.R
+import com.example.aicleanphonestorage.core.lifecycle.ForegroundTransitionGuard
 import kotlinx.coroutines.launch
 
 internal data class PermissionOutcome(
@@ -34,12 +35,15 @@ internal class PermissionCoordinator(
 
     private val handlers = mutableMapOf<String, Handler>()
     private var away = false
+    private var externalUi: AutoCloseable? = null
     private val runtime =
         activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            releaseExternalUi()
             model.runtimeResult()
         }
     private val directory =
         activity.registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) {
+            releaseExternalUi()
             model.directoryResult(it?.toString())
         }
     val pending: Boolean
@@ -69,10 +73,13 @@ internal class PermissionCoordinator(
         activity.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
+                    releaseExternalUi()
                     away = false
                     model.resumed()
                     drain()
                 }
+
+                override fun onDestroy(owner: LifecycleOwner) = releaseExternalUi()
 
                 override fun onStop(owner: LifecycleOwner) {
                     if (!activity.isChangingConfigurations) {
@@ -148,6 +155,11 @@ internal class PermissionCoordinator(
         return true
     }
 
+    private fun releaseExternalUi() {
+        externalUi?.close()
+        externalUi = null
+    }
+
     private fun drain() {
         val value = model.state.value ?: return
         val resumed = activity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
@@ -156,6 +168,8 @@ internal class PermissionCoordinator(
                 if (resumed) {
                     if (!model.launched(value.id)) return
                     if (model.state.value?.phase != PermissionPhase.WAITING) return
+                    releaseExternalUi()
+                    externalUi = ForegroundTransitionGuard.hold("permission:${value.kind}")
                     try {
                         when {
                             value.kind == PermissionKind.DIRECTORY -> directory.launch(null)
@@ -171,8 +185,10 @@ internal class PermissionCoordinator(
                             else -> runtime.launch(PermissionChecks.runtimePermissions(value.kind))
                         }
                     } catch (_: ActivityNotFoundException) {
+                        releaseExternalUi()
                         model.launchFailed(value.id)
                     } catch (_: SecurityException) {
+                        releaseExternalUi()
                         model.launchFailed(value.id)
                     }
                 }
@@ -180,6 +196,7 @@ internal class PermissionCoordinator(
                 if (resumed) {
                     val handler = handlers[value.route] ?: return
                     val result = model.consume() ?: return
+                    releaseExternalUi()
                     if (result.unavailable)
                         Toast.makeText(activity, R.string.permission_unavailable, Toast.LENGTH_LONG)
                             .show()

@@ -13,18 +13,23 @@ import io.docview.push.NotificationDestination
 
 /** 启动页只转交白名单目标与一个调试标记，绝不复制通知正文、任意 URI 或完整 extras。 */
 internal object StartupNavigation {
+    private const val HOT_START = "startup.entry.hot"
     const val COMPLETED = "startup.completed"
     const val PERMISSION_COMPLETED = "startup.permission.completed"
 
     fun read(intent: Intent) = StartupEntry(
         NotificationNavigation.read(intent) ?: NotificationDestination.HOME,
         HomePreviewSupport.initialSelection(intent, null),
+        hotStart = intent.getBooleanExtra(HOT_START, false) && NotificationNavigation.read(intent) == null,
     )
 
     fun needsStartup(intent: Intent) = !intent.getBooleanExtra(COMPLETED, false) && NotificationNavigation.read(intent) != null
 
+    fun hotIntent(context: Context) = Intent(context, StartupActivity::class.java)
+        .putExtra(HOT_START, true)
+
     fun startupIntent(context: Context, entry: StartupEntry) =
-        Intent(context, StartupActivity::class.java)
+        if (entry.hotStart) hotIntent(context) else Intent(context, StartupActivity::class.java)
             .putExtra(NotificationNavigation.EXTRA_DESTINATION, entry.destination.key)
             .putExtra(HomePreviewSupport.EXTRA_MODE, entry.previewMode)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -36,6 +41,17 @@ internal object StartupNavigation {
             .putExtra(COMPLETED, true)
             .putExtra(PERMISSION_COMPLETED, true)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+
+    /** 热启动只结束自身；不重建原页，不启动首页，不清理任务栈。 */
+    @Suppress("DEPRECATION")
+    fun returnToCaller(activity: Activity, animate: Boolean) {
+        val enter = if (animate) android.R.anim.fade_in else 0
+        val exit = if (animate) android.R.anim.fade_out else 0
+        if (Build.VERSION.SDK_INT >= 34)
+            activity.overrideActivityTransition(Activity.OVERRIDE_TRANSITION_CLOSE, enter, exit)
+        activity.finish()
+        if (Build.VERSION.SDK_INT < 34) activity.overridePendingTransition(enter, exit)
+    }
 
     /** 仅定制启动页到首页；低版本兼容和窗口动画统一放在导航边界，不改变其他业务页面。 */
     @Suppress("DEPRECATION")

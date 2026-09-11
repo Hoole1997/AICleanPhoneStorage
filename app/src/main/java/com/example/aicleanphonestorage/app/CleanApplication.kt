@@ -1,6 +1,7 @@
 package com.example.aicleanphonestorage.app
 
 import android.app.Application
+import com.example.aicleanphonestorage.app.ad.HotStartAdCoordinator
 import com.example.aicleanphonestorage.app.ad.AdSdkInitializer
 import com.example.aicleanphonestorage.core.diagnostics.PerformanceDiagnostics
 import com.example.aicleanphonestorage.core.locale.AppLanguageController
@@ -29,5 +30,6 @@ class CleanApplication : Application(), NotificationRuntimeOwner {
         languages.initialize()
         notificationRuntime.initialize()
         AdSdkInitializer.initialize(this)
+        HotStartAdCoordinator(this)
     }
 }

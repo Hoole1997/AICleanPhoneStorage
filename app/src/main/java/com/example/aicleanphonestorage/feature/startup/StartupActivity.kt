@@ -18,6 +18,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.app.CleanApplication
+import com.example.aicleanphonestorage.app.ad.HotStartAdLog
 import com.example.aicleanphonestorage.core.permissions.PermissionCoordinator
 import com.example.aicleanphonestorage.core.permissions.PermissionFlowViewModel
 import com.example.aicleanphonestorage.databinding.ScreenStartupBinding
@@ -27,7 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-/** 独立原生启动 Activity；广告回调放行后统一进入首页，再由首页处理通知目的地。 */
+/** 冷启动/通知进入首页；热启动在广告结束后仅关闭自身，恢复原 Activity。 */
 class StartupActivity : AppCompatActivity() {
     private val model: StartupViewModel by viewModels {
         viewModelFactory {
@@ -86,6 +87,10 @@ class StartupActivity : AppCompatActivity() {
         }
         ViewCompat.requestApplyInsets(binding.root)
         if (!model.hasEntry()) model.accept(incoming)
+        if (model.entry().hotStart) {
+            HotStartAdLog.event("startup_created mode=hot restored=${savedInstanceState != null}")
+            model.permissionFinished()
+        }
         val app = application as CleanApplication
         permissions = PermissionCoordinator(this, permissionFlow, app.container.permissionAccess)
         pushPermission =
@@ -106,7 +111,7 @@ class StartupActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 model.state.collect { state ->
-                    if (state.prepared && !pushPermissionModel.state.value.completed)
+                    if (!model.entry().hotStart && state.prepared && !pushPermissionModel.state.value.completed)
                         pushPermission.onResume()
                     renderer.render(state)
                     if (state.consumed && !isFinishing) finish()
@@ -123,6 +128,7 @@ class StartupActivity : AppCompatActivity() {
         val incoming = StartupNavigation.read(intent)
         setIntent(StartupNavigation.startupIntent(this, incoming))
         model.accept(incoming)
+        if (incoming.hotStart) model.permissionFinished()
         proceedIfReady()
     }
 
@@ -134,7 +140,11 @@ class StartupActivity : AppCompatActivity() {
         )
             return
         val entry = model.consume() ?: return
-        StartupNavigation.openHome(this, entry, animate = renderer.transitionsEnabled)
+        if (entry.hotStart) {
+            HotStartAdLog.event("startup_finished destination=caller")
+            StartupNavigation.returnToCaller(this, animate = renderer.transitionsEnabled)
+        }
+        else StartupNavigation.openHome(this, entry, animate = renderer.transitionsEnabled)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -149,7 +159,7 @@ class StartupActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         renderer.start()
-        if (model.state.value.prepared && !pushPermissionModel.state.value.completed)
+        if (!model.entry().hotStart && model.state.value.prepared && !pushPermissionModel.state.value.completed)
             pushPermission.onResume()
     }
 

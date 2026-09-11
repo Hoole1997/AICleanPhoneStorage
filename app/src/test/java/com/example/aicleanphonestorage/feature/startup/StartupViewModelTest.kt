@@ -11,6 +11,29 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class StartupViewModelTest {
     @Test
+    fun hotEntrySurvivesSavedStateRestoreAndNotificationReplacesReturnMode() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        try {
+            val saved = SavedStateHandle()
+            val vm = StartupViewModel(saved, clock = { testScheduler.currentTime }) {}
+            vm.accept(StartupEntry(NotificationDestination.HOME, hotStart = true))
+            val restored = StartupViewModel(SavedStateHandle(saved.keys().associateWith { saved.get<Any?>(it) }), clock = { testScheduler.currentTime }) {}
+            assertTrue(restored.entry().hotStart)
+            restored.permissionFinished()
+            runCurrent()
+            val request = requireNotNull(restored.beginAd())
+            restored.adFinished(request)
+            advanceTimeBy(3_000)
+            runCurrent()
+            assertTrue(requireNotNull(restored.consume()).hotStart)
+            assertNull(restored.consume())
+            restored.accept(StartupEntry(NotificationDestination.PHOTOS))
+            assertFalse(restored.entry().hotStart)
+            assertEquals(NotificationDestination.PHOTOS, restored.entry().destination)
+        } finally { Dispatchers.resetMain() }
+    }
+
+    @Test
     fun elapsedTimeCannotReplaceAdCallbackAndDestinationIsConsumedOnce() = runTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         try {

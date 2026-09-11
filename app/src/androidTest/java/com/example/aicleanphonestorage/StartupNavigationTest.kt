@@ -18,6 +18,17 @@ class StartupNavigationTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
 
     @Test
+    fun hotIntentPreservesTaskAndNotificationsAlwaysUseNormalEntry() {
+        val hot = StartupNavigation.hotIntent(context)
+        assertEquals(0, hot.flags)
+        assertTrue(StartupNavigation.read(hot).hotStart)
+        assertTrue(StartupNavigation.read(StartupNavigation.startupIntent(context, StartupNavigation.read(hot))).hotStart)
+        hot.putExtra(NotificationNavigation.EXTRA_DESTINATION, "photos")
+        assertFalse(StartupNavigation.read(hot).hotStart)
+        assertEquals(NotificationDestination.PHOTOS, StartupNavigation.read(hot).destination)
+    }
+
+    @Test
     fun systemSplashUsesApplicationIconAndHomeUsesScopedFade() {
         val themed =
             android.view.ContextThemeWrapper(context, R.style.Theme_AICleanPhoneStorage_Launcher)
