@@ -71,7 +71,8 @@ internal class HomeRenderer(private val binding: ScreenHomeBinding, actions: Hom
     }
 
     fun render(state: HomeUiState, preview: HomeContent? = null) {
-        val content = preview ?: (state as? HomeUiState.Ready)?.overview?.toHomeContent(configuration.locales[0])
+        val ready = state as? HomeUiState.Ready
+        val content = preview ?: ready?.overview?.toHomeContent(configuration.locales[0], ready.cleaning)
         binding.homeList.isVisible = content != null
         binding.statusPanel.isVisible = content == null
         binding.loadingIndicator.isVisible = content == null && state is HomeUiState.Loading

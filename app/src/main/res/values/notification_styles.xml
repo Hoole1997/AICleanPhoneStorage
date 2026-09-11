@@ -1,0 +1,15 @@
+<resources>
+    <!-- 角标为辅助数值，字号低于 11/12sp 功能标签；自然高度避免数字/单位被固定行高裁切。 -->
+    <style name="Widget.Clean.NotificationBadge" parent="">
+        <item name="android:textSize">9sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:paddingHorizontal">2dp</item>
+        <item name="android:paddingVertical">1dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/push_badge</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+</resources>

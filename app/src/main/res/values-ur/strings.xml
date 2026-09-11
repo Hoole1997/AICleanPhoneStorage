@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="home_space_ready">خالی کی جا سکنے والی جگہ</string>
+    <string name="home_review_before_cleaning">صفائی سے پہلے فائلیں دیکھیں</string>
     <string name="app_manager_title">ایپ مینیجر</string>
     <string name="app_manager_scanning">سکیننگ…</string>
     <string name="app_manager_loading_prepare">انسٹال کردہ ایپس کو پڑھنا</string>

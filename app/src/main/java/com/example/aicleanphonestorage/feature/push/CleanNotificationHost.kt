@@ -6,9 +6,10 @@ import android.view.View
 import android.widget.RemoteViews
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.aicleanphonestorage.R
+import com.example.aicleanphonestorage.feature.home.data.HomeCleaningState
 import io.docview.push.*
 
-/** 仅保存四个短角标，默认全空；业务有真实结果时按事件更新，不使用设计中的示例数字。 */
+/** 其余入口预留短角标；生产环境 Clean 角标由首页的共享虚拟清理状态提供。 */
 internal data class ResidentBadges(
     val clean: String? = null,
     val network: String? = null,
@@ -16,7 +17,11 @@ internal data class ResidentBadges(
     val unusedFiles: String? = null,
 )
 
-internal class CleanNotificationHost(context: Context) : NotificationHost {
+internal class CleanNotificationHost(
+    context: Context,
+    private val cleaning: HomeCleaningState? = null,
+    private val refreshResident: () -> Unit = {},
+) : NotificationHost {
     private val app = context.applicationContext
     @Volatile var badges = ResidentBadges()
         private set
@@ -37,6 +42,9 @@ internal class CleanNotificationHost(context: Context) : NotificationHost {
 
     override fun onEvent(name: String, properties: Map<String, Any?>) {
         com.example.aicleanphonestorage.app.ad.AdAnalytics.report(name, properties)
+        // 复用模块的 FCM/定时触发事件。仅“确保存在”不会重建已有通知，这里请求同 ID 内容刷新。
+        // 常驻展示上报不是 Notific_Pull，不会形成刷新递归，也不改变 notification 模块逻辑。
+        if (name == "Notific_Pull") refreshResident()
     }
 
     override val smallIcon = R.drawable.ic_home_clean
@@ -70,8 +78,10 @@ internal class CleanNotificationHost(context: Context) : NotificationHost {
             else if (compact) R.layout.notification_shortcuts_compact else R.layout.notification_shortcuts
         val views = RemoteViews(app.packageName, layout)
         val values = badges
+        val clean = if (cleaning == null) values.clean
+            else cleaning.check().cleanBadge(context.resources.configuration.locales[0])
         val items = listOf(
-            Item(R.id.shortcut_clean, R.id.shortcut_clean_label, R.id.shortcut_clean_badge, R.string.push_clean, NotificationDestination.CLEAN, values.clean),
+            Item(R.id.shortcut_clean, R.id.shortcut_clean_label, R.id.shortcut_clean_badge, R.string.push_clean, NotificationDestination.CLEAN, clean),
             Item(R.id.shortcut_network, R.id.shortcut_network_label, R.id.shortcut_network_badge, R.string.push_network, NotificationDestination.NETWORK, values.network),
             Item(R.id.shortcut_photos, R.id.shortcut_photos_label, R.id.shortcut_photos_badge, R.string.push_photos, NotificationDestination.PHOTOS, values.photos),
             Item(R.id.shortcut_unused, R.id.shortcut_unused_label, R.id.shortcut_unused_badge, R.string.push_unused, NotificationDestination.UNUSED_FILES, values.unusedFiles),

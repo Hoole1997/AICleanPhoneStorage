@@ -71,6 +71,8 @@ class ResidentNotificationTest {
             }
             val themed = ContextThemeWrapper(context.createConfigurationContext(config), R.style.Theme_AICleanPhoneStorage)
             val host = CleanNotificationHost(context)
+            // 使用完整容量与短数量核验角标；空角标无法覆盖实际字体与内边距的边界。
+            host.updateBadges(ResidentBadges(clean = "679.9MB", network = "112", photos = "7"))
             val remote = host.residentViews(compact, themed)
             val root = remote.apply(themed, null)
             root.measure(View.MeasureSpec.makeMeasureSpec(width * 2, View.MeasureSpec.EXACTLY),
@@ -82,6 +84,11 @@ class ResidentNotificationTest {
                 assertTrue("$width/$font: text height", label.height >= label.layout.height + label.paddingTop + label.paddingBottom)
                 if (!compact) for (line in 0 until label.lineCount)
                     assertEquals("$width/$font: expanded label must fit", 0, label.layout.getEllipsisCount(line))
+            }
+            val badge = root.findViewById<TextView>(R.id.shortcut_clean_badge)
+            if (badge.visibility == View.VISIBLE) {
+                assertTrue("Badge text height", badge.height >= badge.layout.height + badge.paddingTop + badge.paddingBottom)
+                if (font <= 1.3f) assertEquals("Capacity badge must fit at $width/$font", 0, badge.layout.getEllipsisCount(0))
             }
             if (compact) assertTrue("Collapsed custom area must fit 48dp: ${root.height / 2}", root.height <= 96)
             bitmap = Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888).also {

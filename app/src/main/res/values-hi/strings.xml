@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="home_space_ready">खाली की जा सकने वाली जगह</string>
+    <string name="home_review_before_cleaning">सफ़ाई से पहले फ़ाइलें जाँचें</string>
     <string name="app_manager_title">ऐप मैनेजर</string>
     <string name="app_manager_scanning">स्कैनिंग...</string>
     <string name="app_manager_loading_prepare">इंस्टॉल किए गए ऐप्स पढ़ना</string>

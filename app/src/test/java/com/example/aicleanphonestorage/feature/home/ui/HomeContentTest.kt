@@ -1,5 +1,6 @@
 package com.example.aicleanphonestorage.feature.home.ui
 
+import com.example.aicleanphonestorage.feature.home.data.HomeCleaningSnapshot
 import com.example.aicleanphonestorage.feature.home.data.HomeOverview
 import com.example.aicleanphonestorage.feature.home.data.HomeToolMetric
 import com.example.aicleanphonestorage.feature.home.data.HomeToolMetrics
@@ -20,18 +21,33 @@ class HomeContentTest {
     }
 
     @Test
-    fun `completed zero junk still displays completion and actual storage independently`() {
+    fun `clean view ignores real scan amount and shows actual storage`() {
         val content =
             HomeOverview(
                     StorageSummary(128_000_000_000, 40_300_000_000),
                     ScanSummary.Completed(0, 1),
                 )
                 .toHomeContent(Locale.US)
-        assertTrue(content.hero.scanComplete)
-        assertEquals("0", content.hero.value)
-        assertEquals("B", content.hero.unit)
+        assertFalse(content.hero.scanComplete)
+        assertFalse(content.hero.virtualJunk)
+        assertEquals("40.3", content.hero.value)
+        assertEquals("GB", content.hero.unit)
         assertEquals(31, content.hero.usedPercent)
         assertEquals("87.7GB", content.statistics.available)
+    }
+
+    @Test
+    fun `virtual home amount and resident badge use the same number and leave storage unchanged`() {
+        val cleaning = HomeCleaningSnapshot(paidUser = true, junkTenthsMb = 4567)
+        val overview = HomeOverview(StorageSummary(128_000_000_000, 40_300_000_000), ScanSummary.Completed(999_000_000, 1))
+        val content = overview.toHomeContent(Locale.US, cleaning)
+        assertTrue(content.hero.virtualJunk)
+        assertEquals("456.7", content.hero.value)
+        assertEquals("MB", content.hero.unit)
+        assertEquals(content.hero.value + content.hero.unit, cleaning.cleanBadge(Locale.US))
+        assertEquals("87.7GB", content.statistics.available)
+        assertEquals(overview.toHomeContent(Locale.US).tools, content.tools)
+        assertEquals("456,7MB", cleaning.cleanBadge(Locale.GERMANY))
     }
 
     @Test

@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="home_space_ready">Dung lượng có thể giải phóng</string>
+    <string name="home_review_before_cleaning">Kiểm tra tệp trước khi dọn dẹp</string>
     <string name="app_manager_title">Trình quản lý ứng dụng</string>
     <string name="app_manager_scanning">Đang quét…</string>
     <string name="app_manager_loading_prepare">Đọc ứng dụng đã cài đặt</string>

@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="home_space_ready">Espacio que puedes liberar</string>
+    <string name="home_review_before_cleaning">Revisa los archivos antes de limpiar</string>
     <string name="app_manager_title">Administrador de aplicaciones</string>
     <string name="app_manager_scanning">Escaneando…</string>
     <string name="app_manager_loading_prepare">Lectura de aplicaciones instaladas</string>

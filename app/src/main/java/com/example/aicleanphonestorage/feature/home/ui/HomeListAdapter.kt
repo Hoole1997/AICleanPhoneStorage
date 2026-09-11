@@ -125,11 +125,18 @@ private class HeroHolder(
     fun bind(content: HeroContent) = with(binding) {
         val context = root.context
         val unknown = context.getString(R.string.home_unknown_value)
-        summaryTitle.setText(if (content.scanComplete) R.string.home_scan_complete else R.string.home_storage_used)
+        summaryTitle.setText(when {
+            content.virtualJunk -> R.string.home_space_ready
+            content.scanComplete -> R.string.home_scan_complete
+            else -> R.string.home_storage_used
+        })
         summaryValue.text = content.value ?: unknown
         summaryUnit.text = content.unit
-        scanStatus.text = if (content.scanComplete) context.getString(R.string.home_junk_found)
-            else context.getString(R.string.home_total_storage, content.totalCapacity ?: unknown)
+        scanStatus.text = when {
+            content.virtualJunk -> context.getString(R.string.home_review_before_cleaning)
+            content.scanComplete -> context.getString(R.string.home_junk_found)
+            else -> context.getString(R.string.home_total_storage, content.totalCapacity ?: unknown)
+        }
         val percentage = content.usedPercent?.let {
             NumberFormat.getPercentInstance(context.resources.configuration.locales[0]).format(it / 100.0)
         } ?: unknown

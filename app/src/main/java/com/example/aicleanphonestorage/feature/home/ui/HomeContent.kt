@@ -5,7 +5,7 @@ import androidx.annotation.StringRes
 import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.feature.home.data.HomeOverview
 import com.example.aicleanphonestorage.feature.home.data.HomeToolMetric
-import com.example.aicleanphonestorage.feature.home.data.ScanSummary
+import com.example.aicleanphonestorage.feature.home.data.HomeCleaningSnapshot
 import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.floor
@@ -19,6 +19,7 @@ data class HomeContent(
 
 data class HeroContent(
     val scanComplete: Boolean = false,
+    val virtualJunk: Boolean = false,
     val value: String? = null,
     val unit: String = "",
     val totalCapacity: String? = null,
@@ -49,8 +50,8 @@ data class HomeToolItem(
     val metric: HomeToolMetric? = null,
 )
 
-/** 真实摘要转换与设计样例隔离；缺失的容量/速率不填入设计稿的假数值。 */
-internal fun HomeOverview.toHomeContent(locale: Locale): HomeContent {
+/** 存储与入口摘要保持真实值；主卡单独读取用户要求的虚拟清理展示状态，不写回真实扫描结果。 */
+internal fun HomeOverview.toHomeContent(locale: Locale, cleaning: HomeCleaningSnapshot = HomeCleaningSnapshot()): HomeContent {
     val numbers =
         NumberFormat.getNumberInstance(locale).apply {
             maximumFractionDigits = 1
@@ -68,12 +69,12 @@ internal fun HomeOverview.toHomeContent(locale: Locale): HomeContent {
     }
     fun compact(bytes: Long) = size(bytes).let { it.first + it.second }
     val percent = storage?.let { floor(it.usedFraction * 100).toInt().coerceIn(0, 100) }
-    val completed = scan as? ScanSummary.Completed
-    val displayedSize = (completed?.junkBytes ?: storage?.usedBytes)?.let(::size)
+    // 首页展示不再取真实扫描索引；清理详情仍使用原来的真实数据源。
+    val displayedSize = cleaning.junkNumber(locale)?.let { it to "MB" } ?: storage?.usedBytes?.let(::size)
     return HomeContent(
         hero =
             HeroContent(
-                scanComplete = completed != null,
+                virtualJunk = cleaning.dirty,
                 value = displayedSize?.first,
                 unit = displayedSize?.second.orEmpty(),
                 totalCapacity = storage?.let { compact(it.totalBytes) },

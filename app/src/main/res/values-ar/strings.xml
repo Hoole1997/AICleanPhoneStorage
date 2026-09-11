@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="home_space_ready">مساحة يمكن تحريرها</string>
+    <string name="home_review_before_cleaning">راجع الملفات قبل التنظيف</string>
     <string name="app_manager_title">مدير التطبيقات</string>
     <string name="app_manager_scanning">المسح…</string>
     <string name="app_manager_loading_prepare">قراءة التطبيقات المثبتة</string>

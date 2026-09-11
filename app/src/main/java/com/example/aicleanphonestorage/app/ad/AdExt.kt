@@ -110,7 +110,7 @@ fun FragmentActivity.loadSplash(
 
 internal fun isAdSlotEnabled(positionName: String): Boolean {
     // 测试阶段刻意放行所有广告位；线上参数尚未配置。Slot Key 清单见 docs/ads/slots.md。
-    // 联调完成后移除这一行 return true，恢复下面的远程开关判断。
+    //todo 联调完成后移除这一行 return true，恢复下面的远程开关判断。
     return true
     return AdSlotSwitchController.isEnabled(positionName)
 }

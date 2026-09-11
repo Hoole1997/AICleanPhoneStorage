@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="home_space_ready">확보 가능한 공간</string>
+    <string name="home_review_before_cleaning">정리하기 전에 파일을 확인하세요</string>
     <string name="app_manager_title">앱 관리자</string>
     <string name="app_manager_scanning">스캔 중…</string>
     <string name="app_manager_loading_prepare">설치된 앱 읽기</string>

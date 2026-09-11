@@ -46,7 +46,8 @@ class MainActivity : AppCompatActivity() {
     private val homeViewModel: HomeViewModel by viewModels {
         viewModelFactory {
             initializer {
-                HomeViewModel((application as CleanApplication).container.homeOverviewRepository)
+                HomeViewModel((application as CleanApplication).container.homeOverviewRepository,
+                    (application as CleanApplication).homeCleaning.state)
             }
         }
     }
@@ -223,6 +224,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (redirectedToStartup) return
+        (application as CleanApplication).homeCleaning.check()
         renderer.setResumed(true)
         pushPermission.onResume()
         if (!permissions.pending) {

@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="home_space_ready">可释放空间</string>
+    <string name="home_review_before_cleaning">清理前请检查文件</string>
     <string name="app_manager_title">应用管理</string>
     <string name="app_manager_scanning">正在扫描…</string>
     <string name="app_manager_loading_prepare">正在读取已安装应用</string>

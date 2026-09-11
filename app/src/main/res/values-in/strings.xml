@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="home_space_ready">Ruang yang bisa dikosongkan</string>
+    <string name="home_review_before_cleaning">Tinjau file sebelum membersihkan</string>
     <string name="app_manager_title">Manajer Aplikasi</string>
     <string name="app_manager_scanning">Memindai…</string>
     <string name="app_manager_loading_prepare">Membaca aplikasi yang diinstal</string>

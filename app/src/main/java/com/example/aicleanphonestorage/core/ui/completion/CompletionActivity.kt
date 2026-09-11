@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.aicleanphonestorage.core.ui.motion.MotionPreferences
+import com.example.aicleanphonestorage.app.CleanApplication
 import com.example.aicleanphonestorage.app.ad.NativeAdCoordinator
 import com.example.aicleanphonestorage.app.ad.NativeAdPlacements
 import com.example.aicleanphonestorage.databinding.ScreenCompletionBinding
@@ -23,6 +24,7 @@ class CompletionActivity : AppCompatActivity() {
     private var allowed = false
     private var report: CompletionReport? = null
     private var leaving = false
+    private var visitToken: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +34,9 @@ class CompletionActivity : AppCompatActivity() {
             return
         }
         report = value
+        // 用户以进入完成页作为展示状态的清理完成点；仅保存去重 token，旋转不延长三分钟。
+        visitToken = savedInstanceState?.getString("completion.visit") ?: java.util.UUID.randomUUID().toString()
+        (application as CleanApplication).homeCleaning.completed(requireNotNull(visitToken))
         onBackPressedDispatcher.addCallback(this) { exitToHome() }
         enableEdgeToEdge(
             SystemBarStyle.dark(Color.TRANSPARENT),
@@ -110,6 +115,11 @@ class CompletionActivity : AppCompatActivity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         updateMotion()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString("completion.visit", visitToken)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onDestroy() {
