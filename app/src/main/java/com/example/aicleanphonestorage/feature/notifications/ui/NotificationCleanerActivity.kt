@@ -55,7 +55,7 @@ class NotificationCleanerActivity : AppCompatActivity() {
                     CompletionContract.CONTINUE
             ) {
                 startActivity(
-                    HomeExitAdContract.intent(this, InterstitialPlacements.NOTIFICATIONS_COMPLETE_EXIT)
+                    HomeExitAdContract.intent(this, InterstitialPlacements.NOTIFICATIONS_EXIT)
                 )
                 finish()
             }

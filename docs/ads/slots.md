@@ -1,48 +1,57 @@
 # 广告位与联调清单
 
-对照 [需求 v2 广告位总表](https://ai-clean-storage-home.pages.dev/requirements-v2) 的 32 个建议 Slot Key，加上用户增补的 `native_scanning`，共 33 项。**后台配置应使用“当前代码 Key”列。** 原生位按总表命名；现有开屏/插屏保留既有 Key 和时机，此次没有改名或合并历史退出 Key。
+已按 [需求 v2 广告位总表](https://ai-clean-storage-home.pages.dev/requirements-v2) **v11 · 2026-09-11** 同步全部 33 个 Key；后台应使用下表名称。当前有 30 个 Key 接入实际业务入口，另有 1 个条件位与 2 个完成页预留位。接入入口不等于 SDK 一定填充，也不代表总表中每种触发场景均已实现，差异见 [审计报告](slot-key-audit.md)。
 
-## 测试开关
+## 测试开关与 SDK 参数
 
-`app/ad/AdExt.kt` 的 `isAdSlotEnabled()` **按用户要求保持 `return true`**，因为线上开关参数尚未配置。首页/功能页/完成页均通过现有 `loadNative(positionName, container)` 接入，统一经过此入口。上线前配置当前代码 Key，再去掉临时 `return true`，启用已有的 `AdSlotSwitchController.isEnabled(positionName)`，无需逐页另写判断。
+`app/ad/AdExt.kt` 的 `isAdSlotEnabled()` **按用户要求保持 `return true`**。线上开关参数尚未配置；联调完成后移除该行，恢复 `AdSlotSwitchController.isEnabled(positionName)` 即可，页面无需逐个加判断。
 
-放行开关仅代表允许调用 SDK，SDK 自身请求资格、频次、缓存和填充规则仍生效。查看 `CleanAds` 日志中的 `Native request: slot=...` 和 `Native result: slot=..., success=...` 可定位实际请求位置；没有真实填充不显示占位广告。
+原生、插屏、开屏均将同一个 `positionName` 传入 SDK 的 `position` 参数；SDK 自身请求资格、频次、缓存与填充规则仍生效。原生失败时收起容器，没有填充不展示占位素材。
 
-| # | 位置 | 类型 | 需求建议 Key | 当前代码 Key | 状态 |
-| --- | --- | --- | --- | --- | --- |
-| 1 | 开屏 | 开屏 | `splash` | `startup_splash` | 已有；冷启动/推送入口 |
-| 2 | 垃圾清理确认操作 | 插屏 | `clean_confirm_junk` | `junk_clean_interstitial` | 已有 |
-| 3 | 截图清理确认操作 | 插屏 | `clean_confirm_screenshots` | `screenshots_clean_interstitial` | 已有 |
-| 4 | 照片压缩确认操作 | 插屏 | `clean_confirm_photo` | `photo_compress_clean_interstitial` | 已有 |
-| 5 | 大文件确认操作 | 插屏 | `clean_confirm_large` | `large_files_clean_interstitial` | 已有 |
-| 6 | 未使用文件确认操作 | 插屏 | `clean_confirm_unused` | `unused_files_clean_interstitial` | 已有 |
-| 7 | 流量确认操作 | 插屏 | `clean_confirm_network` | — | 纯展示，无确认动作，不请求 |
-| 8 | 垃圾清理返回首页 | 插屏 | `back_home_junk` | `junk_exit_interstitial / junk_complete_exit_interstitial` | 已有；功能页/完成页沿用两个历史 Key |
-| 9 | 截图清理返回首页 | 插屏 | `back_home_screenshots` | `screenshots_exit_interstitial / screenshots_complete_exit_interstitial` | 已有；功能页/完成页沿用两个历史 Key |
-| 10 | 照片压缩返回首页 | 插屏 | `back_home_photo` | `photo_compress_exit_interstitial / photo_compress_complete_exit_interstitial` | 已有；功能页/完成页沿用两个历史 Key |
-| 11 | 大文件返回首页 | 插屏 | `back_home_large` | `large_files_exit_interstitial / large_files_complete_exit_interstitial` | 已有；功能页/完成页沿用两个历史 Key |
-| 12 | 未使用文件返回首页 | 插屏 | `back_home_unused` | `unused_files_exit_interstitial / unused_files_complete_exit_interstitial` | 已有；功能页/完成页沿用两个历史 Key |
-| 13 | 通知清理返回首页 | 插屏 | `back_home_notify` | `notifications_exit_interstitial / notifications_complete_exit_interstitial` | 已有；两种出口 |
-| 14 | 应用管理返回首页 | 插屏 | `back_home_apps` | `app_manager_exit_interstitial` | 已有；无完成页 |
-| 15 | 流量返回首页 | 插屏 | `back_home_network` | `network_traffic_exit_interstitial` | 已有；无完成页 |
-| 16 | 首页 | 原生 | `native_home` | `native_home` | 本次接入；摘要与 Manual Clean 之间 |
-| 17 | 垃圾清理功能页 | 原生 | `native_feature_junk` | `native_feature_junk` | 本次接入；二级功能页列表下方 |
-| 18 | 截图清理功能页 | 原生 | `native_feature_screenshots` | `native_feature_screenshots` | 本次接入；二级功能页列表下方 |
-| 19 | 照片压缩功能页 | 原生 | `native_feature_photo` | `native_feature_photo` | 本次接入；二级功能页列表下方 |
-| 20 | 大文件功能页 | 原生 | `native_feature_large` | `native_feature_large` | 本次接入；二级功能页列表下方 |
-| 21 | 未使用文件功能页 | 原生 | `native_feature_unused` | `native_feature_unused` | 本次接入；二级功能页列表下方 |
-| 22 | 通知清理功能页 | 原生 | `native_feature_notify` | `native_feature_notify` | 本次接入；二级功能页列表下方 |
-| 23 | 应用管理功能页 | 原生 | `native_feature_apps` | `native_feature_apps` | 本次接入；二级功能页列表下方 |
-| 24 | 流量功能页 | 原生 | `native_feature_network` | `native_feature_network` | 本次接入；二级功能页列表下方 |
-| 25 | 垃圾清理完成页 | 原生 | `native_result_junk` | `native_result_junk` | 本次接入；共享完成页按来源分流 |
-| 26 | 截图清理完成页 | 原生 | `native_result_screenshots` | `native_result_screenshots` | 本次接入；共享完成页按来源分流 |
-| 27 | 照片压缩完成页 | 原生 | `native_result_photo` | `native_result_photo` | 本次接入；共享完成页按来源分流 |
-| 28 | 大文件完成页 | 原生 | `native_result_large` | `native_result_large` | 本次接入；共享完成页按来源分流 |
-| 29 | 未使用文件完成页 | 原生 | `native_result_unused` | `native_result_unused` | 本次接入；共享完成页按来源分流 |
-| 30 | 通知清理完成页 | 原生 | `native_result_notify` | `native_result_notify` | 本次接入；共享完成页按来源分流 |
-| 31 | 应用管理完成页 | 原生 | `native_result_apps` | `native_result_apps` | 预留；当前没有此完成页，不请求 |
-| 32 | 流量完成页 | 原生 | `native_result_network` | `native_result_network` | 预留；当前没有此完成页，不请求 |
-| 33 | 通用功能加载弹框 | 原生 | `native_scanning` | `native_scanning` | 本次接入；仅 showAd=true 的加载状态 |
+## 总表对应关系
+
+| # | 位置 | 类型 | 当前代码 / 后台 Key | 状态 |
+| --- | --- | --- | --- | --- |
+| 1 | 开屏 | 开屏广告 | `splash` | 已接入冷启动、通知入口；普通回前台场景待补 |
+| 2 | 垃圾清理 · 功能内 | 插屏 | `clean_confirm_junk` | 确认后请求；回调后执行业务 |
+| 3 | 截图清理 · 功能内 | 插屏 | `clean_confirm_screenshots` | 确认后请求；回调后执行业务 |
+| 4 | 照片压缩 · 功能内 | 插屏 | `clean_confirm_photo` | 确认后请求；回调后执行业务 |
+| 5 | 大文件 · 功能内 | 插屏 | `clean_confirm_large` | 确认后请求；回调后执行业务 |
+| 6 | 未使用文件 · 功能内 | 插屏 | `clean_confirm_unused` | 确认后请求；回调后执行业务 |
+| 7 | 流量 · 功能内 | 插屏 | `clean_confirm_network` | 仅保留 Key；当前无确认动作，不配置、不请求 |
+| 8 | 垃圾清理 · 返回首页 | 插屏 | `back_home_junk` | 先回首页再请求；功能页/完成页共用 |
+| 9 | 截图清理 · 返回首页 | 插屏 | `back_home_screenshots` | 先回首页再请求；功能页/完成页共用 |
+| 10 | 照片压缩 · 返回首页 | 插屏 | `back_home_photo` | 先回首页再请求；功能页/完成页共用 |
+| 11 | 大文件 · 返回首页 | 插屏 | `back_home_large` | 先回首页再请求；功能页/完成页共用 |
+| 12 | 未使用文件 · 返回首页 | 插屏 | `back_home_unused` | 先回首页再请求；功能页/完成页共用 |
+| 13 | 通知清理 · 返回首页 | 插屏 | `back_home_notify` | 先回首页再请求；功能页/完成页共用 |
+| 14 | 应用管理 · 返回首页 | 插屏 | `back_home_apps` | 先回首页再请求；当前仅功能页出口 |
+| 15 | 流量 · 返回首页 | 插屏 | `back_home_network` | 先回首页再请求；当前仅功能页出口 |
+| 16 | 首页 | 原生 | `native_home` | 已接入 |
+| 17 | 垃圾清理 · 功能页 | 原生 | `native_feature_junk` | 已接入 |
+| 18 | 截图清理 · 功能页 | 原生 | `native_feature_screenshots` | 已接入 |
+| 19 | 照片压缩 · 功能页 | 原生 | `native_feature_photo` | 已接入 |
+| 20 | 大文件 · 功能页 | 原生 | `native_feature_large` | 已接入 |
+| 21 | 未使用文件 · 功能页 | 原生 | `native_feature_unused` | 已接入 |
+| 22 | 通知清理 · 功能页 | 原生 | `native_feature_notify` | 已接入 |
+| 23 | 应用管理 · 功能页 | 原生 | `native_feature_apps` | 已接入 |
+| 24 | 流量 · 功能页 | 原生 | `native_feature_network` | 已接入 |
+| 25 | 垃圾清理 · 完成页 | 原生 | `native_result_junk` | 已接入 |
+| 26 | 照片压缩 · 完成页 | 原生 | `native_result_photo` | 已接入 |
+| 27 | 未使用文件 · 完成页 | 原生 | `native_result_unused` | 已接入 |
+| 28 | 截图清理 · 完成页 | 原生 | `native_result_screenshots` | 已接入 |
+| 29 | 大文件 · 完成页 | 原生 | `native_result_large` | 已接入 |
+| 30 | 通知清理 · 完成页 | 原生 | `native_result_notify` | 已接入 |
+| 31 | 应用管理 · 完成页 | 原生 | `native_result_apps` | 预留；当前没有此完成页，不请求 |
+| 32 | 流量 · 完成页 | 原生 | `native_result_network` | 预留；当前没有此完成页，不请求 |
+| 33 | 扫描中弹窗 | 原生 | `native_scanning` | 已接入；仅 showAd=true 的功能加载弹框 |
+
+## 插屏来源与状态恢复
+
+- `InterstitialPlacements.clean()` 集中映射 5 个清理功能，`exit()` 集中映射同一功能的全部首页出口。通知清理两种出口统一使用 `back_home_notify`；应用管理、流量保留返回广告，不接入功能内插屏。
+- `HomeExitAdContract` 仅接受 8 个 `back_home_*`。首页恢复、获得焦点并绘制后才请求；同一 token 先消费后展示，避免回调、旋转和重复 Intent 重放。
+- 来源缺失时不再生成 `file_cleanup_*` 兜底 Key：正常继续业务/返回首页，跳过无法归属的广告。恢复旧版本待展示状态时，旧 Key 会被过滤；不会再向 SDK 发送历史 Key。
+- `StartupAdCoordinator` 使用 `splash`。本次仅同步 Key 与 SDK 参数，通知授权先于开屏请求、最短停留和 SDK 回调续接逻辑保持现有实现。
 
 ## 原生广告接入约定
 
@@ -52,12 +61,10 @@
 - 功能页底部固定广告（垃圾清理、截图、照片压缩、大文件、未使用文件、通知清理、应用管理、流量）与完成页底部广告均铺满可用宽度，不设置左右外边距。功能页广告位于列表下方、操作按钮上方，采用正常垂直布局避免覆盖按钮；系统栏安全区由页面处理，不加进广告容器内部。
 - 首页使用独立广告行，左右与内容卡片对齐（16dp），展示后与 Manual Clean 保持章节间距；复用同一页面容器；滚动回收/数据刷新不会创建另一份广告请求。纯 UI 预览未注入容器，不触发广告。
 - `NativeAdCoordinator` 只在前台且容器挂载后请求一次；普通恢复不会重复加载。未完成请求退后台会取消，恢复可重试；失败不轮询重试。销毁时取消请求并释放容器子 View。弹框通过 viewLifecycleOwner 绑定请求，关闭弹框立即释放，不依赖宿主 Activity 退出。
-- `loadNative` 现在返回其生命周期 Job，已有不接收返回值的调用仍兼容；取消不被吞成失败回调，避免旧请求回填页面。
+- `loadNative` 返回其生命周期 Job，已有不接收返回值的调用仍兼容；取消不被吞成失败回调，避免旧请求回填页面。
 
 `native_scanning` 使用无占位素材、默认 GONE 的全宽容器；SDK 填充后窗口以 wrap_content 自动调整高度，过高时由限高 ScrollView 滚动。进度刷新不重复请求广告，showAd=false 会取消并收起，原有操作中禁用广告的场景继续保留。
 
-未在此次原生接入中调整：热启动开屏、垃圾清理空扫描插屏路径，以及历史功能页/完成页返回插屏 Key 的合并。
-
 ## 验证
 
-local/google Kotlin 编译、local Lint、124 项 app 单元测试和 7 项相关模拟器测试通过。模拟器测试使用明确标记的假广告内容核验默认隐藏、失败收起后恢复原布局高度、只加载一次、退后台取消、首页行位置及横竖屏按钮可达性，并验证加载弹框异步增高/收起和弹框关闭取消请求；不以测试素材冒充真实 SDK 填充。业务页面实际调用既有 loadNative/SDK 接口，真实填充请结合 CleanAds 日志和测试渠道进行联调。
+本次编译、单元测试、模拟器时机测试与限制说明统一记录于 [审计报告](slot-key-audit.md)。

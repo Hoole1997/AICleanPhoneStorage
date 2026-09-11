@@ -54,7 +54,7 @@ class AdTimingDeviceTest {
                     call(false)
                 }
                 coordinator = HomeExitAdCoordinator(activity, root, ads)
-                request = HomeExitAdContract.intent(activity, InterstitialPlacements.completionExit(CleanupFeature.SCREENSHOTS))
+                request = HomeExitAdContract.intent(activity, InterstitialPlacements.exit(CleanupFeature.SCREENSHOTS))
                 coordinator.accept(Intent(request))
                 assertTrue(positions.isEmpty())
             }
@@ -68,9 +68,28 @@ class AdTimingDeviceTest {
             scenario.onActivity { coordinator.accept(Intent(request)) }
             scenario.moveToState(Lifecycle.State.RESUMED)
             scenario.onActivity {
-                assertEquals(listOf("screenshots_complete_exit_interstitial"), positions)
+                assertEquals(listOf("back_home_screenshots"), positions)
                 assertFalse(coordinator.accept(Intent()))
             }
+        }
+    }
+
+    @Test fun unknownSourceSkipsAdButStillContinuesOnlyWhenResumed() {
+        ActivityScenario.launch(AboutActivity::class.java).use { scenario ->
+            var continued = 0
+            lateinit var ads: InterstitialActions
+            scenario.moveToState(Lifecycle.State.CREATED)
+            scenario.onActivity { activity ->
+                ads = InterstitialActions(activity) { _, _ -> fail("Unknown source must not request an ad") }
+                ads.register("unknown") { continued++ }
+                ads.run("unknown", InterstitialPlacements.clean(null))
+                assertEquals(0, continued)
+                val home = HomeExitAdContract.intent(activity, InterstitialPlacements.exit(null))
+                assertNotNull(home.component)
+                assertNull(HomeExitAdContract.take(home))
+            }
+            scenario.moveToState(Lifecycle.State.RESUMED)
+            scenario.onActivity { assertEquals(1, continued); assertFalse(ads.busy) }
         }
     }
 
@@ -101,7 +120,7 @@ class AdTimingDeviceTest {
                         SavedStateHandle(mapOf("filter.size" to 0L)), scanId)
                     activity.viewModelStore.put("ad.timing.cleanup", model)
                     val ads = InterstitialActions(activity) { position, call ->
-                        assertEquals("large_files_clean_interstitial", position)
+                        assertEquals("clean_confirm_large", position)
                         requests++
                         complete = call
                     }

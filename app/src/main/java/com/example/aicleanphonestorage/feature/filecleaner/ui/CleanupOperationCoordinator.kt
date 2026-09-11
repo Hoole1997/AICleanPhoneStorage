@@ -48,7 +48,7 @@ internal class CleanupOperationCoordinator(
                     } ?: model.state.value.handle?.feature
                     activity.startActivity(
                         HomeExitAdContract.intent(activity,
-                            InterstitialPlacements.completionExit(source))
+                            InterstitialPlacements.exit(source))
                     )
                     activity.finish()
                 }

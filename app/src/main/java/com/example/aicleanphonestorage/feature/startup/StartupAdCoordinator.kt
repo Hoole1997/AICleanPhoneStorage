@@ -65,5 +65,5 @@ internal class StartupAdCoordinator(
         scheduled = false
     }
 
-    private companion object { const val PLACEMENT = "startup_splash" }
+    private companion object { const val PLACEMENT = "splash" }
 }

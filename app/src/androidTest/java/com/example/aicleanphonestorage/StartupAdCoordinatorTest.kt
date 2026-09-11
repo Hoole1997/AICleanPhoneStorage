@@ -30,7 +30,7 @@ class StartupAdCoordinatorTest {
             scenario.onActivity { activity ->
                 host =
                     bind(activity) { position, call ->
-                        assertEquals("startup_splash", position)
+                        assertEquals("splash", position)
                         assertTrue(
                             activity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
                         )

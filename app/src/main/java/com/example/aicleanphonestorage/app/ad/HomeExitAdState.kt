@@ -8,12 +8,15 @@ internal class HomeExitAdState(private val saved: SavedStateHandle) : ViewModel(
     val pending: HomeExitAdRequest?
         get() {
             val token = saved.get<String>(TOKEN) ?: return null
-            val placement = saved.get<String>(PLACEMENT) ?: return null
+            // 升级或状态恢复时丢弃旧版/未知 Key，避免旧待展示状态继续上报已废弃广告位。
+            val placement = saved.get<String>(PLACEMENT)
+                ?.takeIf { it in InterstitialPlacements.homeExits } ?: return null
             return HomeExitAdRequest(token, placement)
         }
 
     fun accept(request: HomeExitAdRequest) {
-        if (request.token == saved.get<String>(CONSUMED)) return
+        if (request.placement !in InterstitialPlacements.homeExits ||
+            request.token == saved.get<String>(CONSUMED)) return
         saved[TOKEN] = request.token
         saved[PLACEMENT] = request.placement
     }

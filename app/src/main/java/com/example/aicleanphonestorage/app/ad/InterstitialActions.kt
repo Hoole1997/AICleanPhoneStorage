@@ -38,12 +38,14 @@ internal class InterstitialActions(
         drain()
     }
 
-    fun run(action: String, position: String, payload: Long = 0) {
+    fun run(action: String, position: String?, payload: Long = 0) {
         if (action !in handlers || activity.isFinishing || activity.isDestroyed) return
         val id = state.begin(action, payload) ?: return
         // 回调只捕获不含 UI 的 ViewModel；旧 Activity 重建后回调仍可由新 Activity 续接。
         val requestState = state
-        request(position) { requestState.complete(id) }
+        // 来源暂未恢复时不猜测广告位；仍经过同一生命周期回调流程继续业务。
+        if (position == null) requestState.complete(id)
+        else request(position) { requestState.complete(id) }
     }
 
     private fun drain() {

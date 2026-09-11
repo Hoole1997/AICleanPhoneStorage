@@ -52,7 +52,6 @@ class InterstitialActionStateTest {
         val features = CleanupFeature.entries
         assertEquals(features.size, features.map(InterstitialPlacements::clean).toSet().size)
         assertEquals(features.size, features.map(InterstitialPlacements::exit).toSet().size)
-        assertEquals(features.size, features.map(InterstitialPlacements::completionExit).toSet().size)
         assertTrue(features.all { InterstitialPlacements.clean(it) != InterstitialPlacements.exit(it) })
     }
 }

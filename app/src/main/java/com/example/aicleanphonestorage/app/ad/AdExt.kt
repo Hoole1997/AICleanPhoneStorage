@@ -13,6 +13,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import net.corekit.core.controller.AdSlotSwitchController
 
+// Slot Key 同时传给远程开关和 SDK position，保证展示统计保留真实业务来源。
 fun FragmentActivity.loadNative(
     positionName: String,
     container: ViewGroup,
@@ -34,6 +35,7 @@ fun FragmentActivity.loadNative(
                     context = container.context,
                     container = container,
                     styleType = styleType,
+                    position = positionName,
                 )
 
             coroutineContext.ensureActive()
@@ -67,7 +69,7 @@ fun FragmentActivity.loadInterstitial(
                 return@launch
             }
 
-            when (AdShowExt.showInterstitialAd(this@loadInterstitial)) {
+            when (AdShowExt.showInterstitialAd(this@loadInterstitial, position = positionName)) {
                 is AdResult.Success -> call.invoke(true)
                 is AdResult.Failure -> call.invoke(false)
             }
@@ -89,7 +91,7 @@ fun FragmentActivity.loadSplash(
                 return@launch
             }
 
-            when (AdShowExt.showAppOpenAd(this@loadSplash)) {
+            when (AdShowExt.showAppOpenAd(this@loadSplash, position = positionName)) {
                 is AdResult.Success -> call.invoke(true)
                 is AdResult.Failure -> call.invoke(false)
             }

@@ -7,7 +7,7 @@ import org.junit.Test
 class HomeExitAdStateTest {
     @Test fun pendingExitSurvivesRestoreButConsumedIntentDoesNotReplay() {
         val saved = SavedStateHandle()
-        val request = HomeExitAdRequest("first", "screenshots_exit_interstitial")
+        val request = HomeExitAdRequest("first", "back_home_screenshots")
         HomeExitAdState(saved).accept(request)
         val restored = HomeExitAdState(copy(saved))
         assertEquals(request, restored.pending)
@@ -19,14 +19,31 @@ class HomeExitAdStateTest {
 
     @Test fun consumedTokenSurvivesProcessStateRestoreAndNewExitKeepsItsSource() {
         val saved = SavedStateHandle()
-        val first = HomeExitAdRequest("first", "junk_exit_interstitial")
+        val first = HomeExitAdRequest("first", "back_home_junk")
         HomeExitAdState(saved).apply { accept(first); consume() }
         val restored = HomeExitAdState(copy(saved))
         restored.accept(first)
         assertNull(restored.pending)
-        val next = HomeExitAdRequest("next", "photo_compress_complete_exit_interstitial")
+        val next = HomeExitAdRequest("next", "back_home_photo")
         restored.accept(next)
         assertEquals(next, restored.consume())
+    }
+
+    @Test fun restoredLegacyOrNonExitSlotCannotReachSdk() {
+        for (placement in listOf("junk_exit_interstitial", "native_home", "clean_confirm_junk")) {
+            val saved = SavedStateHandle(mapOf(
+                "exit_ad.pending.token" to "old",
+                "exit_ad.pending.placement" to placement,
+            ))
+            val restored = HomeExitAdState(saved)
+            assertNull(restored.pending)
+            assertNull(restored.consume())
+            restored.accept(HomeExitAdRequest("invalid", placement))
+            assertNull(restored.pending)
+            val valid = HomeExitAdRequest("new", "back_home_junk")
+            restored.accept(valid)
+            assertEquals(valid, restored.consume())
+        }
     }
 
     private fun copy(saved: SavedStateHandle) = SavedStateHandle(saved.keys().associateWith { saved.get<Any?>(it) })

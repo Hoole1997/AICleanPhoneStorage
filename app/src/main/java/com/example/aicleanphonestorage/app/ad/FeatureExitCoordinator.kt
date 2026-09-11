@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 /** 功能页仅携带来源回首页；广告由首页恢复并绘制后展示。内部分类返回父页不触发首页广告。 */
 internal class FeatureExitCoordinator(
     private val activity: AppCompatActivity,
-    private val position: () -> String,
+    private val position: () -> String?,
     private val isBusy: () -> Boolean = { false },
     private val returnsToParent: () -> Boolean = { false },
 ) {
