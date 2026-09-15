@@ -55,7 +55,7 @@
     <string name="cleanup_limited">শুধুমাত্র নির্বাচিত ফটো অন্তর্ভুক্ত করা হয়</string>
     <string name="cleanup_tips">টিপস</string>
     <string name="cleanup_confirm">নিশ্চিত করুন</string>
-    <string name="cleanup_delete_confirm">স্থায়ীভাবে নির্বাচিত ফাইল মুছে ফেলবেন?\nগণনা: %1$d · আকার: %2$s</string>
+    <string name="cleanup_delete_confirm">আপনি কি এই ফাইলটি মুছে ফেলতে চান?\nনিশ্চিত করুন।</string>
     <string name="cleanup_working">%1$d / %2$d প্রক্রিয়া করা হচ্ছে</string>
     <string name="cleanup_result">মুছে ফেলা হয়েছে: %1$d\nছোট কপি: %2$d\nঅপরিবর্তিত বা বাতিল: %3$d\nব্যর্থ হয়েছে: %4$d</string>
     <string name="cleanup_remove_originals">মূল ছবি মুছুন</string>

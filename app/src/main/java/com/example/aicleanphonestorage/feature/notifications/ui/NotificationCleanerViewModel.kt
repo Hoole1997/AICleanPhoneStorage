@@ -49,6 +49,7 @@ internal data class NotificationUiState(
     val listenerConnected: Boolean = false,
     val saveError: Long = 0,
     val hasSavedChanges: Boolean = false,
+    val completion: CompletionReport? = null,
 )
 
 /** 入口与页面共用数据契约；保存规则不触发Loading，不让开关变化造成整表刷新。 */
@@ -67,11 +68,12 @@ internal class NotificationCleanerViewModel(
                 else if (entry && saved.get<Boolean>(PENDING) != true) NotificationPhase.Idle
                 else NotificationPhase.CheckingAccess,
                 initialCatalog,
-                selected = initialCatalog?.initialSelected.orEmpty(),
-                hasSavedChanges = saved.get<Boolean>("notification.changed") == true,
+                selected = saved.get<ArrayList<String>>("notification.draft")?.toSet() ?: initialCatalog?.initialSelected.orEmpty(),
+                hasSavedChanges = saved.contains("notification.draft"),
             )
         )
     val state = current.asStateFlow()
+    private var applied = initialCatalog?.initialSelected.orEmpty()
     private var id = 0L
     private var check: Job? = null
     private var load: Job? = null
@@ -132,9 +134,10 @@ internal class NotificationCleanerViewModel(
                             packages to running
                         }
                         .collect { (packages, running) ->
+                            applied = packages
                             current.update {
                                 it.copy(
-                                    selected = packages,
+                                    selected = if (it.hasSavedChanges) it.selected else packages,
                                     rulesLoaded = true,
                                     listenerConnected = running,
                                 )
@@ -146,6 +149,11 @@ internal class NotificationCleanerViewModel(
                     current.update { it.copy(rulesLoaded = false, saveError = it.saveError + 1) }
                 }
             }
+    }
+
+    fun retry() {
+        current.update { it.copy(phase = NotificationPhase.CheckingAccess) }
+        onForeground()
     }
 
     fun refresh() {
@@ -220,54 +228,43 @@ internal class NotificationCleanerViewModel(
     }
 
     fun setEnabled(packageName: String, enabled: Boolean) {
-        val state = state.value
-        val app = state.catalog?.apps?.find { it.packageName == packageName } ?: return
-        if (
-            state.phase != NotificationPhase.Ready ||
-                !state.rulesLoaded ||
-                packageName in state.saving ||
-                (!app.installed && enabled)
-        )
-            return
-        if ((packageName in state.selected) == enabled) return
-        current.update { it.copy(saving = it.saving + (packageName to enabled)) }
+        val value = state.value
+        val app = value.catalog?.apps?.find { it.packageName == packageName } ?: return
+        if (value.phase != NotificationPhase.Ready || !value.rulesLoaded || value.saving.isNotEmpty() ||
+            (!app.installed && enabled) || (packageName in value.selected) == enabled) return
+        val selection = if (enabled) value.selected + packageName else value.selected - packageName
+        val changed = selection != applied
+        if (changed) saved["notification.draft"] = ArrayList(selection) else saved.remove<ArrayList<String>>("notification.draft")
+        // 勾选只改页面草稿，离开/取消不会提前清除通知。
+        current.update { it.copy(selected = selection, hasSavedChanges = changed) }
+    }
+
+    fun commitSelection() {
+        val value = state.value
+        if (!value.hasSavedChanges || value.saving.isNotEmpty() || !value.rulesLoaded || value.phase != NotificationPhase.Ready) return
+        val selected = value.selected.toSet()
+        val changes = (applied + selected).associateWith { it in selected }
+        current.update { it.copy(saving = changes) }
         viewModelScope.launch {
             try {
-                repository.setEnabled(packageName, enabled)
-                saved["notification.changed"] = true
-                current.update {
-                    it.copy(
-                        selected =
-                            if (enabled) it.selected + packageName else it.selected - packageName,
-                        hasSavedChanges = true,
-                    )
-                }
-            } catch (error: CancellationException) {
-                throw error
-            } catch (_: IOException) {
-                current.update { it.copy(saveError = it.saveError + 1) }
-            } finally {
-                current.update { it.copy(saving = it.saving - packageName) }
-            }
+                repository.setSelection(selected)
+                applied = selected
+                saved.remove<ArrayList<String>>("notification.draft")
+                current.update { it.copy(selected = selected, hasSavedChanges = false,
+                    completion = CompletionReport(CompletionKind.NOTIFICATIONS, selected.size)) }
+            } catch (error: CancellationException) { throw error }
+            catch (_: SecurityException) { current.update { it.copy(phase = NotificationPhase.NeedsAccess, rulesLoaded = false) } }
+            catch (_: IOException) { current.update { it.copy(saveError = it.saveError + 1) } }
+            finally { current.update { it.copy(saving = emptyMap()) } }
         }
     }
 
-    /** 开关即时持久化；用户主动点击 Done 才汇总，绝不宣称已关闭系统通知权限。 */
-    fun completionReport(): CompletionReport? {
-        val value = state.value
-        if (
-            !value.hasSavedChanges ||
-                value.saving.isNotEmpty() ||
-                !value.rulesLoaded ||
-                value.phase != NotificationPhase.Ready
-        )
-            return null
-        return CompletionReport(CompletionKind.NOTIFICATIONS, value.selected.size)
-    }
+    /** 只有用户确认后已成功落盘的结果才允许进入完成页。 */
+    fun completionReport(): CompletionReport? = state.value.completion?.takeIf { state.value.saving.isEmpty() }
 
     fun completionPresented() {
         saved["notification.changed"] = false
-        current.update { it.copy(hasSavedChanges = false) }
+        current.update { it.copy(hasSavedChanges = false, completion = null) }
     }
 
     fun awaitAccess() {

@@ -17,7 +17,8 @@ internal class PageVisitState : ViewModel() {
     }
     fun once(event: String): Boolean = page != null && contentEvents.add(event)
 
-    fun leave(now: Long): Map<String, Any>? {
+    fun leave(now: Long, temporarilyCovered: Boolean = false): Map<String, Any>? {
+        if (temporarilyCovered) return null
         val value = page ?: return null
         page = null
         return mapOf("page" to value, "stay_duration" to (now - since).coerceAtLeast(0) / 1000.0)
@@ -28,7 +29,9 @@ internal object PageTelemetry {
     fun attach(activity: AppCompatActivity, page: String, permission: suspend () -> String = { "none" }) {
         val state = ViewModelProvider(activity)[PageVisitState::class.java]
         activity.lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onStart(owner: LifecycleOwner) {
+            override fun onResume(owner: LifecycleOwner) {
+                // ActivityResult 可能在 STARTED 时直接转发到首页，不能把短暂露出的父页计成新访问。
+                if (activity.isFinishing || activity.isDestroyed) return
                 if (state.enter(page, SystemClock.elapsedRealtime())) {
                     BusinessTelemetry.withPermission(MetricEvent.PAGE_SHOW, mapOf("page" to page), permission)
                     val event = when (page) {
@@ -41,7 +44,9 @@ internal object PageTelemetry {
             }
             override fun onStop(owner: LifecycleOwner) {
                 if (!activity.isChangingConfigurations)
-                    state.leave(SystemClock.elapsedRealtime())?.let { BusinessTelemetry.emit(MetricEvent.PAGE_LEAVE, it) }
+                    state.leave(SystemClock.elapsedRealtime(), temporarilyCovered =
+                        com.example.aicleanphonestorage.core.lifecycle.ForegroundTransitionGuard.blocked && !activity.isFinishing)
+                        ?.let { BusinessTelemetry.emit(MetricEvent.PAGE_LEAVE, it) }
             }
         })
     }

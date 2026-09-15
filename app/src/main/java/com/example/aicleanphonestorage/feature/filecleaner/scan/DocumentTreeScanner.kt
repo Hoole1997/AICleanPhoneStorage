@@ -13,14 +13,21 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.suspendCancellableCoroutine
 
+internal interface DirectoryScanPolicy {
+    fun visitDirectory(uri: Uri): Boolean
+    fun includeNonemptyDirectory(uri: Uri): Boolean
+}
+
 /** 单 Cursor 扫描用户授权的 SAF 树；目录名使用提供者元数据，不能从不透明 documentId 猜路径。 */
 internal class DocumentTreeScanner(context: Context, index: ScanIndex, private val mime: (String) -> String) {
     private val resolver = context.applicationContext.contentResolver
     private val directories = DirectoryScanIndex(index)
 
-    suspend fun scan(tree: Uri, scan: Long, includeEmptyDirectories: Boolean, emit: (ScannedFile, String) -> Unit, progress: (Int, Int?) -> Unit): Int {
+    suspend fun scan(tree: Uri, scan: Long, includeEmptyDirectories: Boolean, emit: (ScannedFile, String) -> Unit,
+        policy: DirectoryScanPolicy? = null, progress: (Int, Int?) -> Unit): Int {
         val context = currentCoroutineContext()
         val rootId = DocumentsContract.getTreeDocumentId(tree)
+        if (policy?.visitDirectory(DocumentsContract.buildDocumentUriUsingTree(tree, rootId)) == false) return 0
         var rootName = ""
         query(DocumentsContract.buildDocumentUriUsingTree(tree, rootId)) { cursor ->
             if (!cursor.moveToFirst()) throw IOException("Directory unavailable")
@@ -39,6 +46,10 @@ internal class DocumentTreeScanner(context: Context, index: ScanIndex, private v
                     val type = cursor.text(DocumentsContract.Document.COLUMN_MIME_TYPE)
                     val modified = cursor.number(DocumentsContract.Document.COLUMN_LAST_MODIFIED)
                     if (type == DocumentsContract.Document.MIME_TYPE_DIR) {
+                        if (policy?.visitDirectory(DocumentsContract.buildDocumentUriUsingTree(tree, id)) == false) {
+                            directories.markNonempty(scan, directory.document)
+                            continue
+                        }
                         val entry = ScanDirectory(id, directory.document, name, "${directory.folder}/$name", modified, directory.depth + 1)
                         // 深度截断/提供者循环不是空目录；在父链上传播，避免误判整棵子树为空。
                         if (entry.depth >= 64 || !directories.enqueue(scan, entry)) directories.markNonempty(scan, directory.document)
@@ -61,7 +72,8 @@ internal class DocumentTreeScanner(context: Context, index: ScanIndex, private v
                 val entry = directories.take(scan, completed = true) ?: break
                 val parent = entry.parent ?: continue // 授权根目录不参与清理。
                 if (entry.nonempty) directories.markNonempty(scan, parent)
-                else emit(ScannedFile(
+                // 残留子树按文件快照清理后，再按后序尝试删除选中的空目录，绝不递归连带删除。
+                if (!entry.nonempty || policy?.includeNonemptyDirectory(DocumentsContract.buildDocumentUriUsingTree(tree, entry.document)) == true) emit(ScannedFile(
                     uri = DocumentsContract.buildDocumentUriUsingTree(tree, entry.document).toString(), name = entry.name,
                     mime = DocumentsContract.Document.MIME_TYPE_DIR, size = 0, modifiedMillis = entry.modified,
                     category = FileCategory.OTHER, backend = FileBackend.DOCUMENT, scope = tree.toString(),

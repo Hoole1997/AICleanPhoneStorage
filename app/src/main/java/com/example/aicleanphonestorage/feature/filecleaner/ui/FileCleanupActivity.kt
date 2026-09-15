@@ -37,6 +37,9 @@ import com.example.aicleanphonestorage.feature.junkcleaner.ui.descriptionRes
 import com.example.aicleanphonestorage.feature.junkcleaner.ui.titleRes
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import com.example.aicleanphonestorage.feature.unused.data.UnusedKind
+import com.example.aicleanphonestorage.feature.unused.ui.UnusedGroupsAdapter
+import com.example.aicleanphonestorage.feature.unused.ui.titleRes
 
 /** 页面仅绑定分页内容和系统交互；文件读写、选择快照和操作进度由独立组件负责。 */
 class FileCleanupActivity : AppCompatActivity() {
@@ -62,6 +65,7 @@ class FileCleanupActivity : AppCompatActivity() {
     private lateinit var listState: CleanupListStateRenderer
     private lateinit var filters: CleanupFilters
     private var adapter: CleanupFilesAdapter? = null
+    private var unusedGroups: UnusedGroupsAdapter? = null
     private var lastError = 0L
     private lateinit var operationCoordinator: CleanupOperationCoordinator
 
@@ -129,9 +133,17 @@ class FileCleanupActivity : AppCompatActivity() {
             com.example.aicleanphonestorage.feature.junkcleaner.data.JunkKind.from(
                 intent.getStringExtra(EXTRA_BUCKET)
             )
-        if (adapter != null) return
+        if (adapter != null || unusedGroups != null) return
+        if (feature == CleanupFeature.UNUSED_FILES && !intent.hasExtra(EXTRA_BUCKET)) {
+            NativeAdCoordinator(this, binding.nativeAd, NativeAdPlacements.feature(feature).featureSlot)
+            binding.cleanupFiles.layoutManager = LinearLayoutManager(this)
+            binding.cleanupFiles.setPadding(0, 0, 0, binding.cleanupFiles.paddingBottom)
+            binding.cleanupFiles.itemAnimator = null // 固定三分类只更新内容，选择变化不闪烁整张卡片。
+            unusedGroups = UnusedGroupsAdapter(::openUnused, model::selectBucket).also { binding.cleanupFiles.adapter = it }
+            return
+        }
         // Smart Cleaning 的三级分类页不是新的功能页广告位；四个独立清理功能共用本布局。
-        if (feature != CleanupFeature.SMART_CLEAN)
+        if (feature != CleanupFeature.SMART_CLEAN && !(feature == CleanupFeature.UNUSED_FILES && intent.hasExtra(EXTRA_BUCKET)))
             NativeAdCoordinator(this, binding.nativeAd, NativeAdPlacements.feature(feature).featureSlot)
         val columns =
             if (feature == CleanupFeature.SMART_CLEAN && junkKind?.photos == true) 3
@@ -182,6 +194,8 @@ class FileCleanupActivity : AppCompatActivity() {
                     intent.getStringExtra(EXTRA_BUCKET)
                 )
             binding.cleanupTitle.setText(junkKind?.titleRes ?: handle.feature.titleRes)
+            if (handle.feature == CleanupFeature.UNUSED_FILES)
+                binding.cleanupTitle.setText(UnusedKind.from(state.filter.bucket)?.titleRes ?: handle.feature.titleRes)
             if (handle.feature == CleanupFeature.SMART_CLEAN) {
                 binding.root.setBackgroundColor(Color.WHITE)
                 binding.cleanupBackground.isVisible = false
@@ -195,7 +209,7 @@ class FileCleanupActivity : AppCompatActivity() {
             }
             binding.cleanupPhotoHeader.isVisible = handle.feature == CleanupFeature.PHOTO_COMPRESS
             binding.cleanupFilters.isVisible = handle.feature == CleanupFeature.LARGE_FILES
-            binding.cleanupUnusedAge.isVisible = handle.feature == CleanupFeature.UNUSED_FILES
+            binding.cleanupUnusedAge.isVisible = false // Unused 固定规则，不提供额外时间筛选。
             binding.cleanupScope.isVisible =
                 handle.partial || handle.scopeLabel == "Selected folder"
             binding.cleanupScope.text =
@@ -203,6 +217,10 @@ class FileCleanupActivity : AppCompatActivity() {
             if (handle.feature == CleanupFeature.SMART_CLEAN && junkKind != null) {
                 binding.cleanupScope.isVisible = true
                 binding.cleanupScope.setText(junkKind.descriptionRes)
+            }
+            if (handle.feature == CleanupFeature.UNUSED_FILES) {
+                binding.cleanupScope.isVisible = true
+                binding.cleanupScope.setText(R.string.unused_scope_note)
             }
         }
         val idle = state.operation == CleanupOperationState.Idle
@@ -223,7 +241,22 @@ class FileCleanupActivity : AppCompatActivity() {
             return
         }
         listState.state(state)
+        unusedGroups?.let { groups ->
+            groups.submit(state.unusedGroups, idle && state.editing == 0)
+            binding.cleanupProgress.isVisible = !state.totalsReady
+            binding.cleanupEmpty.isVisible = false
+            binding.cleanupFiles.isVisible = true
+            binding.cleanupFooter.isVisible = true
+        }
         operationCoordinator.render(state.operation)
+    }
+
+    private fun openUnused(kind: UnusedKind) {
+        val handle = model.state.value.handle ?: return
+        com.example.aicleanphonestorage.feature.filecleaner.analytics.CleanupTelemetry().unusedGroup(kind)
+        startActivity(Intent(this, FileCleanupActivity::class.java)
+            .putExtra(EXTRA_SCAN, handle.id).putExtra(EXTRA_FEATURE, CleanupFeature.UNUSED_FILES.name)
+            .putExtra(EXTRA_BUCKET, kind.bucket))
     }
 
     private fun preview(file: ScannedFile) {
@@ -276,6 +309,7 @@ class FileCleanupActivity : AppCompatActivity() {
 
     override fun onResumeFragments() {
         super.onResumeFragments()
+        if (model.state.value.handle?.feature == CleanupFeature.UNUSED_FILES) model.refreshTotals()
         render(model.state.value)
         adapter?.resume()
     }

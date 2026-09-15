@@ -1,5 +1,5 @@
 <resources>
-    <string name="compression_selected_label">已选原图大小</string>
+    <string name="compression_selected_label">压缩媒体文件，最多可节省：</string>
     <string name="compression_selected_size">已选原图：%1$s</string>
     <string name="compression_processed_size">成功压缩的原图：%1$s</string>
     <string name="compression_output_size">压缩后副本：%1$s</string>

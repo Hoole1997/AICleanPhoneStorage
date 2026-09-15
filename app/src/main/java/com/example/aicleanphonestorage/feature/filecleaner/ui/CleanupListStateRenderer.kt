@@ -40,7 +40,8 @@ internal class CleanupListStateRenderer(private val binding: ScreenFileCleanupBi
         val empty =
             state.handle != null && presented && refresh is LoadState.NotLoading && count == 0
         val failed = refresh is LoadState.Error && count == 0
-        val detail = state.handle?.feature == CleanupFeature.SMART_CLEAN
+        val detail = state.handle?.feature == CleanupFeature.SMART_CLEAN ||
+            (state.handle?.feature == CleanupFeature.UNUSED_FILES && state.filter.bucket != null)
         screenshots.render(state)
         action.render(state)
         if (state.handle?.feature == CleanupFeature.PHOTO_COMPRESS) {
@@ -63,7 +64,7 @@ internal class CleanupListStateRenderer(private val binding: ScreenFileCleanupBi
         binding.cleanupFiles.isVisible = !empty && !failed
         binding.cleanupProgress.isVisible = refresh is LoadState.Loading && count == 0
         binding.cleanupFooter.isVisible =
-            state.handle?.feature != CleanupFeature.SMART_CLEAN && count > 0
+            !detail && count > 0
         binding.cleanupPhotoHeader.isVisible =
             state.handle?.feature == CleanupFeature.PHOTO_COMPRESS && !empty && !failed
         binding.cleanupSelectAll.isVisible = !empty && !failed

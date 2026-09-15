@@ -24,6 +24,7 @@ import org.junit.runner.RunWith
 /** 用可控权限回调验证拒绝分支，不修改设备通知权限或请求真实广告。 */
 @RunWith(AndroidJUnit4::class)
 class PushPermissionGuideTest {
+    @get:org.junit.Rule val noHotAds = com.example.aicleanphonestorage.testing.NoHotStartAdsRule()
     private val instrumentation
         get() = InstrumentationRegistry.getInstrumentation()
 
@@ -39,7 +40,7 @@ class PushPermissionGuideTest {
         override fun isGranted() = granted
 
         override fun needsSettings(origin: PushPermissionRequest) =
-            origin == PushPermissionRequest.GUIDE && settingsRequired
+            settingsRequired
 
         override fun request(origin: PushPermissionRequest, result: (Boolean, Boolean) -> Unit) {
             requests += origin
@@ -53,135 +54,58 @@ class PushPermissionGuideTest {
     }
 
     @Test
-    fun firstRequestHasNoGuideAndDenialShowsItOnlyWhenResumed() {
+    fun systemDenialDoesNotShowCustomGuideInTheSameHost() {
         ActivityScenario.launch(AboutActivity::class.java).use { scenario ->
             val permissions = Permissions()
             lateinit var coordinator: PushPermissionCoordinator
             scenario.onActivity { activity ->
-                coordinator =
-                    PushPermissionCoordinator(
-                        activity,
-                        (activity.application as CleanApplication).notificationRuntime,
-                        PushPermissionViewModel(SavedStateHandle()),
-                        { false },
-                        { error("No settings expected for a retryable permission") },
-                        permissions,
-                    )
+                coordinator = PushPermissionCoordinator(activity,
+                    (activity.application as CleanApplication).notificationRuntime,
+                    PushPermissionViewModel(SavedStateHandle()), { false }, { error("No settings") }, permissions,
+                    allowGuide = false)
                 coordinator.onResume()
             }
             instrumentation.waitForIdleSync()
             scenario.onActivity { activity ->
                 assertEquals(listOf(PushPermissionRequest.AUTOMATIC), permissions.requests)
-                assertNull(
-                    activity.supportFragmentManager.findFragmentByTag(PushPermissionGuideDialog.TAG)
-                )
-            }
-            scenario.moveToState(Lifecycle.State.CREATED)
-            scenario.onActivity { permissions.complete(false, true) }
-            scenario.moveToState(Lifecycle.State.RESUMED)
-            instrumentation.waitForIdleSync()
-            scenario.onActivity { activity ->
-                val guide =
-                    activity.supportFragmentManager.findFragmentByTag(PushPermissionGuideDialog.TAG)
-                        as PushPermissionGuideDialog
-                assertTrue(guide.dialog!!.isShowing)
-                guide.requireView().findViewById<View>(R.id.push_guide_close).performClick()
-            }
-            instrumentation.waitForIdleSync()
-            scenario.onActivity { activity ->
-                coordinator.onResume()
+                permissions.complete(false, true)
                 coordinator.drain()
-                assertEquals(1, permissions.requests.size)
-                assertNull(
-                    activity.supportFragmentManager.findFragmentByTag(PushPermissionGuideDialog.TAG)
-                )
+                assertNull(activity.supportFragmentManager.findFragmentByTag(PushPermissionGuideDialog.TAG))
             }
         }
     }
 
     @Test
-    fun allowDelegatesOneExplicitRequestAndGrantClosesGuide() {
-        ActivityScenario.launch(AboutActivity::class.java).use { scenario ->
-            val permissions = Permissions()
-            scenario.onActivity { activity ->
-                val coordinator =
-                    PushPermissionCoordinator(
-                        activity,
-                        (activity.application as CleanApplication).notificationRuntime,
-                        PushPermissionViewModel(SavedStateHandle()),
-                        { false },
-                        { error("No settings expected for a retryable permission") },
-                        permissions,
-                    )
-                coordinator.onResume()
-            }
-            instrumentation.waitForIdleSync()
-            scenario.onActivity { permissions.complete(false, true) }
-            instrumentation.waitForIdleSync()
-            instrumentation.uiAutomation.takeScreenshot()?.let { save(it, "denied_guide") }
-            scenario.onActivity { activity ->
-                val guide =
-                    activity.supportFragmentManager.findFragmentByTag(PushPermissionGuideDialog.TAG)
-                        as PushPermissionGuideDialog
-                guide.requireView().findViewById<View>(R.id.push_guide_allow).performClick()
-            }
-            instrumentation.waitForIdleSync()
-            scenario.onActivity { activity ->
-                assertEquals(
-                    listOf(PushPermissionRequest.AUTOMATIC, PushPermissionRequest.GUIDE),
-                    permissions.requests,
-                )
-                permissions.complete(true, false)
-                assertNull(
-                    activity.supportFragmentManager.findFragmentByTag(PushPermissionGuideDialog.TAG)
-                )
-            }
-        }
-    }
-
-    @Test
-    fun settingsOnlyRequestUsesSharedFlowInsteadOfAnotherLibraryRequest() {
+    fun permanentDenialShowsHomeGuideAndAllowOpensSettingsOnce() {
         ActivityScenario.launch(AboutActivity::class.java).use { scenario ->
             val permissions = Permissions().apply { settingsRequired = true }
-            var openedSettings = 0
+            var opened = 0
             var pending = false
             lateinit var coordinator: PushPermissionCoordinator
             scenario.onActivity { activity ->
-                coordinator =
-                    PushPermissionCoordinator(
-                        activity,
-                        (activity.application as CleanApplication).notificationRuntime,
-                        PushPermissionViewModel(SavedStateHandle()),
-                        { pending },
-                        {
-                            openedSettings++
-                            pending = true
-                        },
-                        permissions,
-                    )
+                coordinator = PushPermissionCoordinator(activity,
+                    (activity.application as CleanApplication).notificationRuntime,
+                    PushPermissionViewModel(SavedStateHandle()), { pending }, { opened++; pending = true }, permissions)
                 coordinator.onResume()
             }
             instrumentation.waitForIdleSync()
-            scenario.onActivity { permissions.complete(false, true) }
-            instrumentation.waitForIdleSync()
             scenario.onActivity { activity ->
-                val guide =
-                    activity.supportFragmentManager.findFragmentByTag(PushPermissionGuideDialog.TAG)
-                        as PushPermissionGuideDialog
+                assertTrue(permissions.requests.isEmpty())
+                val guide = activity.supportFragmentManager.findFragmentByTag(PushPermissionGuideDialog.TAG) as PushPermissionGuideDialog
                 guide.requireView().findViewById<View>(R.id.push_guide_allow).performClick()
             }
             instrumentation.waitForIdleSync()
             scenario.onActivity {
-                assertEquals(1, openedSettings)
-                assertEquals(listOf(PushPermissionRequest.AUTOMATIC), permissions.requests)
+                assertEquals(1, opened)
+                assertTrue(permissions.requests.isEmpty())
                 coordinator.onResume()
-                assertEquals(1, openedSettings)
-                permissions.granted = true
-                pending = false
+                assertEquals(1, opened)
+                permissions.granted = true; pending = false
                 coordinator.onSettingsResult(true)
                 coordinator.onResume()
-                assertEquals(1, permissions.requests.size)
             }
+            instrumentation.waitForIdleSync()
+            scenario.onActivity { assertNull(it.supportFragmentManager.findFragmentByTag(PushPermissionGuideDialog.TAG)) }
         }
     }
 
@@ -222,8 +146,11 @@ class PushPermissionGuideTest {
                             text.layout.height
                     )
                 }
-                if (width == 375 && scale == 1f)
-                    assertEquals(334f, binding.root.height / density, 4f)
+                // 正文自然测量，OEM 字体度量会改变总高；验证内容顺序和可滚动边界，不能锁死设计稿总高。
+                assertTrue(binding.pushGuideTitle.bottom <= binding.pushGuideMessage.top)
+                assertTrue(binding.pushGuideMessage.bottom <= binding.pushGuideAllow.top)
+                assertTrue(binding.pushGuideAllow.bottom <= binding.root.getChildAt(0).height)
+                assertTrue(binding.root.height <= 600 * density)
                 image =
                     Bitmap.createBitmap(pixels, binding.root.height, Bitmap.Config.ARGB_8888).also {
                         Canvas(it).apply {

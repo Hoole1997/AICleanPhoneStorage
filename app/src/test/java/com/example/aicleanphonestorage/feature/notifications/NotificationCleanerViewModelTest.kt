@@ -57,32 +57,57 @@ class NotificationCleanerViewModelTest {
         assertEquals(NotificationPhase.Idle, vm.state.value.phase)
         assertNull(vm.consumeCatalog())
     }
-    @Test fun `switch saves without reloading catalog and failure restores stored selection`() = runTest {
+    @Test fun `draft changes do not affect persisted rules until confirmed`() = runTest {
         val repo = Fake(); val vm = vm(repo, false)
         vm.onForeground(); runCurrent()
-        vm.setEnabled("app.1", true); runCurrent()
+        vm.setEnabled("app.1", true); advanceUntilIdle()
+        assertTrue("app.1" in vm.state.value.selected)
+        assertTrue(repo.selectedPackages.value.isEmpty())
+        assertNull(vm.completionReport())
+        vm.commitSelection(); runCurrent()
         assertEquals(true, vm.state.value.saving["app.1"])
         advanceTimeBy(20); runCurrent()
-        assertTrue("app.1" in vm.state.value.selected)
+        assertEquals(setOf("app.1"), repo.selectedPackages.value)
         assertEquals(0, repo.loads)
+        vm.completionPresented()
         repo.saveFails = true
-        vm.setEnabled("app.1", false); advanceTimeBy(20); runCurrent()
-        assertTrue("app.1" in vm.state.value.selected)
-        assertTrue(vm.state.value.saving.isEmpty())
+        vm.setEnabled("app.1", false); vm.commitSelection(); advanceUntilIdle()
+        assertEquals(setOf("app.1"), repo.selectedPackages.value)
+        assertTrue(vm.state.value.selected.isEmpty())
+        assertTrue(vm.state.value.hasSavedChanges)
         assertEquals(1L, vm.state.value.saveError)
     }
-    @Test fun `completion waits for successful persistence and is consumed once`() = runTest {
+    @Test fun `completion waits for explicit commit and successful persistence`() = runTest {
         val repo = Fake(); val vm = vm(repo, false)
         vm.onForeground(); runCurrent()
+        vm.setEnabled("app.1", true); advanceUntilIdle()
         assertNull(vm.completionReport())
-        vm.setEnabled("app.1", true); runCurrent()
+        vm.commitSelection(); runCurrent()
         assertNull(vm.completionReport())
         advanceTimeBy(20); runCurrent()
         assertEquals(1, vm.completionReport()!!.completed)
         vm.completionPresented()
         assertNull(vm.completionReport())
         repo.saveFails = true
-        vm.setEnabled("app.1", false); advanceUntilIdle()
+        vm.setEnabled("app.1", false); vm.commitSelection(); advanceUntilIdle()
         assertNull(vm.completionReport())
+    }
+    @Test fun `retry without permission never scans applications`() = runTest {
+        val repo = Fake().apply { granted = false }
+        val vm = vm(repo, true)
+        vm.beginEntry(); runCurrent()
+        vm.retry(); advanceUntilIdle()
+        assertEquals(NotificationPhase.NeedsAccess, vm.state.value.phase)
+        assertEquals(0, repo.loads)
+    }
+    @Test fun `listener connection updates preserve unsaved selection`() = runTest {
+        val repo = Fake(); val connected = MutableStateFlow(true)
+        val vm = NotificationCleanerViewModel(repo, connected, SavedStateHandle(), false, repo.catalog)
+        store.put("draft", vm)
+        vm.onForeground(); runCurrent()
+        vm.setEnabled("app.1", true)
+        connected.value = false; runCurrent()
+        assertEquals(setOf("app.1"), vm.state.value.selected)
+        assertTrue(repo.selectedPackages.value.isEmpty())
     }
 }

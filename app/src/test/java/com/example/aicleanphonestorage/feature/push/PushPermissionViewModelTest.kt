@@ -18,14 +18,15 @@ class PushPermissionViewModelTest {
     }
 
     @Test
-    fun onlyDeniedResultCanCreateTheGuide() {
+    fun systemDenialDoesNotCreateGuideInTheSameHost() {
         val model = PushPermissionViewModel(SavedStateHandle())
         model.onForeground(false)
         model.takeRequest()
         model.onResult(granted = false, denied = false)
         assertFalse(model.state.value.guideVisible)
         model.onResult(granted = false, denied = true)
-        assertTrue(model.state.value.guideVisible)
+        assertFalse(model.state.value.guideVisible)
+        assertTrue(model.state.value.completed)
     }
 
     @Test
@@ -67,7 +68,9 @@ class PushPermissionViewModelTest {
         val model = PushPermissionViewModel(saved)
         model.onForeground(false)
         model.takeRequest()
-        model.onResult(false, true)
+        model.onForeground(false, canRequestSystem = false)
+        model.completeFromPreviousHost()
+        model.onForeground(false, canRequestSystem = false)
         val restored = PushPermissionViewModel(saved)
         assertTrue(restored.state.value.guideVisible)
         restored.onForeground(true)
@@ -76,29 +79,31 @@ class PushPermissionViewModelTest {
     }
 
     @Test
-    fun completionWaitsForDenialGuideAndThenUnblocksNextStep() {
-        val model = PushPermissionViewModel(SavedStateHandle())
-        assertFalse(model.state.value.completed)
-        model.onForeground(false)
-        model.takeRequest()
-        model.onResult(false, true)
-        assertFalse(model.state.value.completed)
-        model.guideShown()
-        model.guideAction(true)
-        assertFalse(model.state.value.completed)
-        model.takeRequest()
-        model.onResult(false, false)
-        assertTrue(model.state.value.completed)
-    }
-
-    @Test
-    fun previousActivityCompletionSkipsDuplicateRequestWithoutGrantingPermission() {
-        val model = PushPermissionViewModel(SavedStateHandle())
-        model.completeFromPreviousHost()
-        model.onForeground(false)
-        assertNull(model.takeRequest())
-        assertFalse(model.state.value.guideVisible)
-        assertTrue(model.state.value.completed)
+    fun twoSystemAttemptsThenOnlyHomeGuide() {
+        val startup = PushPermissionViewModel(SavedStateHandle())
+        startup.onForeground(false, canRequestSystem = true, allowGuide = false)
+        assertEquals(PushPermissionRequest.AUTOMATIC, startup.takeRequest())
+        startup.onResult(false, true)
+        assertTrue(startup.state.value.completed)
+        assertFalse(startup.state.value.guideVisible)
+        val home = PushPermissionViewModel(SavedStateHandle())
+        home.completeFromPreviousHost()
+        home.onForeground(false, canRequestSystem = true)
+        assertEquals(PushPermissionRequest.AUTOMATIC, home.takeRequest())
+        home.onResult(false, true)
+        assertFalse(home.state.value.guideVisible)
+        val nextStartup = PushPermissionViewModel(SavedStateHandle())
+        nextStartup.onForeground(false, canRequestSystem = false, allowGuide = false)
+        assertTrue(nextStartup.state.value.completed)
+        assertFalse(nextStartup.state.value.guideVisible)
+        home.completeFromPreviousHost()
+        home.onForeground(false, canRequestSystem = false)
+        assertTrue(home.state.value.guideVisible)
+        home.guideAction(true)
+        assertEquals(PushPermissionRequest.GUIDE, home.takeRequest())
+        home.onResult(true, false)
+        assertTrue(home.state.value.completed)
+        assertFalse(home.state.value.guideVisible)
     }
 
     @Test

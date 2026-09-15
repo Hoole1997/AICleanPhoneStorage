@@ -1,5 +1,5 @@
 <resources>
-    <string name="compression_selected_label">Seçilen orijinallerin boyutu</string>
+    <string name="compression_selected_label">Medyanızı sıkıştırarak şu kadar yer kazanın:</string>
     <string name="compression_selected_size">Seçilen orijinaller: %1$s</string>
     <string name="compression_processed_size">Başarıyla sıkıştırılan orijinaller: %1$s</string>
     <string name="compression_output_size">Sıkıştırılmış kopyalar: %1$s</string>

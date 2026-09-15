@@ -14,6 +14,7 @@ internal object CompletionContract {
     fun intent(context: Context, report: CompletionReport, source: String? = null) =
         Intent(context, CompletionActivity::class.java).apply {
             putExtra("completion.kind", report.kind.name)
+            putExtra("completion.empty_scan", report.emptyScan)
             putExtra(SOURCE, source)
             putExtra("completion.count", report.completed)
             putExtra("completion.failed", report.failed)
@@ -47,6 +48,7 @@ internal object CompletionContract {
             intent.getLongExtra("completion.input_bytes", -1).takeIf { it >= 0 },
             intent.getLongExtra("completion.copied_original_bytes", -1).takeIf { it >= 0 },
             intent.getLongExtra("completion.output_bytes", -1).takeIf { it >= 0 },
+            intent.getBooleanExtra("completion.empty_scan", false),
         )
     }
 }

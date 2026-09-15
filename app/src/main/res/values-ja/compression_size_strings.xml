@@ -1,5 +1,5 @@
 <resources>
-    <string name="compression_selected_label">選択した元画像のサイズ</string>
+    <string name="compression_selected_label">メディアを圧縮して最大で次の容量を節約：</string>
     <string name="compression_selected_size">選択した元画像：%1$s</string>
     <string name="compression_processed_size">圧縮に成功した元画像：%1$s</string>
     <string name="compression_output_size">圧縮後のコピー：%1$s</string>

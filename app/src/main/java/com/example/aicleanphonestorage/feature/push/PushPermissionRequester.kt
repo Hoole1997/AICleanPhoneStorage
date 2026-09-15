@@ -18,7 +18,6 @@ internal class XxPushPermissionRequester(private val activity: AppCompatActivity
     override fun isGranted() = NotificationPermissionAccess.isGranted(activity)
 
     override fun needsSettings(origin: PushPermissionRequest): Boolean {
-        if (origin != PushPermissionRequest.GUIDE) return false
         val permission = NotificationPermissionAccess.permissionToRequest(activity)
         // 旧系统或通知总开关被关闭时都只能进入设置；不是只有“不再询问”才需要自动返回。
         return android.os.Build.VERSION.SDK_INT < 33 ||

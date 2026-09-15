@@ -1,5 +1,5 @@
 <resources>
-    <string name="compression_selected_label">चुनी गई मूल फ़ोटो का आकार</string>
+    <string name="compression_selected_label">मीडिया कंप्रेस करके इतनी जगह तक बचाएँ:</string>
     <string name="compression_selected_size">चुनी गई मूल फ़ोटो: %1$s</string>
     <string name="compression_processed_size">सफलतापूर्वक संपीड़ित मूल फ़ोटो: %1$s</string>
     <string name="compression_output_size">संपीड़ित प्रतियाँ: %1$s</string>

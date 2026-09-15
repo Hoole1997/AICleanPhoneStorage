@@ -1,0 +1,7 @@
+<resources>
+    <string name="rating_title">Спасибо, что используете %1$s</string>
+    <string name="rating_message">Будем благодарны, если вы оцените приложение.</string>
+    <string name="rating_hint">Лучшая оценка для нас</string>
+    <string name="rating_submit">Оценить</string>
+    <string name="rating_star_description">Оценить на %1$d из 5 звёзд</string>
+</resources>

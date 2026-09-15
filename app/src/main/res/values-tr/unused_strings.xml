@@ -1,0 +1,6 @@
+<resources>
+    <string name="unused_installed_apk">Yüklü APK dosyaları</string>
+    <string name="unused_residue">Kaldırılan uygulama kalıntıları</string>
+    <string name="unused_download">Eski indirmeler</string>
+    <string name="unused_scope_note">Adaylar kurulum durumu ve değiştirilme zamanına göre seçilir. Yalnızca erişilebilir klasörler taranır.</string>
+</resources>

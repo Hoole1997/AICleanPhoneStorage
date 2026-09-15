@@ -1,0 +1,6 @@
+<resources>
+    <string name="unused_installed_apk">インストール済み APK</string>
+    <string name="unused_residue">削除したアプリの残存ファイル</string>
+    <string name="unused_download">古いダウンロード</string>
+    <string name="unused_scope_note">インストール状態と更新日時に基づく候補です。アクセス可能なフォルダのみをスキャンします。</string>
+</resources>

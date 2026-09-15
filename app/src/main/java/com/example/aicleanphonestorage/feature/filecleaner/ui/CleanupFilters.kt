@@ -43,23 +43,20 @@ internal class CleanupFilters(
             }
         }
         binding.cleanupSize.setOnClickListener {
-            val sizes = listOf(10L, 50L, 100L, 500L)
+            val sizes = listOf(10L, 50L, 100L, 500L, 1000L)
             menu(
                 binding.cleanupFilters,
-                sizes.map { context.getString(R.string.cleanup_size_mb, it) },
+                sizes.map(::sizeLabel),
                 sizes.indexOf(filter.minimumBytes / 1_000_000),
             ) {
                 update(filter.copy(minimumBytes = sizes[it] * 1_000_000))
             }
         }
         binding.cleanupAge.setOnClickListener {
-            val days = listOf(0, 7, 30, 90)
+            val days = listOf(0, 7, 30, 90, 180, 365)
             menu(
                 binding.cleanupFilters,
-                days.map {
-                    if (it == 0) context.getString(R.string.cleanup_all_time)
-                    else context.getString(R.string.cleanup_recent_days, it)
-                },
+                days.map(::timeLabel),
                 days.indexOf(filter.recentDays),
             ) {
                 update(filter.copy(recentDays = days[it]))
@@ -80,11 +77,8 @@ internal class CleanupFilters(
     fun render(value: CleanupFilter, enabled: Boolean) {
         filter = value
         binding.cleanupType.text = context.getString(categories[value.category.ordinal])
-        binding.cleanupSize.text =
-            context.getString(R.string.cleanup_size_mb, value.minimumBytes / 1_000_000)
-        binding.cleanupAge.text =
-            if (value.recentDays == 0) context.getString(R.string.cleanup_all_time)
-            else context.getString(R.string.cleanup_recent_days, value.recentDays)
+        binding.cleanupSize.text = sizeLabel(value.minimumBytes / 1_000_000)
+        binding.cleanupAge.text = timeLabel(value.recentDays)
         binding.cleanupUnusedAge.text =
             context.getString(R.string.cleanup_unchanged_days, value.unusedDays)
         listOf(
@@ -95,6 +89,18 @@ internal class CleanupFilters(
             )
             .forEach { it.isEnabled = enabled }
     }
+
+    private fun sizeLabel(megabytes: Long) = if (megabytes == 1000L) context.getString(R.string.cleanup_one_gb)
+        else context.getString(R.string.cleanup_size_mb, megabytes)
+
+    private fun timeLabel(days: Int) = context.getString(when (days) {
+        7 -> R.string.cleanup_one_week
+        30 -> R.string.cleanup_one_month
+        90 -> R.string.cleanup_three_months
+        180 -> R.string.cleanup_six_months
+        365 -> R.string.cleanup_one_year
+        else -> R.string.cleanup_all_time
+    })
 
     private fun menu(anchor: View, labels: List<String>, selected: Int, onSelect: (Int) -> Unit) {
         popup?.dismiss()

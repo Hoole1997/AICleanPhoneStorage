@@ -32,7 +32,7 @@ internal class NotificationEntryCoordinator(
             activity,
         ) { _, result ->
             if (result.getString("action") == "retry")
-                viewModel.onForeground().also { viewModel.refresh() }
+                viewModel.retry()
             else viewModel.cancelEntry()
         }
     }
@@ -46,13 +46,7 @@ internal class NotificationEntryCoordinator(
             return
         val loading =
             when (val phase = state.phase) {
-                NotificationPhase.CheckingAccess ->
-                    LoadingUiState(
-                        0,
-                        activity.getString(R.string.notification_loading),
-                        activity.getString(R.string.notification_loading_access),
-                        resultKey = CANCEL_RESULT,
-                    )
+                NotificationPhase.CheckingAccess -> null // 权限确认前不闪现扫描弹框。
                 is NotificationPhase.Loading -> {
                     val progress = phase.frame?.detail
                     LoadingUiState(

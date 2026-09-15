@@ -1,5 +1,5 @@
 <resources>
-    <string name="compression_selected_label">Dung lượng ảnh gốc đã chọn</string>
+    <string name="compression_selected_label">Nén nội dung đa phương tiện để tiết kiệm tối đa:</string>
     <string name="compression_selected_size">Ảnh gốc đã chọn: %1$s</string>
     <string name="compression_processed_size">Ảnh gốc đã nén thành công: %1$s</string>
     <string name="compression_output_size">Bản sao đã nén: %1$s</string>

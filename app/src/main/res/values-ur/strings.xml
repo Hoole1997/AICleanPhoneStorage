@@ -55,7 +55,7 @@
     <string name="cleanup_limited">صرف منتخب تصاویر شامل ہیں۔</string>
     <string name="cleanup_tips">تجاویز</string>
     <string name="cleanup_confirm">تصدیق کریں۔</string>
-    <string name="cleanup_delete_confirm">منتخب فائلوں کو مستقل طور پر حذف کریں؟\nشمار: %1$d · سائز: %2$s</string>
+    <string name="cleanup_delete_confirm">کیا آپ یہ فائل حذف کرنا چاہتے ہیں؟\nتصدیق کریں۔</string>
     <string name="cleanup_working">%1$d / %2$d پر کارروائی ہو رہی ہے۔</string>
     <string name="cleanup_result">حذف شدہ: %1$d\nچھوٹی کاپیاں: %2$d\nغیر تبدیل شدہ یا منسوخ: %3$d\nناکام: %4$d</string>
     <string name="cleanup_remove_originals">اصل تصاویر حذف کریں۔</string>

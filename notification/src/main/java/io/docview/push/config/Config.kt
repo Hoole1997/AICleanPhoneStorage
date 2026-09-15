@@ -56,3 +56,7 @@ internal fun parseNotificationConfig(json: String): NotificationConfig {
     }
     return value
 }
+
+/** 每次取配置都按最新归因选 tier，远程分钟值不被本地默认值覆盖。 */
+internal fun NotificationConfig.forChannel(channel: io.docview.push.host.PushUserChannel.UserChannelType): Config =
+    if (channel == io.docview.push.host.PushUserChannel.UserChannelType.PAID) paidChannel else organicChannel

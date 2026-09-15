@@ -15,6 +15,7 @@ internal class PushPermissionCoordinator(
     private val otherPermissionPending: () -> Boolean,
     private val openSettings: () -> Unit,
     private val requester: PushPermissionRequester = XxPushPermissionRequester(activity),
+    private val allowGuide: Boolean = true,
 ) {
     init {
         activity.supportFragmentManager.setFragmentResultListener(
@@ -30,7 +31,8 @@ internal class PushPermissionCoordinator(
 
     fun onResume() {
         val granted = requester.isGranted()
-        model.onForeground(granted, settingsPending = otherPermissionPending())
+        model.onForeground(granted, settingsPending = otherPermissionPending(),
+            canRequestSystem = !requester.needsSettings(PushPermissionRequest.AUTOMATIC), allowGuide = allowGuide)
         if (granted) runtime.refreshResident()
     }
 
@@ -85,6 +87,7 @@ internal class PushPermissionCoordinator(
             model: PushPermissionViewModel,
             permissions: com.example.aicleanphonestorage.core.permissions.PermissionCoordinator,
             beforeSettings: () -> Unit = {},
+            allowGuide: Boolean = true,
         ): PushPermissionCoordinator {
             val coordinator =
                 PushPermissionCoordinator(
@@ -100,6 +103,7 @@ internal class PushPermissionCoordinator(
                             settings = true,
                         )
                     },
+                    allowGuide = allowGuide,
                 )
             permissions.register(
                 SETTINGS_ROUTE,

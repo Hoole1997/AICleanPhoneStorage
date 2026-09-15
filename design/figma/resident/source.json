@@ -1,1 +1,10 @@
-{"fileKey":"dVsTL6ggoDPXVPcEKg856G","nodeId":"5666:1803","asset":"source/clean.png","sizeDp":[36,36],"notes":"Original transparent image fill; contain scaling. Other icons reuse home WebP assets; small icon reuses ic_home_clean."}
+{
+  "fileKey": "dVsTL6ggoDPXVPcEKg856G",
+  "nodeId": "5666:1802",
+  "asset": "source/clean.png",
+  "sizeDp": [
+    36,
+    36
+  ],
+  "notes": "Original 36dp frames exported as transparent PNG; see assets.json for all four icons and provenance."
+}

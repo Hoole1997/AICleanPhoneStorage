@@ -38,6 +38,6 @@ class CleanApplication : Application(), NotificationRuntimeOwner {
         AdSdkInitializer.initialize(this)
         HotStartAdCoordinator(this)
         com.example.aicleanphonestorage.core.analytics.LaunchTelemetry()
-        HomeCleaningSync(homeCleaning) { notificationRuntime.refreshResident() }.start()
+        HomeCleaningSync(homeCleaning, { notificationRuntime.refreshResident() }, notificationRuntime::setPaidUser).start()
     }
 }

@@ -12,6 +12,7 @@ import kotlinx.coroutines.withContext
 internal class HomeCleaningSync(
     private val cleaning: HomeCleaningState,
     private val refreshResident: () -> Unit,
+    private val updatePushChannel: (Boolean) -> Unit = {},
 ) : ChannelUserController.ChannelChangeListener {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
@@ -24,7 +25,7 @@ internal class HomeCleaningSync(
             try {
                 val revision = channelRevision
                 val paid = withContext(Dispatchers.IO) { ChannelUserController.getCurrentChannel() == ChannelUserController.UserChannelType.PAID }
-                if (revision == channelRevision) cleaning.setPaidUser(paid)
+                if (revision == channelRevision) { cleaning.setPaidUser(paid); updatePushChannel(paid) }
             } catch (cancelled: CancellationException) { throw cancelled }
             catch (error: Exception) {
                 android.util.Log.w("HomeCleaning", "Use configured default audience", error)
@@ -39,7 +40,9 @@ internal class HomeCleaningSync(
     ) {
         scope.launch {
             channelRevision++
-            cleaning.setPaidUser(newChannel == ChannelUserController.UserChannelType.PAID)
+            val paid = newChannel == ChannelUserController.UserChannelType.PAID
+            cleaning.setPaidUser(paid)
+            updatePushChannel(paid)
         }
     }
 }

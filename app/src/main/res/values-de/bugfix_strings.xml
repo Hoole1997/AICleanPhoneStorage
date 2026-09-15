@@ -1,0 +1,14 @@
+<resources>
+    <string name="cleanup_one_week">1 Woche</string>
+    <string name="cleanup_one_month">1 Monat</string>
+    <string name="cleanup_three_months">3 Monate</string>
+    <string name="cleanup_six_months">6 Monate</string>
+    <string name="cleanup_one_year">1 Jahr</string>
+    <string name="app_manager_never_used">Nie verwendet</string>
+    <string name="push_apps">Apps</string>
+    <string name="push_accelerate">Beschleunigen</string>
+    <string name="cleanup_count_size">Dateien bereinigen (%1$s · %2$s)</string>
+    <string name="home_junk_categories">Cache · Restdateien · Downloads</string>
+    <string name="junk_got_it">Verstanden</string>
+    <string name="junk_very_clean">Ihr Telefon ist sehr sauber</string>
+</resources>

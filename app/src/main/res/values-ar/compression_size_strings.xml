@@ -1,5 +1,5 @@
 <resources>
-    <string name="compression_selected_label">حجم الصور الأصلية المحددة</string>
+    <string name="compression_selected_label">اضغط ملفات الوسائط لتوفير مساحة تصل إلى:</string>
     <string name="compression_selected_size">الصور الأصلية المحددة: %1$s</string>
     <string name="compression_processed_size">الصور الأصلية المضغوطة بنجاح: %1$s</string>
     <string name="compression_output_size">النسخ المضغوطة: %1$s</string>

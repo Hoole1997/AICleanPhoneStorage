@@ -1,0 +1,7 @@
+<resources>
+    <string name="rating_title">%1$s をご利用いただきありがとうございます</string>
+    <string name="rating_message">評価していただけると幸いです。</string>
+    <string name="rating_hint">私たちへの最高の評価</string>
+    <string name="rating_submit">評価する</string>
+    <string name="rating_star_description">5つ星のうち%1$dつ星で評価</string>
+</resources>

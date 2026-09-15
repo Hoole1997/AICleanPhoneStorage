@@ -55,7 +55,7 @@
     <string name="cleanup_limited">Chỉ bao gồm những ảnh được chọn</string>
     <string name="cleanup_tips">Lời khuyên</string>
     <string name="cleanup_confirm">Xác nhận</string>
-    <string name="cleanup_delete_confirm">Xóa vĩnh viễn các tập tin đã chọn?\nĐếm: %1$d · Kích thước: %2$s</string>
+    <string name="cleanup_delete_confirm">Bạn có muốn xóa tệp này không?\nVui lòng xác nhận.</string>
     <string name="cleanup_working">Đang xử lý %1$d / %2$d</string>
     <string name="cleanup_result">Đã xóa: %1$d\nBản sao nhỏ hơn: %2$d\nKhông thay đổi hoặc bị hủy: %3$d\nKhông thành công: %4$d</string>
     <string name="cleanup_remove_originals">Xóa ảnh gốc</string>

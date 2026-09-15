@@ -179,16 +179,16 @@ class AppManagerDeviceTest {
     fun realMetadataAndFallbackAreHonest() = runBlocking {
         val catalog =
             (context.applicationContext as CleanApplication).container.appManagerRepository.load()
-        val own = catalog.apps.single { it.packageName == context.packageName }
-        assertFalse(own.canUninstall)
-        assertTrue(own.installedAt != null && own.installedAt > 0)
+        assertTrue(catalog.apps.none { it.packageName == context.packageName })
+        assertTrue(catalog.apps.all { it.canUninstall })
+        assertTrue(catalog.apps.any { it.installedAt != null && it.installedAt > 0 })
         if (!catalog.usageAccess) {
             assertTrue(
                 catalog.apps.all {
                     it.sizeKind == AppSizeKind.APK && it.lastUse == AppLastUse.Unavailable
                 }
             )
-            assertTrue(own.sizeBytes != null && own.sizeBytes > 0)
+            assertTrue(catalog.apps.any { it.sizeBytes != null && it.sizeBytes > 0 })
         }
     }
 

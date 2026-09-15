@@ -129,15 +129,16 @@ class JunkCleaningActivity : AppCompatActivity() {
             return
         }
         val empty=summary.snapshot?.categories?.all{it.count==0}==true
-        binding.junkEmpty.isVisible=empty
-        binding.junkCategories.isVisible=summary.snapshot!=null && !empty
+        binding.junkEmpty.isVisible=false
+        binding.junkCategories.isVisible=summary.snapshot!=null
         binding.junkPageProgress.isVisible=summary.snapshot==null && !summary.failed
-        binding.junkFooter.isVisible=summary.snapshot!=null && !empty
-        binding.junkClean.isVisible=!empty
+        binding.junkFooter.isVisible=summary.snapshot!=null
+        binding.junkClean.isVisible=true
+        binding.junkClean.setText(if (empty) R.string.junk_got_it else R.string.junk_clean)
         summary.snapshot?.let { snapshot ->
             val enabled = work.operation == CleanupOperationState.Idle && work.editing == 0
             adapter.submit(snapshot, enabled)
-            binding.junkClean.isEnabled = enabled && snapshot.categories.any { it.selected > 0 }
+            binding.junkClean.isEnabled = enabled && (snapshot.categories.any { it.selected > 0 } || (empty && work.totalsReady))
             binding.junkScope.text =
                 getString(
                     R.string.junk_storage_scope,

@@ -15,6 +15,8 @@ internal class CompletionRenderer(private val binding: ScreenCompletionBinding) 
                 if (value.celebrate) R.string.completion_page_title
                 else R.string.completion_result_title
             )
+            binding.completionCount.isVisible = !value.emptyScan
+            binding.completionUnit.isVisible = !value.emptyScan
             binding.completionCount.text = NumberFormat.getIntegerInstance().format(value.completed)
             val units =
                 when (value.kind) {
@@ -25,6 +27,7 @@ internal class CompletionRenderer(private val binding: ScreenCompletionBinding) 
             binding.completionUnit.text = resources.getQuantityString(units, value.completed)
             binding.completionTitle.setText(
                 when {
+                    value.emptyScan -> R.string.junk_very_clean
                     !value.successful -> R.string.completion_no_changes_title
                     value.partial -> R.string.completion_partial_title
                     value.kind == CompletionKind.COMPRESSION ->

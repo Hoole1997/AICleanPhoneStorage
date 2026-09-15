@@ -44,7 +44,7 @@
     <string name="cleanup_limited">Only selected photos are included</string>
     <string name="cleanup_tips">Tips</string>
     <string name="cleanup_confirm">Confirm</string>
-    <string name="cleanup_delete_confirm">Permanently delete the selected files?\nCount: %1$d · Size: %2$s</string>
+    <string name="cleanup_delete_confirm">Would you like to delete this file?\nPlease confirm.</string>
     <string name="cleanup_working">Processing %1$d / %2$d</string>
     <string name="cleanup_result">Deleted: %1$d\nSmaller copies: %2$d\nUnchanged or cancelled: %3$d\nFailed: %4$d</string>
     <string name="cleanup_remove_originals">Remove originals</string>

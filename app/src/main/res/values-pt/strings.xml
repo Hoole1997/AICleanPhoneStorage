@@ -55,7 +55,7 @@
     <string name="cleanup_limited">Somente fotos selecionadas estão incluídas</string>
     <string name="cleanup_tips">Dicas</string>
     <string name="cleanup_confirm">Confirmar</string>
-    <string name="cleanup_delete_confirm">Excluir permanentemente os arquivos selecionados?\nContagem: %1$d · Tamanho: %2$s</string>
+    <string name="cleanup_delete_confirm">Deseja excluir este arquivo?\nConfirme.</string>
     <string name="cleanup_working">Processando %1$d / %2$d</string>
     <string name="cleanup_result">Excluído: %1$d\nCópias menores: %2$d\nInalterado ou cancelado: %3$d\nFalha: %4$d</string>
     <string name="cleanup_remove_originals">Excluir fotos originais</string>

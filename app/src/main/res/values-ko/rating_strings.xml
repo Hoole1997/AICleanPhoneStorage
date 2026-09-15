@@ -1,0 +1,7 @@
+<resources>
+    <string name="rating_title">%1$s 이용에 감사드립니다</string>
+    <string name="rating_message">앱을 평가해 주시면 감사하겠습니다.</string>
+    <string name="rating_hint">저희에게 최고의 평가</string>
+    <string name="rating_submit">평가하기</string>
+    <string name="rating_star_description">별 5개 중 %1$d개로 평가</string>
+</resources>

@@ -23,6 +23,9 @@ internal class CleanupActionRenderer(
             feature == CleanupFeature.PHOTO_COMPRESS -> context.getString(R.string.cleanup_compress)
             feature == CleanupFeature.SCREENSHOTS && selected ->
                 context.getString(R.string.cleanup_screenshot_clean, values.megabytes(state.totals.selectedBytes))
+            (feature == CleanupFeature.LARGE_FILES || feature == CleanupFeature.UNUSED_FILES) && selected ->
+                context.getString(R.string.cleanup_count_size, values.count(state.totals.selectedCount),
+                    android.text.format.Formatter.formatFileSize(context, state.totals.selectedBytes))
             else -> context.getString(R.string.cleanup_clean)
         }
         binding.cleanupAction.apply {

@@ -35,19 +35,19 @@
         <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="${ADMOB_APPLICATION_ID}" />
         <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/ic_home_clean" />
         <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="general_silent_notification" />
-        <activity android:name=".feature.settings.SettingsActivity" android:exported="false" />
-        <activity android:name=".feature.settings.LanguageSettingsActivity" android:exported="false" />
-        <activity android:name=".feature.settings.FeedbackActivity" android:exported="false" />
-        <activity android:name=".feature.settings.AboutActivity" android:exported="false" />
-        <activity android:name=".core.ui.completion.CompletionActivity" android:exported="false" />
-        <activity android:name=".feature.junkcleaner.ui.JunkCleaningActivity" android:exported="false" />
-        <activity android:name=".feature.appmanager.ui.AppManagerActivity" android:exported="false" />
-        <activity android:name=".feature.filecleaner.ui.FileCleanupActivity" android:exported="false" />
+        <activity android:name=".feature.settings.SettingsActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".feature.settings.LanguageSettingsActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".feature.settings.FeedbackActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".feature.settings.AboutActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".core.ui.completion.CompletionActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".feature.junkcleaner.ui.JunkCleaningActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".feature.appmanager.ui.AppManagerActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".feature.filecleaner.ui.FileCleanupActivity" android:screenOrientation="portrait" android:exported="false" />
         <provider android:name="androidx.core.content.FileProvider" android:authorities="${applicationId}.cleanup.files" android:exported="false" android:grantUriPermissions="true">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/cleanup_file_paths" />
         </provider>
-        <activity android:name=".feature.networktraffic.ui.NetworkTrafficActivity" android:exported="false" />
-        <activity android:name=".feature.notifications.ui.NotificationCleanerActivity" android:exported="false" />
+        <activity android:name=".feature.networktraffic.ui.NetworkTrafficActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".feature.notifications.ui.NotificationCleanerActivity" android:screenOrientation="portrait" android:exported="false" />
         <!-- 只能由Android通知管理器绑定；不是可被其他应用启动的普通服务。 -->
         <service android:name=".feature.notifications.service.NotificationCleanerService"
             android:label="@string/notification_title"
@@ -57,8 +57,8 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
-        <activity android:name=".app.MainActivity" android:launchMode="singleTask" android:exported="false" />
-        <activity android:name=".feature.startup.StartupActivity" android:launchMode="singleTop"
+        <activity android:name=".app.MainActivity" android:screenOrientation="portrait" android:launchMode="singleTask" android:exported="false" />
+        <activity android:name=".feature.startup.StartupActivity" android:screenOrientation="portrait" android:launchMode="singleTop"
             android:exported="true" android:theme="@style/Theme.AICleanPhoneStorage.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

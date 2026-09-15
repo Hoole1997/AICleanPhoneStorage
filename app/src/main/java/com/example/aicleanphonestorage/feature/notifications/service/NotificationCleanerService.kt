@@ -35,16 +35,27 @@ class NotificationCleanerService : NotificationListenerService() {
     private val rescan = AtomicBoolean(false)
     // 通知风暴只合并一次“需要处理”的信号，候选按key去重，不为每条通知创建协程。
     private val wake = Channel<Unit>(Channel.CONFLATED)
+    private val removed = NotificationRemovalTracker()
+    private val removalSignal = Channel<Unit>(Channel.CONFLATED)
 
     override fun onListenerConnected() {
         super.onListenerConnected()
         session?.cancel()
         val token = generation.incrementAndGet()
         connected.set(true)
-        selected.set(emptySet()); pending.clear(); rescan.set(true)
+        selected.set(emptySet()); pending.clear(); removed.clear(); rescan.set(true)
         (application as CleanApplication).container.notificationConnection.update(true)
         session = serviceScope.launch {
             coroutineScope {
+                launch {
+                    for (signal in removalSignal) {
+                        delay(200) // 单次事件合并窗口，无事件时挂起，不轮询。
+                        val count = removed.drainCount()
+                        if (count > 0) com.example.aicleanphonestorage.core.analytics.BusinessTelemetry.emit(
+                            com.example.aicleanphonestorage.core.analytics.MetricEvent.NOTIFY_CLEAN_RESULT,
+                            mapOf("cleared_count" to count))
+                    }
+                }
                 launch {
                     (application as CleanApplication).container.notificationRules.selectedPackages
                         .retryWhen { error, attempt ->
@@ -82,6 +93,7 @@ class NotificationCleanerService : NotificationListenerService() {
                     for ((key, item) in pending) {
                         currentCoroutineContext().ensureActive()
                         if (pending.remove(key, item) && connected.get() && generation.get() == token && eligible(item)) {
+                            removed.requested(key, item.packageName)
                             try { cancelNotification(key) } catch (_: SecurityException) { stopCleaning(token); break }
                         }
                     }
@@ -96,7 +108,11 @@ class NotificationCleanerService : NotificationListenerService() {
         if (connected.get() && eligible(item)) { pending[item.key] = item; wake.trySend(Unit) }
         else pending.remove(item.key)
     }
-    override fun onNotificationRemoved(sbn: StatusBarNotification) { pending.remove(sbn.key) }
+    override fun onNotificationRemoved(sbn: StatusBarNotification, rankingMap: RankingMap, reason: Int) {
+        pending.remove(sbn.key)
+        if (removed.removed(sbn.key, reason == REASON_LISTENER_CANCEL || reason == REASON_LISTENER_CANCEL_ALL))
+            removalSignal.trySend(Unit)
+    }
     private fun eligible(item: NotificationCandidate) = NotificationClearPolicy.shouldClear(item, selected.get(), packageName)
     private fun candidate(sbn: StatusBarNotification) = NotificationCandidate(sbn.key, sbn.packageName,
         sbn.user == Process.myUserHandle(), sbn.isClearable, sbn.isOngoing,
@@ -119,7 +135,7 @@ class NotificationCleanerService : NotificationListenerService() {
         generation.incrementAndGet()
         (application as CleanApplication).container.notificationConnection.update(false)
         connected.set(false); selected.set(emptySet()); pending.clear()
-        serviceScope.cancel(); wake.close()
+        serviceScope.cancel(); wake.close(); removalSignal.close(); removed.clear()
         super.onDestroy()
     }
 }

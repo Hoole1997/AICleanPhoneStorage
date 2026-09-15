@@ -42,6 +42,8 @@ internal enum class MetricEvent(val wireName: String) {
     UNUSED_CLEAN_CLICK("unused_clean_click"),
     UNUSED_RESULT_SHOW("unused_result_show"),
     NOTIFBAR_ENTRY_CLICK("notifbar_entry_click"),
+    NOTIFICATION_CLICK("Notific_Click"),
+    NOTIFICATION_ENTER("Notific_Enter"),
 }
 
 internal fun interface EventSink {

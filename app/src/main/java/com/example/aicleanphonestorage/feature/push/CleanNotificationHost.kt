@@ -15,6 +15,7 @@ internal data class ResidentBadges(
     val network: String? = null,
     val photos: String? = null,
     val unusedFiles: String? = null,
+    val apps: String? = null,
 )
 
 internal class CleanNotificationHost(
@@ -29,7 +30,7 @@ internal class CleanNotificationHost(
     fun updateBadges(value: ResidentBadges) {
         // 入口即限制长度，避免长文本/文件明细被常驻对象保留。
         fun String?.bounded() = this?.trim()?.take(8)?.takeIf { it.isNotEmpty() }
-        badges = ResidentBadges(value.clean.bounded(), value.network.bounded(), value.photos.bounded(), value.unusedFiles.bounded())
+        badges = ResidentBadges(value.clean.bounded(), value.network.bounded(), value.photos.bounded(), value.unusedFiles.bounded(), value.apps.bounded())
     }
 
     private fun localized(): Context {
@@ -70,38 +71,51 @@ internal class CleanNotificationHost(
 
     override fun contentIntent(destination: NotificationDestination) = NotificationNavigation.pendingIntent(app, destination)
 
-    override fun residentViews(compact: Boolean): RemoteViews = residentViews(compact, localized())
+    @Volatile private var appCount: String? = null
+    private var appCountAt = 0L
 
-    internal fun residentViews(compact: Boolean, context: Context): RemoteViews {
+    private fun installedCount(): String? {
+        badges.apps?.let { return it }
+        // 通知模块在受限 IO 调度器构建；UI 测试/其他主线程调用只使用已有缓存。
+        if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) return appCount
+        val now = android.os.SystemClock.elapsedRealtime()
+        if (appCount == null || now - appCountAt > 60_000) {
+            @Suppress("DEPRECATION")
+            val count = app.packageManager.getInstalledApplications(0).size
+            appCount = java.text.NumberFormat.getIntegerInstance(localized().resources.configuration.locales[0]).format(count)
+            appCountAt = now
+        }
+        return appCount
+    }
+
+    override fun residentViews(compact: Boolean): RemoteViews = residentViews(compact, localized(), installedCount())
+
+    internal fun residentViews(compact: Boolean, context: Context, installedApps: String? = badges.apps): RemoteViews {
         val largeText = context.resources.configuration.fontScale > 1.3f
         val layout = if (compact && largeText) R.layout.notification_shortcuts_accessible
             else if (compact) R.layout.notification_shortcuts_compact else R.layout.notification_shortcuts
         val views = RemoteViews(app.packageName, layout)
-        val values = badges
-        val clean = if (cleaning == null) values.clean
-            else cleaning.check().cleanBadge(context.resources.configuration.locales[0])
+        val snapshot = cleaning?.check()
+        val paid = snapshot?.paidUser == true
+        val clean = (snapshot?.cleanBadge(context.resources.configuration.locales[0]) ?: badges.clean).takeIf { paid }
         val items = listOf(
-            Item(R.id.shortcut_clean, R.id.shortcut_clean_label, R.id.shortcut_clean_badge, R.string.push_clean, NotificationDestination.CLEAN, clean),
-            Item(R.id.shortcut_network, R.id.shortcut_network_label, R.id.shortcut_network_badge, R.string.push_network, NotificationDestination.NETWORK, values.network),
-            Item(R.id.shortcut_photos, R.id.shortcut_photos_label, R.id.shortcut_photos_badge, R.string.push_photos, NotificationDestination.PHOTOS, values.photos),
-            Item(R.id.shortcut_unused, R.id.shortcut_unused_label, R.id.shortcut_unused_badge, R.string.push_unused, NotificationDestination.UNUSED_FILES, values.unusedFiles),
+            Item(R.id.shortcut_clean, R.id.shortcut_clean_label, R.id.shortcut_clean_badge, R.string.push_clean, NotificationDestination.CLEAN, clean, "clean"),
+            Item(R.id.shortcut_network, R.id.shortcut_network_label, R.id.shortcut_network_badge, R.string.push_apps, NotificationDestination.APP_MANAGER, installedApps.takeIf { paid }, "app"),
+            Item(R.id.shortcut_photos, R.id.shortcut_photos_label, R.id.shortcut_photos_badge, R.string.push_photos, NotificationDestination.SCREENSHOTS, null, "photos"),
+            Item(R.id.shortcut_unused, R.id.shortcut_unused_label, R.id.shortcut_unused_badge, R.string.push_accelerate, NotificationDestination.APP_MANAGER, null, "accelerate"),
         )
+        views.setViewVisibility(R.id.shortcut_unused, if (paid) View.VISIBLE else View.GONE)
         for (item in items) {
             val label = context.getString(item.label)
             views.setTextViewText(item.text, label)
             views.setContentDescription(item.root, listOfNotNull(label, item.badge).joinToString(", "))
-            val entry = when (item.destination) {
-                NotificationDestination.CLEAN -> "clean"
-                NotificationDestination.PHOTOS -> "photos"
-                else -> null // 旧 Network/Unused 入口没有对应的文档枚举，不伪装为 App/Accelerate。
-            }
             val badgeState = when {
                 cleaning?.state?.value?.paidUser != true -> "none"
                 clean != null -> "shown"
                 else -> "hidden"
             }
-            views.setOnClickPendingIntent(item.root, if (entry == null) contentIntent(item.destination)
-                else NotificationNavigation.residentPendingIntent(app, item.destination, entry, badgeState))
+            views.setOnClickPendingIntent(item.root,
+                NotificationNavigation.residentPendingIntent(app, item.destination, item.entry, badgeState))
             views.setTextViewText(item.badgeView, item.badge.orEmpty())
             views.setViewVisibility(item.badgeView, if (item.badge == null || (compact && largeText)) View.GONE else View.VISIBLE)
         }
@@ -110,5 +124,5 @@ internal class CleanNotificationHost(
     }
 
     private data class Item(val root: Int, val text: Int, val badgeView: Int, val label: Int,
-        val destination: NotificationDestination, val badge: String?)
+        val destination: NotificationDestination, val badge: String?, val entry: String)
 }

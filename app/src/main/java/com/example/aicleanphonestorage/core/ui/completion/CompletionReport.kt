@@ -20,9 +20,10 @@ internal data class CompletionReport(
     val inputBytes: Long? = null,
     val copiedOriginalBytes: Long? = null,
     val outputBytes: Long? = null,
+    val emptyScan: Boolean = false,
 ) {
     val successful: Boolean
-        get() = kind == CompletionKind.NOTIFICATIONS || completed > 0
+        get() = kind == CompletionKind.NOTIFICATIONS || emptyScan || completed > 0
 
     val partial: Boolean
         get() = successful && (failed > 0 || skipped > 0)

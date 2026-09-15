@@ -42,6 +42,8 @@ internal class FileOperationEngine(
     context: Context,
     private val index: ScanIndex,
     private val executor: TaskExecutor,
+    private val unusedPackages: com.example.aicleanphonestorage.feature.unused.data.UnusedPackages =
+        com.example.aicleanphonestorage.feature.unused.data.AndroidUnusedPackages(context),
 ) {
     private val app = context.applicationContext
     private val content = FileContentAccess(app)
@@ -85,6 +87,8 @@ internal class FileOperationEngine(
     suspend fun delete(operation: Long, progress: (Int, Int) -> Unit): OperationStep =
         lock.withLock {
             executor.io {
+                val operationContext = currentCoroutineContext()
+                val unused = com.example.aicleanphonestorage.feature.unused.data.UnusedClassifier(app, unusedPackages) { operationContext.ensureActive() }
                 val total = index.operationCount(operation)
                 var done = total - index.operationCount(operation, "pending")
                 while (true) {
@@ -95,6 +99,10 @@ internal class FileOperationEngine(
                     for (file in batch) {
                         currentCoroutineContext().ensureActive()
                         try {
+                            com.example.aicleanphonestorage.feature.unused.data.UnusedKind.from(file.bucket)?.let { kind ->
+                                if (unused.classify(file, System.currentTimeMillis()) != kind)
+                                    throw IOException("Unused candidate no longer eligible")
+                            }
                             if (file.retained) throw IOException("Reference photo is protected")
                             if (file.isDirectory) {
                                 if (!emptyDirectories.delete(file)) throw IOException("Directory deletion rejected")

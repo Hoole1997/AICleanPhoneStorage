@@ -1,0 +1,6 @@
+<resources>
+    <string name="unused_installed_apk">انسٹال شدہ APK</string>
+    <string name="unused_residue">حذف شدہ ایپس کی باقی فائلیں</string>
+    <string name="unused_download">پرانے ڈاؤن لوڈ</string>
+    <string name="unused_scope_note">انسٹال کی حالت اور ترمیم کے وقت کی بنیاد پر منتخب فائلیں۔ صرف قابل رسائی فولڈرز اسکین ہوتے ہیں۔</string>
+</resources>

@@ -1,0 +1,6 @@
+<resources>
+    <string name="unused_installed_apk">APK déjà installés</string>
+    <string name="unused_residue">Résidus des applis désinstallées</string>
+    <string name="unused_download">Anciens téléchargements</string>
+    <string name="unused_scope_note">Sélection selon l’installation et la date de modification. Seuls les dossiers accessibles sont analysés.</string>
+</resources>

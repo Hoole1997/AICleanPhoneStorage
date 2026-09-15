@@ -97,13 +97,14 @@ object AdjustTracker {
                         ReportDataManager.reportData("adjust_get_success", mapOf("pass_time" to totalDurationSeconds))
 
                         // 设置当前用户渠道类型
-                        val userChannelType = if (MetricsLogger.checkLogEnabled()) {
-                            // 内部版本强制设置为买量类型
-                            MetricsLogger.d("内部版本强制设置为买量类型")
-                            ChannelUserController.UserChannelType.PAID
-                        } else {
-                            determineUserChannelType(attr)
-                        }
+                        val userChannelType = determineUserChannelType(attr)
+//                        val userChannelType = if (MetricsLogger.checkLogEnabled()) {
+//                            // 内部版本强制设置为买量类型
+//                            MetricsLogger.d("内部版本强制设置为买量类型")
+//                            ChannelUserController.UserChannelType.PAID
+//                        } else {
+//                            determineUserChannelType(attr)
+//                        }
                         MetricsLogger.d("根据归因数据判断用户渠道类型: $userChannelType")
 
                         // 设置用户渠道类型

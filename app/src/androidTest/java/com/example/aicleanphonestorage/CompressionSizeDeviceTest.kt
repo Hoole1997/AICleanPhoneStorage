@@ -27,9 +27,11 @@ class CompressionSizeDeviceTest {
     private val context get() = instrumentation.targetContext
 
     @Test fun selectedSizeHeaderUsesTheSameDisplayAsCompletion() {
+        for (locale in listOf(Locale.US, Locale.SIMPLIFIED_CHINESE, Locale.GERMAN))
+        for (widthDp in listOf(320, 375))
         for (scale in listOf(1f, 2f)) instrumentation.runOnMainSync {
             val config = Configuration(context.resources.configuration).apply {
-                setLocale(Locale.SIMPLIFIED_CHINESE); fontScale = scale
+                setLocale(locale); fontScale = scale
             }
             val themed = ContextThemeWrapper(context.createConfigurationContext(config), R.style.Theme_AICleanPhoneStorage)
             val binding = com.example.aicleanphonestorage.databinding.ScreenFileCleanupBinding.inflate(LayoutInflater.from(themed))
@@ -41,21 +43,25 @@ class CompressionSizeDeviceTest {
                 totalsReady = true,
             )
             renderer.state(state)
-            assertEquals("27.9 MB", binding.cleanupPotential.text.toString())
+            assertEquals(if (locale == Locale.GERMAN) "27,9 MB" else "27.9 MB", binding.cleanupPotential.text.toString())
             val density = themed.resources.displayMetrics.density
-            val width = (375 * density).toInt()
+            val width = (widthDp * density).toInt()
             val height = (740 * density).toInt()
             binding.root.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY))
             binding.root.layout(0, 0, width, height)
             assertTrue(binding.cleanupPotential.height >= binding.cleanupPotential.layout.height)
+            // 长文案允许自然换行，但不能裁切或与右侧容量徽标重叠。
+            val label = binding.cleanupPhotoHeader.getChildAt(0) as android.widget.TextView
+            assertTrue(label.height - label.compoundPaddingTop - label.compoundPaddingBottom >= label.layout.height)
+            assertTrue(label.right <= binding.cleanupPotential.left)
             val image = Bitmap.createBitmap(width, binding.cleanupPhotoHeader.bottom + (8 * density).toInt(), Bitmap.Config.ARGB_8888)
             try {
                 binding.root.draw(Canvas(image))
                 val folder = File(context.getExternalFilesDir(null), "compression-size-tests").apply { mkdirs() }
-                File(folder, "selected_header_$scale.png").outputStream().use { image.compress(Bitmap.CompressFormat.PNG, 100, it) }
+                File(folder, "selected_header_${locale.language}_${widthDp}_$scale.png").outputStream().use { image.compress(Bitmap.CompressFormat.PNG, 100, it) }
             } finally { image.recycle() }
             renderer.state(state.copy(totals = state.totals.copy(selectedCount = 0, selectedBytes = 0)))
-            assertEquals("0.0 MB", binding.cleanupPotential.text.toString())
+            assertEquals(if (locale == Locale.GERMAN) "0,0 MB" else "0.0 MB", binding.cleanupPotential.text.toString())
         }
     }
 

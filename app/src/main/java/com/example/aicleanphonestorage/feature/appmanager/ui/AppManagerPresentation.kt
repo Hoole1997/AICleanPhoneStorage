@@ -63,15 +63,20 @@ internal class AppManagerPresentation(private val context: Context) {
         }
     }
 
-    fun used(app: ManagedApp): String =
-        context.getString(
-            R.string.app_manager_last_used,
-            when (val usage = app.lastUse) {
-                is AppLastUse.Recorded -> dateTime.format(Date(usage.timeMillis))
-                AppLastUse.NoRecentRecord -> context.getString(R.string.app_manager_no_recent_use)
-                AppLastUse.Unavailable -> unknown()
-            },
-        )
+    fun used(app: ManagedApp): CharSequence {
+        // Never Used 是需求中的未知历史占位；数据层仍保留 Unavailable/NoRecentRecord，不伪造使用时间。
+        val value = when (val usage = app.lastUse) {
+            is AppLastUse.Recorded -> dateTime.format(Date(usage.timeMillis))
+            else -> context.getString(R.string.app_manager_never_used)
+        }
+        val label = context.getString(R.string.app_manager_last_used, value)
+        return SpannableString(label).apply {
+            val start = label.indexOf(value)
+            if (start >= 0) setSpan(android.text.style.ForegroundColorSpan(
+                androidx.core.content.ContextCompat.getColor(context, R.color.traffic_blue)),
+                start, start + value.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+    }
 
     private fun unknown() = context.getString(R.string.app_manager_unknown)
 }

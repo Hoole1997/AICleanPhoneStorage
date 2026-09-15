@@ -1,0 +1,7 @@
+<resources>
+    <string name="rating_title">Danke, dass du %1$s nutzt</string>
+    <string name="rating_message">Wir würden uns sehr über deine Bewertung freuen.</string>
+    <string name="rating_hint">Die beste Bewertung für uns</string>
+    <string name="rating_submit">Bewerten</string>
+    <string name="rating_star_description">Mit %1$d von 5 Sternen bewerten</string>
+</resources>

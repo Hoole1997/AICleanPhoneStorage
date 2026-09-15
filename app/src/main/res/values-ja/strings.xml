@@ -55,7 +55,7 @@
     <string name="cleanup_limited">厳選した写真のみを収録</string>
     <string name="cleanup_tips">ヒント</string>
     <string name="cleanup_confirm">確認</string>
-    <string name="cleanup_delete_confirm">選択したファイルを完全に削除しますか?\nカウント: %1$d · サイズ: %2$s</string>
+    <string name="cleanup_delete_confirm">このファイルを削除しますか？\n確認してください。</string>
     <string name="cleanup_working">%1$d / %2$d を処理中</string>
     <string name="cleanup_result">削除されました: %1$d\n小さいコピー: %2$d\n未変更またはキャンセル: %3$d\n失敗しました: %4$d</string>
     <string name="cleanup_remove_originals">元の写真を削除する</string>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="rating_title">Merci d’utiliser %1$s</string>
+    <string name="rating_message">Nous vous serions reconnaissants de nous évaluer.</string>
+    <string name="rating_hint">La meilleure note pour nous</string>
+    <string name="rating_submit">Évaluer</string>
+    <string name="rating_star_description">Noter %1$d étoiles sur 5</string>
+</resources>

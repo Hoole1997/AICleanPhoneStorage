@@ -122,8 +122,8 @@ internal object CleanupPolicy {
             CleanupFeature.SCREENSHOTS ->
                 file.category == FileCategory.PHOTOS && screenshot(file.name, folder)
             CleanupFeature.LARGE_FILES -> file.size >= 10_000_000
-            CleanupFeature.UNUSED_FILES ->
-                file.modifiedMillis > 0 && file.modifiedMillis <= now - 30L * 86_400_000
+            // 闲置需要包状态/下载目录证据，由 UnusedClassifier 处理，不能退回全盘按年龄筛选。
+            CleanupFeature.UNUSED_FILES -> false
         }
     }
 

@@ -31,6 +31,9 @@ import org.junit.runner.RunWith
 /** 只创建/处理本测试专属文件，不授予权限、不删除用户内容；真实 SQLite/Paging/编码器均在设备执行。 */
 @RunWith(AndroidJUnit4::class)
 class CleanupFeatureDeviceTest {
+    @get:org.junit.Rule
+    val noHotStartAds = com.example.aicleanphonestorage.testing.NoHotStartAdsRule()
+
     private val instrumentation
         get() = InstrumentationRegistry.getInstrumentation()
 
@@ -152,7 +155,9 @@ class CleanupFeatureDeviceTest {
                             feature == CleanupFeature.LARGE_FILES ||
                                 feature == CleanupFeature.UNUSED_FILES
                         )
-                            (0..11).map { fixture(root, "document_${feature}_$it.pdf") }
+                            (0..11).map { fixture(root, "document_${feature}_$it.pdf").let { row ->
+                                if (feature == CleanupFeature.UNUSED_FILES) row.copy(bucket = "unused_download") else row
+                            } }
                         else photos,
                     )
                 try {
@@ -170,9 +175,11 @@ class CleanupFeatureDeviceTest {
                                 }
                                 ready
                             }
-                            onView(withId(R.id.cleanup_action)).check(matches(isNotEnabled()))
-                            screenshot("${feature}_unselected")
-                            onView(withId(R.id.cleanup_select_all)).perform(click())
+                            if (feature == CleanupFeature.PHOTO_COMPRESS || feature == CleanupFeature.SCREENSHOTS) {
+                                onView(withId(R.id.cleanup_action)).check(matches(isNotEnabled()))
+                                screenshot("${feature}_unselected")
+                                onView(withId(R.id.cleanup_select_all)).perform(click())
+                            }
                             waitUntil {
                                 var enabled = false
                                 scenario.onActivity {

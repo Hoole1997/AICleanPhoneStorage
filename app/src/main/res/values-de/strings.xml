@@ -55,7 +55,7 @@
     <string name="cleanup_limited">Es sind nur ausgewählte Fotos enthalten</string>
     <string name="cleanup_tips">Tipps</string>
     <string name="cleanup_confirm">Bestätigen</string>
-    <string name="cleanup_delete_confirm">Die ausgewählten Dateien dauerhaft löschen?\nAnzahl: %1$d · Größe: %2$s</string>
+    <string name="cleanup_delete_confirm">Möchten Sie diese Datei löschen?\nBitte bestätigen.</string>
     <string name="cleanup_working">Verarbeitung von %1$d / %2$d</string>
     <string name="cleanup_result">Gelöscht: %1$d\nKleinere Kopien: %2$d\nUnverändert oder storniert: %3$d\nFehlgeschlagen: %4$d</string>
     <string name="cleanup_remove_originals">Originalfotos löschen</string>

@@ -18,6 +18,7 @@ internal sealed interface CleanupOperationState {
 
     /** 用户点击压缩即授权创建副本；等待既有广告流程结束后按冻结的操作 ID 启动。 */
     data class CompressionReady(val id: Long) : CleanupOperationState
+    data class EmptyJunkReady(val id: Long) : CleanupOperationState
 
     data class Running(val id: Long, val done: Int = 0, val total: Int = 0) : CleanupOperationState
 
@@ -34,6 +35,7 @@ internal data class CleanupUiState(
     val editing: Int = 0,
     val error: Long = 0,
     val totalsReady: Boolean = false,
+    val unusedGroups: List<com.example.aicleanphonestorage.feature.unused.data.UnusedGroup> = emptyList(),
 )
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -52,7 +54,7 @@ internal class CleanupViewModel(
                 FileCategory.entries.getOrElse(saved["filter.category"] ?: 0) { FileCategory.ALL },
             minimumBytes = saved["filter.size"] ?: 10_000_000L,
             recentDays = saved["filter.recent"] ?: 0,
-            unusedDays = saved["filter.unused"] ?: 30,
+            unusedDays = 30, // 固定候选范围，旧版本保存的筛选条件不再隐式过滤结果。
             referenceMillis = saved["filter.clock"] ?: System.currentTimeMillis(),
         )
     private val current = MutableStateFlow(CleanupUiState(filter = restoredFilter))
@@ -138,12 +140,20 @@ internal class CleanupViewModel(
     fun selectBucket(bucket: String, selected: Boolean) = edit {
         current.value.handle?.let {
             repository.selectAll(it, current.value.filter.copy(bucket = bucket), selected)
+            if (it.feature == CleanupFeature.UNUSED_FILES)
+                telemetry.selection(it.feature, bucket, selected, repository.totals(it, current.value.filter.copy(bucket = bucket)))
         }
     }
 
     private suspend fun reportSelection(selected: Boolean) {
         val value = current.value
         val handle = value.handle ?: return
+        if (handle.feature == CleanupFeature.UNUSED_FILES && value.filter.bucket == null) {
+            repository.unusedGroups(handle).filter { it.totals.count > 0 }.forEach {
+                telemetry.selection(handle.feature, it.kind.bucket, selected, it.totals)
+            }
+            return
+        }
         val totals = repository.totals(handle, value.filter)
         telemetry.selection(handle.feature, value.filter.bucket, selected, totals)
     }
@@ -179,7 +189,9 @@ internal class CleanupViewModel(
         totalsJob =
             viewModelScope.launch(failures) {
                 val totals = repository.totals(handle, value.filter)
-                current.update { it.copy(totals = totals, totalsReady = true) }
+                val groups = if (handle.feature == CleanupFeature.UNUSED_FILES && value.filter.bucket == null)
+                    repository.unusedGroups(handle) else emptyList()
+                current.update { it.copy(totals = totals, totalsReady = true, unusedGroups = groups) }
             }
     }
 
@@ -191,7 +203,8 @@ internal class CleanupViewModel(
             val value = current.value
             val handle = value.handle ?: return@launch
             if (
-                value.editing > 0 || value.totals.selectedCount == 0 ||
+                value.editing > 0 || (value.totals.selectedCount == 0 &&
+                    !(handle.feature == CleanupFeature.SMART_CLEAN && value.totalsReady && value.totals.count == 0)) ||
                     value.operation != CleanupOperationState.Idle
             ) return@launch
             telemetry.cleanClick(handle.feature, value.totals)
@@ -200,6 +213,8 @@ internal class CleanupViewModel(
                 it.copy(
                     operation = if (handle.feature == CleanupFeature.PHOTO_COMPRESS)
                         CleanupOperationState.CompressionReady(op.id)
+                    else if (handle.feature == CleanupFeature.SMART_CLEAN && op.count == 0)
+                        CleanupOperationState.EmptyJunkReady(op.id)
                     else CleanupOperationState.Confirm(op.id, op.count, op.bytes)
                 )
             }
@@ -221,6 +236,11 @@ internal class CleanupViewModel(
         val ready = current.value.operation as? CleanupOperationState.CompressionReady ?: return
         // 广告重复/迟到回调不能重复压缩，也不能执行已失效的选择快照。
         if (ready.id == id) run(id, true)
+    }
+
+    fun startEmptyJunk(id: Long) {
+        val ready = current.value.operation as? CleanupOperationState.EmptyJunkReady ?: return
+        if (ready.id == id) run(id, false)
     }
 
     private fun run(id: Long, compress: Boolean) {

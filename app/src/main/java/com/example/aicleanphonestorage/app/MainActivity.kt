@@ -38,6 +38,7 @@ import com.example.aicleanphonestorage.feature.notifications.ui.NotificationClea
 import com.example.aicleanphonestorage.feature.notifications.ui.NotificationCleanerViewModel
 import com.example.aicleanphonestorage.feature.notifications.ui.NotificationEntryCoordinator
 import kotlinx.coroutines.launch
+import com.example.aicleanphonestorage.feature.rating.*
 import com.example.aicleanphonestorage.feature.push.NotificationNavigation
 import com.example.aicleanphonestorage.feature.push.PushPermissionCoordinator
 import com.example.aicleanphonestorage.feature.push.PushPermissionViewModel
@@ -68,6 +69,12 @@ class MainActivity : AppCompatActivity() {
         viewModelFactory { initializer { PushPermissionViewModel(createSavedStateHandle()) } }
     }
     private var redirectedToStartup = false
+    private val ratingModel: RatingPromptViewModel by viewModels {
+        viewModelFactory { initializer {
+            RatingPromptViewModel((application as CleanApplication).container.ratingPromptStore, createSavedStateHandle())
+        } }
+    }
+    private lateinit var rating: RatingPromptCoordinator
     private lateinit var homeExitAds: HomeExitAdCoordinator
     private lateinit var homeActions: HomeEntryActions
     private lateinit var pushPermission: PushPermissionCoordinator
@@ -234,6 +241,19 @@ class MainActivity : AppCompatActivity() {
         }
         observeEntryState(notificationEntry.state, notificationCoordinator::render)
         observeEntryState(trafficEntry.state, trafficEntryCoordinator::render)
+        rating = RatingPromptCoordinator(this, binding.root, ratingModel, ready = {
+            val push = pushPermissionModel.state.value
+            push.completed && push.ratingAllowed && !push.requesting && !push.guideVisible && !permissions.pending && previewSelection == null &&
+                cleanupEntry.state.value == CleanupEntryState.Idle &&
+                appManagerEntry.state.value == AppManagerEntryState.Idle &&
+                trafficEntry.state.value.status == com.example.aicleanphonestorage.feature.networktraffic.ui.TrafficStatus.Idle &&
+                notificationEntry.state.value.phase == com.example.aicleanphonestorage.feature.notifications.ui.NotificationPhase.Idle
+        })
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                pushPermissionModel.state.collect { rating.drain() }
+            }
+        }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homeViewModel.uiState.collect { state ->
@@ -282,6 +302,7 @@ class MainActivity : AppCompatActivity() {
         super.onWindowFocusChanged(hasFocus)
         if (this::renderer.isInitialized) renderer.setWindowFocused(hasFocus)
         if (this::homeExitAds.isInitialized) homeExitAds.onWindowFocusChanged(hasFocus)
+        if (this::rating.isInitialized) rating.windowFocusChanged(hasFocus)
     }
 
     override fun onResumeFragments() {
@@ -292,6 +313,7 @@ class MainActivity : AppCompatActivity() {
         cleanupCoordinator.render(cleanupEntry.state.value)
         appManagerCoordinator.render(appManagerEntry.state.value)
         pushPermission.drain()
+        if (this::rating.isInitialized) rating.drain()
     }
 
     override fun onStop() {
@@ -335,6 +357,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleNotificationIntent(intent: Intent) {
+        com.example.aicleanphonestorage.feature.push.NotificationLaunchTelemetry.entered(intent)
         val destination = NotificationNavigation.consume(intent) ?: return
         when (destination) {
             NotificationDestination.HOME -> homeActions.cancelPending()

@@ -55,7 +55,7 @@
     <string name="cleanup_limited">تم تضمين الصور المختارة فقط</string>
     <string name="cleanup_tips">نصائح</string>
     <string name="cleanup_confirm">تأكيد</string>
-    <string name="cleanup_delete_confirm">هل تريد حذف الملفات المحددة نهائيًا؟\nالعدد: %1$d · الحجم: %2$s</string>
+    <string name="cleanup_delete_confirm">هل تريد حذف هذا الملف؟\nيرجى التأكيد.</string>
     <string name="cleanup_working">معالجة %1$d / %2$d</string>
     <string name="cleanup_result">محذوف: %1$d\nنسخ أصغر: %2$d\nلم يتم تغييرها أو إلغاؤها: %3$d\nفشل: %4$d</string>
     <string name="cleanup_remove_originals">حذف الصور الأصلية</string>

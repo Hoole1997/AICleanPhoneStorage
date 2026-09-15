@@ -55,7 +55,7 @@
     <string name="cleanup_limited">仅包含选定的照片</string>
     <string name="cleanup_tips">温馨提示</string>
     <string name="cleanup_confirm">确认</string>
-    <string name="cleanup_delete_confirm">永久删除所选文件？\n数量：%1$d · 大小：%2$s</string>
+    <string name="cleanup_delete_confirm">是否删除此文件？\n请确认。</string>
     <string name="cleanup_working">正在处理 %1$d / %2$d</string>
     <string name="cleanup_result">已删除：%1$d\n较小的副本：%2$d\n未更改或取消：%3$d\n失败：%4$d</string>
     <string name="cleanup_remove_originals">删除原图</string>

@@ -11,6 +11,15 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class BusinessTelemetryTest {
+    @org.junit.Test fun temporaryAdCoverDoesNotCreateAnotherPageVisit() {
+        val state = PageVisitState()
+        org.junit.Assert.assertTrue(state.enter("home", 0))
+        org.junit.Assert.assertNull(state.leave(1000, temporarilyCovered = true))
+        org.junit.Assert.assertFalse(state.enter("home", 2000))
+        org.junit.Assert.assertNotNull(state.leave(3000))
+        org.junit.Assert.assertNull(state.leave(3001))
+        org.junit.Assert.assertTrue(state.enter("home", 4000))
+    }
     @Test fun channelEnumUsesDocumentValuesRatherThanFlavorOrEnumValue() {
         assertEquals("paid", BusinessTelemetry.userType(UserChannelType.PAID))
         assertEquals("organic", BusinessTelemetry.userType(UserChannelType.NATURAL))
@@ -54,9 +63,9 @@ class BusinessTelemetryTest {
         assertEquals(12.5, calls.last().second["total_size"])
         assertEquals(0.0, calls.last().second["empty_folder_size"])
         assertEquals(0.0, calls.last().second["ad_file_size"])
-        metrics.selection(CleanupFeature.UNUSED_FILES, null, true, SelectionTotals(selectedBytes = 2_000_000))
+        metrics.selection(CleanupFeature.UNUSED_FILES, "unused_download", true, SelectionTotals(selectedBytes = 2_000_000))
         assertEquals(MetricEvent.UNUSED_CHECK, calls.last().first)
-        assertFalse(calls.last().second.containsKey("group"))
+        assertEquals("download", calls.last().second["group"])
     }
     @Test fun filtersAndApplicationBandsUseExactDocumentEnums() {
         var captured = emptyMap<String, Any>()

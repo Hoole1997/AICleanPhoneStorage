@@ -30,5 +30,10 @@ class NotificationRulesStore(private val store: DataStore<Preferences>) {
             }
         }
     }
+    suspend fun setSelection(packages: Set<String>) {
+        require(packages.all { it.isNotBlank() })
+        // 用户按 Done 后一次原子提交，监听服务不会看到逐项勾选的草稿。
+        withContext(NonCancellable) { store.edit { it[PACKAGES] = packages.toSet() } }
+    }
     companion object { private val PACKAGES = stringSetPreferencesKey("auto_clear_packages") }
 }

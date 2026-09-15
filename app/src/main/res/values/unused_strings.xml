@@ -1,0 +1,6 @@
+<resources>
+    <string name="unused_installed_apk">Installed APKs</string>
+    <string name="unused_residue">Uninstalled app leftovers</string>
+    <string name="unused_download">Old downloads</string>
+    <string name="unused_scope_note">Candidates based on installation status and modification time. Only accessible folders are scanned.</string>
+</resources>

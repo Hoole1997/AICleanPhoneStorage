@@ -9,6 +9,7 @@ import android.content.Intent
 import com.example.aicleanphonestorage.app.MainActivity
 import com.example.aicleanphonestorage.feature.home.preview.HomePreviewSupport
 import com.example.aicleanphonestorage.feature.push.NotificationNavigation
+import com.example.aicleanphonestorage.feature.push.NotificationLaunchTelemetry
 import io.docview.push.NotificationDestination
 
 /** 启动页只转交白名单目标与一个调试标记，绝不复制通知正文、任意 URI 或完整 extras。 */
@@ -21,6 +22,7 @@ internal object StartupNavigation {
         NotificationNavigation.read(intent) ?: NotificationDestination.HOME,
         HomePreviewSupport.initialSelection(intent, null),
         hotStart = intent.getBooleanExtra(HOT_START, false) && NotificationNavigation.read(intent) == null,
+        notificationOrigin = NotificationLaunchTelemetry.origin(intent),
     )
 
     fun needsStartup(intent: Intent) = !intent.getBooleanExtra(COMPLETED, false) && NotificationNavigation.read(intent) != null
@@ -32,12 +34,14 @@ internal object StartupNavigation {
         if (entry.hotStart) hotIntent(context) else Intent(context, StartupActivity::class.java)
             .putExtra(NotificationNavigation.EXTRA_DESTINATION, entry.destination.key)
             .putExtra(HomePreviewSupport.EXTRA_MODE, entry.previewMode)
+            .putExtra(NotificationLaunchTelemetry.ORIGIN, entry.notificationOrigin)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
     fun homeIntent(context: Context, entry: StartupEntry) =
         Intent(context, MainActivity::class.java)
             .putExtra(NotificationNavigation.EXTRA_DESTINATION, entry.destination.key)
             .putExtra(HomePreviewSupport.EXTRA_MODE, entry.previewMode)
+            .putExtra(NotificationLaunchTelemetry.ORIGIN, entry.notificationOrigin)
             .putExtra(COMPLETED, true)
             .putExtra(PERMISSION_COMPLETED, true)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)

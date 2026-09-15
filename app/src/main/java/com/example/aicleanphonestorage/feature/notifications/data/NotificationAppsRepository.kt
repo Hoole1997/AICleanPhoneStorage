@@ -24,6 +24,12 @@ interface NotificationAppsRepository {
     suspend fun loadApps(progress: (Int, Int) -> Unit): NotificationCatalog
 
     suspend fun setEnabled(packageName: String, enabled: Boolean)
+
+    suspend fun setSelection(packages: Set<String>) {
+        val previous = selectedPackages.first()
+        for (name in previous - packages) setEnabled(name, false)
+        for (name in packages - previous) setEnabled(name, true)
+    }
 }
 
 class AndroidNotificationAppsRepository(
@@ -54,6 +60,12 @@ class AndroidNotificationAppsRepository(
             rows.map { NotificationApp(it.packageName, it.label, it.installed) },
             storedSelection,
         )
+    }
+
+    override suspend fun setSelection(packages: Set<String>) {
+        require(app.packageName !in packages)
+        if (!hasAccess()) throw SecurityException("Notification access required")
+        rules.setSelection(packages)
     }
 
     override suspend fun setEnabled(packageName: String, enabled: Boolean) {

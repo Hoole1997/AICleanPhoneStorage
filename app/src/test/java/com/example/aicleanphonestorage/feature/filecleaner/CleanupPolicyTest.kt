@@ -37,7 +37,7 @@ class CleanupPolicyTest {
                 now,
             )
         )
-        assertTrue(
+        assertFalse(
             CleanupPolicy.candidate(
                 CleanupFeature.UNUSED_FILES,
                 file(modified = now - 30L * 86_400_000),

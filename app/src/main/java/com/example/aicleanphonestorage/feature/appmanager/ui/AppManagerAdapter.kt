@@ -68,7 +68,7 @@ internal class AppManagerAdapter(
             }
             binding.appManagerUninstall.setOnClickListener {
                 val value = row ?: return@setOnClickListener
-                if (value.canUninstall) uninstall(value) else open(value.packageName)
+                uninstall(value) // 同一按钮统一上报，系统不可卸载项由 action 层回退详情页。
             }
             ViewCompat.setScreenReaderFocusable(binding.root, true)
         }
@@ -80,10 +80,7 @@ internal class AppManagerAdapter(
             binding.appManagerInstalled.text = presentation.installed(value)
             binding.appManagerSize.text = presentation.size(value)
             binding.appManagerUsed.text = presentation.used(value)
-            binding.appManagerUninstall.setText(
-                if (value.canUninstall) R.string.app_manager_uninstall
-                else R.string.app_manager_manage
-            )
+            binding.appManagerUninstall.setText(R.string.app_manager_uninstall)
             binding.appManagerUninstall.contentDescription =
                 itemView.context.getString(
                     if (value.canUninstall) R.string.app_manager_uninstall_app

@@ -1,5 +1,5 @@
 <resources>
-    <string name="compression_selected_label">Размер выбранных оригиналов</string>
+    <string name="compression_selected_label">Сожмите медиафайлы и освободите до:</string>
     <string name="compression_selected_size">Выбранные оригиналы: %1$s</string>
     <string name="compression_processed_size">Успешно сжатые оригиналы: %1$s</string>
     <string name="compression_output_size">Сжатые копии: %1$s</string>

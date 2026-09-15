@@ -27,6 +27,7 @@ internal class FileScanSources(context: Context, private val index: ScanIndex) {
         scanId: Long,
         emit: (ScannedFile, String) -> Unit,
         includeEmptyDirectories: Boolean = false,
+        directories: DirectoryScanPolicy? = null,
         progress: (Int, Int?) -> Unit,
     ): Int {
         var seen = 0
@@ -100,7 +101,7 @@ internal class FileScanSources(context: Context, private val index: ScanIndex) {
             }
             ScanSourceKind.DOCUMENT -> {
                 seen = DocumentTreeScanner(app, index, ::mime).scan(
-                    Uri.parse(access.roots.single()), scanId, includeEmptyDirectories, emit, progress,
+                    Uri.parse(access.roots.single()), scanId, includeEmptyDirectories, emit, directories, progress,
                 )
             }
             null -> throw SecurityException("Storage access required")

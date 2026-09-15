@@ -99,8 +99,8 @@ internal class ScanIndex(context: Context) :
         val db = writableDatabase
         db.beginTransaction()
         try {
-            if (handle.feature == CleanupFeature.SMART_CLEAN) {
-                // 只全选当前展示的四类候选，覆盖所有分页；旧分类不会被隐藏后悄悄清理。
+            if (handle.feature in setOf(CleanupFeature.SMART_CLEAN, CleanupFeature.UNUSED_FILES, CleanupFeature.LARGE_FILES)) {
+                // 按当前功能的有效筛选范围全选，覆盖所有分页；隐藏的旧垃圾分类不进入选择。
                 // 仅对未发布的新扫描执行；重复完成、页面恢复不能覆盖用户手动取消的选择。
                 val (selection, args) = where(handle.id, handle.feature, CleanupFilter())
                 db.execSQL(
@@ -205,8 +205,10 @@ internal class ScanIndex(context: Context) :
             }
         }
         if (feature == CleanupFeature.UNUSED_FILES) {
-            clauses += "modified>0 AND modified<=?"
-            args += (filter.referenceMillis - filter.unusedDays * 86_400_000L).toString()
+            // 新三分类索引才可展示/清理；旧版按年龄生成的无分类候选不再进入清理快照。
+            clauses += "bucket IN (${com.example.aicleanphonestorage.feature.unused.data.UnusedKind.entries.joinToString { "?" }})"
+            args += com.example.aicleanphonestorage.feature.unused.data.UnusedKind.entries.map { it.bucket }
+            if (filter.bucket != null) { clauses += "bucket=?"; args += filter.bucket }
         }
         if (feature == CleanupFeature.SMART_CLEAN) {
             clauses += "bucket<>''"
@@ -241,6 +243,7 @@ internal class ScanIndex(context: Context) :
                         filter.bucket in listOf("DUPLICATES", "SIMILAR")
                 )
                     "group_key,retained DESC,id"
+                else if (handle.feature == CleanupFeature.UNUSED_FILES) "modified DESC,id"
                 else "size DESC,id",
                 "$offset,$limit",
             )
@@ -266,6 +269,11 @@ internal class ScanIndex(context: Context) :
         readableDatabase
             .query("files", null, "id=?", arrayOf(id.toString()), null, null, null)
             .use { if (it.moveToFirst()) row(it) else null }
+
+    fun unusedGroups(handle: ScanHandle) =
+        com.example.aicleanphonestorage.feature.unused.data.UnusedKind.entries.map { kind ->
+            com.example.aicleanphonestorage.feature.unused.data.UnusedGroup(kind, totals(handle, CleanupFilter(bucket = kind.bucket)))
+        }
 
     fun totals(handle: ScanHandle, filter: CleanupFilter): SelectionTotals {
         val (selection, args) = where(handle.id, handle.feature, filter)

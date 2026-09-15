@@ -15,6 +15,7 @@ internal data class StartupEntry(
     val destination: NotificationDestination,
     val previewMode: String? = null,
     val hotStart: Boolean = false,
+    val notificationOrigin: String? = null,
 )
 
 internal data class StartupState(
@@ -61,6 +62,7 @@ internal class StartupViewModel(
         saved[DESTINATION] = entry.destination.key
         saved[PREVIEW] = entry.previewMode
         saved[HOT_START] = entry.hotStart
+        saved["startup.notification.origin"] = entry.notificationOrigin
         // 等待中的新通知只更新目标；已交接后的新入口才开启下一次广告请求。
         if (current.value.consumed) {
             minimumStayJob?.cancel()
@@ -77,7 +79,7 @@ internal class StartupViewModel(
 
     fun hasEntry() = saved.contains(DESTINATION)
 
-    fun entry() = StartupEntry(NotificationDestination.fromKey(saved[DESTINATION]), saved[PREVIEW], saved[HOT_START] ?: false)
+    fun entry() = StartupEntry(NotificationDestination.fromKey(saved[DESTINATION]), saved[PREVIEW], saved[HOT_START] ?: false, saved["startup.notification.origin"])
 
     fun permissionFinished() {
         if (!cleared) current.value = current.value.copy(permissionCompleted = true)

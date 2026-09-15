@@ -20,6 +20,7 @@ internal class FileScanRepository(
     context: Context, private val executor: TaskExecutor,
     private val telemetry: com.example.aicleanphonestorage.feature.filecleaner.analytics.CleanupTelemetry = com.example.aicleanphonestorage.feature.filecleaner.analytics.CleanupTelemetry(),
 ) {
+    private val app = context.applicationContext
     val index = ScanIndex(context)
     val access = CleanupAccess(context)
     private val junkIndex =
@@ -43,6 +44,9 @@ internal class FileScanRepository(
                 try {
                     val batch = ArrayList<ScannedFile>(200)
                     val smartClean = feature == CleanupFeature.SMART_CLEAN
+                    val scanContext = currentCoroutineContext()
+                    val unused = if (feature == CleanupFeature.UNUSED_FILES)
+                        com.example.aicleanphonestorage.feature.unused.data.UnusedClassifier(app) { scanContext.ensureActive() } else null
                     var junkBytes = 0L
                     val startedAt = System.currentTimeMillis()
                     val count =
@@ -50,7 +54,8 @@ internal class FileScanRepository(
                             permission,
                             session,
                             { file, folder ->
-                                if (CleanupPolicy.candidate(feature, file, folder, startedAt)) {
+                                val unusedKind = unused?.classify(file, startedAt)
+                                if (if (unused != null) unusedKind != null else CleanupPolicy.candidate(feature, file, folder, startedAt)) {
                                     batch +=
                                         if (feature == CleanupFeature.SMART_CLEAN)
                                             file.copy(
@@ -63,6 +68,7 @@ internal class FileScanRepository(
                                                         ?.name
                                                         .orEmpty()
                                             )
+                                        else if (unusedKind != null) file.copy(bucket = unusedKind.bucket)
                                         else file
                                     if (batch.size == 200) {
                                         junkBytes += index.insert(session, batch)
@@ -70,7 +76,8 @@ internal class FileScanRepository(
                                     }
                                 }
                             },
-                            includeEmptyDirectories = smartClean,
+                            includeEmptyDirectories = smartClean || unused != null,
+                            directories = unused,
                         ) { done, total ->
                             progress(ScanProgress(done, total, junkBytes = junkBytes.takeIf { smartClean }))
                         }
@@ -91,7 +98,8 @@ internal class FileScanRepository(
                                 val categories = junkIndex.visibleCategories(session)
                                 progress(ScanProgress(count, count, "FILES", categories.sumOf { it.bytes }))
                                 telemetry.junkScan(categories)
-                            } else telemetry.scan(feature, index.totals(handle, CleanupFilter(minimumBytes = 0)))
+                            } else if (unused != null) telemetry.unusedScan(index.unusedGroups(handle))
+                            else telemetry.scan(feature, index.totals(handle, CleanupFilter(minimumBytes = 0)))
                         }
                 } catch (error: Exception) {
                     // 取消或失败只移除本应用的临时索引，绝不触碰原文件。
@@ -116,6 +124,8 @@ internal class FileScanRepository(
 
     suspend fun totals(handle: ScanHandle, filter: CleanupFilter) =
         executor.io { index.totals(handle, filter) }
+
+    suspend fun unusedGroups(handle: ScanHandle) = executor.io { index.unusedGroups(handle) }
 
     suspend fun select(id: Long, selected: Boolean) = executor.io { index.select(id, selected) }
 

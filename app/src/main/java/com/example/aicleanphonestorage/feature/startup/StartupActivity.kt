@@ -65,6 +65,7 @@ class StartupActivity : AppCompatActivity() {
         )
         com.example.aicleanphonestorage.feature.push.ResidentClickTelemetry.consume(intent)
         val incoming = StartupNavigation.read(intent)
+        if (savedInstanceState == null) com.example.aicleanphonestorage.feature.push.NotificationLaunchTelemetry.clicked(incoming.notificationOrigin)
         // 在创建 SavedStateHandle 前规范化 Intent，避免把通知正文或外部同名状态键存入页面状态。
         setIntent(StartupNavigation.startupIntent(this, incoming))
         val binding = ScreenStartupBinding.inflate(layoutInflater)
@@ -100,6 +101,7 @@ class StartupActivity : AppCompatActivity() {
                 app.notificationRuntime,
                 pushPermissionModel,
                 permissions,
+                allowGuide = false,
             )
         ads = StartupAdCoordinator(this, binding.root, model)
         lifecycleScope.launch {
@@ -128,6 +130,7 @@ class StartupActivity : AppCompatActivity() {
         if (permissions.onReturnIntent(intent)) return
         com.example.aicleanphonestorage.feature.push.ResidentClickTelemetry.consume(intent)
         val incoming = StartupNavigation.read(intent)
+        com.example.aicleanphonestorage.feature.push.NotificationLaunchTelemetry.clicked(incoming.notificationOrigin)
         setIntent(StartupNavigation.startupIntent(this, incoming))
         model.accept(incoming)
         if (incoming.hotStart) model.permissionFinished()

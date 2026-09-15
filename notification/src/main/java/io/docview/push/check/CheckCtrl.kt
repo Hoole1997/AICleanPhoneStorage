@@ -139,8 +139,9 @@ class CheckCtrl private constructor() {
             val appInstallTime = getAppInstallTime()
 
             if (currentTime - appInstallTime < cooldownMs) {
-                val remainingMinutes = ((cooldownMs - (currentTime - appInstallTime)) / (60 * 1000)).toInt()
-                Logger.d("新用户冷却时间未满足，还需等待 ${remainingMinutes} 分钟 (冷却时长: ${cooldownMinutes} 分钟)")
+                // 判断仍以毫秒为准；分钟取整会把尚未到期的最后 59 秒误写成“等待 0 分钟”。
+                val remainingMs = cooldownMs - (currentTime - appInstallTime)
+                Logger.d("新用户冷却时间未满足，还需等待 ${remainingMs / 1000.0} 秒 (remaining_ms=$remainingMs, 冷却时长: ${cooldownMinutes} 分钟)")
                 return Pair(false, BlockReason.NEW_USER_COOLDOWN)
             }
         }
@@ -177,9 +178,9 @@ class CheckCtrl private constructor() {
         val canTrigger = lastTime == 0L || (currentTime - lastTime) >= intervalMs
 
         if (!canTrigger) {
-            val remainingMinutes = ((lastTime + intervalMs - currentTime) / (60 * 1000)).toInt()
+            val remainingMs = lastTime + intervalMs - currentTime
             val intervalMinutes = (intervalMs / (60 * 1000)).toInt()
-            Logger.d("${type.name}通知间隔未满足，还需等待 ${remainingMinutes} 分钟 (间隔时长: ${intervalMinutes} 分钟)")
+            Logger.d("${type.name}通知间隔未满足，还需等待 ${remainingMs / 1000.0} 秒 (remaining_ms=$remainingMs, 间隔时长: ${intervalMinutes} 分钟)")
             return Pair(false, BlockReason.TRIGGER_INTERVAL_NOT_MET)
         }
 

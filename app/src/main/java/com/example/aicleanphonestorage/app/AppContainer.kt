@@ -17,6 +17,7 @@ import com.example.aicleanphonestorage.feature.notifications.service.Notificatio
 /** 手动依赖注入的唯一组装入口。应用级对象禁止保存 Activity/View 或启动隐式后台任务。 */
 class AppContainer(context: Context) {
     private val applicationContext = context.applicationContext
+    internal val ratingPromptStore by lazy { com.example.aicleanphonestorage.feature.rating.PersistentRatingPromptStore(applicationContext) }
     internal val fileScanRepository by lazy {
         com.example.aicleanphonestorage.feature.filecleaner.data.FileScanRepository(
             applicationContext,

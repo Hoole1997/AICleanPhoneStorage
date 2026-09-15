@@ -1,0 +1,7 @@
+<resources>
+    <string name="rating_title">شكرًا لاستخدام %1$s</string>
+    <string name="rating_message">سنكون ممتنين جدًا إذا قيّمت التطبيق.</string>
+    <string name="rating_hint">أفضل تقييم لنا</string>
+    <string name="rating_submit">تقييم</string>
+    <string name="rating_star_description">التقييم بـ %1$d من 5 نجوم</string>
+</resources>

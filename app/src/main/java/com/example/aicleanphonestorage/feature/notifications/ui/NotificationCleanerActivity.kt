@@ -77,11 +77,12 @@ class NotificationCleanerActivity : AppCompatActivity() {
         val exit = FeatureExitCoordinator(this, { InterstitialPlacements.NOTIFICATIONS_EXIT })
         binding.notificationBack.setOnClickListener { exit.exit() }
         binding.notificationDone.setOnClickListener {
-            viewModel.completionReport()?.let { report ->
-                com.example.aicleanphonestorage.core.analytics.BusinessTelemetry.emit(com.example.aicleanphonestorage.core.analytics.MetricEvent.NOTIFY_CLEAN_CLICK, mapOf("selected_count" to report.completed))
-                // Done 的 report.completed 是规则来源数，并非实际清除来源数；不能冒充 cleared_count。
-                completion.launch(CompletionContract.intent(this, report))
-                viewModel.completionPresented()
+            val state = viewModel.state.value
+            if (state.hasSavedChanges && state.saving.isEmpty()) {
+                com.example.aicleanphonestorage.core.analytics.BusinessTelemetry.emit(
+                    com.example.aicleanphonestorage.core.analytics.MetricEvent.NOTIFY_CLEAN_CLICK,
+                    mapOf("selected_count" to state.selected.size))
+                viewModel.commitSelection()
             }
         }
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
@@ -100,13 +101,11 @@ class NotificationCleanerActivity : AppCompatActivity() {
                 AppIconLoader(this, (application as CleanApplication).container.taskExecutor),
                 viewModel::setEnabled,
                 {
-                    viewModel.onForeground()
-                    viewModel.refresh()
+                    viewModel.retry()
                 },
             ) {
                 if (!viewModel.state.value.rulesLoaded) {
-                    viewModel.onForeground()
-                    viewModel.refresh()
+                    viewModel.retry()
                 } else
                     lifecycleScope.launch {
                         val granted =
@@ -159,6 +158,12 @@ class NotificationCleanerActivity : AppCompatActivity() {
 
     private fun render(state: NotificationUiState) {
         renderer.render(state)
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !supportFragmentManager.isStateSaved) {
+            viewModel.completionReport()?.let { report ->
+                viewModel.completionPresented()
+                completion.launch(CompletionContract.intent(this, report))
+            }
+        }
         if (
             state.phase == NotificationPhase.NeedsAccess &&
                 !returning &&

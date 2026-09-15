@@ -21,6 +21,7 @@ internal fun OperationSummary.completionReport(
         originalsRemaining = if (compression) (copied - deleted).coerceAtLeast(0) else 0,
         removableOriginals = if (compression) originalsAvailable else 0,
         operationId = operation,
+        emptyScan = feature == CleanupFeature.SMART_CLEAN && total == 0,
         inputBytes = inputBytes.takeIf { compression },
         copiedOriginalBytes = copiedOriginalBytes.takeIf { compression },
         outputBytes = outputBytes.takeIf { compression },

@@ -1,5 +1,5 @@
 <resources>
-    <string name="compression_selected_label">নির্বাচিত মূল ছবির আকার</string>
+    <string name="compression_selected_label">মিডিয়া সংকুচিত করে সর্বোচ্চ জায়গা বাঁচান:</string>
     <string name="compression_selected_size">নির্বাচিত মূল ছবি: %1$s</string>
     <string name="compression_processed_size">সফলভাবে সংকুচিত মূল ছবি: %1$s</string>
     <string name="compression_output_size">সংকুচিত কপি: %1$s</string>

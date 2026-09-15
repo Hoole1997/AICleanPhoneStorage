@@ -1,0 +1,7 @@
+<resources>
+    <string name="rating_title">%1$s इस्तेमाल करने के लिए धन्यवाद</string>
+    <string name="rating_message">अगर आप हमें रेटिंग दें तो हम आभारी होंगे।</string>
+    <string name="rating_hint">हमारे लिए सबसे अच्छी रेटिंग</string>
+    <string name="rating_submit">रेटिंग दें</string>
+    <string name="rating_star_description">5 में से %1$d स्टार दें</string>
+</resources>

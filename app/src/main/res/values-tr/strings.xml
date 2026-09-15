@@ -55,7 +55,7 @@
     <string name="cleanup_limited">Yalnızca seçilen fotoğraflar dahil edilmiştir</string>
     <string name="cleanup_tips">İpuçları</string>
     <string name="cleanup_confirm">Onayla</string>
-    <string name="cleanup_delete_confirm">Seçilen dosyalar kalıcı olarak silinsin mi?\nSayı: %1$d · Boyut: %2$s</string>
+    <string name="cleanup_delete_confirm">Bu dosyayı silmek ister misiniz?\nLütfen onaylayın.</string>
     <string name="cleanup_working">%1$d / %2$d işleniyor</string>
     <string name="cleanup_result">Silindi: %1$d\nDaha küçük kopyalar: %2$d\nDeğiştirilmedi veya iptal edildi: %3$d\nBaşarısız: %4$d</string>
     <string name="cleanup_remove_originals">Orijinal fotoğrafları silin</string>

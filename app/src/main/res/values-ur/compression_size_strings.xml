@@ -1,5 +1,5 @@
 <resources>
-    <string name="compression_selected_label">منتخب اصل تصاویر کا حجم</string>
+    <string name="compression_selected_label">میڈیا کمپریس کرکے زیادہ سے زیادہ جگہ بچائیں:</string>
     <string name="compression_selected_size">منتخب اصل تصاویر: %1$s</string>
     <string name="compression_processed_size">کامیابی سے کمپریس شدہ اصل تصاویر: %1$s</string>
     <string name="compression_output_size">کمپریس شدہ کاپیاں: %1$s</string>

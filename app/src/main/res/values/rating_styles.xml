@@ -1,0 +1,14 @@
+<resources>
+    <style name="ThemeOverlay.Clean.Rating" parent="ThemeOverlay.Clean.PushGuide">
+        <item name="android:backgroundDimAmount">0.7</item>
+    </style>
+    <style name="Widget.Clean.RatingStar" parent="">
+        <!-- 40dp 原图放在 48dp 点击区域中，使用系统 Ripple，不把位图当作整张交互界面。 -->
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:src">@drawable/rating_star_filled</item>
+    </style>
+</resources>

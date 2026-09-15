@@ -96,6 +96,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.android.play:review:2.0.2")
     implementation(libs.lottie)
     implementation("com.github.toukaremax:core:1.0.15")
     implementation("com.github.toukaremax:bill:1.0.51") {

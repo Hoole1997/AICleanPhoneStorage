@@ -15,6 +15,7 @@ internal object NotificationNavigation {
             Intent(context, StartupActivity::class.java)
                 .setAction("${context.packageName}.notification.${destination.key}")
                 .putExtra(EXTRA_DESTINATION, destination.key)
+                .putExtra(NotificationLaunchTelemetry.ORIGIN, "resident")
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
@@ -23,6 +24,7 @@ internal object NotificationNavigation {
             Intent(context, StartupActivity::class.java)
                 .setAction("${context.packageName}.resident.$entry.$badge")
                 .putExtra(EXTRA_DESTINATION, destination.key)
+                .putExtra(NotificationLaunchTelemetry.ORIGIN, "resident")
                 .putExtra(ResidentClickTelemetry.ENTRY, entry)
                 .putExtra(ResidentClickTelemetry.BADGE, badge)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP),

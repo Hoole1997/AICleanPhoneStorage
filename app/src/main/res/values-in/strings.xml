@@ -55,7 +55,7 @@
     <string name="cleanup_limited">Hanya foto terpilih yang disertakan</string>
     <string name="cleanup_tips">Kiat</string>
     <string name="cleanup_confirm">Konfirmasi</string>
-    <string name="cleanup_delete_confirm">Hapus file yang dipilih secara permanen?\nJumlah: %1$d · Ukuran: %2$s</string>
+    <string name="cleanup_delete_confirm">Ingin menghapus file ini?\nHarap konfirmasi.</string>
     <string name="cleanup_working">Memproses %1$d / %2$d</string>
     <string name="cleanup_result">Dihapus: %1$d\nSalinan yang lebih kecil: %2$d\nTidak diubah atau dibatalkan: %3$d\nGagal: %4$d</string>
     <string name="cleanup_remove_originals">Hapus foto asli</string>

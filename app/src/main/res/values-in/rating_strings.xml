@@ -1,0 +1,7 @@
+<resources>
+    <string name="rating_title">Terima kasih telah menggunakan %1$s</string>
+    <string name="rating_message">Kami sangat berterima kasih jika Anda memberi penilaian.</string>
+    <string name="rating_hint">Penilaian terbaik untuk kami</string>
+    <string name="rating_submit">Beri nilai</string>
+    <string name="rating_star_description">Beri %1$d dari 5 bintang</string>
+</resources>

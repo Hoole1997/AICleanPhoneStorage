@@ -4,6 +4,7 @@ import com.example.aicleanphonestorage.core.analytics.*
 import com.example.aicleanphonestorage.core.ui.completion.*
 import com.example.aicleanphonestorage.feature.filecleaner.data.*
 import com.example.aicleanphonestorage.feature.junkcleaner.data.*
+import com.example.aicleanphonestorage.feature.unused.data.*
 
 /** 业务语义到飞书字段的唯一映射；不上传文件名、URI、路径、包名或扫描索引 ID。 */
 internal class CleanupTelemetry(private val sink: EventSink = BusinessTelemetry) {
@@ -12,11 +13,7 @@ internal class CleanupTelemetry(private val sink: EventSink = BusinessTelemetry)
             CleanupFeature.SCREENSHOTS -> MetricEvent.SHOT_SCAN_RESULT
             CleanupFeature.PHOTO_COMPRESS -> MetricEvent.PHOTO_SCAN_RESULT
             CleanupFeature.LARGE_FILES -> MetricEvent.LARGE_SCAN_RESULT
-            CleanupFeature.UNUSED_FILES -> {
-                // 扫描完成事实可上报；当前没有文档中的三分组统计，不能填 0 冒充。
-                sink.send(MetricEvent.UNUSED_SCAN_RESULT, emptyMap())
-                return
-            }
+            CleanupFeature.UNUSED_FILES -> return // 由实际三分组汇总上报，不使用总量伪装分组值。
             else -> return
         }
         sink.send(event, mapOf("count" to totals.count, "total_size" to mb(totals.bytes)))
@@ -32,6 +29,14 @@ internal class CleanupTelemetry(private val sink: EventSink = BusinessTelemetry)
             "ad_file_size" to mb(categories.filter { it.kind == JunkKind.AD_FILES }.sumOf { it.bytes }),
         ))
     }
+    fun unusedScan(groups: List<UnusedGroup>) {
+        sink.send(MetricEvent.UNUSED_SCAN_RESULT, mapOf(
+            "installed_apk_size" to mb(groups.filter { it.kind == UnusedKind.INSTALLED_APK }.sumOf { it.totals.bytes }),
+            "residue_size" to mb(groups.filter { it.kind == UnusedKind.RESIDUE }.sumOf { it.totals.bytes }),
+            "download_size" to mb(groups.filter { it.kind == UnusedKind.DOWNLOAD }.sumOf { it.totals.bytes }),
+        ))
+    }
+    fun unusedGroup(kind: UnusedKind) = sink.send(MetricEvent.UNUSED_GROUP_CLICK, mapOf("group" to kind.wire))
     fun junkGroup(kind: JunkKind) {
         group(kind)?.let { sink.send(MetricEvent.JUNK_GROUP_CLICK, mapOf("group" to it)) }
     }
@@ -45,8 +50,10 @@ internal class CleanupTelemetry(private val sink: EventSink = BusinessTelemetry)
             CleanupFeature.SCREENSHOTS -> MetricEvent.SHOT_CHECK
             CleanupFeature.PHOTO_COMPRESS -> MetricEvent.PHOTO_CHECK
             CleanupFeature.LARGE_FILES -> MetricEvent.LARGE_FILE_CHECK
-            // 现有平铺列表可以记录勾选；尚无分组时省略 group，覆盖报告明确列出。
-            CleanupFeature.UNUSED_FILES -> MetricEvent.UNUSED_CHECK
+            CleanupFeature.UNUSED_FILES -> {
+                params["group"] = UnusedKind.from(bucket)?.wire ?: return
+                MetricEvent.UNUSED_CHECK
+            }
         }
         if (feature == CleanupFeature.PHOTO_COMPRESS) params["selected_count"] = totals.selectedCount
         else params["selected_size"] = mb(totals.selectedBytes)

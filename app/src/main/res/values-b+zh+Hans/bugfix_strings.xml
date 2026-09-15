@@ -1,0 +1,14 @@
+<resources>
+    <string name="cleanup_one_week">1周</string>
+    <string name="cleanup_one_month">1个月</string>
+    <string name="cleanup_three_months">3个月</string>
+    <string name="cleanup_six_months">6个月</string>
+    <string name="cleanup_one_year">1年</string>
+    <string name="app_manager_never_used">从未使用</string>
+    <string name="push_apps">应用</string>
+    <string name="push_accelerate">加速</string>
+    <string name="cleanup_count_size">清理 (%1$s · %2$s)</string>
+    <string name="home_junk_categories">缓存 · 残留文件 · 下载</string>
+    <string name="junk_got_it">知道了</string>
+    <string name="junk_very_clean">您的手机很干净</string>
+</resources>

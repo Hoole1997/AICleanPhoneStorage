@@ -140,7 +140,8 @@ private class HeroHolder(
         val percentage = content.usedPercent?.let {
             NumberFormat.getPercentInstance(context.resources.configuration.locales[0]).format(it / 100.0)
         } ?: unknown
-        usageLabel.text = context.getString(R.string.home_used_percentage, percentage)
+        usageLabel.text = if (content.virtualJunk) context.getString(R.string.home_junk_categories)
+            else context.getString(R.string.home_used_percentage, percentage)
         // determinate ProgressBar，赋值不启动无限动画；文字提供 TalkBack 可读的百分比。
         usageProgress.progress = ((content.progressFraction ?: 0f).coerceIn(0f, 1f) * usageProgress.max).toInt()
     }

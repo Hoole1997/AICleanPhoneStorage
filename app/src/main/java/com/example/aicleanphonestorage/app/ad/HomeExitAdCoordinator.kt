@@ -10,6 +10,9 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import com.example.aicleanphonestorage.core.lifecycle.ForegroundTransitionGuard
 
 /** 首页拥有退出广告：等首页恢复、取得焦点且绘制一帧后请求，不用固定延时或轮询。 */
 internal class HomeExitAdCoordinator(
@@ -32,6 +35,8 @@ internal class HomeExitAdCoordinator(
 
     init {
         ads.register(EXIT) { schedule() }
+        // 原生 Play 评价期间不叠加退出广告；评价结束后按现有条件继续，不丢失退出来源。
+        activity.lifecycleScope.launch { ForegroundTransitionGuard.changes.collect { schedule() } }
         activity.lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onResume(owner: LifecycleOwner) = schedule()
             override fun onPause(owner: LifecycleOwner) = cancelFrame()
@@ -58,6 +63,7 @@ internal class HomeExitAdCoordinator(
     }
 
     private fun canShow() = state.pending != null && !ads.busy &&
+        !ForegroundTransitionGuard.contains("in_app_review") &&
         !activity.isFinishing && !activity.isDestroyed && root.isAttachedToWindow &&
         activity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) &&
         activity.hasWindowFocus() && !activity.supportFragmentManager.isStateSaved &&

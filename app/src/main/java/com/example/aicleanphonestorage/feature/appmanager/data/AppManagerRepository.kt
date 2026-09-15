@@ -62,6 +62,12 @@ internal class AndroidAppManagerRepository(
                         val info =
                             pkg.applicationInfo
                                 ?: manager.getApplicationInfo(identity.packageName, 0)
+                        // 功能只列第三方应用；保持原有系统详情回退逻辑应对扫描后状态变化。
+                        if (identity.packageName == app.packageName || info.flags and
+                            (ApplicationInfo.FLAG_SYSTEM or ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
+                            progress(index + 1, identities.size)
+                            continue
+                        }
                         val installed = pkg.firstInstallTime.takeIf { it > 0 }
                         val used = usage?.get(identity.packageName)?.lastTimeUsed
                         val lastUse =

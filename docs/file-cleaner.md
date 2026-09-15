@@ -21,7 +21,13 @@
 
 ## 业务规则
 
-Unused Files 的含义是“至少 30/90/180 天未修改”，不是 Android 无法可靠提供的“最后使用时间”。时间未知的文件不作为候选。Screenshots 根据截图目录或文件名识别，部分厂商自定义命名可能无法识别。
+Unused Files 按 2026-09-15 用户确认使用三类代理规则：包名已安装的 APK、共享 Android/data 与 Android/obb 中可确认包已卸载的残留、Download 下超过 30 天未修改的文档/压缩包。时间未知、正好 30 天、旧媒体、Download 以外的旧文档不纳入下载候选；不声称知道文件最后打开时间。三个功能独立筛选，同一文件可跨入口出现。Screenshots 根据截图目录或文件名识别，部分厂商自定义命名可能无法识别。
+
+闲置概览展示三分类，进入详情沿用 Paging 和共享选择；返回刷新总量。新扫描默认全选，旧版无分类候选不进入展示和删除快照。unused_scan_result 上报 installed_apk_size、residue_size、download_size，单位为十进制 MB；分组点击和选择分别上报 unused_group_click、unused_check，group 为 installed_apk/residue/download。埋点文档的旧 90 天表述由用户最新 30 天规则覆盖。
+
+Android 11+ 的包查询有可见性过滤，且共享 Android/data/obb 受系统访问限制；不将 NameNotFound 当作卸载，也不新增 QUERY_ALL_PACKAGES 或绕过目录限制。旧系统仅在用户已授权且可访问时处理残留。SAF 的下载/残留路径只认系统 ExternalStorageProvider 的卷内路径，其他不透明提供者不猜目录归属。SAF APK 串行流式复制至临时文件供 PackageManager 解析，单个上限 128 MiB，结束或取消删除临时副本。
+
+删除闲置项前重新判断包状态和文件资格。残留内容按选中快照先文件后目录逐项处理，目录仅为空时删除；扫描后新增或取消选择的内容不会被递归连带删除。
 
 Photo Compress 当前支持 JPEG 和静态 PNG，提供 JPEG 质量 60/75/85。按约 2 MP 和最长边 2048px 的预算采样，低内存设备进一步降低预算；透明区域转为白色。界面节省量是按质量档位计算的粗略估计，实际以编码结果为准；输出不小于原图时跳过。
 

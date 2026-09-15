@@ -1,0 +1,6 @@
+<resources>
+    <string name="unused_installed_apk">APK instalados</string>
+    <string name="unused_residue">Restos de apps desinstaladas</string>
+    <string name="unused_download">Descargas antiguas</string>
+    <string name="unused_scope_note">Candidatos según la instalación y la fecha de modificación. Solo se analizan carpetas accesibles.</string>
+</resources>

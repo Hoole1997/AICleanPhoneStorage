@@ -50,6 +50,13 @@ class NotificationRuntime(context: Context, host: NotificationHost) {
         }
     }
 
+    /** 宿主归因与推送配置共用渠道；不能一直停留在构建时的默认 natural。 */
+    fun setPaidUser(paid: Boolean) {
+        io.docview.push.host.PushUserChannel.setChannel(if (paid)
+            io.docview.push.host.PushUserChannel.UserChannelType.PAID
+            else io.docview.push.host.PushUserChannel.UserChannelType.NATURAL)
+    }
+
     fun refreshResident() {
         initialize()
         PushEnvironment.scope.launch {

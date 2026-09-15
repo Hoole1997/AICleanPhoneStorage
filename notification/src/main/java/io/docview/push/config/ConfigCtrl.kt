@@ -224,10 +224,7 @@ object ConfigCtrl {
      * @return 当前渠道的配置
      */
     private fun getCurrentConfig(): Config? {
-        return when (PushUserChannel.getCurrentChannel()) {
-            PushUserChannel.UserChannelType.PAID -> config?.paidChannel
-            PushUserChannel.UserChannelType.NATURAL -> config?.organicChannel
-        }
+        return config?.forChannel(PushUserChannel.getCurrentChannel())
     }
 
     /**

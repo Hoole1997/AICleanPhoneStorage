@@ -1,0 +1,46 @@
+{
+  "fileKey": "dVsTL6ggoDPXVPcEKg856G",
+  "nodeId": "5666:1790",
+  "assets": [
+    {
+      "name": "clean",
+      "nodeId": "5666:1802",
+      "source": "design/figma/resident/source/clean.png",
+      "sha256": "b2cc9165f18106e878d9e9a5a6553ba490bcaab71369de5fa887db303644d25b",
+      "sizeDp": [
+        36,
+        36
+      ]
+    },
+    {
+      "name": "apps",
+      "nodeId": "5666:1808",
+      "source": "design/figma/resident/source/apps.png",
+      "sha256": "a077585edd72549df6605dd7ab598bd5ef7ad44621c56cdbc26609f0f2027383",
+      "sizeDp": [
+        36,
+        36
+      ]
+    },
+    {
+      "name": "photos",
+      "nodeId": "5666:1814",
+      "source": "design/figma/resident/source/photos.png",
+      "sha256": "5498f0c2cb6e9a7abc8df03a793da565511049aec5d4d6ce45b823325a986134",
+      "sizeDp": [
+        36,
+        36
+      ]
+    },
+    {
+      "name": "accelerate",
+      "nodeId": "5666:1818",
+      "source": "design/figma/resident/source/accelerate.png",
+      "sha256": "da534fac12f20247220990f2187b8896af4b76e5944915a2cb96bebc7cf4b6cf",
+      "sizeDp": [
+        36,
+        36
+      ]
+    }
+  ]
+}

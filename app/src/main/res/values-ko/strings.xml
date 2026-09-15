@@ -55,7 +55,7 @@
     <string name="cleanup_limited">선택한 사진만 포함됩니다.</string>
     <string name="cleanup_tips">팁</string>
     <string name="cleanup_confirm">확인</string>
-    <string name="cleanup_delete_confirm">선택한 파일을 영구적으로 삭제하시겠습니까?\n개수: %1$d · 크기: %2$s</string>
+    <string name="cleanup_delete_confirm">이 파일을 삭제하시겠습니까?\n확인해 주세요.</string>
     <string name="cleanup_working">%1$d / %2$d 처리 중</string>
     <string name="cleanup_result">삭제됨: %1$d\n더 작은 사본: %2$d\n변경되지 않았거나 취소됨: %3$d\n실패: %4$d</string>
     <string name="cleanup_remove_originals">원본 사진 삭제</string>

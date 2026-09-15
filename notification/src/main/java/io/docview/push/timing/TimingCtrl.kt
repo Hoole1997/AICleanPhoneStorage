@@ -222,13 +222,16 @@ class TimingCtrl private constructor() : DefaultLifecycleObserver {
      */
     inner class ScreenReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            // 亮屏不等于解除锁屏；记录系统事件和当时状态，便于区分未收到解锁与收到后被限频。
+            val keyguardLocked = context?.getSystemService(android.app.KeyguardManager::class.java)?.isKeyguardLocked
+            Logger.d("收到屏幕广播: action=${intent?.action}, keyguard_locked=$keyguardLocked, app_in_foreground=${isAppInForeground.get()}")
             when (intent?.action) {
                 Intent.ACTION_SCREEN_OFF -> {
                     Logger.d("屏幕关闭")
                     TriggerCtrl.stopRepeatNotification()
                 }
                 Intent.ACTION_SCREEN_ON -> {
-                    Logger.d("屏幕点亮")
+                    Logger.d("屏幕点亮：此事件仅处理常驻通知；解锁推送等待 ACTION_USER_PRESENT")
                     context?.let {
                         KeepAliveServiceManager.startKeepAliveService(context)
                     }
@@ -244,7 +247,7 @@ class TimingCtrl private constructor() : DefaultLifecycleObserver {
      * 处理解锁事件
      */
     private fun handleUnlock() {
-        Logger.d("用户解锁屏幕")
+        Logger.d("用户解锁屏幕：已收到 ACTION_USER_PRESENT，准备检查 UNLOCK 推送条件")
         if (io.docview.push.host.PushEnvironment.host.earthquakeEnabled) EarthquakeController.checkAndTriggerScheduledPush()
         triggerNotificationIfAllowed(CheckCtrl.NotificationType.UNLOCK)
     }
@@ -266,6 +269,8 @@ class TimingCtrl private constructor() : DefaultLifecycleObserver {
             CheckCtrl.NotificationType.RESIDENT -> ""
             CheckCtrl.NotificationType.EARTHQUAKE -> "地震通知"
         }
+        // UNLOCK 与 BACKGROUND 的埋点同为 local_push，日志必须保留具体触发类型。
+        Logger.d("开始检查${description}: trigger=${type.name}")
         PushEventReporter.reportData("Notific_Pull", mapOf("topic" to "localPush"))
 
         // 检查是否可以触发通知，并获取具体的拦截原因
@@ -275,7 +280,7 @@ class TimingCtrl private constructor() : DefaultLifecycleObserver {
             val reasonString = blockReason?.reason ?: "unknown"
             val reasonDescription = blockReason?.description ?: "未知原因"
 
-            Logger.d("${description}检查未通过，跳过触发 - 原因: ${reasonDescription}")
+            Logger.d("${description}检查未通过，跳过触发 - trigger=${type.name}, reason=$reasonString, 原因: ${reasonDescription}")
             PushEventReporter.reportData("Notific_Show_Fail", mapOf(
                 "reason" to "app_inner_${type.string}_${reasonString}",
             ))

@@ -1,5 +1,5 @@
 <resources>
-    <string name="compression_selected_label">Tamaño original seleccionado</string>
+    <string name="compression_selected_label">Comprime tus archivos multimedia y ahorra hasta:</string>
     <string name="compression_selected_size">Originales seleccionados: %1$s</string>
     <string name="compression_processed_size">Originales comprimidos correctamente: %1$s</string>
     <string name="compression_output_size">Copias comprimidas: %1$s</string>
