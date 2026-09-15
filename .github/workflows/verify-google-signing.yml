@@ -1,0 +1,66 @@
+name: Verify google signing
+run-name: Verify google signing ${{ inputs.request_id }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      request_id:
+        description: Verification request ID
+        required: true
+        type: string
+      public_key:
+        description: Temporary recipient RSA public key in PEM format
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  verify-signing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+      - name: Verify existing keystore and encrypt credentials for recipient
+        env:
+          ANDROID_SIGNING_STORE_PASSWORD: ${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}
+          SIGNING_EXPORT_PUBLIC_KEY: ${{ inputs.public_key }}
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, subprocess, tempfile
+          keystore = 'app/src/google/google-release.keystore'
+          password = os.environ['ANDROID_SIGNING_STORE_PASSWORD']
+          if not password:
+              raise SystemExit('Signing password is missing')
+          # 只读取 main 的现有签名，绝不生成、修改或替换 keystore。
+          args = ['-keystore', keystore, '-alias', 'google', '-storepass:env', 'ANDROID_SIGNING_STORE_PASSWORD']
+          info = subprocess.run(['keytool', '-J-Duser.language=en', '-list', '-v', *args], check=True, capture_output=True, text=True)
+          if 'PrivateKeyEntry' not in info.stdout:
+              raise SystemExit('Alias is not a private key entry')
+          cert = subprocess.run(['keytool', '-exportcert', *args], check=True, capture_output=True).stdout
+          output = pathlib.Path('build/signing-verification')
+          output.mkdir(parents=True)
+          (output / 'certificate.der').write_bytes(cert)
+          payload = json.dumps({'alias': 'google', 'store_password': password, 'key_password': password,
+                                'certificate_sha256': hashlib.sha256(cert).hexdigest()}).encode()
+          # 密码只通过 stdin 加密；artifact 中只有密文，公开日志中不出现密码。
+          with tempfile.TemporaryDirectory() as temp:
+              public_key = pathlib.Path(temp) / 'recipient.pem'
+              public_key.write_text(os.environ['SIGNING_EXPORT_PUBLIC_KEY'])
+              subprocess.run(['openssl', 'pkeyutl', '-encrypt', '-pubin', '-inkey', str(public_key),
+                              '-pkeyopt', 'rsa_padding_mode:oaep', '-pkeyopt', 'rsa_oaep_md:sha256',
+                              '-pkeyopt', 'rsa_mgf1_md:sha256', '-out', str(output / 'credentials.enc')],
+                             input=payload, check=True, capture_output=True)
+          print('Existing keystore validated; encrypted verification artifact ready.')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: signing-verification-${{ github.run_id }}
+          path: build/signing-verification/
+          retention-days: 1
+          if-no-files-found: error
