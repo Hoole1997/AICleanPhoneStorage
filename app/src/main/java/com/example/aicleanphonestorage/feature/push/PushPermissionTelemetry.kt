@@ -17,7 +17,7 @@ internal enum class PushPermissionOutcome(val wire: String?, val granted: Boolea
 internal enum class PushPermissionRequestMode { RUNTIME, SETTINGS }
 
 /** 每个宿主授权流程的事件账本；只存基本类型，旋转保留，旧回调不能冒充新请求的结果。 */
-internal class PushPermissionTelemetry(private val saved: SavedStateHandle) {
+internal class PushPermissionTelemetry(private val saved: SavedStateHandle, private val sdkInt: Int) {
     init {
         // 新 ViewModel 意味着运行时 SDK 回调已丢失；设置页结果由共享 ActivityResult 流程恢复。
         if (saved.get<String>(MODE) == PushPermissionRequestMode.RUNTIME.name) clearActive()
@@ -59,6 +59,9 @@ internal class PushPermissionTelemetry(private val saved: SavedStateHandle) {
     }
 
     private fun result(position: String, outcome: PushPermissionOutcome, sink: EventSink) {
+        // allow1 仅表示 Android 12L 及以下无需运行时申请时的默认授权。
+        // 所有结果入口统一过滤：Android 13+ 已授权、跨页面检查及迟到回调均不能补报 allow1。
+        if (outcome == PushPermissionOutcome.ALREADY_ALLOWED && sdkInt >= 33) return
         sink.send(MetricEvent.NOTIFICATION_ALLOW_RESULT,
             mapOf("Notific_Allow_Position" to position, "Result" to requireNotNull(outcome.wire)))
     }

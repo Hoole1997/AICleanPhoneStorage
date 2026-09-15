@@ -7,17 +7,17 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class PushPermissionTelemetryTest {
-    private class Fixture(val saved: SavedStateHandle = SavedStateHandle()) {
+    private class Fixture(val saved: SavedStateHandle = SavedStateHandle(), val sdkInt: Int = 33) {
         val events = mutableListOf<Pair<MetricEvent, Map<String, Any>>>()
         val sink = EventSink { event, params -> events += event to params }
-        val tracker = PushPermissionTelemetry(saved)
+        val tracker = PushPermissionTelemetry(saved, sdkInt)
     }
 
-    @Test fun alreadyAllowedReportsOnlyAllow1OnceAcrossRepeatedChecksAndRecreation() {
-        for (position in PushPermissionPosition.entries) {
-            val f = Fixture()
+    @Test fun android12AndBelowReportAllow1OnceAcrossRepeatedChecksAndRecreation() {
+        for (sdk in listOf(26, 30, 31, 32)) for (position in PushPermissionPosition.entries) {
+            val f = Fixture(sdkInt = sdk)
             repeat(3) { f.tracker.alreadyGranted(position, f.sink) }
-            PushPermissionTelemetry(f.saved).alreadyGranted(position, f.sink)
+            PushPermissionTelemetry(f.saved, sdk).alreadyGranted(position, f.sink)
             assertEquals(listOf(MetricEvent.NOTIFICATION_ALLOW_RESULT to mapOf("Notific_Allow_Position" to position.wire, "Result" to "allow1")), f.events)
             f.tracker.reset()
             f.tracker.alreadyGranted(position, f.sink)
@@ -25,9 +25,28 @@ class PushPermissionTelemetryTest {
         }
     }
 
+    @Test fun android13AndAboveNeverReportAllow1AcrossHostsResetsAndLateCallbacks() {
+        for (sdk in listOf(33, 34, 35, 36, 37)) for (position in PushPermissionPosition.entries) {
+            val f = Fixture(sdkInt = sdk)
+            repeat(3) { f.tracker.alreadyGranted(position, f.sink) }
+            PushPermissionTelemetry(f.saved, sdk).alreadyGranted(position, f.sink)
+            f.tracker.reset()
+            f.tracker.alreadyGranted(position, f.sink)
+            // 新宿主没有原页面的去重状态，也不能把之前授予的权限报成默认允许。
+            PushPermissionTelemetry(SavedStateHandle(), sdk).alreadyGranted(position, f.sink)
+            assertTrue(f.events.isEmpty())
+
+            f.tracker.reset()
+            val token = f.tracker.started(position, PushPermissionRequestMode.RUNTIME, f.sink)
+            assertTrue(f.tracker.completed(token, PushPermissionOutcome.ALREADY_ALLOWED, f.sink))
+            assertNull(f.tracker.active(PushPermissionRequestMode.RUNTIME))
+            assertEquals(listOf(MetricEvent.NOTIFICATION_ALLOW_START), f.events.map { it.first })
+        }
+    }
+
     @Test fun realRequestHasOneStartAndExactResultValuesWithTheOriginalPosition() {
-        for (position in PushPermissionPosition.entries) for (outcome in listOf(PushPermissionOutcome.ALLOWED, PushPermissionOutcome.DENIED, PushPermissionOutcome.DENIED_FOREVER)) {
-            val f = Fixture()
+        for (sdk in listOf(32, 33, 35)) for (position in PushPermissionPosition.entries) for (outcome in listOf(PushPermissionOutcome.ALLOWED, PushPermissionOutcome.DENIED, PushPermissionOutcome.DENIED_FOREVER)) {
+            val f = Fixture(sdkInt = sdk)
             val token = f.tracker.started(position, PushPermissionRequestMode.RUNTIME, f.sink)
             assertEquals(token, f.tracker.started(position, PushPermissionRequestMode.RUNTIME, f.sink))
             f.tracker.alreadyGranted(position, f.sink) // 允许后的 onResume 可能先于 SDK 回调到达。
@@ -44,7 +63,7 @@ class PushPermissionTelemetryTest {
     @Test fun abandonedAndFailedRequestsDoNotInventPermissionResults() {
         val f = Fixture()
         val old = f.tracker.started(PushPermissionPosition.SPLASH, PushPermissionRequestMode.RUNTIME, f.sink)
-        val restored = PushPermissionTelemetry(f.saved)
+        val restored = PushPermissionTelemetry(f.saved, f.sdkInt)
         assertFalse(restored.completed(old, PushPermissionOutcome.DENIED, f.sink))
         restored.alreadyGranted(PushPermissionPosition.SPLASH, f.sink)
         assertEquals(1, f.events.size)
@@ -59,7 +78,7 @@ class PushPermissionTelemetryTest {
     @Test fun pendingSettingsResultSurvivesProcessRecreationWithoutAnotherStart() {
         val f = Fixture()
         val token = f.tracker.started(PushPermissionPosition.HOME, PushPermissionRequestMode.SETTINGS, f.sink)
-        val restored = PushPermissionTelemetry(f.saved)
+        val restored = PushPermissionTelemetry(f.saved, f.sdkInt)
         assertEquals(token, restored.active(PushPermissionRequestMode.SETTINGS))
         assertTrue(restored.completed(token, PushPermissionOutcome.ALLOWED, f.sink))
         assertEquals(2, f.events.size)

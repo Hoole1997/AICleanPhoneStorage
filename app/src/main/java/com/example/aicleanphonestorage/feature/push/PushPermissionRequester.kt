@@ -25,7 +25,7 @@ internal class XxPushPermissionRequester(private val activity: AppCompatActivity
     }
 
     override fun request(origin: PushPermissionRequest, onStarted: () -> Unit, result: (PushPermissionOutcome) -> Unit) {
-        // 排队期间或另一个授权入口可能已获批；这种情况是 allow1，不能虚报一次 Start。
+        // 排队期间或另一个授权入口可能已获批，不能虚报 Start；埋点层按系统版本决定是否报 allow1。
         if (isGranted()) { result(PushPermissionOutcome.ALREADY_ALLOWED); return }
         try {
             val permission = NotificationPermissionAccess.permissionToRequest(activity)

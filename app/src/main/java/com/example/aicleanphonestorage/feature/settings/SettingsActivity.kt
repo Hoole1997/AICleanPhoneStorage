@@ -3,6 +3,7 @@ package com.example.aicleanphonestorage.feature.settings
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.aicleanphonestorage.BuildConfig
 import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.databinding.ViewSettingsMenuBinding
 
@@ -33,7 +34,7 @@ class SettingsActivity : AppCompatActivity() {
         menu.settingsPrivacy.setOnClickListener {
             SettingsDestinations.open(
                 this,
-                SettingsDestinations.privacy(getString(R.string.settings_privacy_url)),
+                SettingsDestinations.privacy(BuildConfig.PRIVACY_URL),
                 R.string.settings_link_unavailable,
             )
         }

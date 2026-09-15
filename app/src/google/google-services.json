@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1084818814336",
+    "project_id": "ag9724a6036d-364eb-gp",
+    "storage_bucket": "ag9724a6036d-364eb-gp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1084818814336:android:2112745e3b7e0098c53d65",
+        "android_client_info": {
+          "package_name": "com.ai.clean.phone.storage.junk.cleaner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8oCGeHN6fZ1Q8zyZ_E_AkIRKFNPf8QYI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

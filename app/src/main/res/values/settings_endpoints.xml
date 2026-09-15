@@ -1,5 +1,0 @@
-<resources>
-    <!-- 用户指定先使用虚构地址。发布前替换为实际隐私政策和客服邮箱；不把示例域当成真实服务。 -->
-    <string name="settings_privacy_url" translatable="false">https://example.com/privacy</string>
-    <string name="settings_support_email" translatable="false">feedback@example.com</string>
-</resources>

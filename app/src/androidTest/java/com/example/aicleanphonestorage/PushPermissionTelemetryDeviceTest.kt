@@ -45,7 +45,11 @@ class PushPermissionTelemetryDeviceTest {
                         events = EventSink { event, params -> events += event to params })
                     repeat(3) { coordinator.onResume(); coordinator.drain() }
                     assertEquals(0, permissions.nativeCalls)
-                    assertEquals(listOf(MetricEvent.NOTIFICATION_ALLOW_RESULT to mapOf("Notific_Allow_Position" to position.wire, "Result" to "allow1")), events)
+                    if (android.os.Build.VERSION.SDK_INT <= 32) {
+                        assertEquals(listOf(MetricEvent.NOTIFICATION_ALLOW_RESULT to mapOf("Notific_Allow_Position" to position.wire, "Result" to "allow1")), events)
+                    } else {
+                        assertTrue("Android 13+ 已授权检查不能产生 allow1", events.isEmpty())
+                    }
                 }
             }
         }

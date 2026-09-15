@@ -36,6 +36,20 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // 只给 googleRelease 绑定上传签名；签名文件由 Actions 从 main 复用或首次生成，密码从 Secret 注入。
+    signingConfigs {
+        create("googleRelease") {
+            val signingPath = providers.environmentVariable("ANDROID_SIGNING_STORE_FILE").orNull
+            if (!signingPath.isNullOrBlank()) {
+                storeFile = rootProject.file(signingPath)
+                storePassword = providers.environmentVariable("ANDROID_SIGNING_STORE_PASSWORD").orNull
+                keyAlias = providers.environmentVariable("ANDROID_SIGNING_KEY_ALIAS").orNull
+                keyPassword = providers.environmentVariable("ANDROID_SIGNING_KEY_PASSWORD").orNull
+                storeType = "PKCS12"
+            }
+        }
+    }
+
     flavorDimensions += "distribution"
     productFlavors {
         listOf("local", "google").forEach { channel ->
@@ -46,6 +60,13 @@ android {
                 versionCode = config.getProperty("versionCode").toInt()
                 versionName = config.getProperty("versionName")
                 buildConfigField("boolean", "REMOTE_PUSH_ENABLED", config.getProperty("remotePushEnabled"))
+                // 设置页目标地址由渠道配置提供，不放进语言资源，避免多处维护。
+                mapOf("privacyUrl" to "PRIVACY_URL", "feedbackEmail" to "FEEDBACK_EMAIL")
+                    .forEach { (property, field) ->
+                        val value = config.getProperty(property)
+                        require(!value.isNullOrBlank()) { "app/src/$channel/config.properties 缺少 $property" }
+                        buildConfigField("String", field, buildString(value))
+                    }
                 val ads = adConfig(channel)
                 val platforms = listOf("admob", "gam", "pangle", "topon", "max")
                 val slots = mapOf("splash" to "SPLASH", "banner" to "BANNER", "interstitial" to "INTERSTITIAL",
@@ -142,6 +163,15 @@ dependencies {
 
 // 配置目录与 distribution flavor 同名，配置和 Firebase JSON 直接放在该目录。
 // 在插件创建 variant 任务后覆盖输入，避免其默认 src/... 路径随后覆盖自定义值。
+// 用户要求 Google Play 渠道仅在 GitHub Actions 构建，本机不创建其编译/打包/安装任务。
+androidComponents.beforeVariants(androidComponents.selector().withFlavor("distribution" to "google")) {
+    it.enable = providers.environmentVariable("GITHUB_ACTIONS").orNull == "true"
+}
+
+androidComponents.onVariants(androidComponents.selector().withFlavor("distribution" to "google").withBuildType("release")) {
+    it.signingConfig?.setConfig(android.signingConfigs.getByName("googleRelease"))
+}
+
 androidComponents.onVariants { variant ->
     val channel = variant.productFlavors.single { it.first == "distribution" }.second
     val jsonFile = layout.projectDirectory.file("src/$channel/google-services.json").asFile
@@ -151,4 +181,20 @@ androidComponents.onVariants { variant ->
         // 发布渠道目前只有示例 JSON，未提供真实配置时保留可编译占位。
         enabled = channel == "local" || jsonFile.isFile
     }
+}
+
+// 仅输出元数据，不依赖任何渠道的编译任务；CI 与 CLI 用同一渠道版本生成产物名。
+val googleVersionConfig = channelConfig("google")
+val googleVersionName = googleVersionConfig.getProperty("versionName")
+val googleVersionCode = googleVersionConfig.getProperty("versionCode")
+require(googleVersionName.matches(Regex("[A-Za-z0-9._-]+"))) { "google versionName 不适合用作产物文件名" }
+tasks.register("printGoogleReleaseVersionName") {
+    group = "help"
+    inputs.property("value", googleVersionName)
+    doLast { println(inputs.properties.getValue("value")) }
+}
+tasks.register("printGoogleReleaseAabName") {
+    group = "help"
+    inputs.property("value", "aiclean_google_release_${googleVersionName}_${googleVersionCode}.aab")
+    doLast { println(inputs.properties.getValue("value")) }
 }

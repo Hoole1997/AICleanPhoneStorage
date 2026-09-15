@@ -20,7 +20,7 @@ internal data class PushPermissionState(
 
 /** 只记录本次宿主 Activity 生命周期的流程，不持有 Activity。未授权本身不是展示引导的依据。 */
 internal class PushPermissionViewModel(private val saved: SavedStateHandle) : ViewModel() {
-    val telemetry = PushPermissionTelemetry(saved)
+    val telemetry = PushPermissionTelemetry(saved, android.os.Build.VERSION.SDK_INT)
     val hasStarted: Boolean get() = saved.get<Boolean>("push.auto.attempted") == true
     private val current =
         MutableStateFlow(

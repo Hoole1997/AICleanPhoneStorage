@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.widget.doAfterTextChanged
+import com.example.aicleanphonestorage.BuildConfig
 import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.databinding.ViewSettingsFeedbackBinding
 
@@ -33,7 +34,7 @@ class FeedbackActivity : AppCompatActivity() {
             if (openingEmail) return@setOnClickListener
             val intent =
                 SettingsDestinations.feedback(
-                    getString(R.string.settings_support_email),
+                    BuildConfig.FEEDBACK_EMAIL,
                     getString(R.string.settings_feedback_subject, getString(R.string.app_name)),
                     text,
                 )

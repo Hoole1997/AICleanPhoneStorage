@@ -28,4 +28,6 @@
 
 - 用户于 2026-09-15 要求自家推送的 Notific_Click、Notific_Show、Notific_Enter 补齐 from_background、title、text。通知文案可作为有界埋点快照通过启动页传递，Click/Enter 共用点击前后台状态；不复制完整 extras，不读取其他应用通知正文。自然用户第四个常驻入口保持隐藏，不为埋点或测试改动该显示规则。
 
-- 通知权限埋点 Notific_Allow_Start 仅在未授权且真正调用申请 API 时上报，排队和引导展示不算申请。Notific_Allow_Result 按协议使用 allow、denied、deined_forever、allow1；默认已授权只报 allow1。位置为 SplashScreen/HomeScreen，同一次申请结果保留原位置，防止生命周期重复上报。
+- 通知权限埋点 Notific_Allow_Start 仅在未授权且真正调用申请 API 时上报，排队和引导展示不算申请。Notific_Allow_Result 按协议使用 allow、denied、deined_forever、allow1；仅 Android 12/12L 及以下默认已授权时上报 allow1；Android 13 及以上已授权检查不补报结果，实际申请成功上报 allow。位置为 SplashScreen/HomeScreen，同一次申请结果保留原位置，防止生命周期重复上报。
+
+- 用户要求 Google Play（google）渠道仅通过 GitHub CLI / GitHub Actions 编译打包，本机不得编译、打包或安装该渠道。本机仅允许静态检查和元数据读取。上传签名文件由 GitHub Actions 首次生成并提交 main，密码单独保存在 GitHub Secrets；后续构建从 main 复用原签名，不在本机生成、不自动更换。

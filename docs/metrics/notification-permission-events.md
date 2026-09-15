@@ -13,7 +13,7 @@
 - `allow`：真实申请回调确认已授权；用户从本次通知设置申请中开启权限也使用此值。
 - `denied`：普通拒绝；本次通知设置申请返回仍未授权也使用此值。
 - `deined_forever`：在实际权限拒绝回调中，由 XXPermissions 确认“不再询问”。保留协议拼写，不改成 denied_forever。
-- `allow1`：流程检查时已经授权，或排队之后在真正调用申请 API 前发现已经授权；只报 Result，不报 Start。
+- `allow1`：仅 Android 12/12L 及以下（API ≤ 32）无需运行时通知授权且检查已授权时上报；只报 Result，不报 Start。Android 13 及以上已授权检查、跨页面检查、排队后已授权均不补报结果；真实申请成功仍报 `allow`。
 
 ## Start 的触发边界
 
@@ -41,18 +41,9 @@ PushPermissionTelemetry 只保存请求序号、位置、类型及去重标记�
 
 ## 验证
 
-- local/google Debug 构建、app 186 项 JVM 测试通过。
-- app localDebug Lint：0 Error，179 个现有 Warning。
-- 可控权限边界测试覆盖两种位置、默认允许、排队后已经授权、实际调用才报 Start、三种请求结果、重复回调、未启动流程与设置边界。
-- 不修改设备已有通知权限，不执行权限引导的布局/截图测试。
+- JVM 回归覆盖 API 32/33 边界、不同系统版本、两个页面位置、重复检查、宿主重建、流程重置与迟到回调。
+- 保留真实申请的 allow / denied / deined_forever、请求去重和设置回跳测试。
+- 设备边界测试按实际系统版本断言：API 33+ 已授权检查没有 Start/Result，API 32 及以下只有一次 allow1。
+- 本次修正取代此前将 Android 13+ 已授权检查记录为 allow1 的口径。
 
-设备测试：`OK (5 tests)`，包括 3 项新埋点边界测试和 2 项原有引导行为回归。
-
-手机现有 POST_NOTIFICATIONS 权限为 granted=true，未修改权限。正常启动后的客户端日志：
-
-```text
-20:38:12.624 Notific_Allow_Result {Notific_Allow_Position=SplashScreen, Result=allow1}
-20:38:15.750 Notific_Allow_Result {Notific_Allow_Position=HomeScreen, Result=allow1}
-```
-
-该流程没有 Notific_Allow_Start。允许/拒绝/不再询问通过可控 SDK 边界回调测试验证，没有向真实埋点服务发送测试用假结果。新 local Debug 包已覆盖安装。日志保存于 `build/notification-permission-events/device.log`。
+本次验证：local Debug APK、google Debug Kotlin 编译、local AndroidTest APK 构建通过；187 项 app JVM 测试通过，local Debug Lint 无错误。设备测试代码已更新并编译，本次未进行真机授权复测。

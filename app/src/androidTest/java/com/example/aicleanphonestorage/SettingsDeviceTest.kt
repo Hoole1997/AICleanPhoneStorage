@@ -99,22 +99,22 @@ class SettingsDeviceTest {
         }
         val draft =
             SettingsDestinations.feedback(
-                context.getString(R.string.settings_support_email),
+                BuildConfig.FEEDBACK_EMAIL,
                 "Test subject",
                 message,
             )!!
         assertEquals(Intent.ACTION_SENDTO, draft.action)
         assertEquals("mailto", draft.data!!.scheme)
-        assertEquals("feedback@example.com", draft.data!!.schemeSpecificPart.substringBefore("?"))
+        assertEquals(BuildConfig.FEEDBACK_EMAIL.trim(), draft.data!!.schemeSpecificPart.substringBefore("?"))
         assertEquals(message, draft.getStringExtra(Intent.EXTRA_TEXT))
         assertTrue(draft.dataString!!.contains("%26"))
         assertFalse(draft.dataString!!.contains("\n"))
         assertNull(SettingsDestinations.feedback("bad\naddress", "test", message))
         assertNull(SettingsDestinations.feedback("feedback@example.com", "test", " "))
         val privacy =
-            SettingsDestinations.privacy(context.getString(R.string.settings_privacy_url))!!
+            SettingsDestinations.privacy(BuildConfig.PRIVACY_URL)!!
         assertEquals(Intent.ACTION_VIEW, privacy.action)
-        assertEquals("https://example.com/privacy", privacy.dataString)
+        assertEquals(BuildConfig.PRIVACY_URL.trim(), privacy.dataString)
         assertNull(SettingsDestinations.privacy("javascript:alert(1)"))
     }
 

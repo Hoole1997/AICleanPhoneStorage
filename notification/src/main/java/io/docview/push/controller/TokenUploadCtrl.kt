@@ -13,20 +13,28 @@ import java.security.MessageDigest
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
-/** 来源的签名、参数名和路径完整保留；URL 正确编码，不打印 token、签名或完整请求 URL。 */
+/** 路径、密钥和参数名来自 app 对应渠道配置；URL 正确编码，不打印 token、签名或完整请求 URL。 */
 internal object TokenUploadProtocol {
-    private const val SECRET_KEY = "kA4deAzg7YpWTSZPYYa7wWb7WQk8Z7V5"
+    private const val SECRET_KEY = BuildConfig.FCM_SECRET_KEY
+
+    // 签名与 URL 使用同一组渠道参数名，避免只修改请求字段而遗漏签名字段。
+    private const val PARAM_TOKEN = BuildConfig.FCM_PARAM_TOKEN
+    private const val PARAM_UID = BuildConfig.FCM_PARAM_UID
+    private const val PARAM_PACK = BuildConfig.FCM_PARAM_PACK
+    private const val HEADER_SIG = BuildConfig.FCM_HEADER_SIG
+
     fun signature(token: String, userId: String, packageName: String): String {
-        val params = sortedMapOf("wndk" to token, "weid" to userId, "dfk" to packageName)
+        val params = sortedMapOf(PARAM_TOKEN to token, PARAM_UID to userId, PARAM_PACK to packageName)
         val canonical = SECRET_KEY + params.entries.joinToString("&") { "${it.key}=${it.value}" }
         return MessageDigest.getInstance("MD5").digest(canonical.toByteArray(Charsets.UTF_8))
             .joinToString("") { "%02x".format(it) }
     }
     fun request(baseUrl: String, token: String, userId: String, packageName: String): Request =
-        Request.Builder().url(baseUrl.toHttpUrl().newBuilder().addPathSegments("browser/wnfree")
-            .addQueryParameter("wndk", token).addQueryParameter("weid", userId)
-            .addQueryParameter("dfk", packageName).build())
-            .header("seg", signature(token, userId, packageName)).get().build()
+        // 去掉配置路径首尾斜杠，由 HttpUrl 连接路径，避免出现双斜杠。
+        Request.Builder().url(baseUrl.toHttpUrl().newBuilder().addPathSegments(BuildConfig.FCM_PATH.trim('/'))
+            .addQueryParameter(PARAM_TOKEN, token).addQueryParameter(PARAM_UID, userId)
+            .addQueryParameter(PARAM_PACK, packageName).build())
+            .header(HEADER_SIG, signature(token, userId, packageName)).get().build()
 
     fun accepted(httpSuccess: Boolean, body: String): Boolean {
         if (!httpSuccess) return false
@@ -64,8 +72,9 @@ object TokenUploadCtrl {
         if (BuildConfig.REMOTE_PUSH_ENABLED && token.isNotBlank()) uploads.trySend(token)
     }
 
+    // 路径变更视为新的上传目标，避免旧接口成功记录阻止新接口接收 token。
     private fun fingerprint(token: String): String = MessageDigest.getInstance("SHA-256")
-        .digest("${BuildConfig.FCM_URL}|${BuildConfig.FCM_PKG}|$token".toByteArray())
+        .digest("${BuildConfig.FCM_URL}|${BuildConfig.FCM_PATH.trim('/')}|${BuildConfig.FCM_PKG}|$token".toByteArray())
         .joinToString("") { "%02x".format(it) }
 
     fun isTokenUploaded(token: String) = acknowledged == fingerprint(token)

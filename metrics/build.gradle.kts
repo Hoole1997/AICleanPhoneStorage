@@ -43,6 +43,11 @@ android {
     }
 }
 
+// Google Play 渠道只由 GitHub Actions 编译，本机保留 local 渠道开发。
+androidComponents.beforeVariants(androidComponents.selector().withFlavor("distribution" to "google")) {
+    it.enable = providers.environmentVariable("GITHUB_ACTIONS").orNull == "true"
+}
+
 dependencies {
     testImplementation(libs.junit)
     implementation("com.github.toukaremax:core:1.0.15")
