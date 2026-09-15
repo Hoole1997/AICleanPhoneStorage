@@ -50,7 +50,12 @@ internal class FileContentAccess(context: Context) {
             catch(_:IllegalArgumentException){null}
     }
 
-    fun validatedFile(item: ScannedFile): File {
+    fun validatedFile(item: ScannedFile): File = validatedPath(item).also {
+        if (!it.isFile) throw IOException("File missing")
+    }
+
+    /** 文件与空目录共用授权边界；类型和状态由各自的操作再次校验。 */
+    fun validatedPath(item: ScannedFile): File {
         val root = File(item.scope).canonicalFile
         val file = File(item.path)
         val canonical = file.canonicalFile
@@ -64,7 +69,6 @@ internal class FileContentAccess(context: Context) {
         }
         if (Build.VERSION.SDK_INT >= 26 && Files.isSymbolicLink(file.toPath()))
             throw IOException("Symbolic link skipped")
-        if (!file.isFile) throw IOException("File missing")
         return file
     }
 

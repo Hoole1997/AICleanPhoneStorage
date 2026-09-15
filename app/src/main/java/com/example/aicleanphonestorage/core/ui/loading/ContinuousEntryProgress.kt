@@ -28,7 +28,7 @@ internal class ContinuousEntryProgress(
 
     override fun complete(appCount: Int, stage: String) {
         completionStart = displayed
-        actual.set(Actual(TaskProgress(stage, appCount, appCount), true))
+        actual.set(Actual(TaskProgress(stage, appCount, appCount, actual.get().detail.bytes), true))
         finishedAt = clock()
     }
 
@@ -66,7 +66,12 @@ internal class ContinuousEntryProgress(
                 val total = (fact.total ?: completed).coerceAtLeast(0)
                 minOf(completed, (total.toLong() * displayed / 100).toInt())
             }
-        return TimedEntryProgress.Frame(fact.copy(completed = count), displayed)
+        // 容量与百分比共用同一时间轴，仅延后呈现已确认的候选；100% 精确收敛到结果摘要。
+        val bytes = fact.bytes?.let { total ->
+            // 先除后乘避免 Long 乘百分比溢出。
+            total / 100 * displayed + total % 100 * displayed / 100
+        }
+        return TimedEntryProgress.Frame(fact.copy(completed = count, bytes = bytes), displayed)
     }
 
     companion object {

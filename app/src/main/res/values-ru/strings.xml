@@ -33,8 +33,8 @@
     <string name="cleanup_scan_failed">Не удалось просканировать файлы. Пожалуйста, проверьте доступ и повторите попытку.</string>
     <string name="cleanup_action_failed">Некоторые файлы не удалось обработать. Пожалуйста, обновите и повторите попытку.</string>
     <string name="cleanup_no_files">Подходящие файлы не найдены.</string>
-    <string name="cleanup_photo_summary">Сжимайте фотографии. Предполагаемая экономия:</string>
-    <string name="cleanup_estimate">Расчетное значение. спасти %1$s</string>
+
+
     <string name="cleanup_preview">Предварительный просмотр %1$s</string>
     <string name="cleanup_select_file">Выберите %1$s</string>
     <string name="cleanup_quality">Качество сжатия</string>
@@ -56,7 +56,6 @@
     <string name="cleanup_tips">Советы</string>
     <string name="cleanup_confirm">Подтвердить</string>
     <string name="cleanup_delete_confirm">Удалить выбранные файлы навсегда?\nКоличество: %1$d · Размер: %2$s</string>
-    <string name="cleanup_compress_confirm">Создавать уменьшенные копии JPEG? Выбранные фотографии: %1$d. Копии ограничены размером 2048 пикселей и могут быть меньше на устройствах с небольшим объемом памяти. Оригиналы сохраняются. Прозрачные области становятся белыми.</string>
     <string name="cleanup_working">Обработка %1$d / %2$d</string>
     <string name="cleanup_result">Удалено: %1$d\nУменьшенные копии: %2$d\nБез изменений или отмены: %3$d\nОшибка: %4$d</string>
     <string name="cleanup_remove_originals">Удаление исходных фотографий</string>
@@ -251,7 +250,7 @@
     <string name="traffic_title">Сетевой трафик</string>
     <string name="traffic_back">Назад</string>
     <string name="traffic_this_month">В этом месяце</string>
-    <string name="traffic_last_month">Последний месяц</string>
+    <string name="traffic_this_week">Эта неделя</string>
     <string name="traffic_24_hours">24 часа</string>
     <string name="traffic_mobile">Мобильные данные</string>
     <string name="traffic_wifi">Wi-Fi</string>

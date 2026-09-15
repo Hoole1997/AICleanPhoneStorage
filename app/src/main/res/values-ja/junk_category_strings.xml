@@ -1,0 +1,7 @@
+<resources>
+    <string name="junk_empty_folders">空のフォルダ</string>
+    <string name="junk_ad_files">広告ファイル</string>
+    <string name="junk_temporary_files_description">一時拡張子のファイルと、アクセス可能な cache フォルダ内のファイルです。削除前に確認してください。</string>
+    <string name="junk_empty_folders_description">サブフォルダを含めてファイルが存在しないフォルダです。各フォルダは 0 B として計算します。</string>
+    <string name="junk_ad_files_description">広告関連の名前や既知の広告 SDK フォルダに一致するファイル候補です。削除前に確認してください。</string>
+</resources>

@@ -33,8 +33,8 @@
     <string name="cleanup_scan_failed">لا يمكن فحص الملفات. يرجى التحقق من الوصول والمحاولة مرة أخرى.</string>
     <string name="cleanup_action_failed">لا يمكن معالجة بعض الملفات. يرجى التحديث والمحاولة مرة أخرى.</string>
     <string name="cleanup_no_files">لم يتم العثور على ملفات مطابقة.</string>
-    <string name="cleanup_photo_summary">ضغط صورك. الادخار المقدر:</string>
-    <string name="cleanup_estimate">مؤسسة. حفظ %1$s</string>
+
+
     <string name="cleanup_preview">معاينة %1$s</string>
     <string name="cleanup_select_file">اختر %1$s</string>
     <string name="cleanup_quality">جودة الضغط</string>
@@ -56,7 +56,6 @@
     <string name="cleanup_tips">نصائح</string>
     <string name="cleanup_confirm">تأكيد</string>
     <string name="cleanup_delete_confirm">هل تريد حذف الملفات المحددة نهائيًا؟\nالعدد: %1$d · الحجم: %2$s</string>
-    <string name="cleanup_compress_confirm">إنشاء نسخ JPEG أصغر؟ الصور المحددة: %1$d. تقتصر النسخ على 2048 بكسل وقد تكون أصغر على الأجهزة ذات الذاكرة المنخفضة. يتم الاحتفاظ بالأصول. تصبح المناطق الشفافة بيضاء.</string>
     <string name="cleanup_working">معالجة %1$d / %2$d</string>
     <string name="cleanup_result">محذوف: %1$d\nنسخ أصغر: %2$d\nلم يتم تغييرها أو إلغاؤها: %3$d\nفشل: %4$d</string>
     <string name="cleanup_remove_originals">حذف الصور الأصلية</string>
@@ -267,7 +266,7 @@
     <string name="traffic_title">حركة مرور الشبكة</string>
     <string name="traffic_back">العودة</string>
     <string name="traffic_this_month">هذا الشهر</string>
-    <string name="traffic_last_month">الشهر الماضي</string>
+    <string name="traffic_this_week">هذا الأسبوع</string>
     <string name="traffic_24_hours">24 ساعة</string>
     <string name="traffic_mobile">بيانات الجوال</string>
     <string name="traffic_wifi">واي فاي</string>

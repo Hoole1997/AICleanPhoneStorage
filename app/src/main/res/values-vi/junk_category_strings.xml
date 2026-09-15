@@ -1,0 +1,7 @@
+<resources>
+    <string name="junk_empty_folders">Thư mục trống</string>
+    <string name="junk_ad_files">Tệp quảng cáo</string>
+    <string name="junk_temporary_files_description">Tệp có phần mở rộng tạm thời và tệp trong thư mục cache có thể truy cập. Kiểm tra trước khi xóa.</string>
+    <string name="junk_empty_folders_description">Thư mục không chứa tệp, kể cả trong thư mục con. Mỗi thư mục được tính là 0 B.</string>
+    <string name="junk_ad_files_description">Tệp có tên liên quan đến quảng cáo hoặc trong thư mục SDK quảng cáo đã biết. Kiểm tra trước khi xóa.</string>
+</resources>

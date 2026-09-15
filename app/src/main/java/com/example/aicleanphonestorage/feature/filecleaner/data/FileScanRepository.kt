@@ -24,11 +24,6 @@ internal class FileScanRepository(
     val access = CleanupAccess(context)
     private val junkIndex =
         com.example.aicleanphonestorage.feature.junkcleaner.data.JunkIndex(index)
-    private val photoAnalyzer =
-        com.example.aicleanphonestorage.feature.junkcleaner.data.JunkPhotoAnalyzer(
-            context,
-            junkIndex,
-        )
     private val sources = FileScanSources(context, index)
     private val scanLock = Mutex()
 
@@ -47,6 +42,8 @@ internal class FileScanRepository(
                 val session = index.start(feature)
                 try {
                     val batch = ArrayList<ScannedFile>(200)
+                    val smartClean = feature == CleanupFeature.SMART_CLEAN
+                    var junkBytes = 0L
                     val startedAt = System.currentTimeMillis()
                     val count =
                         sources.scan(
@@ -62,30 +59,23 @@ internal class FileScanRepository(
                                                         .junkcleaner
                                                         .data
                                                         .JunkRules
-                                                        .classify(file, startedAt)
+                                                        .classify(file, startedAt, folder)
                                                         ?.name
                                                         .orEmpty()
                                             )
                                         else file
                                     if (batch.size == 200) {
-                                        index.insert(session, batch)
+                                        junkBytes += index.insert(session, batch)
                                         batch.clear()
                                     }
                                 }
                             },
+                            includeEmptyDirectories = smartClean,
                         ) { done, total ->
-                            progress(ScanProgress(done, total))
+                            progress(ScanProgress(done, total, junkBytes = junkBytes.takeIf { smartClean }))
                         }
                     currentCoroutineContext().ensureActive()
-                    if (batch.isNotEmpty()) index.insert(session, batch)
-                    var skipped = 0
-                    if (feature == CleanupFeature.SMART_CLEAN) {
-                        progress(ScanProgress(0,null,"PHOTOS"))
-                        skipped =
-                            photoAnalyzer.analyze(session) { done ->
-                                progress(ScanProgress(done, null, "PHOTOS"))
-                            }
-                    }
+                    if (batch.isNotEmpty()) junkBytes += index.insert(session, batch)
                     val label =
                         when (permission.source) {
                             ScanSourceKind.MEDIA ->
@@ -94,11 +84,14 @@ internal class FileScanRepository(
                             ScanSourceKind.DOCUMENT -> "Selected folder"
                             null -> ""
                         }
-                    ScanHandle(session, feature, count, label, permission.limited, skipped)
+                    ScanHandle(session, feature, count, label, permission.limited)
                         .also { handle ->
                             index.finishScan(handle)
-                            if (feature == CleanupFeature.SMART_CLEAN) telemetry.junkScan(junkIndex.categories(session))
-                            else telemetry.scan(feature, index.totals(handle, CleanupFilter(minimumBytes = 0)))
+                            if (smartClean) {
+                                val categories = junkIndex.visibleCategories(session)
+                                progress(ScanProgress(count, count, "FILES", categories.sumOf { it.bytes }))
+                                telemetry.junkScan(categories)
+                            } else telemetry.scan(feature, index.totals(handle, CleanupFilter(minimumBytes = 0)))
                         }
                 } catch (error: Exception) {
                     // 取消或失败只移除本应用的临时索引，绝不触碰原文件。

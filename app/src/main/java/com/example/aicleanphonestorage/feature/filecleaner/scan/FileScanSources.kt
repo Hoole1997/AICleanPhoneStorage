@@ -6,18 +6,10 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.CancellationSignal
-import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.webkit.MimeTypeMap
 import com.example.aicleanphonestorage.feature.filecleaner.data.*
-import java.io.File
 import java.io.IOException
-import java.nio.file.FileVisitResult
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.SimpleFileVisitor
-import java.nio.file.attribute.BasicFileAttributes
-import java.util.EnumSet
 import java.util.Locale
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -34,6 +26,7 @@ internal class FileScanSources(context: Context, private val index: ScanIndex) {
         access: ScanAccess,
         scanId: Long,
         emit: (ScannedFile, String) -> Unit,
+        includeEmptyDirectories: Boolean = false,
         progress: (Int, Int?) -> Unit,
     ): Int {
         var seen = 0
@@ -103,119 +96,12 @@ internal class FileScanSources(context: Context, private val index: ScanIndex) {
                 }
             }
             ScanSourceKind.DIRECT -> {
-                if (Build.VERSION.SDK_INT < 30)
-                    throw SecurityException("Direct access requires Android 11")
-                for (rootPath in access.roots) {
-                    val root = File(rootPath).canonicalFile.toPath()
-                    Files.walkFileTree(
-                        root,
-                        EnumSet.noneOf(java.nio.file.FileVisitOption::class.java),
-                        64,
-                        object : SimpleFileVisitor<Path>() {
-                            override fun preVisitDirectory(
-                                dir: Path,
-                                attrs: BasicFileAttributes,
-                            ): FileVisitResult {
-                                context.ensureActive()
-                                val relative =
-                                    root.relativize(dir).toString().lowercase(Locale.ROOT)
-                                return if (
-                                    relative == "android/data" ||
-                                        relative == "android/obb" ||
-                                        relative == "pictures/aiclean/compressed"
-                                )
-                                    FileVisitResult.SKIP_SUBTREE
-                                else FileVisitResult.CONTINUE
-                            }
-
-                            override fun visitFile(
-                                path: Path,
-                                attrs: BasicFileAttributes,
-                            ): FileVisitResult {
-                                context.ensureActive()
-                                if (attrs.isRegularFile && !attrs.isSymbolicLink) {
-                                    val file = path.toFile()
-                                    val type = mime(file.name)
-                                    emit(
-                                        ScannedFile(
-                                            uri = Uri.fromFile(file).toString(),
-                                            name = file.name,
-                                            mime = type,
-                                            size = attrs.size(),
-                                            modifiedMillis = attrs.lastModifiedTime().toMillis(),
-                                            category = CleanupPolicy.category(file.name, type),
-                                            backend = FileBackend.DIRECT,
-                                            scope = root.toString(),
-                                            path = file.absolutePath,
-                                        ),
-                                        file.parent.orEmpty(),
-                                    )
-                                    seen++
-                                    if (seen % 50 == 0) progress(seen, null)
-                                }
-                                return FileVisitResult.CONTINUE
-                            }
-
-                            override fun visitFileFailed(
-                                file: Path,
-                                exc: IOException,
-                            ): FileVisitResult {
-                                context.ensureActive()
-                                return FileVisitResult.CONTINUE
-                            }
-                        },
-                    )
-                }
+                seen = DirectStorageScanner(::mime).scan(access.roots, includeEmptyDirectories, emit, progress)
             }
             ScanSourceKind.DOCUMENT -> {
-                val tree = Uri.parse(access.roots.single())
-                index.enqueueDirectory(scanId, DocumentsContract.getTreeDocumentId(tree))
-                while (true) {
-                    context.ensureActive()
-                    val document = index.takeDirectory(scanId) ?: break
-                    val children = DocumentsContract.buildChildDocumentsUriUsingTree(tree, document)
-                    query(
-                        children,
-                        arrayOf(
-                            DocumentsContract.Document.COLUMN_DOCUMENT_ID,
-                            DocumentsContract.Document.COLUMN_DISPLAY_NAME,
-                            DocumentsContract.Document.COLUMN_MIME_TYPE,
-                            DocumentsContract.Document.COLUMN_SIZE,
-                            DocumentsContract.Document.COLUMN_LAST_MODIFIED,
-                        ),
-                    ) { cursor ->
-                        while (cursor.moveToNext()) {
-                            context.ensureActive()
-                            val id = cursor.text(DocumentsContract.Document.COLUMN_DOCUMENT_ID)
-                            val type = cursor.text(DocumentsContract.Document.COLUMN_MIME_TYPE)
-                            if (type == DocumentsContract.Document.MIME_TYPE_DIR)
-                                index.enqueueDirectory(scanId, id)
-                            else {
-                                val name =
-                                    cursor.text(DocumentsContract.Document.COLUMN_DISPLAY_NAME)
-                                val uri = DocumentsContract.buildDocumentUriUsingTree(tree, id)
-                                emit(
-                                    ScannedFile(
-                                        uri = uri.toString(),
-                                        name = name,
-                                        mime = type.ifBlank { mime(name) },
-                                        size = cursor.long(DocumentsContract.Document.COLUMN_SIZE),
-                                        modifiedMillis =
-                                            cursor.long(
-                                                DocumentsContract.Document.COLUMN_LAST_MODIFIED
-                                            ),
-                                        category = CleanupPolicy.category(name, type),
-                                        backend = FileBackend.DOCUMENT,
-                                        scope = tree.toString(),
-                                    ),
-                                    id,
-                                )
-                                seen++
-                                if (seen % 50 == 0) progress(seen, null)
-                            }
-                        }
-                    }
-                }
+                seen = DocumentTreeScanner(app, index, ::mime).scan(
+                    Uri.parse(access.roots.single()), scanId, includeEmptyDirectories, emit, progress,
+                )
             }
             null -> throw SecurityException("Storage access required")
         }

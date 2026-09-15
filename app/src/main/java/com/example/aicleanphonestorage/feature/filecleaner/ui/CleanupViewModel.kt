@@ -13,8 +13,11 @@ import kotlinx.coroutines.flow.*
 internal sealed interface CleanupOperationState {
     data object Idle : CleanupOperationState
 
-    data class Confirm(val id: Long, val count: Int, val bytes: Long, val compress: Boolean) :
+    data class Confirm(val id: Long, val count: Int, val bytes: Long) :
         CleanupOperationState
+
+    /** 用户点击压缩即授权创建副本；等待既有广告流程结束后按冻结的操作 ID 启动。 */
+    data class CompressionReady(val id: Long) : CleanupOperationState
 
     data class Running(val id: Long, val done: Int = 0, val total: Int = 0) : CleanupOperationState
 
@@ -30,6 +33,7 @@ internal data class CleanupUiState(
     val operation: CleanupOperationState = CleanupOperationState.Idle,
     val editing: Int = 0,
     val error: Long = 0,
+    val totalsReady: Boolean = false,
 )
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -175,14 +179,14 @@ internal class CleanupViewModel(
         totalsJob =
             viewModelScope.launch(failures) {
                 val totals = repository.totals(handle, value.filter)
-                current.update { it.copy(totals = totals) }
+                current.update { it.copy(totals = totals, totalsReady = true) }
             }
     }
 
     fun prepare() {
         if (work?.isActive == true) return
         work = viewModelScope.launch(failures) {
-            // 页面恢复可能正在刷新总览；等待当前查询完成，再使用最新选择快照准备用户确认。
+            // 页面恢复可能正在刷新总览；等待当前查询完成，再冻结最新选择快照。
             while (totalsJob?.isActive == true) totalsJob?.join()
             val value = current.value
             val handle = value.handle ?: return@launch
@@ -194,9 +198,9 @@ internal class CleanupViewModel(
             val op = repository.prepare(handle, value.filter)
             current.update {
                 it.copy(
-                    operation = CleanupOperationState.Confirm(
-                        op.id, op.count, op.bytes, handle.feature == CleanupFeature.PHOTO_COMPRESS
-                    )
+                    operation = if (handle.feature == CleanupFeature.PHOTO_COMPRESS)
+                        CleanupOperationState.CompressionReady(op.id)
+                    else CleanupOperationState.Confirm(op.id, op.count, op.bytes)
                 )
             }
         }
@@ -210,7 +214,13 @@ internal class CleanupViewModel(
 
     fun confirm(id: Long) {
         val confirmation = current.value.operation as? CleanupOperationState.Confirm ?: return
-        if (confirmation.id == id) run(id, confirmation.compress)
+        if (confirmation.id == id) run(id, false)
+    }
+
+    fun startCompression(id: Long) {
+        val ready = current.value.operation as? CleanupOperationState.CompressionReady ?: return
+        // 广告重复/迟到回调不能重复压缩，也不能执行已失效的选择快照。
+        if (ready.id == id) run(id, true)
     }
 
     private fun run(id: Long, compress: Boolean) {

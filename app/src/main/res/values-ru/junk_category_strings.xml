@@ -1,0 +1,7 @@
+<resources>
+    <string name="junk_empty_folders">Пустые папки</string>
+    <string name="junk_ad_files">Рекламные файлы</string>
+    <string name="junk_temporary_files_description">Файлы с временными расширениями и файлы в доступных папках кэша. Проверьте перед удалением.</string>
+    <string name="junk_empty_folders_description">Папки без файлов, включая все вложенные папки. Размер каждой папки — 0 Б.</string>
+    <string name="junk_ad_files_description">Файлы с рекламными названиями или в папках известных рекламных SDK. Проверьте перед удалением.</string>
+</resources>

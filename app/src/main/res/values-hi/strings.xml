@@ -33,8 +33,8 @@
     <string name="cleanup_scan_failed">फ़ाइलें स्कैन नहीं की जा सकीं। कृपया पहुंच जांचें और पुनः प्रयास करें।</string>
     <string name="cleanup_action_failed">कुछ फ़ाइलें संसाधित नहीं की जा सकीं। कृपया ताज़ा करें और पुनः प्रयास करें।</string>
     <string name="cleanup_no_files">कोई मेल खाती फ़ाइलें नहीं मिलीं।</string>
-    <string name="cleanup_photo_summary">अपनी तस्वीरों को संपीड़ित करें। अनुमानित बचत:</string>
-    <string name="cleanup_estimate">स्था. %1$s बचाएं</string>
+
+
     <string name="cleanup_preview">%1$s का पूर्वावलोकन करें</string>
     <string name="cleanup_select_file">%1$s चुनें</string>
     <string name="cleanup_quality">संपीड़न गुणवत्ता</string>
@@ -56,7 +56,6 @@
     <string name="cleanup_tips">युक्तियाँ</string>
     <string name="cleanup_confirm">पुष्टि करें</string>
     <string name="cleanup_delete_confirm">चयनित फ़ाइलों को स्थायी रूप से हटाएं?\nगिनती: %1$d · आकार: %2$s</string>
-    <string name="cleanup_compress_confirm">छोटी जेपीईजी प्रतियां बनाएं? चयनित फ़ोटो: %1$d. प्रतिलिपियाँ 2048px तक सीमित हैं और कम-मेमोरी वाले उपकरणों पर छोटी हो सकती हैं। मूल रखे गए हैं. पारदर्शी क्षेत्र सफेद हो जाते हैं।</string>
     <string name="cleanup_working">प्रसंस्करण %1$d / %2$d</string>
     <string name="cleanup_result">हटाया गया: %1$d\nछोटी प्रतियाँ: %2$d\nअपरिवर्तित या रद्द: %3$d\nविफल: %4$d</string>
     <string name="cleanup_remove_originals">मूल फ़ोटो हटाएं</string>
@@ -235,7 +234,7 @@
     <string name="traffic_title">नेटवर्क ट्रैफ़िक</string>
     <string name="traffic_back">वापस</string>
     <string name="traffic_this_month">इस महीने</string>
-    <string name="traffic_last_month">पिछला महीना</string>
+    <string name="traffic_this_week">इस सप्ताह</string>
     <string name="traffic_24_hours">24 घंटे</string>
     <string name="traffic_mobile">मोबाइल डेटा</string>
     <string name="traffic_wifi">वाई-फाई</string>

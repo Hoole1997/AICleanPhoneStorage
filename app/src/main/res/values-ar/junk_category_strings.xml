@@ -1,0 +1,7 @@
+<resources>
+    <string name="junk_empty_folders">مجلدات فارغة</string>
+    <string name="junk_ad_files">ملفات الإعلانات</string>
+    <string name="junk_temporary_files_description">ملفات بامتدادات مؤقتة وملفات في مجلدات ذاكرة التخزين المؤقت المتاحة. راجعها قبل الحذف.</string>
+    <string name="junk_empty_folders_description">مجلدات لا تحتوي هي أو مجلداتها الفرعية على ملفات. يُحسب كل مجلد بحجم 0 بايت.</string>
+    <string name="junk_ad_files_description">ملفات بأسماء مرتبطة بالإعلانات أو في مجلدات حزم إعلانات معروفة. راجعها قبل الحذف.</string>
+</resources>

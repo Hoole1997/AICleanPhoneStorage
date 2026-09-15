@@ -140,13 +140,11 @@ class JunkCleaningActivity : AppCompatActivity() {
             binding.junkClean.isEnabled = enabled && snapshot.categories.any { it.selected > 0 }
             binding.junkScope.text =
                 getString(
-                    R.string.junk_scope,
+                    R.string.junk_storage_scope,
                     scanScopeText(snapshot.handle?.scopeLabel.orEmpty()),
-                    snapshot.handle?.analysisSkipped ?: 0,
                 )
             binding.junkScope.isVisible =
-                snapshot.handle?.scopeLabel == "Selected folder" ||
-                    (snapshot.handle?.analysisSkipped ?: 0) > 0
+                snapshot.handle?.scopeLabel == "Selected folder"
         }
         if(empty && binding.junkScope.isVisible)binding.junkFooter.isVisible=true
         operations.render(work.operation)

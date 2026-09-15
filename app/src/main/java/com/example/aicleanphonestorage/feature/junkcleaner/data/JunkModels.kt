@@ -8,11 +8,15 @@ internal enum class JunkKind(val photos: Boolean = false) {
     TEMPORARY,
     OLD_LOGS,
     EMPTY_FILES,
+    EMPTY_FOLDERS,
+    AD_FILES,
     DUPLICATES(true),
     SIMILAR(true),
     REVIEW_QUALITY(true);
 
     companion object {
+        // 旧分类/照片分析继续保留；入口、摘要、默认选择共用这份可见分类定义。
+        val visible = listOf(INSTALLERS, TEMPORARY, EMPTY_FOLDERS, AD_FILES)
         fun from(value: String?) = entries.firstOrNull { it.name == value }
     }
 }
@@ -24,28 +28,42 @@ internal data class JunkCategorySummary(
     val selected: Int = 0,
 )
 
-/** 文件名只是候选依据，不声称 .tmp/.log 一定无用；最近写入的临时数据一律跳过。 */
+/** 分类只产生候选；只处理公开共享存储或用户授权目录，不能访问其他应用私有缓存。 */
 internal object JunkRules {
-    private const val DAY = 86_400_000L
+    private val temporaryExtensions = setOf("tmp", "temp", "log", "part", "crdownload")
+    private val adTokens = setOf("ad", "ads", "advert", "advertisement", "advertising")
+    private val adSdkTokens = setOf(
+        "admob", "applovin", "vungle", "pangle", "bytedanceads", "unityads", "ironsource",
+        "mbridge", "mintegral", "chartboost", "inmobi", "tapjoy", "adcolony", "baiduads",
+        "gdtads", "ttad", "ttads", "tt_ad", "com.google.android.gms.ads",
+    )
+    private val tokenSeparator = Regex("[^a-z0-9]+")
+    private val camelBoundary = Regex("([a-z0-9])([A-Z])")
 
-    fun classify(file: ScannedFile, now: Long): JunkKind? {
-        val old7 = file.modifiedMillis > 0 && file.modifiedMillis <= now - 7 * DAY
+    @Suppress("UNUSED_PARAMETER") // 新规则不再按文件年龄过滤，保留旧调用签名。
+    fun classify(file: ScannedFile, now: Long, folder: String = file.path.substringBeforeLast('/', "")): JunkKind? {
+        if (file.isDirectory) return JunkKind.EMPTY_FOLDERS // 仅由确认整棵子树无文件的扫描器发出。
         val extension = file.name.substringAfterLast('.', "").lowercase(Locale.ROOT)
         return when {
-            file.size == 0L && old7 -> JunkKind.EMPTY_FILES
-            file.category == FileCategory.APK && file.size > 0 -> JunkKind.INSTALLERS
-            extension in setOf("tmp", "temp", "part", "crdownload") && old7 -> JunkKind.TEMPORARY
-            extension == "log" &&
-                file.modifiedMillis > 0 &&
-                file.modifiedMillis <= now - 30 * DAY -> JunkKind.OLD_LOGS
+            extension == "apk" -> JunkKind.INSTALLERS
+            hasAdMarker("$folder/${file.name}") -> JunkKind.AD_FILES
+            extension in temporaryExtensions || pathTokens(folder).any { it == "cache" || it == "caches" } -> JunkKind.TEMPORARY
             else -> null
         }
     }
 
+    private fun pathTokens(path: String): List<String> =
+        camelBoundary.replace(path, "$1/$2").lowercase(Locale.ROOT).split(tokenSeparator)
+
+    internal fun hasAdMarker(path: String): Boolean {
+        val segments = path.lowercase(Locale.ROOT).split('/')
+        return pathTokens(path).any { it in adTokens || it in adSdkTokens } ||
+            segments.any { segment -> adSdkTokens.any { sdk -> segment == sdk || segment.startsWith("$sdk.") || segment.startsWith(".$sdk") } }
+    }
+
     fun include(file: ScannedFile, folder: String, now: Long): Boolean {
         if (folder.contains("/AIClean/Compressed", ignoreCase = true)) return false
-        return classify(file, now) != null ||
-            (file.size > 0 && file.category == FileCategory.PHOTOS)
+        return classify(file, now, folder) != null
     }
 }
 

@@ -1,0 +1,7 @@
+<resources>
+    <string name="junk_empty_folders">빈 폴더</string>
+    <string name="junk_ad_files">광고 파일</string>
+    <string name="junk_temporary_files_description">임시 확장자 파일과 접근 가능한 cache 폴더의 파일입니다. 삭제 전에 확인하세요.</string>
+    <string name="junk_empty_folders_description">하위 폴더를 포함해 파일이 없는 폴더입니다. 각 폴더는 0 B로 계산합니다.</string>
+    <string name="junk_ad_files_description">광고 관련 이름 또는 알려진 광고 SDK 폴더와 일치하는 파일입니다. 삭제 전에 확인하세요.</string>
+</resources>

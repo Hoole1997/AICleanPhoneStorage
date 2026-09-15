@@ -1,0 +1,6 @@
+<resources>
+    <plurals name="cleanup_screenshot_summary">
+        <item quantity="other">スクリーンショット %1$s 枚 · %2$s</item>
+    </plurals>
+    <string name="cleanup_screenshot_clean">ファイルをクリーンアップする（%1$s）</string>
+</resources>

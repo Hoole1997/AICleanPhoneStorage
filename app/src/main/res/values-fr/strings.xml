@@ -33,8 +33,8 @@
     <string name="cleanup_scan_failed">Impossible d\'analyser les fichiers. Veuillez vérifier l\'accès et réessayer.</string>
     <string name="cleanup_action_failed">Certains fichiers n\'ont pas pu être traités. Veuillez actualiser et réessayer.</string>
     <string name="cleanup_no_files">Aucun fichier correspondant trouvé.</string>
-    <string name="cleanup_photo_summary">Compressez vos photos. Économie estimée :</string>
-    <string name="cleanup_estimate">Est. économisez %1$s</string>
+
+
     <string name="cleanup_preview">Aperçu %1$s</string>
     <string name="cleanup_select_file">Sélectionnez %1$s</string>
     <string name="cleanup_quality">Qualité de compression</string>
@@ -56,7 +56,6 @@
     <string name="cleanup_tips">Conseils</string>
     <string name="cleanup_confirm">Confirmer</string>
     <string name="cleanup_delete_confirm">Supprimer définitivement les fichiers sélectionnés ?\nNombre : %1$d · Taille : %2$s</string>
-    <string name="cleanup_compress_confirm">Créer des copies JPEG plus petites ? Photos sélectionnées : %1$d. Les copies sont limitées à 2 048 px et peuvent être plus petites sur les appareils à faible mémoire. Les originaux sont conservés. Les zones transparentes deviennent blanches.</string>
     <string name="cleanup_working">Traitement de %1$d / %2$d</string>
     <string name="cleanup_result">Supprimé : %1$d\nCopies plus petites : %2$d\nInchangé ou annulé : %3$d\nÉchec : %4$d</string>
     <string name="cleanup_remove_originals">Supprimer les photos originales</string>
@@ -243,7 +242,7 @@
     <string name="traffic_title">Trafic réseau</string>
     <string name="traffic_back">Retour</string>
     <string name="traffic_this_month">Ce mois-ci</string>
-    <string name="traffic_last_month">Le mois dernier</string>
+    <string name="traffic_this_week">Cette semaine</string>
     <string name="traffic_24_hours">24 heures</string>
     <string name="traffic_mobile">Données mobiles</string>
     <string name="traffic_wifi">Wi-Fi</string>

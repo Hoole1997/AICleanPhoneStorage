@@ -1,0 +1,7 @@
+<resources>
+    <string name="junk_empty_folders">Leere Ordner</string>
+    <string name="junk_ad_files">Werbedateien</string>
+    <string name="junk_temporary_files_description">Dateien mit temporären Endungen und Dateien in zugänglichen Cache-Ordnern. Vor dem Löschen prüfen.</string>
+    <string name="junk_empty_folders_description">Ordner, die auch in Unterordnern keine Dateien enthalten. Jeder Ordner zählt als 0 B.</string>
+    <string name="junk_ad_files_description">Dateien mit werbebezogenen Namen oder in bekannten Werbe-SDK-Ordnern. Vor dem Löschen prüfen.</string>
+</resources>

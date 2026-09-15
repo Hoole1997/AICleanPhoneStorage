@@ -85,9 +85,11 @@ class JunkCleanerDeviceTest {
         return file
     }
 
-    private fun scan(files: List<ScannedFile>): ScanHandle {
+    private suspend fun scan(files: List<ScannedFile>): ScanHandle {
         val id = index.start(CleanupFeature.SMART_CLEAN)
         index.insert(id, files)
+        // 与生产扫描顺序一致：先完成照片分类和参考图保护，再发布默认选择。
+        JunkPhotoAnalyzer(context, JunkIndex(index)).analyze(id) {}
         return ScanHandle(id, CleanupFeature.SMART_CLEAN, files.size, "Test fixtures")
             .also(index::finishScan)
     }
@@ -102,12 +104,12 @@ class JunkCleanerDeviceTest {
             original.copyTo(copy)
             original.setLastModified(System.currentTimeMillis() - 10_000)
             handle = scan(listOf(row(original, root), row(copy, root)))
-            JunkPhotoAnalyzer(context, JunkIndex(index)).analyze(handle.id) {}
             val filter = CleanupFilter(bucket = JunkKind.DUPLICATES.name)
             val rows = index.page(handle, filter, 0, 60)
             assertEquals(2, rows.size)
             assertEquals(1, rows.count { it.retained })
             val keeper = rows.single { it.retained }
+            assertFalse(rows.single { !it.retained }.selected)
             index.selectAll(handle, filter, true)
             index.select(keeper.id, true)
             assertFalse(index.get(keeper.id)!!.selected)
@@ -138,7 +140,6 @@ class JunkCleanerDeviceTest {
             val b = File(root, "b.png")
             a.copyTo(b)
             handle = scan(listOf(row(a, root), row(b, root)))
-            JunkPhotoAnalyzer(context, JunkIndex(index)).analyze(handle.id) {}
             val filter = CleanupFilter(bucket = JunkKind.DUPLICATES.name)
             val rows = index.page(handle, filter, 0, 60)
             val candidate = rows.single { !it.retained }
@@ -164,7 +165,6 @@ class JunkCleanerDeviceTest {
             small.setLastModified(System.currentTimeMillis() - 20_000)
             val big = picture(root, "big.jpg", 1600, 1200, 95)
             handle = scan(listOf(row(small, root), row(big, root)))
-            JunkPhotoAnalyzer(context, JunkIndex(index)).analyze(handle.id) {}
             val rows = index.page(handle, CleanupFilter(bucket = JunkKind.SIMILAR.name), 0, 60)
             assertEquals(2, rows.size)
             assertEquals(big.canonicalPath, rows.single { it.retained }.path)
@@ -184,7 +184,6 @@ class JunkCleanerDeviceTest {
             val b = File(root, "b.png")
             a.copyTo(b)
             handle = scan(listOf(row(a, root), row(b, root)))
-            JunkPhotoAnalyzer(context, JunkIndex(index)).analyze(handle.id) {}
             val filter = CleanupFilter(bucket = JunkKind.DUPLICATES.name)
             val rows = index.page(handle, filter, 0, 60)
             val keeper = rows.single { it.retained }
@@ -232,7 +231,7 @@ class JunkCleanerDeviceTest {
         }
         try {
             ScanIndex(isolated).use { database ->
-                assertEquals(3, database.readableDatabase.version)
+                assertEquals(4, database.readableDatabase.version)
                 assertEquals(CleanupFeature.LARGE_FILES, database.handle(1)!!.feature)
                 val restored = database.get(1)!!
                 assertTrue(restored.selected)
@@ -249,6 +248,7 @@ class JunkCleanerDeviceTest {
         for ((widthDp, heightDp, scale) in
             listOf(Triple(375, 812, 1f), Triple(320, 640, 2f), Triple(640, 320, 1f))) {
             var output: Bitmap? = null
+            var selectedOutput: Bitmap? = null
             instrumentation.runOnMainSync {
                 val configuration =
                     Configuration(context.resources.configuration).apply { fontScale = scale }
@@ -263,7 +263,7 @@ class JunkCleanerDeviceTest {
                 binding.junkCategories.adapter = adapter
                 val categories =
                     JunkKind.entries.mapIndexed { i, kind ->
-                        JunkCategorySummary(kind, 20, 40_000_000L * (i + 1), if (i == 1) 20 else 0)
+                        JunkCategorySummary(kind, 20, if (kind == JunkKind.EMPTY_FOLDERS) 0 else 40_000_000L * (i + 1), 20)
                     }
                 adapter.submit(
                     JunkSnapshot(
@@ -290,14 +290,33 @@ class JunkCleanerDeviceTest {
                     kotlin.math.abs(bytes.top + bytes.baseline - unit.top - unit.baseline) <= 1,
                 )
                 assertTrue(bytes.height >= bytes.layout.height)
-                assertTrue(binding.junkCategories.canScrollVertically(1))
+                if (scale > 1f || heightDp < widthDp) assertTrue(binding.junkCategories.canScrollVertically(1))
+                assertEquals(6, adapter.itemCount) // 头部、分区、四个可见分类；照片分类保留代码但隐藏。
                 output =
                     Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).also {
                         binding.root.draw(Canvas(it))
                     }
+                // 大字体/横屏首屏可能只有头部，先将分类滚入可见区域再检查真实复用行。
+                (binding.junkCategories.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(2, 0)
+                binding.root.measure(
+                    View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+                    View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY),
+                )
+                binding.root.layout(0, 0, width, height)
+                val category = binding.junkCategories.findViewHolderForAdapterPosition(2)!!
+                assertTrue(category.itemView.findViewById<View>(R.id.junk_category_check).isSelected)
+                selectedOutput = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).also {
+                    binding.root.draw(Canvas(it))
+                }
             }
             val folder =
                 File(context.getExternalFilesDir(null), "junk-layout-tests").apply { mkdirs() }
+            selectedOutput!!.let { image ->
+                File(folder, "selected_${widthDp}_${heightDp}_${scale}.png").outputStream().use {
+                    image.compress(Bitmap.CompressFormat.PNG, 100, it)
+                }
+                image.recycle()
+            }
             output!!.let { image ->
                 File(folder, "overview_${widthDp}_${heightDp}_${scale}.png").outputStream().use {
                     image.compress(Bitmap.CompressFormat.PNG, 100, it)

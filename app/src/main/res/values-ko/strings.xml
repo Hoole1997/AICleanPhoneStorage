@@ -33,8 +33,8 @@
     <string name="cleanup_scan_failed">파일을 검색할 수 없습니다. 액세스 권한을 확인하고 다시 시도해 주세요.</string>
     <string name="cleanup_action_failed">일부 파일을 처리할 수 없습니다. 새로고침한 후 다시 시도해 주세요.</string>
     <string name="cleanup_no_files">일치하는 파일을 찾을 수 없습니다.</string>
-    <string name="cleanup_photo_summary">사진을 압축하세요. 예상 절감액:</string>
-    <string name="cleanup_estimate">추정. %1$s 저장</string>
+
+
     <string name="cleanup_preview">%1$s 미리보기</string>
     <string name="cleanup_select_file">%1$s 선택</string>
     <string name="cleanup_quality">압축 품질</string>
@@ -56,7 +56,6 @@
     <string name="cleanup_tips">팁</string>
     <string name="cleanup_confirm">확인</string>
     <string name="cleanup_delete_confirm">선택한 파일을 영구적으로 삭제하시겠습니까?\n개수: %1$d · 크기: %2$s</string>
-    <string name="cleanup_compress_confirm">더 작은 JPEG 복사본을 만드시겠습니까? 선택한 사진: %1$d. 복사본은 2048px로 제한되며 메모리가 부족한 장치에서는 더 작을 수 있습니다. 원본은 보관됩니다. 투명한 부분은 흰색이 됩니다.</string>
     <string name="cleanup_working">%1$d / %2$d 처리 중</string>
     <string name="cleanup_result">삭제됨: %1$d\n더 작은 사본: %2$d\n변경되지 않았거나 취소됨: %3$d\n실패: %4$d</string>
     <string name="cleanup_remove_originals">원본 사진 삭제</string>
@@ -227,7 +226,7 @@
     <string name="traffic_title">네트워크 트래픽</string>
     <string name="traffic_back">뒤로</string>
     <string name="traffic_this_month">이번 달</string>
-    <string name="traffic_last_month">지난달</string>
+    <string name="traffic_this_week">이번 주</string>
     <string name="traffic_24_hours">24시간</string>
     <string name="traffic_mobile">모바일 데이터</string>
     <string name="traffic_wifi">Wi-Fi</string>

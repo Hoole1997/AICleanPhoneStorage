@@ -2,8 +2,8 @@
 <string name="traffic_title">Network Traffic</string>
 <string name="traffic_back">Back</string>
 <string name="traffic_this_month">This Month</string>
-<string name="traffic_last_month">Last Month</string>
-<string name="traffic_24_hours">24 Hours</string>
+<string name="traffic_this_week">This Week</string>
+<string name="traffic_24_hours">Last 24 Hours</string>
 <string name="traffic_mobile">Mobile</string>
 <string name="traffic_wifi">Wi-Fi</string>
 <string name="traffic_apps">Apps</string>

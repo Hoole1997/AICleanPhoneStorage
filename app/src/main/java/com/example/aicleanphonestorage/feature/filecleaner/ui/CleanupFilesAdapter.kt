@@ -149,7 +149,9 @@ internal class CleanupFilesAdapter(
             binding.root.setOnClickListener {
                 row?.let { if (it.retained) preview(it) else toggle(it.id, !it.selected) }
             }
-            binding.fileIcon.setOnClickListener { row?.let(preview) }
+            binding.fileIcon.setOnClickListener {
+                row?.let { if (it.isDirectory) toggle(it.id, !it.selected) else preview(it) }
+            }
         }
 
         override fun bindText(file: ScannedFile) {
@@ -182,14 +184,10 @@ internal class CleanupFilesAdapter(
             binding.photoKeep.isVisible = file.retained
             binding.photoExpand.contentDescription =
                 context.getString(R.string.cleanup_preview, file.name)
-            binding.photoSaving.text =
-                context.getString(
-                    R.string.cleanup_estimate,
-                    Formatter.formatShortFileSize(
-                        context,
-                        CleanupPolicy.estimatedSaving(file.size, file.quality),
-                    ),
-                )
+            // 徽标说明实际编码质量；质量 75 不代表体积减少 25%。
+            binding.photoSaving.text = QualityOption.entries.firstOrNull { it.value == file.quality }
+                ?.let { context.getString(it.title) }
+                ?: (context.getString(R.string.cleanup_quality) + " " + file.quality)
             binding.photoSavingAction.contentDescription =
                 context.getString(R.string.cleanup_quality) + ", " + file.name + ", " + file.quality
         }

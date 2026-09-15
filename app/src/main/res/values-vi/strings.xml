@@ -33,8 +33,8 @@
     <string name="cleanup_scan_failed">Không thể quét tập tin. Vui lòng kiểm tra quyền truy cập và thử lại.</string>
     <string name="cleanup_action_failed">Không thể xử lý một số tệp. Vui lòng làm mới và thử lại.</string>
     <string name="cleanup_no_files">Không tìm thấy tập tin phù hợp.</string>
-    <string name="cleanup_photo_summary">Nén ảnh của bạn. Tiết kiệm ước tính:</string>
-    <string name="cleanup_estimate">Ước tính. tiết kiệm %1$s</string>
+
+
     <string name="cleanup_preview">Xem trước %1$s</string>
     <string name="cleanup_select_file">Chọn %1$s</string>
     <string name="cleanup_quality">Chất lượng nén</string>
@@ -56,7 +56,6 @@
     <string name="cleanup_tips">Lời khuyên</string>
     <string name="cleanup_confirm">Xác nhận</string>
     <string name="cleanup_delete_confirm">Xóa vĩnh viễn các tập tin đã chọn?\nĐếm: %1$d · Kích thước: %2$s</string>
-    <string name="cleanup_compress_confirm">Tạo bản sao JPEG nhỏ hơn? Ảnh đã chọn: %1$d. Bản sao được giới hạn ở 2048px và có thể nhỏ hơn trên các thiết bị có bộ nhớ thấp. Bản gốc được lưu giữ. Các vùng trong suốt trở nên trắng.</string>
     <string name="cleanup_working">Đang xử lý %1$d / %2$d</string>
     <string name="cleanup_result">Đã xóa: %1$d\nBản sao nhỏ hơn: %2$d\nKhông thay đổi hoặc bị hủy: %3$d\nKhông thành công: %4$d</string>
     <string name="cleanup_remove_originals">Xóa ảnh gốc</string>
@@ -227,7 +226,7 @@
     <string name="traffic_title">Lưu lượng mạng</string>
     <string name="traffic_back">Trở lại</string>
     <string name="traffic_this_month">Tháng Này</string>
-    <string name="traffic_last_month">Tháng trước</string>
+    <string name="traffic_this_week">Tuần này</string>
     <string name="traffic_24_hours">24 giờ</string>
     <string name="traffic_mobile">Dữ liệu di động</string>
     <string name="traffic_wifi">Wi-Fi</string>

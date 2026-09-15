@@ -1,0 +1,7 @@
+<resources>
+    <string name="junk_empty_folders">খালি ফোল্ডার</string>
+    <string name="junk_ad_files">বিজ্ঞাপনের ফাইল</string>
+    <string name="junk_temporary_files_description">অস্থায়ী এক্সটেনশনের ফাইল ও অ্যাক্সেসযোগ্য cache ফোল্ডারের ফাইল। মুছে ফেলার আগে দেখুন।</string>
+    <string name="junk_empty_folders_description">নিজে বা সাবফোল্ডারে কোনো ফাইল নেই এমন ফোল্ডার। প্রতিটির আকার 0 B।</string>
+    <string name="junk_ad_files_description">বিজ্ঞাপন-সম্পর্কিত নাম বা পরিচিত বিজ্ঞাপন SDK ফোল্ডারের ফাইল। মুছে ফেলার আগে দেখুন।</string>
+</resources>

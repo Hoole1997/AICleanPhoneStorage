@@ -96,9 +96,9 @@ internal class TrafficListAdapter(
 
     private inner class HeaderHolder(private val binding: ItemTrafficHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
-            listOf(binding.periodMonth, binding.periodPrevious, binding.periodDay).forEach { it.isCheckable = true }
+            listOf(binding.periodMonth, binding.periodWeek, binding.periodDay).forEach { it.isCheckable = true }
             binding.periodMonth.setOnClickListener { onPeriod(TrafficPeriod.THIS_MONTH) }
-            binding.periodPrevious.setOnClickListener { onPeriod(TrafficPeriod.LAST_MONTH) }
+            binding.periodWeek.setOnClickListener { onPeriod(TrafficPeriod.THIS_WEEK) }
             binding.periodDay.setOnClickListener { onPeriod(TrafficPeriod.LAST_24_HOURS) }
             binding.mobileTotal.totalIcon.setImageResource(R.drawable.ic_traffic_mobile)
             binding.mobileTotal.totalLabel.setText(R.string.traffic_mobile)
@@ -109,7 +109,7 @@ internal class TrafficListAdapter(
         fun bind(row: TrafficRow.Header, fields: Int) = with(binding) {
             if (fields and TrafficRowDiff.PERIOD != 0) periodGroup.check(when (row.period) {
                 TrafficPeriod.THIS_MONTH -> R.id.period_month
-                TrafficPeriod.LAST_MONTH -> R.id.period_previous
+                TrafficPeriod.THIS_WEEK -> R.id.period_week
                 TrafficPeriod.LAST_24_HOURS -> R.id.period_day
             })
             if (fields and TrafficRowDiff.MOBILE != 0) {

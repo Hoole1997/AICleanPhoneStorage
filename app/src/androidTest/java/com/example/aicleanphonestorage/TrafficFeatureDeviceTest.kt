@@ -29,6 +29,46 @@ import org.junit.runner.RunWith
 class TrafficFeatureDeviceTest {
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
 
+    @Test fun periodLabelsFollowAppLanguageAndFitLargeFonts() {
+        val expected = mapOf(
+            "zh-Hans" to listOf("本月", "本周", "近 24 小时"),
+            "en" to listOf("This Month", "This Week", "Last 24 Hours"),
+        )
+        for ((language, labels) in expected) for (scale in listOf(1f, 2f)) {
+            instrumentation.runOnMainSync {
+                val context = instrumentation.targetContext
+                val config = android.content.res.Configuration(context.resources.configuration).apply {
+                    setLocale(java.util.Locale.forLanguageTag(language))
+                    fontScale = scale
+                }
+                val themed = androidx.appcompat.view.ContextThemeWrapper(context.createConfigurationContext(config), R.style.Theme_AICleanPhoneStorage)
+                val binding = com.example.aicleanphonestorage.databinding.ItemTrafficHeaderBinding.inflate(android.view.LayoutInflater.from(themed))
+                val chips = listOf(binding.periodMonth, binding.periodWeek, binding.periodDay)
+                assertEquals(labels, chips.map { it.text.toString() })
+                binding.periodGroup.check(R.id.period_week)
+                val width = (320 * themed.resources.displayMetrics.density).toInt()
+                binding.root.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+                binding.root.layout(0, 0, width, binding.root.measuredHeight)
+                for (chip in chips) {
+                    assertTrue(chip.right <= width)
+                    assertTrue(chip.height >= chip.layout.height)
+                    assertEquals(0, chip.layout.getEllipsisCount(0))
+                }
+                // 只截顶部真实布局，使用显式语言配置，不改设备或应用的语言设置。
+                val image = android.graphics.Bitmap.createBitmap(width, binding.periodGroup.bottom, android.graphics.Bitmap.Config.ARGB_8888)
+                try {
+                    val canvas = android.graphics.Canvas(image)
+                    canvas.drawColor(android.graphics.Color.WHITE)
+                    binding.root.draw(canvas)
+                    val folder = java.io.File(context.getExternalFilesDir(null), "traffic-period-tests").apply { mkdirs() }
+                    java.io.File(folder, "period_${language}_$scale.png").outputStream().use {
+                        image.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it)
+                    }
+                } finally { image.recycle() }
+            }
+        }
+    }
+
     @Test fun homeShowsLoadingBeforeDestinationAndDatesNeverOpenDialog() {
         assumeTrue(UsageAccessChecker(ApplicationProvider.getApplicationContext()).isGranted())
         var destination: NetworkTrafficActivity? = null
@@ -39,7 +79,7 @@ class TrafficFeatureDeviceTest {
                 home.onActivity { assertNotNull(it.supportFragmentManager.findFragmentByTag(TaskLoadingDialogFragment.TAG)) }
                 assertNull(resumedTraffic())
                 waitUntil { resumedTraffic()?.also { destination = it } != null }
-                onView(withId(R.id.period_previous)).perform(click())
+                onView(withId(R.id.period_week)).perform(click())
                 repeat(20) {
                     instrumentation.runOnMainSync { assertNull(destination!!.supportFragmentManager.findFragmentByTag(TaskLoadingDialogFragment.TAG)) }
                     SystemClock.sleep(50) // instrumentation 线程，不阻塞应用主线程。
@@ -49,7 +89,7 @@ class TrafficFeatureDeviceTest {
                     instrumentation.runOnMainSync { done = destination!!.findViewById<View>(R.id.traffic_refresh_indicator).visibility != View.VISIBLE }
                     done
                 }
-                onView(withId(R.id.period_previous)).check(matches(isChecked()))
+                onView(withId(R.id.period_week)).check(matches(isChecked()))
             } finally { instrumentation.runOnMainSync { destination?.finish() } }
         }
     }

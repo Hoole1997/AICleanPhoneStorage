@@ -1,0 +1,8 @@
+<resources>
+    <string name="junk_empty_folders">Empty Folders</string>
+    <string name="junk_ad_files">Ad Files</string>
+    <string name="junk_temporary_files_description">Files with temporary extensions and files in accessible cache directories. Review before deleting.</string>
+    <string name="junk_empty_folders_description">Folders whose entire subtree contains no files. Each folder counts as 0 B.</string>
+    <string name="junk_ad_files_description">Files matching ad-related names or known advertising SDK directories. Review before deleting.</string>
+    <string name="junk_storage_scope" translatable="false">%1$s</string>
+</resources>

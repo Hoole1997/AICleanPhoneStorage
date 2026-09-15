@@ -1,20 +1,32 @@
 package com.example.aicleanphonestorage.feature.networktraffic.data
 
 import java.time.Clock
+import java.time.DayOfWeek
+import java.time.temporal.TemporalAdjusters
 import java.time.Duration
 import java.time.ZoneId
 
-enum class TrafficPeriod { THIS_MONTH, LAST_MONTH, LAST_24_HOURS }
+enum class TrafficPeriod {
+    THIS_MONTH, THIS_WEEK, LAST_24_HOURS;
+
+    companion object {
+        fun fromSavedValue(value: String?): TrafficPeriod =
+            // 旧版本第二项保存为 LAST_MONTH，升级后映射到本周，不恢复已经移除的上月查询。
+            if (value == "LAST_MONTH") THIS_WEEK else entries.firstOrNull { it.name == value } ?: THIS_MONTH
+    }
+}
 data class TrafficWindow(val startMillis: Long, val endMillis: Long)
 
-/** 一次请求只读取一次 now，自然月遵守时区，最近24小时使用真实时长（跨夏令时也正确）。 */
+/** 一次请求只读取一次 now，自然月/周一开始的自然周遵守时区，最近24小时使用真实时长（跨夏令时也正确）。 */
 class TrafficPeriodResolver(private val clock: Clock = Clock.systemDefaultZone(), private val zone: ZoneId = clock.zone) {
     fun resolve(period: TrafficPeriod): TrafficWindow {
         val now = clock.instant()
-        val month = now.atZone(zone).withDayOfMonth(1).toLocalDate().atStartOfDay(zone)
+        val today = now.atZone(zone).toLocalDate()
+        val month = today.withDayOfMonth(1).atStartOfDay(zone)
+        val week = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).atStartOfDay(zone)
         return when (period) {
             TrafficPeriod.THIS_MONTH -> TrafficWindow(month.toInstant().toEpochMilli(), now.toEpochMilli())
-            TrafficPeriod.LAST_MONTH -> TrafficWindow(month.minusMonths(1).toInstant().toEpochMilli(), month.toInstant().toEpochMilli())
+            TrafficPeriod.THIS_WEEK -> TrafficWindow(week.toInstant().toEpochMilli(), now.toEpochMilli())
             TrafficPeriod.LAST_24_HOURS -> TrafficWindow(now.minus(Duration.ofHours(24)).toEpochMilli(), now.toEpochMilli())
         }
     }

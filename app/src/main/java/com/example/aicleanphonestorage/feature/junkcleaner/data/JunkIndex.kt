@@ -91,6 +91,11 @@ internal class JunkIndex(private val index: ScanIndex) {
         return JunkKind.entries.map { values[it.name] ?: JunkCategorySummary(it) }
     }
 
+    fun visibleCategories(scan: Long): List<JunkCategorySummary> {
+        val all = categories(scan).associateBy { it.kind }
+        return JunkKind.visible.map { all.getValue(it) }
+    }
+
     fun latest(): Pair<ScanHandle, Long>? =
         db.rawQuery(
                 "SELECT id,created FROM scans WHERE feature='SMART_CLEAN' AND ready=1 ORDER BY id DESC LIMIT 1",

@@ -24,7 +24,7 @@ internal class JunkSummaryRepository(
 
     fun snapshots(scan: Long) =
         index.changes.mapLatest {
-            executor.io { JunkSnapshot(index.handle(scan), groups.categories(scan), storage()) }
+            executor.io { JunkSnapshot(index.handle(scan), groups.visibleCategories(scan), storage()) }
         }
 
     override fun observeOverview() =
@@ -34,7 +34,7 @@ internal class JunkSummaryRepository(
                 HomeOverview(
                     storage(),
                     latest?.let { (handle, time) ->
-                        ScanSummary.Completed(groups.categories(handle.id).sumOf { it.bytes }, time)
+                        ScanSummary.Completed(groups.visibleCategories(handle.id).sumOf { it.bytes }, time)
                     } ?: ScanSummary.NotScanned,
                 )
             }

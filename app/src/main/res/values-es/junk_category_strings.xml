@@ -1,0 +1,7 @@
+<resources>
+    <string name="junk_empty_folders">Carpetas vacías</string>
+    <string name="junk_ad_files">Archivos publicitarios</string>
+    <string name="junk_temporary_files_description">Archivos con extensiones temporales y archivos en carpetas de caché accesibles. Revisa antes de eliminar.</string>
+    <string name="junk_empty_folders_description">Carpetas sin archivos en ellas ni en sus subcarpetas. Cada carpeta cuenta como 0 B.</string>
+    <string name="junk_ad_files_description">Archivos con nombres publicitarios o en carpetas de SDK publicitarios conocidos. Revisa antes de eliminar.</string>
+</resources>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="junk_empty_folders">خالی فولڈرز</string>
+    <string name="junk_ad_files">اشتہاری فائلیں</string>
+    <string name="junk_temporary_files_description">عارضی ایکسٹینشن والی فائلیں اور قابل رسائی cache فولڈرز کی فائلیں۔ حذف کرنے سے پہلے دیکھیں۔</string>
+    <string name="junk_empty_folders_description">ایسے فولڈرز جن میں یا ان کے ذیلی فولڈرز میں کوئی فائل نہیں۔ ہر فولڈر 0 B شمار ہوتا ہے۔</string>
+    <string name="junk_ad_files_description">اشتہاری ناموں یا معروف اشتہاری SDK فولڈرز سے متعلق فائلیں۔ حذف کرنے سے پہلے دیکھیں۔</string>
+</resources>

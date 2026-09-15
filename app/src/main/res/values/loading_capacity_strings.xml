@@ -1,0 +1,4 @@
+<resources>
+    <!-- 国际通用容量单位；数字按当前应用语言格式化。 -->
+    <string name="task_loading_megabytes" translatable="false">%1$s MB</string>
+</resources>

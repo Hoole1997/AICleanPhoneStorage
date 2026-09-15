@@ -27,35 +27,42 @@ class JunkRulesTest {
         )
 
     @Test
-    fun recentTemporaryFilesAndUnknownDatesAreExcluded() {
-        assertNull(JunkRules.classify(file("inprogress.crdownload", age = 6), now))
-        assertEquals(JunkKind.TEMPORARY, JunkRules.classify(file("orphan.TMP", age = 7), now))
-        assertNull(JunkRules.classify(file("unknown.tmp").copy(modifiedMillis = 0), now))
+    fun temporaryExtensionsAndCacheDirectoriesDoNotRequireAnAgeThreshold() {
+        for (name in listOf("active.tmp", "unknown.TEMP", "recent.log", "partial.part", "download.crdownload")) {
+            assertEquals(JunkKind.TEMPORARY, JunkRules.classify(file(name).copy(modifiedMillis = 0), now))
+        }
+        assertEquals(JunkKind.TEMPORARY, JunkRules.classify(file("blob.bin"), now, "/shared/app/cache"))
+        assertEquals(JunkKind.TEMPORARY, JunkRules.classify(file("blob.bin"), now, "/shared/app/Cache/images"))
+        assertNull(JunkRules.classify(file("cache.json"), now, "/shared/Download"))
     }
 
     @Test
-    fun emptyFilesAndLogsHaveIndependentAgeThresholds() {
-        assertEquals(
-            JunkKind.EMPTY_FILES,
-            JunkRules.classify(file("empty", size = 0, age = 7), now),
-        )
-        assertNull(JunkRules.classify(file("recent.log", age = 29), now))
-        assertEquals(JunkKind.OLD_LOGS, JunkRules.classify(file("old.log", age = 30), now))
+    fun apkUsesSuffixAndOrdinaryEmptyFilesAreNotEmptyFolders() {
+        assertEquals(JunkKind.INSTALLERS, JunkRules.classify(file("setup.APK", size = 0), now))
+        assertNull(JunkRules.classify(file("empty", size = 0), now))
+        assertNull(JunkRules.classify(file("contract.pdf", age = 900), now))
+        assertNull(JunkRules.classify(file("photo.jpg", mime = "image/jpeg"), now))
+        assertEquals(JunkKind.EMPTY_FOLDERS, JunkRules.classify(file("folder", size = 0, mime = "vnd.android.document/directory"), now))
     }
 
     @Test
-    fun ordinaryDocumentsAreNeverJunkJustBecauseTheyAreOld() {
-        assertNull(
-            JunkRules.classify(file("contract.pdf", age = 900, mime = "application/pdf"), now)
-        )
-        assertEquals(JunkKind.INSTALLERS, JunkRules.classify(file("setup.apk"), now))
+    fun adsHavePriorityOverCacheAndTemporaryFilesWithoutMatchingDownloadOrRoad() {
+        for (folder in listOf("/shared/app/cache/ads", "/shared/.admob", "/shared/com.google.android.gms.ads", "/shared/UnityAdsCache", "/shared/applovin")) {
+            assertEquals(folder, JunkKind.AD_FILES, JunkRules.classify(file("blob.tmp"), now, folder))
+        }
+        for (name in listOf("ad_banner.jpg", "ads.bin", "advert.data", "videoAd.mp4"))
+            assertEquals(JunkKind.AD_FILES, JunkRules.classify(file(name), now, "/shared/Download"))
+        for (name in listOf("road.jpg", "download.bin", "readme.pdf", "shadow.png"))
+            assertNull(JunkRules.classify(file(name), now, "/shared/Download"))
+        assertEquals(JunkKind.INSTALLERS, JunkRules.classify(file("setup.apk"), now, "/shared/ads/cache"))
     }
 
     @Test
-    fun compressedOutputIsNotAnalyzedAgain() {
-        val photo = file("photo.jpg", mime = "image/jpeg")
-        assertFalse(JunkRules.include(photo, "Pictures/AIClean/Compressed", now))
-        assertTrue(JunkRules.include(photo, "DCIM/Camera", now))
+    fun compressedOutputsAndHiddenPhotoCategoriesAreNotScanned() {
+        assertFalse(JunkRules.include(file("photo.jpg", mime = "image/jpeg"), "DCIM/Camera", now))
+        assertFalse(JunkRules.include(file("left.tmp"), "Pictures/AIClean/Compressed", now))
+        assertEquals(listOf(JunkKind.INSTALLERS, JunkKind.TEMPORARY, JunkKind.EMPTY_FOLDERS, JunkKind.AD_FILES), JunkKind.visible)
+        assertTrue(JunkKind.entries.contains(JunkKind.DUPLICATES))
     }
 
     private fun pattern(shift: Int = 0) =

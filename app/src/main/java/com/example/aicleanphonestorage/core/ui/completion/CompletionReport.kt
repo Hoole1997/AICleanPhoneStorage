@@ -17,6 +17,9 @@ internal data class CompletionReport(
     val originalsRemaining: Int = 0,
     val removableOriginals: Int = 0,
     val operationId: Long = 0,
+    val inputBytes: Long? = null,
+    val copiedOriginalBytes: Long? = null,
+    val outputBytes: Long? = null,
 ) {
     val successful: Boolean
         get() = kind == CompletionKind.NOTIFICATIONS || completed > 0

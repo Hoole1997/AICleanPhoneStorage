@@ -1,0 +1,6 @@
+<resources>
+    <plurals name="cleanup_screenshot_summary">
+        <item quantity="other">%1$s 张截图 · %2$s</item>
+    </plurals>
+    <string name="cleanup_screenshot_clean">清理（%1$s）</string>
+</resources>

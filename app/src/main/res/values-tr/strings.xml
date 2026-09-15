@@ -33,8 +33,8 @@
     <string name="cleanup_scan_failed">Dosyalar taranamadı. Lütfen erişimi kontrol edip tekrar deneyin.</string>
     <string name="cleanup_action_failed">Bazı dosyalar işlenemedi. Lütfen yenileyin ve tekrar deneyin.</string>
     <string name="cleanup_no_files">Eşleşen dosya bulunamadı.</string>
-    <string name="cleanup_photo_summary">Fotoğraflarınızı sıkıştırın. Tahmini tasarruf:</string>
-    <string name="cleanup_estimate">Tah. %1$s\'ı kaydet</string>
+
+
     <string name="cleanup_preview">%1$s\'ı önizle</string>
     <string name="cleanup_select_file">%1$s\'yi seçin</string>
     <string name="cleanup_quality">Sıkıştırma kalitesi</string>
@@ -56,7 +56,6 @@
     <string name="cleanup_tips">İpuçları</string>
     <string name="cleanup_confirm">Onayla</string>
     <string name="cleanup_delete_confirm">Seçilen dosyalar kalıcı olarak silinsin mi?\nSayı: %1$d · Boyut: %2$s</string>
-    <string name="cleanup_compress_confirm">Daha küçük JPEG kopyaları oluşturulsun mu? Seçilen fotoğraflar: %1$d. Kopyalar 2048 piksel ile sınırlıdır ve düşük belleğe sahip cihazlarda daha küçük olabilir. Orijinaller saklanır. Şeffaf alanlar beyazlaşır.</string>
     <string name="cleanup_working">%1$d / %2$d işleniyor</string>
     <string name="cleanup_result">Silindi: %1$d\nDaha küçük kopyalar: %2$d\nDeğiştirilmedi veya iptal edildi: %3$d\nBaşarısız: %4$d</string>
     <string name="cleanup_remove_originals">Orijinal fotoğrafları silin</string>
@@ -235,7 +234,7 @@
     <string name="traffic_title">Ağ Trafiği</string>
     <string name="traffic_back">Geri</string>
     <string name="traffic_this_month">Bu Ay</string>
-    <string name="traffic_last_month">Geçen Ay</string>
+    <string name="traffic_this_week">Bu Hafta</string>
     <string name="traffic_24_hours">24 Saat</string>
     <string name="traffic_mobile">Mobil veri</string>
     <string name="traffic_wifi">Wi-Fi</string>

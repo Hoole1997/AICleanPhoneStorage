@@ -67,9 +67,7 @@ internal class CleanupEntryViewModel(
                         TimedEntryLoader().load(
                             initialStage = "FILES",
                             finalStage = "FILES",
-                            continuousStages =
-                                if (feature == CleanupFeature.SMART_CLEAN) listOf("FILES", "PHOTOS")
-                                else listOf("FILES"),
+                            continuousStages = listOf("FILES"),
                             count = { it: ScanHandle -> it.scannedCount },
                             onStalled = { failLoading(id, feature) },
                             onFrame = {
@@ -78,7 +76,7 @@ internal class CleanupEntryViewModel(
                             },
                         ) { report ->
                             repository.scan(feature) {
-                                report(TaskProgress(it.stage, it.completed, it.total))
+                                report(TaskProgress(it.stage, it.completed, it.total, it.junkBytes))
                             }
                         }
                     currentCoroutineContext().ensureActive()

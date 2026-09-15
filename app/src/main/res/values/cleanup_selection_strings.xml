@@ -1,0 +1,4 @@
+<resources>
+    <string name="cleanup_compress_selected">Compress (%1$s)</string>
+    <string name="cleanup_megabytes" translatable="false">%1$s MB</string>
+</resources>

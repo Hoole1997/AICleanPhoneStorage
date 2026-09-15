@@ -1,0 +1,7 @@
+<resources>
+    <string name="junk_empty_folders">Folder Kosong</string>
+    <string name="junk_ad_files">File Iklan</string>
+    <string name="junk_temporary_files_description">File berekstensi sementara dan file dalam folder cache yang dapat diakses. Periksa sebelum menghapus.</string>
+    <string name="junk_empty_folders_description">Folder yang tidak berisi file, termasuk dalam subfoldernya. Setiap folder dihitung 0 B.</string>
+    <string name="junk_ad_files_description">File dengan nama terkait iklan atau dalam folder SDK iklan yang dikenal. Periksa sebelum menghapus.</string>
+</resources>

@@ -72,6 +72,8 @@ internal class CleanupEntryCoordinator(
                     message,
                     state.frame.percent ?: 0,
                     resultKey = CANCEL,
+                    bytes = if (state.feature == com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature.SMART_CLEAN)
+                        detail.bytes ?: 0L else null,
                 )
             if (existing == null)
                 TaskLoadingDialogFragment.newInstance(loading).showNow(manager, LOADING)

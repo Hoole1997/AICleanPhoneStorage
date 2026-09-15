@@ -1,0 +1,7 @@
+<resources>
+    <plurals name="cleanup_screenshot_summary">
+        <item quantity="one">%1$s Screenshot · %2$s</item>
+        <item quantity="other">%1$s Screenshots · %2$s</item>
+    </plurals>
+    <string name="cleanup_screenshot_clean">Dateien bereinigen (%1$s)</string>
+</resources>

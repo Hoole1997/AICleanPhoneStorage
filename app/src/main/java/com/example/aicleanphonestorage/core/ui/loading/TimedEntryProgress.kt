@@ -2,7 +2,12 @@ package com.example.aicleanphonestorage.core.ui.loading
 
 import java.util.concurrent.atomic.AtomicReference
 
-internal data class TaskProgress(val stage: String, val completed: Int? = null, val total: Int? = null) {
+internal data class TaskProgress(
+    val stage: String,
+    val completed: Int? = null,
+    val total: Int? = null,
+    val bytes: Long? = null,
+) {
     val percent: Int? get() = if (completed != null && total != null && total > 0) (completed.toLong() * 100 / total).toInt().coerceIn(0, 100) else null
 }
 

@@ -1,0 +1,11 @@
+<resources>
+    <plurals name="cleanup_screenshot_summary">
+        <item quantity="zero">لقطات الشاشة: %1$s · %2$s</item>
+        <item quantity="one">لقطات الشاشة: %1$s · %2$s</item>
+        <item quantity="two">لقطات الشاشة: %1$s · %2$s</item>
+        <item quantity="few">لقطات الشاشة: %1$s · %2$s</item>
+        <item quantity="many">لقطات الشاشة: %1$s · %2$s</item>
+        <item quantity="other">لقطات الشاشة: %1$s · %2$s</item>
+    </plurals>
+    <string name="cleanup_screenshot_clean">تنظيف الملفات (%1$s)</string>
+</resources>

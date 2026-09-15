@@ -33,8 +33,8 @@
     <string name="cleanup_scan_failed">无法扫描文件。请检查访问权限并重试。</string>
     <string name="cleanup_action_failed">某些文件无法处理。请刷新并重试。</string>
     <string name="cleanup_no_files">未找到匹配的文件。</string>
-    <string name="cleanup_photo_summary">压缩照片，预计可节省：</string>
-    <string name="cleanup_estimate">预计节省 %1$s</string>
+
+
     <string name="cleanup_preview">预览%1$s</string>
     <string name="cleanup_select_file">选择%1$s</string>
     <string name="cleanup_quality">压缩质量</string>
@@ -56,7 +56,6 @@
     <string name="cleanup_tips">温馨提示</string>
     <string name="cleanup_confirm">确认</string>
     <string name="cleanup_delete_confirm">永久删除所选文件？\n数量：%1$d · 大小：%2$s</string>
-    <string name="cleanup_compress_confirm">为所选的 %1$d 张照片创建更小的 JPEG 副本？副本最大边长为 2048 像素，低内存设备上可能更小。原图会保留，透明区域将变为白色。</string>
     <string name="cleanup_working">正在处理 %1$d / %2$d</string>
     <string name="cleanup_result">已删除：%1$d\n较小的副本：%2$d\n未更改或取消：%3$d\n失败：%4$d</string>
     <string name="cleanup_remove_originals">删除原图</string>
@@ -227,7 +226,7 @@
     <string name="traffic_title">网络流量</string>
     <string name="traffic_back">返回</string>
     <string name="traffic_this_month">本月</string>
-    <string name="traffic_last_month">上月</string>
+    <string name="traffic_this_week">本周</string>
     <string name="traffic_24_hours">近 24 小时</string>
     <string name="traffic_mobile">移动流量</string>
     <string name="traffic_wifi">Wi-Fi</string>

@@ -28,23 +28,18 @@ internal class JunkCategoriesAdapter(
     private val select: (JunkKind, Boolean) -> Unit,
 ) : ListAdapter<JunkRow, RecyclerView.ViewHolder>(DIFF) {
     fun submit(snapshot: JunkSnapshot, enabled: Boolean) {
+        val visible = JunkKind.visible.mapNotNull { kind -> snapshot.categories.find { it.kind == kind } }
         submitList(
             buildList {
                 add(
                     JunkRow.Overview(
-                        snapshot.categories.sumOf { it.bytes },
+                        visible.sumOf { it.bytes },
                         snapshot.storage.usedBytes,
                         snapshot.storage.totalBytes,
                     )
                 )
                 add(JunkRow.Section(false))
-                snapshot.categories
-                    .filterNot { it.kind.photos }
-                    .forEach { add(JunkRow.Category(it, enabled)) }
-                add(JunkRow.Section(true))
-                snapshot.categories
-                    .filter { it.kind.photos }
-                    .forEach { add(JunkRow.Category(it, enabled)) }
+                visible.forEach { add(JunkRow.Category(it, enabled)) }
             }
         )
     }

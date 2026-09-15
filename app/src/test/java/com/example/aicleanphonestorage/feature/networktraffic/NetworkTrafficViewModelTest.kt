@@ -75,7 +75,7 @@ class NetworkTrafficViewModelTest {
         assertNotNull(vm.consumeEntrySnapshot())
         val page = NetworkTrafficViewModel(repo, SavedStateHandle(), entryMode = false,
             minimumEntryLoadingMillis = { error("Page refresh must not request an ad delay") }).also { store.put("page", it) }
-        page.selectPeriod(TrafficPeriod.LAST_MONTH)
+        page.selectPeriod(TrafficPeriod.THIS_WEEK)
         advanceTimeBy(1000); runCurrent()
         assertEquals(TrafficStatus.Ready, page.state.value.status)
     }
@@ -136,11 +136,19 @@ class NetworkTrafficViewModelTest {
         assertEquals(0, repo.calls)
         assertEquals(TrafficStatus.Ready, vm.state.value.status)
     }
+    @Test fun `this week refreshes stale data when returning to foreground`() = runTest {
+        val repo = Fake()
+        val vm = NetworkTrafficViewModel(repo, SavedStateHandle(), now = { 50_001 }, initialSnapshot = snapshot(TrafficPeriod.THIS_WEEK))
+            .also { store.put("traffic", it) }
+        vm.onForeground(); advanceUntilIdle()
+        assertEquals(1, repo.calls)
+        assertEquals(TrafficPeriod.THIS_WEEK, vm.state.value.snapshot?.period)
+    }
     @Test fun `latest date wins and old dialog cancellation cannot cancel new date`() = runTest {
         val repo = Fake()
-        repo.loader = { period, _ -> delay(if (period == TrafficPeriod.LAST_MONTH) 1000 else 100); snapshot(period) }
+        repo.loader = { period, _ -> delay(if (period == TrafficPeriod.THIS_WEEK) 1000 else 100); snapshot(period) }
         val vm = vm(repo, initial = snapshot())
-        vm.selectPeriod(TrafficPeriod.LAST_MONTH); runCurrent()
+        vm.selectPeriod(TrafficPeriod.THIS_WEEK); runCurrent()
         val oldId = (vm.state.value.status as TrafficStatus.Loading).requestId
         vm.selectPeriod(TrafficPeriod.LAST_24_HOURS)
         assertFalse(vm.cancelByUser(oldId))

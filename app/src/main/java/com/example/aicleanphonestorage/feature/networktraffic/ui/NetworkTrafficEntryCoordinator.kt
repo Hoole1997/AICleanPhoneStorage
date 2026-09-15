@@ -78,7 +78,7 @@ internal class NetworkTrafficEntryCoordinator(
                                 activity.getString(R.string.traffic_reading_mobile)
                             TrafficStage.WIFI -> activity.getString(R.string.traffic_reading_wifi)
                             TrafficStage.APPLICATIONS ->
-                                if (status.progress.total == 0)
+                                if (status.progress.total == null || status.progress.total == 0)
                                     activity.getString(R.string.traffic_preparing_results)
                                 else
                                     activity.getString(

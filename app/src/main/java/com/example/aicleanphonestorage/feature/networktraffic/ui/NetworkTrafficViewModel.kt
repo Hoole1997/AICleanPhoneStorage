@@ -48,7 +48,7 @@ class NetworkTrafficViewModel(
     private val minimumEntryLoadingMillis: () -> Long = { TimedEntryLoader.defaultDurationMillis() },
     private val monotonicMillis: () -> Long = { System.nanoTime() / 1_000_000 },
 ) : ViewModel() {
-    private val initialPeriod = TrafficPeriod.entries.firstOrNull { it.name == savedState.get<String>(PERIOD_KEY) } ?: TrafficPeriod.THIS_MONTH
+    private val initialPeriod = TrafficPeriod.fromSavedValue(savedState[PERIOD_KEY])
     private val mutableState = MutableStateFlow(initialSnapshot?.let { TrafficUiState(it.period, TrafficStatus.Ready, it) }
         ?: TrafficUiState(initialPeriod, if (entryMode && savedState.get<Boolean>(ENTRY_PENDING) != true) TrafficStatus.Idle else TrafficStatus.CheckingAccess))
     val state = mutableState.asStateFlow()
@@ -70,7 +70,7 @@ class NetworkTrafficViewModel(
                 } else {
                     val current = state.value
                     val shouldLoad = current.status == TrafficStatus.CheckingAccess || current.status == TrafficStatus.NeedsAccess || current.status == TrafficStatus.AwaitingPermission ||
-                        (current.status == TrafficStatus.Ready && current.snapshot?.let { now() - it.window.endMillis !in 0..30_000 } == true && current.period != TrafficPeriod.LAST_MONTH)
+                        (current.status == TrafficStatus.Ready && current.snapshot?.let { now() - it.window.endMillis !in 0..30_000 } == true)
                     if (shouldLoad) selectPeriod(current.period)
                 }
             } catch (error: CancellationException) {

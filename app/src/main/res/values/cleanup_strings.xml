@@ -22,8 +22,8 @@
     <string name="cleanup_scan_failed">Couldn’t scan files. Please check access and try again.</string>
     <string name="cleanup_action_failed">Some files could not be processed. Please refresh and try again.</string>
     <string name="cleanup_no_files">No matching files found.</string>
-    <string name="cleanup_photo_summary">Compress your photos. Estimated saving:</string>
-    <string name="cleanup_estimate">Est. save %1$s</string>
+
+
     <string name="cleanup_preview">Preview %1$s</string>
     <string name="cleanup_select_file">Select %1$s</string>
     <string name="cleanup_quality">Compression quality</string>
@@ -45,7 +45,6 @@
     <string name="cleanup_tips">Tips</string>
     <string name="cleanup_confirm">Confirm</string>
     <string name="cleanup_delete_confirm">Permanently delete the selected files?\nCount: %1$d · Size: %2$s</string>
-    <string name="cleanup_compress_confirm">Create smaller JPEG copies? Selected photos: %1$d. Copies are limited to 2048px and may be smaller on low-memory devices. Originals are kept. Transparent areas become white.</string>
     <string name="cleanup_working">Processing %1$d / %2$d</string>
     <string name="cleanup_result">Deleted: %1$d\nSmaller copies: %2$d\nUnchanged or cancelled: %3$d\nFailed: %4$d</string>
     <string name="cleanup_remove_originals">Remove originals</string>

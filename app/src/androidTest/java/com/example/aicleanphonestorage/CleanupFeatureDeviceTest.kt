@@ -189,10 +189,12 @@ class CleanupFeatureDeviceTest {
                                 }
                                 ready
                             }
-                            onView(withId(R.id.cleanup_action)).perform(click())
-                            onView(withId(R.id.confirm_title)).check(matches(isDisplayed()))
-                            screenshot("${feature}_confirm")
-                            onView(withId(R.id.confirm_cancel)).perform(click())
+                            if (feature != CleanupFeature.PHOTO_COMPRESS) {
+                                onView(withId(R.id.cleanup_action)).perform(click())
+                                onView(withId(R.id.confirm_title)).check(matches(isDisplayed()))
+                                screenshot("${feature}_confirm")
+                                onView(withId(R.id.confirm_cancel)).perform(click())
+                            }
                         }
                 } finally {
                     index.discard(handle.id)

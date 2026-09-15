@@ -1,0 +1,7 @@
+<resources>
+    <string name="junk_empty_folders">Boş Klasörler</string>
+    <string name="junk_ad_files">Reklam Dosyaları</string>
+    <string name="junk_temporary_files_description">Geçici uzantılı dosyalar ve erişilebilir cache klasörlerindeki dosyalar. Silmeden önce inceleyin.</string>
+    <string name="junk_empty_folders_description">Alt klasörleri dahil hiçbir dosya içermeyen klasörler. Her klasör 0 B sayılır.</string>
+    <string name="junk_ad_files_description">Reklamla ilgili adlara sahip veya bilinen reklam SDK klasörlerindeki dosyalar. Silmeden önce inceleyin.</string>
+</resources>

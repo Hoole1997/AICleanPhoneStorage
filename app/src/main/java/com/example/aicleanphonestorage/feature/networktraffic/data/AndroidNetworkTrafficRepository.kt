@@ -34,12 +34,19 @@ class AndroidNetworkTrafficRepository(context: Context, private val executor: Ta
             var lastPercent = -1
             for ((index, uid) in uids.withIndex()) {
                 currentCoroutineContext().ensureActive()
-                apps += TrafficApp(uid, metadata.applicationsForUid(uid), mobile.uids[uid] ?: 0, wifi.uids[uid] ?: 0)
-                val progress = TrafficProgress(TrafficStage.APPLICATIONS, index + 1, uids.size)
+                val packages = metadata.applicationsForUid(uid)
+                if (packages.isNotEmpty())
+                    apps += TrafficApp(uid, packages, mobile.uids[uid] ?: 0, wifi.uids[uid] ?: 0)
+                val percent = (index + 1).toLong() * 100 / uids.size
                 // 最多100个进度变化，不为每个 bucket 发出 UI 更新，也不人为延长 Loading。
-                if (progress.percent != lastPercent) { onProgress(progress); lastPercent = progress.percent ?: -1 }
+                if (percent.toInt() != lastPercent) {
+                    // 筛选完成前总应用数未知，不把已排除的系统 UID 算进结果计数。
+                    onProgress(TrafficProgress(TrafficStage.APPLICATIONS, apps.size))
+                    lastPercent = percent.toInt()
+                }
             }
             currentCoroutineContext().ensureActive()
+            onProgress(TrafficProgress(TrafficStage.APPLICATIONS, apps.size, apps.size))
             TrafficSnapshot(period, window, mobile.usage, wifi.usage, apps.sortedWith(compareByDescending<TrafficApp> { it.bytes }.thenBy { it.uid }))
         }
     }

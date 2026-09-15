@@ -33,8 +33,8 @@
     <string name="cleanup_scan_failed">فائلوں کو اسکین نہیں کیا جا سکا۔ براہ کرم رسائی چیک کریں اور دوبارہ کوشش کریں۔</string>
     <string name="cleanup_action_failed">کچھ فائلوں پر کارروائی نہیں ہو سکی۔ براہ کرم ریفریش کریں اور دوبارہ کوشش کریں۔</string>
     <string name="cleanup_no_files">کوئی مماثل فائلیں نہیں ملیں۔</string>
-    <string name="cleanup_photo_summary">اپنی تصاویر کو کمپریس کریں۔ تخمینی بچت:</string>
-    <string name="cleanup_estimate">تخمینہ %1$s بچائیں۔</string>
+
+
     <string name="cleanup_preview">پیش نظارہ %1$s</string>
     <string name="cleanup_select_file">%1$s کو منتخب کریں۔</string>
     <string name="cleanup_quality">کمپریشن کوالٹی</string>
@@ -56,7 +56,6 @@
     <string name="cleanup_tips">تجاویز</string>
     <string name="cleanup_confirm">تصدیق کریں۔</string>
     <string name="cleanup_delete_confirm">منتخب فائلوں کو مستقل طور پر حذف کریں؟\nشمار: %1$d · سائز: %2$s</string>
-    <string name="cleanup_compress_confirm">چھوٹی JPEG کاپیاں بنائیں؟ منتخب کردہ تصاویر: %1$d۔ کاپیاں 2048px تک محدود ہیں اور کم میموری والے آلات پر چھوٹی ہو سکتی ہیں۔ اصل رکھے گئے ہیں۔ شفاف علاقے سفید ہو جاتے ہیں۔</string>
     <string name="cleanup_working">%1$d / %2$d پر کارروائی ہو رہی ہے۔</string>
     <string name="cleanup_result">حذف شدہ: %1$d\nچھوٹی کاپیاں: %2$d\nغیر تبدیل شدہ یا منسوخ: %3$d\nناکام: %4$d</string>
     <string name="cleanup_remove_originals">اصل تصاویر حذف کریں۔</string>
@@ -235,7 +234,7 @@
     <string name="traffic_title">نیٹ ورک ٹریفک</string>
     <string name="traffic_back">پیچھے</string>
     <string name="traffic_this_month">اس مہینے</string>
-    <string name="traffic_last_month">گزشتہ ماہ</string>
+    <string name="traffic_this_week">اس ہفتے</string>
     <string name="traffic_24_hours">24 گھنٹے</string>
     <string name="traffic_mobile">موبائل ڈیٹا</string>
     <string name="traffic_wifi">وائی فائی</string>

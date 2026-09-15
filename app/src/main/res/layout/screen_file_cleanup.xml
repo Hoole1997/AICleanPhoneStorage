@@ -6,8 +6,13 @@
             <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text.Bold" android:id="@+id/cleanup_title" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textSize="18sp" android:textColor="@color/home_title" />
             <com.google.android.material.button.MaterialButton style="@style/Widget.MaterialComponents.Button.TextButton" android:id="@+id/cleanup_select_all" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minHeight="48dp" android:textSize="12sp" android:textAllCaps="false" android:text="@string/cleanup_select_all" />
         </LinearLayout>
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/Widget.Home.Text" android:id="@+id/cleanup_screenshot_summary"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:layout_marginBottom="8dp"
+            android:textSize="12sp" android:textColor="@color/home_text_secondary" android:visibility="gone" />
         <LinearLayout android:id="@+id/cleanup_photo_header" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:layout_marginTop="12dp" android:layout_marginBottom="16dp" android:gravity="center_vertical" android:visibility="gone">
-            <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginEnd="16dp" android:textSize="18sp" android:textColor="#666666" android:text="@string/cleanup_photo_summary" />
+            <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginEnd="16dp" android:textSize="18sp" android:textColor="#666666" android:text="@string/compression_selected_label" />
             <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text.Semibold" android:id="@+id/cleanup_potential" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minHeight="40dp" android:padding="12dp" android:gravity="center" android:textSize="14sp" android:textColor="@color/home_surface" android:background="@drawable/cleanup_badge" />
         </LinearLayout>
         <LinearLayout android:id="@+id/cleanup_filters" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:layout_marginTop="12dp" android:layout_marginBottom="12dp" android:background="@drawable/task_dialog_surface" android:visibility="gone">

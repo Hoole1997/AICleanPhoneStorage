@@ -1,0 +1,6 @@
+<resources>
+    <plurals name="cleanup_screenshot_summary">
+        <item quantity="other">%1$s ảnh chụp màn hình · %2$s</item>
+    </plurals>
+    <string name="cleanup_screenshot_clean">Dọn dẹp tập tin (%1$s)</string>
+</resources>

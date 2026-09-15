@@ -22,12 +22,14 @@ internal class CleanupTelemetry(private val sink: EventSink = BusinessTelemetry)
         sink.send(event, mapOf("count" to totals.count, "total_size" to mb(totals.bytes)))
     }
     fun junkScan(categories: List<JunkCategorySummary>) {
-        // 只有 APK/临时文件与表内口径相同；空文件不冒充空文件夹，旧日志不冒充广告文件。
+        // 四类分别上报，空目录按 0B 计；旧分类仍保留代码但不进入当前扫描。
         sink.send(MetricEvent.JUNK_SCAN_RESULT, mapOf(
             "result" to if (categories.any { it.count > 0 }) "has_junk" else "empty",
             "total_size" to mb(categories.sumOf { it.bytes }),
             "apk_size" to mb(categories.filter { it.kind == JunkKind.INSTALLERS }.sumOf { it.bytes }),
             "temp_size" to mb(categories.filter { it.kind == JunkKind.TEMPORARY }.sumOf { it.bytes }),
+            "empty_folder_size" to mb(categories.filter { it.kind == JunkKind.EMPTY_FOLDERS }.sumOf { it.bytes }),
+            "ad_file_size" to mb(categories.filter { it.kind == JunkKind.AD_FILES }.sumOf { it.bytes }),
         ))
     }
     fun junkGroup(kind: JunkKind) {
@@ -95,7 +97,7 @@ internal class CleanupTelemetry(private val sink: EventSink = BusinessTelemetry)
     }
     companion object {
         fun mb(bytes: Long): Double = bytes.coerceAtLeast(0) / 1_000_000.0
-        fun group(kind: JunkKind?): String? = when (kind) { JunkKind.INSTALLERS -> "apk"; JunkKind.TEMPORARY -> "temp"; else -> null }
+        fun group(kind: JunkKind?): String? = when (kind) { JunkKind.INSTALLERS -> "apk"; JunkKind.TEMPORARY -> "temp"; JunkKind.EMPTY_FOLDERS -> "empty_folder"; JunkKind.AD_FILES -> "ad_file"; else -> null }
         fun page(feature: CleanupFeature): String = when (feature) {
             CleanupFeature.SMART_CLEAN -> "junk"; CleanupFeature.SCREENSHOTS -> "screenshots"; CleanupFeature.PHOTO_COMPRESS -> "photo"; CleanupFeature.LARGE_FILES -> "large"; CleanupFeature.UNUSED_FILES -> "unused"
         }

@@ -1,0 +1,9 @@
+<resources>
+    <plurals name="cleanup_screenshot_summary">
+        <item quantity="one">%1$s скриншот · %2$s</item>
+        <item quantity="few">%1$s скриншота · %2$s</item>
+        <item quantity="many">%1$s скриншотов · %2$s</item>
+        <item quantity="other">%1$s скриншотов · %2$s</item>
+    </plurals>
+    <string name="cleanup_screenshot_clean">Очистка файлов (%1$s)</string>
+</resources>

@@ -62,6 +62,7 @@ internal class CleanupOperationCoordinator(
     init {
         // 请求中只保存确认时的操作编号；广告回调后 ViewModel 再验证编号，避免执行后来改变的选择。
         ads.register(CONFIRM_AD) { id -> model.confirm(id) }
+        ads.register(COMPRESS_AD) { id -> model.startCompression(id) }
         ads.register(ORIGINALS_AD) { id -> model.removeOriginals(id) }
         // Activity Result 在 STARTED 时分发；回到原图确认时没有新的业务状态发射，需在 RESUMED 补呈现。
         activity.lifecycle.addObserver(
@@ -86,16 +87,16 @@ internal class CleanupOperationCoordinator(
                 identity.startsWith("originals:") -> {
                     val id = originalsConfirmation
                     originalsConfirmation = null
-                    if (positive && id != null) requestConfirmedAction(ORIGINALS_AD, id)
+                    if (positive && id != null) requestAction(ORIGINALS_AD, id)
                     else model.dismissOperation()
                 }
                 op is CleanupOperationState.Confirm && identity == "confirm:${op.id}" ->
-                    if (positive) requestConfirmedAction(CONFIRM_AD, op.id) else model.dismissOperation()
+                    if (positive) requestAction(CONFIRM_AD, op.id) else model.dismissOperation()
             }
         }
     }
 
-    private fun requestConfirmedAction(action: String, id: Long) {
+    private fun requestAction(action: String, id: Long) {
         ads.run(action, InterstitialPlacements.clean(model.state.value.handle?.feature), payload = id)
     }
 
@@ -142,14 +143,11 @@ internal class CleanupOperationCoordinator(
                     CleanupMessageDialog.create(
                         "confirm:${operation.id}",
                         activity.getString(R.string.cleanup_tips),
-                        if (operation.compress)
-                            activity.getString(R.string.cleanup_compress_confirm, operation.count)
-                        else
-                            activity.getString(
-                                R.string.cleanup_delete_confirm,
-                                operation.count,
-                                Formatter.formatShortFileSize(activity, operation.bytes),
-                            ),
+                        activity.getString(
+                            R.string.cleanup_delete_confirm,
+                            operation.count,
+                            Formatter.formatShortFileSize(activity, operation.bytes),
+                        ),
                         activity.getString(R.string.cleanup_confirm),
                         activity.getString(R.string.cleanup_cancel),
                     )
@@ -158,6 +156,11 @@ internal class CleanupOperationCoordinator(
         if (old?.identity != message?.identity) {
             old?.dismissNow()
             message?.showNow(activity.supportFragmentManager, CleanupMessageDialog.TAG)
+        }
+        if (operation is CleanupOperationState.CompressionReady) {
+            // 点击 Compress 已表达创建副本的意图，直接进入既有广告/压缩流程，不再弹二次确认。
+            requestAction(COMPRESS_AD, operation.id)
+            return
         }
         if (
             operation is CleanupOperationState.Result &&
@@ -193,6 +196,7 @@ internal class CleanupOperationCoordinator(
     }
 
     companion object {
+        private const val COMPRESS_AD = "ad.compress.requested"
         private const val CONFIRM_AD = "ad.clean.confirmed"
         private const val ORIGINALS_AD = "ad.originals.confirmed"
         private const val WORKING = "cleanup.operation.loading"

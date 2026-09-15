@@ -204,16 +204,9 @@ class FileCleanupActivity : AppCompatActivity() {
                 binding.cleanupScope.isVisible = true
                 binding.cleanupScope.setText(junkKind.descriptionRes)
             }
-            binding.cleanupPotential.text =
-                Formatter.formatShortFileSize(this, state.totals.estimatedSaving)
-            binding.cleanupAction.setText(
-                if (handle.feature == CleanupFeature.PHOTO_COMPRESS) R.string.cleanup_compress
-                else R.string.cleanup_clean
-            )
         }
         val idle = state.operation == CleanupOperationState.Idle
-        binding.cleanupAction.isEnabled =
-            idle && state.editing == 0 && state.totals.selectedCount > 0
+        // 底部按钮统一交给 CleanupActionRenderer，Activity 不再重复改写文案或启用状态。
         binding.cleanupSelectAll.isEnabled = idle && state.editing == 0 && state.totals.count > 0
         binding.cleanupSelectAll.setText(
             if (state.totals.selectedCount == state.totals.count && state.totals.count > 0)
@@ -234,6 +227,7 @@ class FileCleanupActivity : AppCompatActivity() {
     }
 
     private fun preview(file: ScannedFile) {
+        if (file.isDirectory) return
         // FileProvider 只发出单个文件的临时只读授权，绝不向外暴露 file:// URI 或目录授权。
         lifecycleScope.launch {
             try {

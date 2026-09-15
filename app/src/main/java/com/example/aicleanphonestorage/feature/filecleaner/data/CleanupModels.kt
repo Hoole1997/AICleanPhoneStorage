@@ -53,7 +53,10 @@ data class ScannedFile(
     val bucket: String = "",
     val groupKey: String = "",
     val retained: Boolean = false,
-)
+) {
+    // 使用索引已有 MIME 字段区分目录，不把空文件伪装成空目录。
+    val isDirectory: Boolean get() = mime == "vnd.android.document/directory"
+}
 
 data class ScanHandle(
     val id: Long,
@@ -69,12 +72,16 @@ data class SelectionTotals(
     val bytes: Long = 0,
     val selectedCount: Int = 0,
     val selectedBytes: Long = 0,
-    val estimatedSaving: Long = 0,
 )
 
 data class PreparedOperation(val id: Long, val count: Int, val bytes: Long)
 
-data class ScanProgress(val completed: Int, val total: Int? = null, val stage: String = "FILES")
+data class ScanProgress(
+    val completed: Int,
+    val total: Int? = null,
+    val stage: String = "FILES",
+    val junkBytes: Long? = null,
+)
 
 internal object CleanupPolicy {
     private val documents =
@@ -120,6 +127,13 @@ internal object CleanupPolicy {
         }
     }
 
-    fun estimatedSaving(size: Long, quality: Int): Long =
-        (size * ((100 - quality.coerceIn(1, 100)) / 100.0)).toLong()
 }
+
+/** 持久操作快照的大小统计。输入含失败/跳过项；成功原图和输出只统计已验证副本。 */
+internal data class OperationStorage(
+    val freedBytes: Long,
+    val reducedBytes: Long,
+    val inputBytes: Long,
+    val copiedOriginalBytes: Long,
+    val outputBytes: Long,
+)

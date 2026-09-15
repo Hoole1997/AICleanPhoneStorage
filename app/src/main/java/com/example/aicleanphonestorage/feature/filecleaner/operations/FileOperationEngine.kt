@@ -26,6 +26,9 @@ internal data class OperationSummary(
     val originalsAvailable: Int,
     val freedBytes: Long = 0,
     val reducedBytes: Long = 0,
+    val inputBytes: Long = 0,
+    val copiedOriginalBytes: Long = 0,
+    val outputBytes: Long = 0,
 )
 
 internal sealed interface OperationStep {
@@ -43,6 +46,7 @@ internal class FileOperationEngine(
     private val app = context.applicationContext
     private val content = FileContentAccess(app)
     private val compressor = PhotoCompressor(app, content)
+    private val emptyDirectories = EmptyDirectoryDeleter(content)
     private val lock = Mutex()
 
     suspend fun compress(operation: Long, progress: (Int, Int) -> Unit): OperationStep =
@@ -92,6 +96,13 @@ internal class FileOperationEngine(
                         currentCoroutineContext().ensureActive()
                         try {
                             if (file.retained) throw IOException("Reference photo is protected")
+                            if (file.isDirectory) {
+                                if (!emptyDirectories.delete(file)) throw IOException("Directory deletion rejected")
+                                index.mark(operation, file.id, "deleted")
+                                index.remove(file.id, notify = false)
+                                progress(++done, total)
+                                continue
+                            }
                             if (file.groupKey.isNotEmpty()) {
                                 val reference =
                                     index.retainedPeer(file)
@@ -194,7 +205,7 @@ internal class FileOperationEngine(
     suspend fun summary(operation: Long) = executor.io { summaryNow(operation) }
 
     private fun summaryNow(operation: Long): OperationSummary {
-        val (freed, reduced) = index.operationStorage(operation)
+        val storage = index.operationStorage(operation)
         return OperationSummary(
             index.operationCount(operation),
             index.operationCount(operation, "deleted"),
@@ -202,8 +213,11 @@ internal class FileOperationEngine(
             index.operationCount(operation, "failed"),
             index.operationCount(operation, "skipped"),
             index.operationCount(operation, "copied"),
-            freed,
-            reduced,
+            storage.freedBytes,
+            storage.reducedBytes,
+            storage.inputBytes,
+            storage.copiedOriginalBytes,
+            storage.outputBytes,
         )
     }
 

@@ -1,5 +1,6 @@
 package com.example.aicleanphonestorage.feature.filecleaner.data
 
+import com.example.aicleanphonestorage.feature.junkcleaner.data.JunkKind
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -12,7 +13,7 @@ import kotlinx.coroutines.flow.update
 
 /** 仅缓存元数据/选择状态的临时索引。所有方法由Repository在I/O线程调用，不存文件内容或Bitmap。 */
 internal class ScanIndex(context: Context) :
-    SQLiteOpenHelper(context.applicationContext, "cleanup_index.db", null, 3) {
+    SQLiteOpenHelper(context.applicationContext, "cleanup_index.db", null, 4) {
     private val revision = kotlinx.coroutines.flow.MutableStateFlow(0L)
     val changes: kotlinx.coroutines.flow.StateFlow<Long> = revision
     private val sources = Collections.newSetFromMap(WeakHashMap<PagingSource<*, *>, Boolean>())
@@ -31,9 +32,7 @@ internal class ScanIndex(context: Context) :
         db.execSQL("CREATE INDEX files_selection ON files(scan,selected)")
         createGroupIndexes(db)
         createIdentityIndexes(db)
-        db.execSQL(
-            "CREATE TABLE directories(scan INTEGER NOT NULL, document TEXT NOT NULL, done INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(scan,document))"
-        )
+        DirectoryScanIndex.create(db)
         db.execSQL(
             "CREATE TABLE operations(id INTEGER PRIMARY KEY AUTOINCREMENT, feature TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'prepared')"
         )
@@ -53,6 +52,11 @@ internal class ScanIndex(context: Context) :
             createGroupIndexes(db)
         }
         if (oldVersion < 3) createIdentityIndexes(db)
+        if (oldVersion < 4) {
+            // 仅重建未完成扫描的临时队列，文件选择与已完成操作不受影响。
+            db.execSQL("DROP TABLE IF EXISTS directories")
+            DirectoryScanIndex.create(db)
+        }
     }
 
     private fun createIdentityIndexes(db: SQLiteDatabase) {
@@ -92,19 +96,37 @@ internal class ScanIndex(context: Context) :
     }
 
     fun finishScan(handle: ScanHandle) {
-        writableDatabase.update(
-            "scans",
-            ContentValues().apply {
-                put("count", handle.scannedCount)
-                put("label", handle.scopeLabel)
-                put("partial", if (handle.partial) 1 else 0)
-                put("ready", 1)
-                put("analysis_skipped", handle.analysisSkipped)
-            },
-            "id=?",
-            arrayOf(handle.id.toString()),
-        )
-        writableDatabase.delete("directories", "scan=?", arrayOf(handle.id.toString()))
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            if (handle.feature == CleanupFeature.SMART_CLEAN) {
+                // 只全选当前展示的四类候选，覆盖所有分页；旧分类不会被隐藏后悄悄清理。
+                // 仅对未发布的新扫描执行；重复完成、页面恢复不能覆盖用户手动取消的选择。
+                val (selection, args) = where(handle.id, handle.feature, CleanupFilter())
+                db.execSQL(
+                    """UPDATE files SET selected=1 WHERE $selection AND retained=0
+                    AND EXISTS (SELECT 1 FROM scans WHERE id=? AND ready=0)""",
+                    arrayOf(*args, handle.id.toString()),
+                )
+            }
+            db.update(
+                "scans",
+                ContentValues().apply {
+                    put("count", handle.scannedCount)
+                    put("label", handle.scopeLabel)
+                    put("partial", if (handle.partial) 1 else 0)
+                    put("ready", 1)
+                    put("analysis_skipped", handle.analysisSkipped)
+                },
+                "id=?",
+                arrayOf(handle.id.toString()),
+            )
+            db.delete("directories", "scan=?", arrayOf(handle.id.toString()))
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
+        // 提交选择和扫描状态后统一通知，总览和详情首次读取即保持一致。
         invalidate()
     }
 
@@ -124,22 +146,27 @@ internal class ScanIndex(context: Context) :
                     )
             }
 
-    fun insert(scan: Long, batch: List<ScannedFile>) {
+    /** 返回本批实际新增的已分类候选容量；忽略重复 URI，不重复累计扫描数字。 */
+    fun insert(scan: Long, batch: List<ScannedFile>): Long {
         val db = writableDatabase
+        var candidateBytes = 0L
         db.beginTransaction()
         try {
             batch.forEach { item ->
-                db.insertWithOnConflict(
+                val inserted = db.insertWithOnConflict(
                     "files",
                     null,
                     values(item).apply { put("scan", scan) },
                     SQLiteDatabase.CONFLICT_IGNORE,
                 )
+                if (inserted != -1L && item.bucket.isNotEmpty() && !item.retained)
+                    candidateBytes += item.size
             }
             db.setTransactionSuccessful()
         } finally {
             db.endTransaction()
         }
+        return candidateBytes
     }
 
     private fun values(item: ScannedFile) =
@@ -183,9 +210,12 @@ internal class ScanIndex(context: Context) :
         }
         if (feature == CleanupFeature.SMART_CLEAN) {
             clauses += "bucket<>''"
-            filter.bucket?.let {
+            if (filter.bucket != null) {
                 clauses += "bucket=?"
-                args += it
+                args += filter.bucket
+            } else {
+                clauses += "bucket IN (${JunkKind.visible.joinToString { "?" }})"
+                args += JunkKind.visible.map { it.name }
             }
         }
         return clauses.joinToString(" AND ") to args.toTypedArray()
@@ -241,8 +271,7 @@ internal class ScanIndex(context: Context) :
         val (selection, args) = where(handle.id, handle.feature, filter)
         return readableDatabase
             .rawQuery(
-                """SELECT COUNT(*),TOTAL(size),TOTAL(selected),TOTAL(CASE WHEN selected=1 THEN size ELSE 0 END),
-            TOTAL(size*(100-quality)/100.0) FROM files WHERE $selection AND retained=0""",
+                """SELECT COUNT(*),TOTAL(size),TOTAL(selected),TOTAL(CASE WHEN selected=1 THEN size ELSE 0 END) FROM files WHERE $selection AND retained=0""",
                 args,
             )
             .use {
@@ -252,7 +281,6 @@ internal class ScanIndex(context: Context) :
                     it.getDouble(1).toLong(),
                     it.getInt(2),
                     it.getDouble(3).toLong(),
-                    it.getDouble(4).toLong(),
                 )
             }
     }
@@ -355,36 +383,6 @@ internal class ScanIndex(context: Context) :
         writableDatabase.delete("scans", "id=?", arrayOf(scan.toString()))
         invalidate()
     }
-
-    fun enqueueDirectory(scan: Long, document: String) =
-        writableDatabase.insertWithOnConflict(
-            "directories",
-            null,
-            ContentValues().apply {
-                put("scan", scan)
-                put("document", document)
-            },
-            SQLiteDatabase.CONFLICT_IGNORE,
-        )
-
-    fun takeDirectory(scan: Long): String? =
-        writableDatabase
-            .rawQuery(
-                "SELECT document FROM directories WHERE scan=? AND done=0 LIMIT 1",
-                arrayOf(scan.toString()),
-            )
-            .use {
-                if (!it.moveToFirst()) null
-                else
-                    it.getString(0).also { id ->
-                        writableDatabase.update(
-                            "directories",
-                            ContentValues().apply { put("done", 1) },
-                            "scan=? AND document=?",
-                            arrayOf(scan.toString(), id),
-                        )
-                    }
-            }
 
     fun register(source: PagingSource<*, *>) {
         synchronized(sources) { sources.add(source) }
@@ -492,16 +490,20 @@ internal class ScanIndex(context: Context) :
             .use { if (it.moveToFirst()) it.getString(0) else "missing" }
 
     /** 基于持久操作快照统计；原文件删除后仍可读取，副本占用从已删除字节中扣除。 */
-    fun operationStorage(operation: Long): Pair<Long, Long> =
+    fun operationStorage(operation: Long): OperationStorage =
         readableDatabase.rawQuery(
             """SELECT COALESCE(SUM(CASE WHEN state='deleted' THEN file_bytes ELSE 0 END),0)
                 - COALESCE(SUM(output_bytes),0),
-                COALESCE(SUM(CASE WHEN output IS NOT NULL THEN MAX(file_bytes-output_bytes,0) ELSE 0 END),0)
+                COALESCE(SUM(CASE WHEN output IS NOT NULL THEN MAX(file_bytes-output_bytes,0) ELSE 0 END),0),
+                COALESCE(SUM(file_bytes),0),
+                COALESCE(SUM(CASE WHEN output IS NOT NULL THEN file_bytes ELSE 0 END),0),
+                COALESCE(SUM(output_bytes),0)
                 FROM operation_items WHERE op=?""",
             arrayOf(operation.toString()),
         ).use {
             it.moveToFirst()
-            it.getLong(0).coerceAtLeast(0) to it.getLong(1).coerceAtLeast(0)
+            OperationStorage(it.getLong(0).coerceAtLeast(0), it.getLong(1).coerceAtLeast(0),
+                it.getLong(2).coerceAtLeast(0), it.getLong(3).coerceAtLeast(0), it.getLong(4).coerceAtLeast(0))
         }
 
     fun cancelPending(operation: Long) {

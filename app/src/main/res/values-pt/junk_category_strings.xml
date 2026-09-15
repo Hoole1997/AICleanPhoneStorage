@@ -1,0 +1,7 @@
+<resources>
+    <string name="junk_empty_folders">Pastas vazias</string>
+    <string name="junk_ad_files">Arquivos de anúncios</string>
+    <string name="junk_temporary_files_description">Arquivos com extensões temporárias e arquivos em pastas de cache acessíveis. Confira antes de excluir.</string>
+    <string name="junk_empty_folders_description">Pastas sem arquivos, inclusive nas subpastas. Cada pasta conta como 0 B.</string>
+    <string name="junk_ad_files_description">Arquivos com nomes relacionados a anúncios ou em pastas de SDKs de anúncios conhecidos. Confira antes de excluir.</string>
+</resources>

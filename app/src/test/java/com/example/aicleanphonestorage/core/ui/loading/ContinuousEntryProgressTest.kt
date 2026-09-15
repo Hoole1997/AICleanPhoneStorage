@@ -7,6 +7,49 @@ import org.junit.Test
 @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 class ContinuousEntryProgressTest {
     @Test
+    fun capacityStartsAtZeroGrowsWithProgressAndFinishesAtExactResult() = runTest {
+        val frames = mutableListOf<TimedEntryProgress.Frame>()
+        val bytes = 123_456_789L
+        TimedEntryLoader({ 2500 }, { testScheduler.currentTime }).load(
+            initialStage = "FILES",
+            finalStage = "PHOTOS",
+            continuousStages = listOf("FILES", "PHOTOS"),
+            count = { it: Int -> it },
+            onFrame = frames::add,
+        ) { report ->
+            report(TaskProgress("FILES", 200, bytes = 20_000_000))
+            kotlinx.coroutines.delay(500)
+            report(TaskProgress("PHOTOS", 0, bytes = 20_000_000))
+            kotlinx.coroutines.delay(500)
+            report(TaskProgress("PHOTOS", 400, 400, bytes))
+            400
+        }
+        assertEquals(0, frames.first().percent)
+        assertEquals(0L, frames.first().detail.bytes ?: 0)
+        val capacities = frames.map { it.detail.bytes ?: 0 }
+        assertTrue(capacities.zipWithNext().all { (a, b) -> b >= a })
+        assertTrue(capacities.distinct().size > 20)
+        assertEquals(100, frames.last().percent)
+        assertEquals(bytes, frames.last().detail.bytes)
+        assertTrue(frames.all { (it.detail.bytes ?: 0) <= bytes })
+    }
+
+    @Test
+    fun capacityHandlesEmptyAndLargeResultsAndIgnoresLateReports() {
+        for (bytes in listOf(0L, Long.MAX_VALUE)) {
+            var now = 0L
+            val timeline = ContinuousEntryProgress(0, 2000, { now }, listOf("FILES", "PHOTOS"))
+            timeline.report(TaskProgress("PHOTOS", 1, 1, bytes))
+            timeline.complete(1, "PHOTOS")
+            timeline.report(TaskProgress("FILES", 0, bytes = 0))
+            now = 1000
+            assertTrue(timeline.frame().detail.bytes!! in 0..bytes)
+            now = 2000
+            assertEquals(bytes, timeline.frame().detail.bytes)
+        }
+    }
+
+    @Test
     fun unknownTotalsAndStageChangesNeverSwitchModeOrResetProgress() {
         var now = 0L
         val timeline = ContinuousEntryProgress(0, 2500, { now }, listOf("FILES", "PHOTOS"))

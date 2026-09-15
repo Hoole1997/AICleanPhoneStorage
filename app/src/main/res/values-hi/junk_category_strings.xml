@@ -1,0 +1,7 @@
+<resources>
+    <string name="junk_empty_folders">खाली फ़ोल्डर</string>
+    <string name="junk_ad_files">विज्ञापन फ़ाइलें</string>
+    <string name="junk_temporary_files_description">अस्थायी एक्सटेंशन वाली फ़ाइलें और उपलब्ध cache फ़ोल्डरों की फ़ाइलें। हटाने से पहले जाँचें।</string>
+    <string name="junk_empty_folders_description">ऐसे फ़ोल्डर जिनमें या उनके सबफ़ोल्डरों में कोई फ़ाइल नहीं है। प्रत्येक का आकार 0 B है।</string>
+    <string name="junk_ad_files_description">विज्ञापन-संबंधी नाम वाली या ज्ञात विज्ञापन SDK फ़ोल्डरों की फ़ाइलें। हटाने से पहले जाँचें।</string>
+</resources>

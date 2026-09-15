@@ -29,6 +29,7 @@ data class LoadingUiState(
     val cancellable: Boolean = true,
     val showAd: Boolean = true,
     val resultKey: String = TaskLoadingDialogFragment.RESULT_KEY,
+    val bytes: Long? = null,
 )
 
 class TaskLoadingDialogFragment : DialogFragment() {
@@ -36,6 +37,8 @@ class TaskLoadingDialogFragment : DialogFragment() {
     private var spinner: ObjectAnimator? = null
     private var nativeAd: NativeAdCoordinator? = null
     private var viewReady = false
+    private var started = false
+    private var capacityRenderer: LoadingCapacityRenderer? = null
     private lateinit var model: LoadingUiState
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +53,7 @@ class TaskLoadingDialogFragment : DialogFragment() {
                 state.getBoolean("cancellable", true),
                 state.getBoolean("ad", true),
                 state.getString("result_key") ?: RESULT_KEY,
+                state.getLong("bytes", -1).takeIf { it >= 0 },
             )
         isCancelable = model.cancellable
     }
@@ -68,6 +72,7 @@ class TaskLoadingDialogFragment : DialogFragment() {
     ): View {
         val viewBinding = DialogTaskLoadingBinding.inflate(inflater, container, false)
         binding = viewBinding
+        capacityRenderer = LoadingCapacityRenderer(viewBinding)
         viewBinding.loadingClose.setOnClickListener {
             if (model.cancellable) {
                 publishCancellation()
@@ -104,13 +109,18 @@ class TaskLoadingDialogFragment : DialogFragment() {
     }
 
     fun render(state: LoadingUiState) {
+        if (::model.isInitialized && model.requestId != state.requestId) capacityRenderer?.stop()
         model = state
         isCancelable = state.cancellable
         binding?.apply {
             loadingTitle.text = state.title
             loadingMessage.text = state.message
             loadingClose.isVisible = state.cancellable
-            if (state.percent == null) {
+            loadingCapacity.isVisible = state.bytes != null
+            if (state.bytes != null) {
+                capacityRenderer?.render(state.bytes, state.percent ?: 0, animate = started)
+            } else if (state.percent == null) {
+                capacityRenderer?.stop()
                 if (!loadingProgress.isIndeterminate) {
                     loadingProgress.visibility = View.INVISIBLE
                     loadingProgress.isIndeterminate = true
@@ -118,8 +128,10 @@ class TaskLoadingDialogFragment : DialogFragment() {
                 }
                 loadingPercentage.setText(R.string.task_loading_unknown)
             } else {
+                capacityRenderer?.stop()
                 // 同一帧切换模式并赋值，避免等待 indeterminate 动画结束，导致进度条落后于计数。
                 if (loadingProgress.isIndeterminate) loadingProgress.isIndeterminate = false
+                loadingProgress.max = 100
                 loadingProgress.setProgressCompat(state.percent.coerceIn(0, 100), false)
                 loadingPercentage.text =
                     NumberFormat.getPercentInstance(resources.configuration.locales[0])
@@ -131,6 +143,8 @@ class TaskLoadingDialogFragment : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
+        started = true
+        render(model)
         val metrics = resources.displayMetrics
         val width =
             minOf(
@@ -143,7 +157,7 @@ class TaskLoadingDialogFragment : DialogFragment() {
             addFlags(android.view.WindowManager.LayoutParams.FLAG_DIM_BEHIND)
             setDimAmount(0.7f)
         }
-        spinner =
+        if (ValueAnimator.areAnimatorsEnabled()) spinner =
             ObjectAnimator.ofFloat(binding?.loadingSpinner, View.ROTATION, 0f, 360f).apply {
                 duration = 1000L
                 interpolator = LinearInterpolator()
@@ -153,12 +167,16 @@ class TaskLoadingDialogFragment : DialogFragment() {
     }
 
     override fun onStop() {
+        started = false
+        capacityRenderer?.stop()
         spinner?.cancel()
         spinner = null
         super.onStop()
     }
 
     override fun onDestroyView() {
+        capacityRenderer?.stop()
+        capacityRenderer = null
         viewReady = false
         nativeAd?.dispose()
         nativeAd = null
@@ -199,6 +217,7 @@ class TaskLoadingDialogFragment : DialogFragment() {
                 putBoolean("cancellable", cancellable)
                 putBoolean("ad", showAd)
                 putString("result_key", resultKey)
+                putLong("bytes", bytes ?: -1)
             }
     }
 }

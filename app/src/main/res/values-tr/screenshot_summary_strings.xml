@@ -1,0 +1,7 @@
+<resources>
+    <plurals name="cleanup_screenshot_summary">
+        <item quantity="one">%1$s ekran görüntüsü · %2$s</item>
+        <item quantity="other">%1$s ekran görüntüsü · %2$s</item>
+    </plurals>
+    <string name="cleanup_screenshot_clean">Dosyaları temizle (%1$s)</string>
+</resources>

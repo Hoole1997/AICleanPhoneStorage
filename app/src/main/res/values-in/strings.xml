@@ -33,8 +33,8 @@
     <string name="cleanup_scan_failed">Tidak dapat memindai file. Silakan periksa akses dan coba lagi.</string>
     <string name="cleanup_action_failed">Beberapa berkas tidak dapat diproses. Silakan segarkan dan coba lagi.</string>
     <string name="cleanup_no_files">Tidak ditemukan file yang cocok.</string>
-    <string name="cleanup_photo_summary">Kompres foto Anda. Perkiraan penghematan:</string>
-    <string name="cleanup_estimate">Perkiraan. hemat %1$s</string>
+
+
     <string name="cleanup_preview">Pratinjau %1$s</string>
     <string name="cleanup_select_file">Pilih %1$s</string>
     <string name="cleanup_quality">Kualitas kompresi</string>
@@ -56,7 +56,6 @@
     <string name="cleanup_tips">Kiat</string>
     <string name="cleanup_confirm">Konfirmasi</string>
     <string name="cleanup_delete_confirm">Hapus file yang dipilih secara permanen?\nJumlah: %1$d · Ukuran: %2$s</string>
-    <string name="cleanup_compress_confirm">Membuat salinan JPEG yang lebih kecil? Foto yang dipilih: %1$d. Salinan dibatasi hingga 2048 piksel dan mungkin lebih kecil pada perangkat dengan memori rendah. Yang asli disimpan. Area transparan menjadi putih.</string>
     <string name="cleanup_working">Memproses %1$d / %2$d</string>
     <string name="cleanup_result">Dihapus: %1$d\nSalinan yang lebih kecil: %2$d\nTidak diubah atau dibatalkan: %3$d\nGagal: %4$d</string>
     <string name="cleanup_remove_originals">Hapus foto asli</string>
@@ -227,7 +226,7 @@
     <string name="traffic_title">Lalu Lintas Jaringan</string>
     <string name="traffic_back">Kembali</string>
     <string name="traffic_this_month">Bulan Ini</string>
-    <string name="traffic_last_month">Bulan Lalu</string>
+    <string name="traffic_this_week">Minggu Ini</string>
     <string name="traffic_24_hours">24 Jam</string>
     <string name="traffic_mobile">Data seluler</string>
     <string name="traffic_wifi">Wi-Fi</string>

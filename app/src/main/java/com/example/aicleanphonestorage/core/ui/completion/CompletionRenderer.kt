@@ -8,6 +8,7 @@ import java.text.NumberFormat
 
 /** 仅将真实结果映射为文案和可见状态，可独立验证字号/屏幕适配。 */
 internal class CompletionRenderer(private val binding: ScreenCompletionBinding) {
+    private val sizes = com.example.aicleanphonestorage.core.format.StorageSizeFormatter(binding.root.context)
     fun render(value: CompletionReport) =
         with(binding.root.context) {
             binding.completionPageTitle.setText(
@@ -49,11 +50,18 @@ internal class CompletionRenderer(private val binding: ScreenCompletionBinding) 
                             Formatter.formatShortFileSize(binding.root.context, value.freedBytes),
                         )
                     )
+                if (value.kind == CompletionKind.COMPRESSION) {
+                    value.inputBytes?.let { add(getString(R.string.compression_selected_size, sizes.megabytes(it))) }
+                }
                 if (value.kind == CompletionKind.COMPRESSION && value.completed > 0) {
+                    if (value.partial) value.copiedOriginalBytes?.let {
+                        add(getString(R.string.compression_processed_size, sizes.megabytes(it)))
+                    }
+                    value.outputBytes?.let { add(getString(R.string.compression_output_size, sizes.megabytes(it))) }
                     add(
                         getString(
                             R.string.completion_copies_smaller,
-                            Formatter.formatShortFileSize(binding.root.context, value.reducedBytes),
+                            sizes.megabytes(value.reducedBytes),
                         )
                     )
                     if (value.originalsRemaining > 0)

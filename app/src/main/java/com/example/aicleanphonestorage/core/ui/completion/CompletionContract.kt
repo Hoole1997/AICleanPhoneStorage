@@ -20,6 +20,9 @@ internal object CompletionContract {
             putExtra("completion.skipped", report.skipped)
             putExtra("completion.freed", report.freedBytes)
             putExtra("completion.reduced", report.reducedBytes)
+            report.inputBytes?.let { putExtra("completion.input_bytes", it) }
+            report.copiedOriginalBytes?.let { putExtra("completion.copied_original_bytes", it) }
+            report.outputBytes?.let { putExtra("completion.output_bytes", it) }
             putExtra("completion.remaining", report.originalsRemaining)
             putExtra("completion.removable", report.removableOriginals)
             putExtra(OPERATION, report.operationId)
@@ -40,6 +43,10 @@ internal object CompletionContract {
             intent.getIntExtra("completion.remaining", 0).coerceAtLeast(0),
             intent.getIntExtra("completion.removable", 0).coerceAtLeast(0),
             intent.getLongExtra(OPERATION, 0),
+            // 旧版完成页 Intent 没有这些字段时不伪造 0，仍可恢复原有结果。
+            intent.getLongExtra("completion.input_bytes", -1).takeIf { it >= 0 },
+            intent.getLongExtra("completion.copied_original_bytes", -1).takeIf { it >= 0 },
+            intent.getLongExtra("completion.output_bytes", -1).takeIf { it >= 0 },
         )
     }
 }

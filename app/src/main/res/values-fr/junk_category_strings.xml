@@ -1,0 +1,7 @@
+<resources>
+    <string name="junk_empty_folders">Dossiers vides</string>
+    <string name="junk_ad_files">Fichiers publicitaires</string>
+    <string name="junk_temporary_files_description">Fichiers à extension temporaire et fichiers dans les dossiers cache accessibles. Vérifiez avant de supprimer.</string>
+    <string name="junk_empty_folders_description">Dossiers sans aucun fichier, y compris dans leurs sous-dossiers. Chaque dossier compte pour 0 o.</string>
+    <string name="junk_ad_files_description">Fichiers aux noms publicitaires ou dans les dossiers de SDK publicitaires connus. Vérifiez avant de supprimer.</string>
+</resources>

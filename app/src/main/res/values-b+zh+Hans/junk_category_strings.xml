@@ -1,0 +1,7 @@
+<resources>
+    <string name="junk_empty_folders">空文件夹</string>
+    <string name="junk_ad_files">广告文件</string>
+    <string name="junk_temporary_files_description">临时后缀文件及可访问的 cache 目录中的文件。删除前请检查。</string>
+    <string name="junk_empty_folders_description">整棵目录树不含任何文件的文件夹，每个按 0 B 计。</string>
+    <string name="junk_ad_files_description">名称含广告特征或位于已知广告 SDK 目录中的候选文件。删除前请检查。</string>
+</resources>

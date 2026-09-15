@@ -1,0 +1,6 @@
+<resources>
+    <string name="compression_selected_label">Größe ausgewählter Originale</string>
+    <string name="compression_selected_size">Ausgewählte Originale: %1$s</string>
+    <string name="compression_processed_size">Erfolgreich komprimierte Originale: %1$s</string>
+    <string name="compression_output_size">Komprimierte Kopien: %1$s</string>
+</resources>

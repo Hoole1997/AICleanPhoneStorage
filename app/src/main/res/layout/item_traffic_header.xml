@@ -4,8 +4,8 @@
         app:singleSelection="true" app:selectionRequired="true" app:chipSpacingHorizontal="12dp">
         <com.google.android.material.chip.Chip style="@style/Widget.Traffic.Filter" android:id="@+id/period_month"
             android:layout_width="wrap_content" android:layout_height="wrap_content" android:checkable="true" android:text="@string/traffic_this_month"/>
-        <com.google.android.material.chip.Chip style="@style/Widget.Traffic.Filter" android:id="@+id/period_previous"
-            android:layout_width="wrap_content" android:layout_height="wrap_content" android:checkable="true" android:text="@string/traffic_last_month"/>
+        <com.google.android.material.chip.Chip style="@style/Widget.Traffic.Filter" android:id="@+id/period_week"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" android:checkable="true" android:text="@string/traffic_this_week"/>
         <com.google.android.material.chip.Chip style="@style/Widget.Traffic.Filter" android:id="@+id/period_day"
             android:layout_width="wrap_content" android:layout_height="wrap_content" android:checkable="true" android:text="@string/traffic_24_hours"/>
     </com.google.android.material.chip.ChipGroup>
