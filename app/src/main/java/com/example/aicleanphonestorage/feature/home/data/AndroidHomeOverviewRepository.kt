@@ -12,6 +12,7 @@ internal class AndroidHomeOverviewRepository(
     private val files: HomeFileMetricsSource,
     private val platform: HomePlatformMetricsSource,
     private val notifications: NotificationRulesStore,
+    private val appCount: com.example.aicleanphonestorage.core.data.apps.InstalledAppCountRepository,
 ) : HomeOverviewRepository {
     override fun observeOverview() =
         combine(
@@ -23,13 +24,15 @@ internal class AndroidHomeOverviewRepository(
                     HomeToolMetric.AppCount(it.size, selected = true)
                 }
                 .catch { if (it is IOException) emit(HomeToolMetric.Unavailable) else throw it },
-        ) { overview, fileMetrics, system, notificationMetric ->
+            appCount.count,
+        ) { overview, fileMetrics, system, notificationMetric, count ->
             overview.copy(
                 wifiBytes = system.wifiBytes,
                 tools =
                     fileMetrics.copy(
                         network = system.network,
-                        apps = system.apps,
+                        // 首页采用数量回退时与通知共用同一快照；有占用权限时仍显示原来的容量。
+                        apps = system.apps.withSharedAppCount(count),
                         notifications = notificationMetric,
                     )
             )

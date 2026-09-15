@@ -36,6 +36,8 @@ class KeepAliveWorker(
     }
 
     override suspend fun doWork(): Result {
+        // 历史任务可能在迁移取消前已被调度；事件监听模式不执行任何周期工作。
+        if (!io.docview.push.host.PushEnvironment.host.periodicPushEnabled) return Result.success()
         return try {
             Logger.d("开始执行通知保活任务")
 

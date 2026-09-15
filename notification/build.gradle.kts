@@ -12,7 +12,11 @@ fun channelConfig(name: String) = Properties().apply {
 android {
     namespace = "io.docview.push"
     compileSdk { version = release(37) }
-    defaultConfig { minSdk = 24 }
+    defaultConfig {
+        minSdk = 24
+        // 所有渠道/构建类型均导出规则，防止混淆宿主依赖 debug AAR 时丢失反射契约。
+        consumerProguardFiles("consumer-rules.pro")
+    }
     flavorDimensions += "distribution"
     productFlavors {
         listOf("local", "google").forEach { channel ->
@@ -26,9 +30,6 @@ android {
                 buildConfigField("String", "USER_CHANNEL", "\"${config.getProperty("userChannel")}\"")
             }
         }
-    }
-    buildTypes {
-        release { consumerProguardFiles("proguard-rules.pro") }
     }
     buildFeatures { viewBinding = true; buildConfig = true }
     compileOptions {

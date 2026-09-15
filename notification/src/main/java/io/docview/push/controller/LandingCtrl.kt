@@ -83,6 +83,9 @@ object LandingCtrl {
         intent.removeExtra("mark_red_point_clicked")
         intent.removeExtra(LANDING_NOTIFICATION_ID)
         intent.removeExtra(LANDING_NOTIFICATION_FROM)
+        intent.removeExtra(io.docview.push.builder.LANDING_NOTIFICATION_TITLE)
+        intent.removeExtra(io.docview.push.builder.LANDING_NOTIFICATION_CONTENT)
+        intent.removeExtra(io.docview.push.builder.LANDING_NOTIFICATION_EARTHQUAKE_DATA)
 
         // 清理通知动作
         intent.action = null

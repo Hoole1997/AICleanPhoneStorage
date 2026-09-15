@@ -1,12 +1,14 @@
-# Add project specific R8 rules here.
-# AGP will combine all keep rule files in src/main/keepRules to pass to R8
-#
-# For more details, see
-#   https://d.android.com/r/tools/r8/keep-rules
+# app 的规则由 AGP 9.3 keepRules source set 自动加载，local/google release 共用。
+# 默认 Android 规则无需再次引入；禁止通过全包 keep / dontwarn 掩盖缺失依赖。
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# HotStartAdCoordinator.isBusinessActivity 使用 Activity 的完整类名判断包前缀。
+# 仅固定本应用 Activity 的类名；方法/字段仍可优化，未使用的类仍可移除。
+# 当前 Manifest 入口也由 AAPT 保留，此规则明确记录业务代码额外依赖的类名契约。
+-keepnames class com.example.aicleanphonestorage.** extends android.app.Activity
+
+# 其余入口的规则归属（详见 docs/r8-audit.md）：
+# - Manifest 组件、XML 自定义 View 构造函数：AGP/AAPT 自动生成。
+# - Fragment、ViewModel 反射构造、WorkManager：对应 AndroidX consumer rules。
+# - ViewBinding、显式构造的 ViewModel.Factory、广告 renderer 回调：静态调用可追踪。
+# - Gson 模型：notification / metrics 各自导出 consumer-rules.pro。
+# - 广告、Glide、Firebase、Adjust、ThinkingData：使用实际解析依赖自带的规则。

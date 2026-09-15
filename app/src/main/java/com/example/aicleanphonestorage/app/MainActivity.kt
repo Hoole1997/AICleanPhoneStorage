@@ -222,6 +222,7 @@ class MainActivity : AppCompatActivity() {
             pushPermissionModel.completeFromPreviousHost()
         pushPermission = PushPermissionCoordinator.attach(this,
             (application as CleanApplication).notificationRuntime, pushPermissionModel, permissions,
+            position = com.example.aicleanphonestorage.feature.push.PushPermissionPosition.HOME,
             beforeSettings = homeActions::cancelPending)
         binding.retryButton.setOnClickListener { homeViewModel.retry() }
         previewSelection = HomePreviewSupport.initialSelection(intent, savedInstanceState)

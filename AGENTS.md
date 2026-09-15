@@ -23,3 +23,9 @@
 - 用户于 2026-09-15 明确应用自身页面统一锁定竖屏；保留大字体、小屏和系统 inset 适配。
 
 - 闲置文件按用户 2026-09-15 确认分为已安装 APK、已卸载应用在共享 Android/data 或 Android/obb 下的残留、Download 下超 30 天未修改的文档/压缩包。排除按年龄筛选的媒体及应用私有数据；无法确认包不存在或没有访问权时跳过，不猜测卸载状态。各功能口径独立，同一文件可在垃圾清理、大文件和闲置文件同时出现。删除前再次验证资格，残留只按选中快照逐项处理，目录为空才删除。
+
+- 用户于 2026-09-15 授权同时启用 Application 与 CoreService 两层屏幕事件监听，以提高后台可用性。两处独立注册/释放并共用事件去重；CoreService 复用用户可见常驻通知，按系统规则启动和 sticky 恢复。事件监听与旧周期推送/WorkManager 分离，后两者默认关闭；不借 Provider 重试、轮询或电池豁免绕过后台启动限制，不承诺系统杀进程后必定恢复。
+
+- 用户于 2026-09-15 要求自家推送的 Notific_Click、Notific_Show、Notific_Enter 补齐 from_background、title、text。通知文案可作为有界埋点快照通过启动页传递，Click/Enter 共用点击前后台状态；不复制完整 extras，不读取其他应用通知正文。自然用户第四个常驻入口保持隐藏，不为埋点或测试改动该显示规则。
+
+- 通知权限埋点 Notific_Allow_Start 仅在未授权且真正调用申请 API 时上报，排队和引导展示不算申请。Notific_Allow_Result 按协议使用 allow、denied、deined_forever、allow1；默认已授权只报 allow1。位置为 SplashScreen/HomeScreen，同一次申请结果保留原位置，防止生命周期重复上报。

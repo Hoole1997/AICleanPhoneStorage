@@ -2,7 +2,6 @@ package com.example.aicleanphonestorage.feature.home.data
 
 import android.app.usage.StorageStatsManager
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Process
 import android.os.storage.StorageManager
@@ -23,7 +22,11 @@ internal data class HomePlatformMetrics(
 )
 
 /** 每次首页订阅时读取系统摘要，串行占用一个 I/O 许可；不查应用明细，不轮询或请求新权限。 */
-internal class HomePlatformMetricsSource(context: Context, private val executor: TaskExecutor) {
+internal class HomePlatformMetricsSource(
+    context: Context,
+    private val executor: TaskExecutor,
+    private val appCount: com.example.aicleanphonestorage.core.data.apps.InstalledAppCountRepository,
+) {
     private val app = context.applicationContext
     private val access = UsageAccessChecker(app)
     private val traffic = AndroidTrafficDataSource(app)
@@ -67,7 +70,7 @@ internal class HomePlatformMetricsSource(context: Context, private val executor:
                     wifiBytes = wifiBytes,
                 )
             )
-            val apps = safely { executor.io { readApps(granted) } }
+            val apps = safely { readApps(granted) }
             currentCoroutineContext().ensureActive()
             val result = HomePlatformMetrics(network, apps, wifiBytes)
             cached = result
@@ -82,13 +85,14 @@ internal class HomePlatformMetricsSource(context: Context, private val executor:
             val manager = app.getSystemService(StorageStatsManager::class.java)
             try {
                 // 系统按当前用户汇总，避免逐包查询以及 shared UID 重复累加。
-                val stats =
-                    manager?.queryStatsForUser(StorageManager.UUID_DEFAULT, Process.myUserHandle())
-                currentCoroutineContext().ensureActive()
-                if (stats != null && stats.appBytes >= 0 && stats.dataBytes >= 0)
-                    return HomeToolMetric.Bytes(
-                        addBytes(stats.appBytes, stats.dataBytes)
-                    ) // dataBytes 已包含 cacheBytes。
+                val size = executor.io {
+                    val stats = manager?.queryStatsForUser(StorageManager.UUID_DEFAULT, Process.myUserHandle())
+                    currentCoroutineContext().ensureActive()
+                    if (stats != null && stats.appBytes >= 0 && stats.dataBytes >= 0)
+                        HomeToolMetric.Bytes(addBytes(stats.appBytes, stats.dataBytes)) // dataBytes 已包含 cacheBytes。
+                    else null
+                }
+                if (size != null) return size
             } catch (error: SecurityException) {
                 /* 无权读取占用时显示可管理应用数。 */
             } catch (error: IOException) {
@@ -98,13 +102,8 @@ internal class HomePlatformMetricsSource(context: Context, private val executor:
             }
         }
         currentCoroutineContext().ensureActive()
-        @Suppress("DEPRECATION")
-        val packages =
-            app.packageManager.queryIntentActivities(
-                Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER),
-                0,
-            )
-        return HomeToolMetric.AppCount(packages.map { it.activityInfo.packageName }.toSet().size)
+        // refresh 自己获取一次 I/O 许可，不能套在 executor.io 中造成嵌套许可死锁。
+        return HomeToolMetric.AppCount(appCount.refresh())
     }
 
     private suspend fun safely(block: suspend () -> HomeToolMetric): HomeToolMetric =

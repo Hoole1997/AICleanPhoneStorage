@@ -20,7 +20,8 @@ android {
 
     defaultConfig {
         minSdk = 26
-        consumerProguardFiles("proguard-rules.pro")
+        // 本库不单独混淆；规则随 AAR 交给宿主的最终 R8 构建执行。
+        consumerProguardFiles("consumer-rules.pro")
     }
     flavorDimensions += "distribution"
     productFlavors {
@@ -43,6 +44,7 @@ android {
 }
 
 dependencies {
+    testImplementation(libs.junit)
     implementation("com.github.toukaremax:core:1.0.15")
     // metrics 只使用 core 的上报协议，无需引入完整 bill 广告依赖。
     implementation(platform(libs.firebase.bom))

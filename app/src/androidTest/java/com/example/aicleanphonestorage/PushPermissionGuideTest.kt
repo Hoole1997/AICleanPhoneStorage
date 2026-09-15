@@ -35,21 +35,22 @@ class PushPermissionGuideTest {
         var granted = false
         var settingsRequired = false
         val requests = mutableListOf<PushPermissionRequest>()
-        lateinit var callback: (Boolean, Boolean) -> Unit
+        lateinit var callback: (PushPermissionOutcome) -> Unit
 
         override fun isGranted() = granted
 
         override fun needsSettings(origin: PushPermissionRequest) =
             settingsRequired
 
-        override fun request(origin: PushPermissionRequest, result: (Boolean, Boolean) -> Unit) {
+        override fun request(origin: PushPermissionRequest, onStarted: () -> Unit, result: (PushPermissionOutcome) -> Unit) {
+            onStarted()
             requests += origin
             callback = result
         }
 
         fun complete(granted: Boolean, denied: Boolean) {
             this.granted = granted
-            callback(granted, denied)
+            callback(if (granted) PushPermissionOutcome.ALLOWED else if (denied) PushPermissionOutcome.DENIED else PushPermissionOutcome.UNAVAILABLE)
         }
     }
 
@@ -61,8 +62,8 @@ class PushPermissionGuideTest {
             scenario.onActivity { activity ->
                 coordinator = PushPermissionCoordinator(activity,
                     (activity.application as CleanApplication).notificationRuntime,
-                    PushPermissionViewModel(SavedStateHandle()), { false }, { error("No settings") }, permissions,
-                    allowGuide = false)
+                    PushPermissionViewModel(SavedStateHandle()), PushPermissionPosition.SPLASH, { false }, { error("No settings") }, permissions,
+                    allowGuide = false, events = com.example.aicleanphonestorage.core.analytics.EventSink { _, _ -> })
                 coordinator.onResume()
             }
             instrumentation.waitForIdleSync()
@@ -85,7 +86,8 @@ class PushPermissionGuideTest {
             scenario.onActivity { activity ->
                 coordinator = PushPermissionCoordinator(activity,
                     (activity.application as CleanApplication).notificationRuntime,
-                    PushPermissionViewModel(SavedStateHandle()), { pending }, { opened++; pending = true }, permissions)
+                    PushPermissionViewModel(SavedStateHandle()), PushPermissionPosition.HOME, { pending }, { opened++; pending = true }, permissions,
+                    events = com.example.aicleanphonestorage.core.analytics.EventSink { _, _ -> })
                 coordinator.onResume()
             }
             instrumentation.waitForIdleSync()

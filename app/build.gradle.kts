@@ -76,6 +76,7 @@ android {
     buildTypes {
         release {
             optimization {
+                // AGP 9.3 自动合入 src/main/keepRules/*.keep 及 Android 默认规则。
                 enable = true
             }
         }

@@ -130,7 +130,7 @@ class HomeMetricsDeviceTest {
 
     @Test
     fun platformMetricsSettleWithoutRequestingPermissions() = runBlocking {
-        val result = HomePlatformMetricsSource(context, executor).observe().toList().last()
+        val result = HomePlatformMetricsSource(context, executor, (context.applicationContext as CleanApplication).container.installedAppCount).observe().toList().last()
         assertNotEquals(HomeToolMetric.Reading, result.network)
         assertNotEquals(HomeToolMetric.Reading, result.apps)
         if (result.network == HomeToolMetric.AccessRequired) assertNull(result.wifiBytes)

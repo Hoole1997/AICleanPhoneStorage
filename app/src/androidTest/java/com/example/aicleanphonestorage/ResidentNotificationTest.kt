@@ -78,9 +78,13 @@ class ResidentNotificationTest {
             root.measure(View.MeasureSpec.makeMeasureSpec(width * 2, View.MeasureSpec.EXACTLY),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
             root.layout(0, 0, root.measuredWidth, root.measuredHeight)
+            // 此 fixture 是自然用户，第四个入口隐藏是业务要求；GONE 容器的子文字没有 Layout。
+            assertEquals(View.GONE, root.findViewById<View>(R.id.shortcut_unused).visibility)
             val labels = listOf(R.id.shortcut_clean_label, R.id.shortcut_network_label, R.id.shortcut_photos_label, R.id.shortcut_unused_label)
             for (id in labels) {
                 val label = root.findViewById<TextView>(id)
+                // 不用 isShown：RemoteViews 测试根节点尚未附着窗口，但可见内容仍须检查。
+                if (generateSequence<View>(label) { it.parent as? View }.any { it.visibility == View.GONE }) continue
                 assertTrue("$width/$font: text height", label.height >= label.layout.height + label.paddingTop + label.paddingBottom)
                 if (!compact) for (line in 0 until label.lineCount)
                     assertEquals("$width/$font: expanded label must fit", 0, label.layout.getEllipsisCount(line))

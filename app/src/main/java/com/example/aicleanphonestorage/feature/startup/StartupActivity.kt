@@ -65,8 +65,8 @@ class StartupActivity : AppCompatActivity() {
         )
         com.example.aicleanphonestorage.feature.push.ResidentClickTelemetry.consume(intent)
         val incoming = StartupNavigation.read(intent)
-        if (savedInstanceState == null) com.example.aicleanphonestorage.feature.push.NotificationLaunchTelemetry.clicked(incoming.notificationOrigin)
-        // 在创建 SavedStateHandle 前规范化 Intent，避免把通知正文或外部同名状态键存入页面状态。
+        if (savedInstanceState == null) com.example.aicleanphonestorage.feature.push.NotificationLaunchTelemetry.clicked(incoming.notification)
+        // 在创建 SavedStateHandle 前规范化 Intent，仅允许有界自家通知埋点字段进入状态。
         setIntent(StartupNavigation.startupIntent(this, incoming))
         val binding = ScreenStartupBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -101,6 +101,7 @@ class StartupActivity : AppCompatActivity() {
                 app.notificationRuntime,
                 pushPermissionModel,
                 permissions,
+                position = com.example.aicleanphonestorage.feature.push.PushPermissionPosition.SPLASH,
                 allowGuide = false,
             )
         ads = StartupAdCoordinator(this, binding.root, model)
@@ -130,7 +131,7 @@ class StartupActivity : AppCompatActivity() {
         if (permissions.onReturnIntent(intent)) return
         com.example.aicleanphonestorage.feature.push.ResidentClickTelemetry.consume(intent)
         val incoming = StartupNavigation.read(intent)
-        com.example.aicleanphonestorage.feature.push.NotificationLaunchTelemetry.clicked(incoming.notificationOrigin)
+        com.example.aicleanphonestorage.feature.push.NotificationLaunchTelemetry.clicked(incoming.notification)
         setIntent(StartupNavigation.startupIntent(this, incoming))
         model.accept(incoming)
         if (incoming.hotStart) model.permissionFinished()

@@ -4,15 +4,16 @@ import android.content.Intent
 import com.example.aicleanphonestorage.core.analytics.BusinessTelemetry
 import com.example.aicleanphonestorage.core.analytics.EventSink
 import com.example.aicleanphonestorage.core.analytics.MetricEvent
+import io.docview.push.analytics.NotificationContentIntent
+import io.docview.push.analytics.NotificationVisibility
 
-/** 只携带来源枚举；冷启动点击先入有界队列，SDK 就绪后再发送，不保存通知正文。 */
+/** 自家通知的有界文案与来源通过白名单传递；不读取其他 App 通知，也不复制完整 extras。 */
 internal object NotificationLaunchTelemetry {
     const val ORIGIN = "notification.metrics.origin"
-    private val origins = setOf("resident", "local", "remote")
+    const val FROM_BACKGROUND = "notification.metrics.from_background"
 
     fun origin(intent: Intent): String? {
-        intent.getStringExtra(ORIGIN)?.takeIf { it in origins }?.let { return it }
-        // 兼容升级前已投递的常驻卡片，它们只有既有 action 与目的地字段。
+        intent.getStringExtra(ORIGIN)?.takeIf { it in NotificationClickContext.origins }?.let { return it }
         if (intent.hasExtra(NotificationNavigation.EXTRA_DESTINATION) &&
             (intent.action?.contains(".resident.") == true || intent.action?.contains(".notification.") == true)) return "resident"
         if (intent.hasExtra("google.message_id") || intent.hasExtra("gcm.message_id")) return "remote"
@@ -22,22 +23,35 @@ internal object NotificationLaunchTelemetry {
         return null
     }
 
-    fun clicked(origin: String?, sink: EventSink = BusinessTelemetry) {
-        properties(origin)?.let { sink.send(MetricEvent.NOTIFICATION_CLICK, it) }
+    fun read(intent: Intent, fromBackground: Boolean = NotificationVisibility.backgroundForClick()): NotificationClickContext? {
+        val source = origin(intent) ?: return null
+        val content = NotificationContentIntent.read(intent)
+        val background = if (intent.hasExtra(FROM_BACKGROUND)) intent.getBooleanExtra(FROM_BACKGROUND, fromBackground) else fromBackground
+        return NotificationClickContext.create(source, content.title, content.text, background)
+    }
+
+    fun write(intent: Intent, snapshot: NotificationClickContext?) {
+        clear(intent)
+        if (snapshot == null) return
+        intent.putExtra(ORIGIN, snapshot.origin).putExtra(FROM_BACKGROUND, snapshot.fromBackground)
+        NotificationContentIntent.write(intent, snapshot.content)
+    }
+
+    fun clicked(snapshot: NotificationClickContext?, sink: EventSink = BusinessTelemetry) {
+        snapshot?.let { sink.send(MetricEvent.NOTIFICATION_CLICK, it.properties()) }
     }
 
     fun entered(intent: Intent, sink: EventSink = BusinessTelemetry) {
-        val origin = intent.getStringExtra(ORIGIN)
-        intent.removeExtra(ORIGIN) // 同一首页 Intent 旋转/恢复不重复上报进入。
-        properties(origin)?.let { sink.send(MetricEvent.NOTIFICATION_ENTER, it) }
+        // 仅消费启动页传来的规范化上下文；移除后旋转/再次调用不会通过遗留来源字段重复上报。
+        if (intent.getStringExtra(ORIGIN) !in NotificationClickContext.origins) return
+        val snapshot = read(intent)
+        clear(intent)
+        snapshot?.let { sink.send(MetricEvent.NOTIFICATION_ENTER, it.properties()) }
     }
 
-    private fun properties(origin: String?): Map<String, Any>? {
-        if (origin !in origins) return null
-        return mapOf(
-            "Notific_Type" to when (origin) { "resident" -> 4; "remote" -> 3; else -> 1 },
-            "Notific_Position" to if (origin == "resident") 2 else 1,
-            "event_id" to if (origin == "resident") "permanent" else "customer_general_style",
-        )
+    private fun clear(intent: Intent) {
+        intent.removeExtra(ORIGIN)
+        intent.removeExtra(FROM_BACKGROUND)
+        NotificationContentIntent.clear(intent)
     }
 }

@@ -1,90 +1,40 @@
 package io.docview.push.service
 
 import android.content.Context
-import android.content.Intent
-import android.os.Handler
-import android.os.Looper
-import androidx.core.net.toUri
-import com.blankj.utilcode.util.ServiceUtils
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ProcessLifecycleOwner
 import io.docview.push.controller.TriggerCtrl
-import io.docview.push.utils.Logger
+import io.docview.push.host.PushEnvironment
 import io.docview.push.host.canSendNotification
-import io.docview.push.host.PushEventReporter
+import io.docview.push.utils.Logger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-/**
- * 前台保活服务管理器
- * 提供便捷的服务控制接口
- */
+/** 仅在应用可见、通知已授权时建立事件监听 FGS；后台事件不会反复拉起被系统停止的服务。 */
 object KeepAliveServiceManager {
-
-    private const val TAG = "KeepAliveServiceManager"
-
-    /**
-     * 启动保活服务
-     * @param context 上下文
-     * @param intervalSeconds 间隔时间（秒），默认使用持久化存储的值
-     */
-    fun startKeepAliveService(context: Context,from: String = "localPush" ) {
-        if (!io.docview.push.host.PushEnvironment.host.backgroundServiceEnabled) {
-            TriggerCtrl.ensureResidentNotificationExists()
-            return
-        }
-        try {
-            PushEventReporter.reportData("Notific_Pull", mapOf("topic" to "permanent"))
-            if(!context.canSendNotification()){
-                PushEventReporter.reportData("Notific_Show_Fail",mapOf("reason" to "alive_service_${from}_no_permission"))
-                Logger.d("无通知权限，前台服务忽略启动")
-                return
+    fun startKeepAliveService(context: Context, from: String = "localPush") {
+        val app = context.applicationContext
+        PushEnvironment.scope.launch(Dispatchers.Main.immediate) {
+            if (!PushEnvironment.host.backgroundServiceEnabled) {
+                if (CoreService.isRunning) CoreService.stopService(app)
+                TriggerCtrl.ensureResidentNotificationExists()
+                return@launch
             }
-            if (isKeepAliveServiceRunning()) {
-                // 服务已运行，更新通知栏
-                Logger.d("保活服务已在运行中，刷新通知栏")
-                CoreService.updateNotification(context)
-            } else {
-                // 服务未运行，启动服务
-                try {
-                    CoreService.startService(context)
-                    Logger.d("保活服务启动请求已发送")
-                }
-                catch (e: Exception){
-                    Logger.e("启动保活服务失败,尝试使用contentResolver方式启动服务", e)
-                }
-                startWithCall(context,from)
+            if (!app.canSendNotification()) {
+                if (CoreService.isRunning) CoreService.stopService(app)
+                return@launch
             }
-        } catch (e: Exception) {
-            TriggerCtrl.ensureResidentNotificationExists()
-            PushEventReporter.reportData("Notific_Show_Fail",mapOf("reason" to "alive_service_${from}_${e.message}"))
-            Logger.e("启动保活服务失败", e)
+            if (CoreService.isRunning) return@launch
+            if (!ProcessLifecycleOwner.get().lifecycle.currentState
+                    .isAtLeast(Lifecycle.State.STARTED)) {
+                // 常驻通知与 Service 是不同的能力；不能借 Provider 调用绕过系统后台启动限制。
+                TriggerCtrl.ensureResidentNotificationExists()
+                Logger.d("屏幕监听服务等待前台且通知已授权: from=$from")
+                return@launch
+            }
+            CoreService.startService(app)
         }
     }
 
-    private fun startWithCall(context: Context,from: String ) {
-        Handler(Looper.getMainLooper()).postDelayed({
-            try {
-                if (!isKeepAliveServiceRunning()) {
-                    val contentResolver = context.contentResolver
-                    contentResolver.call(
-                        "content://${context.packageName}.notification.provider".toUri(),
-                        Intent(
-                            context,
-                            CoreService::class.java
-                        ).component?.className ?: "",
-                        "",
-                        null
-                    )
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                PushEventReporter.reportData("Notific_Show_Fail",mapOf("reason" to "alive_service_${from}_${e.message}"))
-            }
-        }, 1000)
-    }
-
-    /**
-     * 检查保活服务是否在运行
-     * @return 是否在运行
-     */
-    fun isKeepAliveServiceRunning(): Boolean {
-        return ServiceUtils.isServiceRunning(CoreService::class.java)
-    }
+    fun isKeepAliveServiceRunning(): Boolean = CoreService.isRunning
 }

@@ -31,6 +31,7 @@ internal class PermissionCoordinator(
     private data class Handler(
         val before: (PermissionKind) -> Unit,
         val result: (PermissionOutcome) -> Unit,
+        val launch: (PermissionKind) -> Unit,
     )
 
     private val handlers = mutableMapOf<String, Handler>()
@@ -106,7 +107,17 @@ internal class PermissionCoordinator(
         before: (PermissionKind) -> Unit,
         result: (PermissionOutcome) -> Unit,
     ) {
-        handlers[route] = Handler(before, result)
+        register(route, before, onLaunch = {}, result = result)
+    }
+
+    /** 独立的实际启动钩子；原有 before 仍只表示请求入队，不能用于统计系统弹窗发起。 */
+    fun register(
+        route: String,
+        before: (PermissionKind) -> Unit,
+        onLaunch: (PermissionKind) -> Unit,
+        result: (PermissionOutcome) -> Unit,
+    ) {
+        handlers[route] = Handler(before, result, onLaunch)
     }
 
     fun rationale(route: String, kind: PermissionKind?) {
@@ -171,6 +182,7 @@ internal class PermissionCoordinator(
                     releaseExternalUi()
                     externalUi = ForegroundTransitionGuard.hold("permission:${value.kind}")
                     try {
+                        handlers[value.route]?.launch?.invoke(value.kind)
                         when {
                             value.kind == PermissionKind.DIRECTORY -> directory.launch(null)
                             value.settings ->

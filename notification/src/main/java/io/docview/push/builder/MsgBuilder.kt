@@ -266,10 +266,11 @@ class GeneralModelManager() {
 class ResidentModelManger {
     fun getModel(context: Context): GeneralNotificationData {
         val host = io.docview.push.host.PushEnvironment.host
+        val content = host.residentContent().bounded()
         return GeneralNotificationData(
             notificationId = type2notificationId[NotificationType.JUNK]!!,
-            contentTitle = host.appName,
-            contentContent = "",
+            contentTitle = content.title,
+            contentContent = content.text,
             contentIntent = host.contentIntent(io.docview.push.NotificationDestination.HOME),
             contentView = host.residentViews(true),
             bigContentView = host.residentViews(false),

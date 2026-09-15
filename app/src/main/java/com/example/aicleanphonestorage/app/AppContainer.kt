@@ -31,6 +31,10 @@ class AppContainer(context: Context) {
             taskExecutor,
         )
     }
+    internal val installedAppCount by lazy {
+        val source = com.example.aicleanphonestorage.core.data.apps.LauncherAppCountSource(applicationContext, taskExecutor)
+        com.example.aicleanphonestorage.core.data.apps.InstalledAppCountRepository(source::read)
+    }
     internal val installedAppsReader by lazy {
         com.example.aicleanphonestorage.core.data.apps.InstalledAppsReader(
             applicationContext,
@@ -81,8 +85,10 @@ class AppContainer(context: Context) {
             com.example.aicleanphonestorage.feature.home.data.HomePlatformMetricsSource(
                 applicationContext,
                 taskExecutor,
+                installedAppCount,
             ),
             notificationRules,
+            installedAppCount,
         )
     }
     val networkTrafficRepository: NetworkTrafficRepository by lazy {

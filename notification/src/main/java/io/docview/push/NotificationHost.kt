@@ -12,10 +12,13 @@ interface NotificationHost {
     val versionName: String
     fun contentIntent(destination: NotificationDestination): PendingIntent
     fun residentViews(compact: Boolean): RemoteViews
+    fun residentContent() = io.docview.push.analytics.NotificationContent(appName, "")
     fun contentIcon(destination: NotificationDestination): Int
     /** 来源模块的可选业务能力完整保留，由宿主决定是否存在相应页面和真实数据源。 */
     val earthquakeEnabled: Boolean get() = false
+    /** 事件监听前台服务，复用用户可见常驻通知；与旧周期任务独立。 */
     val backgroundServiceEnabled: Boolean get() = false
+    val periodicPushEnabled: Boolean get() = false
     val repeatNotificationsEnabled: Boolean get() = false
     fun onEvent(name: String, properties: Map<String, Any?>) {}
 }

@@ -308,6 +308,12 @@ object TriggerCtrl {
             .setSmallIcon(io.docview.push.host.PushEnvironment.host.smallIcon)
             .setContentTitle(model.contentTitle)
             .setContentIntent(model.contentIntent)
+            .setDeleteIntent(ResidentNotificationDismissal.pendingIntent(context!!))
+            .addExtras(android.os.Bundle().apply {
+                val content = io.docview.push.analytics.NotificationContent(model.contentTitle, model.contentContent).bounded()
+                putString(io.docview.push.analytics.NotificationContentIntent.TITLE, content.title)
+                putString(io.docview.push.analytics.NotificationContentIntent.TEXT, content.text)
+            })
             .setCustomContentView(model.contentView)
             .setCustomBigContentView(model.bigContentView)
             .setStyle(NotificationCompat.DecoratedCustomViewStyle())
@@ -474,22 +480,29 @@ object TriggerCtrl {
      */
     fun buildResidentNotification(context: Context): Notification {
         val residentModel = ResidentModelManger().getModel(context)
-        if(context.canSendNotification()){
-            residentTrack(residentModel)
-        }
         return resident(residentModel)
     }
 
-    private fun residentTrack(residentModel: GeneralNotificationData) {
+    /** FGS 晋升/恢复成功后再上报，不能把仅构建 Notification 误算成展示。 */
+    fun residentShown(notification: Notification) {
+        val extras = notification.extras
+        reportResident(io.docview.push.analytics.NotificationContent(
+            extras.getString(io.docview.push.analytics.NotificationContentIntent.TITLE).orEmpty(),
+            extras.getString(io.docview.push.analytics.NotificationContentIntent.TEXT).orEmpty(),
+        ))
+    }
+
+    private fun residentTrack(residentModel: GeneralNotificationData) =
+        reportResident(io.docview.push.analytics.NotificationContent(residentModel.contentTitle, residentModel.contentContent))
+
+    private fun reportResident(content: io.docview.push.analytics.NotificationContent) {
         PushEventReporter.reportData(
             "Notific_Show", mapOf(
                 "Notific_Type" to 4,
                 "Notific_Position" to 2,
                 "Notific_Priority" to "PRIORITY_DEFAULT",
                 "event_id" to "permanent",
-//                "title" to residentModel.contentTitle,
-//                "text" to residentModel.contentContent,
-            )
+            ) + content.properties(io.docview.push.analytics.NotificationVisibility.backgroundForDisplay())
         )
     }
 
@@ -510,9 +523,8 @@ object TriggerCtrl {
                 "Notific_Position" to 1,
                 "Notific_Priority" to "PRIORITY_MAX",
                 "event_id" to "customer_general_style",
-                "title" to notificationData.contentTitle,
-                "text" to notificationData.contentContent,
-            )
+            ) + io.docview.push.analytics.NotificationContent(notificationData.contentTitle, notificationData.contentContent)
+                .properties(io.docview.push.analytics.NotificationVisibility.backgroundForDisplay())
         )
     }
 }

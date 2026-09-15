@@ -11,6 +11,25 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class StartupViewModelTest {
     @Test
+    fun notificationSnapshotSurvivesRecreationAndIsReplacedByNextEntry() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        try {
+            val saved = SavedStateHandle()
+            val first = com.example.aicleanphonestorage.feature.push.NotificationClickContext.create("local", "First", "First body", true)
+            val vm = StartupViewModel(saved, clock = { testScheduler.currentTime }) {}
+            vm.accept(StartupEntry(NotificationDestination.HOME, notification = first))
+            val restored = StartupViewModel(SavedStateHandle(saved.keys().associateWith { saved.get<Any?>(it) }), clock = { testScheduler.currentTime }) {}
+            assertEquals(first, restored.entry().notification)
+            val second = com.example.aicleanphonestorage.feature.push.NotificationClickContext.create("resident", "Second", "Second body", false)
+            restored.accept(StartupEntry(NotificationDestination.HOME, notification = second))
+            assertEquals(second, restored.entry().notification)
+            restored.accept(StartupEntry(NotificationDestination.HOME))
+            assertNull(restored.entry().notification)
+            runCurrent()
+        } finally { Dispatchers.resetMain() }
+    }
+
+    @Test
     fun hotEntrySurvivesSavedStateRestoreAndNotificationReplacesReturnMode() = runTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         try {

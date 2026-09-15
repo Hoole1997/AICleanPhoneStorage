@@ -12,17 +12,17 @@ import com.example.aicleanphonestorage.feature.push.NotificationNavigation
 import com.example.aicleanphonestorage.feature.push.NotificationLaunchTelemetry
 import io.docview.push.NotificationDestination
 
-/** 启动页只转交白名单目标与一个调试标记，绝不复制通知正文、任意 URI 或完整 extras。 */
+/** 启动页只转交白名单目标、调试标记及有界通知埋点快照，不复制任意 URI 或完整 extras。 */
 internal object StartupNavigation {
     private const val HOT_START = "startup.entry.hot"
     const val COMPLETED = "startup.completed"
     const val PERMISSION_COMPLETED = "startup.permission.completed"
 
-    fun read(intent: Intent) = StartupEntry(
+    fun read(intent: Intent, fromBackground: Boolean = io.docview.push.analytics.NotificationVisibility.backgroundForClick()) = StartupEntry(
         NotificationNavigation.read(intent) ?: NotificationDestination.HOME,
         HomePreviewSupport.initialSelection(intent, null),
         hotStart = intent.getBooleanExtra(HOT_START, false) && NotificationNavigation.read(intent) == null,
-        notificationOrigin = NotificationLaunchTelemetry.origin(intent),
+        notification = NotificationLaunchTelemetry.read(intent, fromBackground),
     )
 
     fun needsStartup(intent: Intent) = !intent.getBooleanExtra(COMPLETED, false) && NotificationNavigation.read(intent) != null
@@ -34,14 +34,14 @@ internal object StartupNavigation {
         if (entry.hotStart) hotIntent(context) else Intent(context, StartupActivity::class.java)
             .putExtra(NotificationNavigation.EXTRA_DESTINATION, entry.destination.key)
             .putExtra(HomePreviewSupport.EXTRA_MODE, entry.previewMode)
-            .putExtra(NotificationLaunchTelemetry.ORIGIN, entry.notificationOrigin)
+            .apply { NotificationLaunchTelemetry.write(this, entry.notification) }
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
     fun homeIntent(context: Context, entry: StartupEntry) =
         Intent(context, MainActivity::class.java)
             .putExtra(NotificationNavigation.EXTRA_DESTINATION, entry.destination.key)
             .putExtra(HomePreviewSupport.EXTRA_MODE, entry.previewMode)
-            .putExtra(NotificationLaunchTelemetry.ORIGIN, entry.notificationOrigin)
+            .apply { NotificationLaunchTelemetry.write(this, entry.notification) }
             .putExtra(COMPLETED, true)
             .putExtra(PERMISSION_COMPLETED, true)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)

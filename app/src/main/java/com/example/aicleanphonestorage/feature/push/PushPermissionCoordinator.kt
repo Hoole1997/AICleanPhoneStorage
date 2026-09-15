@@ -12,10 +12,12 @@ internal class PushPermissionCoordinator(
     private val activity: AppCompatActivity,
     private val runtime: NotificationRuntime,
     private val model: PushPermissionViewModel,
+    private val position: PushPermissionPosition,
     private val otherPermissionPending: () -> Boolean,
     private val openSettings: () -> Unit,
     private val requester: PushPermissionRequester = XxPushPermissionRequester(activity),
     private val allowGuide: Boolean = true,
+    private val events: com.example.aicleanphonestorage.core.analytics.EventSink = com.example.aicleanphonestorage.core.analytics.BusinessTelemetry,
 ) {
     init {
         activity.supportFragmentManager.setFragmentResultListener(
@@ -31,12 +33,15 @@ internal class PushPermissionCoordinator(
 
     fun onResume() {
         val granted = requester.isGranted()
+        if (granted) model.telemetry.alreadyGranted(position, events)
         model.onForeground(granted, settingsPending = otherPermissionPending(),
-            canRequestSystem = !requester.needsSettings(PushPermissionRequest.AUTOMATIC), allowGuide = allowGuide)
+            canRequestSystem = granted || !requester.needsSettings(PushPermissionRequest.AUTOMATIC), allowGuide = allowGuide)
         if (granted) runtime.refreshResident()
     }
 
     fun drain() {
+        // 热启动页不运行自动授权流程；仅订阅状态不能被当成一次授权检查/默认允许。
+        if (!model.hasStarted) return
         val manager = activity.supportFragmentManager
         if (
             !activity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) ||
@@ -49,6 +54,7 @@ internal class PushPermissionCoordinator(
         val existing =
             manager.findFragmentByTag(PushPermissionGuideDialog.TAG) as? PushPermissionGuideDialog
         if (requester.isGranted()) {
+            model.telemetry.alreadyGranted(position, events)
             model.onForeground(true)
             existing?.dismiss()
             return
@@ -66,11 +72,36 @@ internal class PushPermissionCoordinator(
             // 此分支只来自引导框的 Allow。共享权限流程负责有限期检测与返回，避免两套后台监测。
             openSettings()
         } else {
-            requester.request(origin) { granted, denied -> complete(granted, denied) }
+            var attempt: Long? = null
+            requester.request(origin, onStarted = {
+                attempt = model.telemetry.started(position, PushPermissionRequestMode.RUNTIME, events)
+            }) { outcome ->
+                if (outcome == PushPermissionOutcome.ALREADY_ALLOWED && attempt == null) {
+                    model.telemetry.alreadyGranted(position, events)
+                } else if (attempt != null && !model.telemetry.completed(requireNotNull(attempt), outcome, events)) {
+                    return@request // 重复或已被新流程取代的回调不重复上报、不覆盖新流程。
+                }
+                complete(outcome.granted, outcome == PushPermissionOutcome.DENIED || outcome == PushPermissionOutcome.DENIED_FOREVER)
+            }
         }
     }
 
-    fun onSettingsResult(granted: Boolean) = complete(granted, denied = false)
+    /** 由共享权限协调器在真正调用设置页 API 前通知，而不是在排队/展示引导时上报。 */
+    fun onSettingsLaunched() {
+        if (!requester.isGranted()) model.telemetry.started(position, PushPermissionRequestMode.SETTINGS, events)
+    }
+
+    fun onSettingsResult(granted: Boolean, unavailable: Boolean = false) {
+        val attempt = model.telemetry.active(PushPermissionRequestMode.SETTINGS)
+        val outcome = when {
+            unavailable -> PushPermissionOutcome.UNAVAILABLE
+            granted -> PushPermissionOutcome.ALLOWED
+            else -> PushPermissionOutcome.DENIED
+        }
+        if (attempt != null) model.telemetry.completed(attempt, outcome, events)
+        else if (granted && !unavailable) model.telemetry.alreadyGranted(position, events)
+        complete(granted, denied = !granted && !unavailable)
+    }
 
     private fun complete(granted: Boolean, denied: Boolean) {
         model.onResult(granted, denied)
@@ -86,6 +117,7 @@ internal class PushPermissionCoordinator(
             runtime: NotificationRuntime,
             model: PushPermissionViewModel,
             permissions: com.example.aicleanphonestorage.core.permissions.PermissionCoordinator,
+            position: PushPermissionPosition,
             beforeSettings: () -> Unit = {},
             allowGuide: Boolean = true,
         ): PushPermissionCoordinator {
@@ -94,6 +126,7 @@ internal class PushPermissionCoordinator(
                     activity,
                     runtime,
                     model,
+                    position,
                     { permissions.pending },
                     {
                         permissions.request(
@@ -108,7 +141,8 @@ internal class PushPermissionCoordinator(
             permissions.register(
                 SETTINGS_ROUTE,
                 before = { beforeSettings() },
-                result = { coordinator.onSettingsResult(it.granted) },
+                onLaunch = { coordinator.onSettingsLaunched() },
+                result = { coordinator.onSettingsResult(it.granted, it.unavailable || it.cancelled || it.skipped) },
             )
             return coordinator
         }

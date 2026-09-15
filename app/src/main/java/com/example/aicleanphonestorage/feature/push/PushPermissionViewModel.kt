@@ -20,6 +20,8 @@ internal data class PushPermissionState(
 
 /** 只记录本次宿主 Activity 生命周期的流程，不持有 Activity。未授权本身不是展示引导的依据。 */
 internal class PushPermissionViewModel(private val saved: SavedStateHandle) : ViewModel() {
+    val telemetry = PushPermissionTelemetry(saved)
+    val hasStarted: Boolean get() = saved.get<Boolean>("push.auto.attempted") == true
     private val current =
         MutableStateFlow(
             PushPermissionState(
@@ -71,6 +73,7 @@ internal class PushPermissionViewModel(private val saved: SavedStateHandle) : Vi
     }
 
     fun guideAction(allow: Boolean) {
+        if (allow) telemetry.reset()
         // 确认/关闭都消耗本次引导，避免系统设置返回或旋转后形成弹框循环。
         saved["push.guide.offered"] = true
         update(
@@ -83,6 +86,7 @@ internal class PushPermissionViewModel(private val saved: SavedStateHandle) : Vi
 
     /** 冷启动从启动页抵达首页时重新检查：首次拒绝后可进行第二次系统询问。 */
     fun completeFromPreviousHost() {
+        telemetry.reset()
         saved["push.auto.attempted"] = false
         saved["push.guide.offered"] = false
         update(PushPermissionState())

@@ -97,8 +97,11 @@ internal class CleanupTelemetry(private val sink: EventSink = BusinessTelemetry)
         }
         val params = mutableMapOf<String, Any>("deleted_size" to mb(report.freedBytes))
         if (feature == CleanupFeature.SMART_CLEAN) {
-            if (report.completed > 0) params["type"] = "cleaned"
-            // 当前没有空扫描进入完成页的入口；不能仅凭 deleted=0 把取消/失败称为本来很干净。
+            // 空扫描由结果摘要明确标记；删除失败、取消或删除 0B 空目录都不能据此推断。
+            when {
+                report.emptyScan -> params["type"] = "already_clean"
+                report.completed > 0 -> params["type"] = "cleaned"
+            }
         }
         sink.send(event, params)
     }

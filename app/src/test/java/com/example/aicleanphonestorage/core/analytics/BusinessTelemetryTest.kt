@@ -6,11 +6,42 @@ import com.example.aicleanphonestorage.feature.filecleaner.data.*
 import com.example.aicleanphonestorage.feature.junkcleaner.data.*
 import com.example.aicleanphonestorage.core.ui.completion.*
 import com.example.aicleanphonestorage.feature.home.data.HomeCleaningSnapshot
+import com.example.aicleanphonestorage.feature.filecleaner.operations.OperationSummary
+import com.example.aicleanphonestorage.feature.filecleaner.ui.completionReport
 import net.corekit.core.controller.ChannelUserController.UserChannelType
 import org.junit.Assert.*
 import org.junit.Test
 
 class BusinessTelemetryTest {
+    @Test fun emptyJunkScanReportsAlreadyCleanFromTheCompletionSummary() {
+        val calls = mutableListOf<Pair<MetricEvent, Map<String, Any>>>()
+        val metrics = CleanupTelemetry { event, params -> calls += event to params }
+        val report = OperationSummary(0, 0, 0, 0, 0, 0).completionReport(CleanupFeature.SMART_CLEAN, 1)
+        assertTrue(report.emptyScan)
+        metrics.result(CleanupFeature.SMART_CLEAN, report)
+        assertEquals(listOf(MetricEvent.JUNK_RESULT_SHOW to mapOf("type" to "already_clean", "deleted_size" to 0.0)), calls)
+    }
+
+    @Test fun successfulZeroByteJunkDeletionStillReportsCleaned() {
+        var captured = emptyMap<String, Any>()
+        val metrics = CleanupTelemetry { _, params -> captured = params }
+        val report = OperationSummary(1, 1, 0, 0, 0, 0).completionReport(CleanupFeature.SMART_CLEAN, 2)
+        assertFalse(report.emptyScan)
+        metrics.result(CleanupFeature.SMART_CLEAN, report)
+        assertEquals(mapOf("type" to "cleaned", "deleted_size" to 0.0), captured)
+    }
+
+    @Test fun failedOrSkippedJunkOperationsDoNotBecomeEmptyScanResults() {
+        var captured = emptyMap<String, Any>()
+        val metrics = CleanupTelemetry { _, params -> captured = params }
+        for (summary in listOf(OperationSummary(2, 0, 0, 2, 0, 0), OperationSummary(2, 0, 0, 0, 2, 0))) {
+            val report = summary.completionReport(CleanupFeature.SMART_CLEAN, 3)
+            assertFalse(report.emptyScan)
+            metrics.result(CleanupFeature.SMART_CLEAN, report)
+            assertEquals(mapOf("deleted_size" to 0.0), captured)
+        }
+    }
+
     @org.junit.Test fun temporaryAdCoverDoesNotCreateAnotherPageVisit() {
         val state = PageVisitState()
         org.junit.Assert.assertTrue(state.enter("home", 0))

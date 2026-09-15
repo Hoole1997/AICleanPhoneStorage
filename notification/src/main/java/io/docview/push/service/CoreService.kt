@@ -25,12 +25,15 @@ import io.docview.push.host.canSendNotification
 import io.docview.push.host.PushEventReporter
 
 /**
- * 前台保活服务
- * 用于定期触发通知保活机制
+ * 前台屏幕事件服务，复用用户可见的常驻快捷入口。
+ * Service 自有接收器与 Application 接收器独立；旧周期推送须另行开启。
  */
 class CoreService : Service() {
 
     companion object {
+        @Volatile var isRunning = false
+            private set
+
         private val NOTIFICATION_ID = TriggerCtrl.getResidentNotificationId()
 
         // 默认15分钟 = 900秒
@@ -49,7 +52,7 @@ class CoreService : Service() {
          */
         fun setDefaultIntervalSeconds1(seconds: Long) {
             defaultIntervalSeconds = seconds
-            Logger.d("设置通知保活默认轮训间隔时间: ${seconds}秒")
+            Logger.d("已保存周期推送间隔: ${seconds}秒，周期推送启用=${PushEnvironment.host.periodicPushEnabled}")
         }
 
         /**
@@ -60,6 +63,12 @@ class CoreService : Service() {
         fun startService(context: Context, intervalSeconds: Long = defaultIntervalSeconds) {
             if (!io.docview.push.host.PushEnvironment.host.backgroundServiceEnabled) {
                 TriggerCtrl.ensureResidentNotificationExists()
+                return
+            }
+            // 主动启动只允许应用可见时执行；系统 sticky 恢复走 onStartCommand(null)，不走此入口。
+            if (!androidx.lifecycle.ProcessLifecycleOwner.get().lifecycle.currentState
+                    .isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) {
+                Logger.d("屏幕监听服务启动延后：等待应用回到前台")
                 return
             }
             val intent = Intent(context, CoreService::class.java).apply {
@@ -73,7 +82,7 @@ class CoreService : Service() {
                 } else {
                     context.startService(intent)
                 }
-                Logger.d("启动保活服务，间隔: ${intervalSeconds}秒")
+                Logger.d("启动屏幕监听前台服务，周期推送启用=${PushEnvironment.host.periodicPushEnabled}")
             } catch (e: Throwable) {
                 PushEventReporter.reportData("Notific_Show_Fail",mapOf("reason" to "alive_service_${e.message}"))
                 Logger.e("启动保活服务失败", e)
@@ -118,15 +127,25 @@ class CoreService : Service() {
     private var intervalSeconds = DEFAULT_INTERVAL_SECONDS
     private var requestedIntervalSeconds: Long? = null
     private var runtimeReady = false
+    private var screenRegistration: AutoCloseable? = null
     private var initialization: Job? = null
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val session = CoreServiceLifecycle(
         promote = {
-            startForeground(NOTIFICATION_ID,
-                if (runtimeReady) TriggerCtrl.buildResidentNotification(this) else bootstrapNotification())
+            val notification = if (runtimeReady) TriggerCtrl.buildResidentNotification(this) else bootstrapNotification()
+            startForeground(NOTIFICATION_ID, notification)
+            if (runtimeReady) TriggerCtrl.residentShown(notification)
         },
         beginWork = ::restoreWork,
-        cancelWork = { initialization?.cancel(); initialization = null; stopKeepAliveTask() },
+        cancelWork = {
+            isRunning = false
+            initialization?.cancel()
+            initialization = null
+            stopKeepAliveTask()
+            // 只释放这个 Service 的监听，Application 的句柄和去重状态仍然保留。
+            screenRegistration?.close()
+            screenRegistration = null
+        },
         leaveForeground = { stopForeground(STOP_FOREGROUND_REMOVE) },
         stopService = { stopSelf() },
         reportFailure = ::reportServiceFailure,
@@ -143,7 +162,7 @@ class CoreService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         return try {
             // 检查放在 Service 内部，系统 sticky 恢复也必须遵守当前宿主开关。
-            if (!PushEnvironment.host.backgroundServiceEnabled) {
+            if (!PushEnvironment.host.backgroundServiceEnabled || !canSendNotification()) {
                 session.stop()
                 return START_NOT_STICKY
             }
@@ -197,10 +216,12 @@ class CoreService : Service() {
             .setSmallIcon(host.smallIcon)
             .setContentTitle(host.appName)
             .setContentIntent(host.contentIntent(NotificationDestination.HOME))
+            .setDeleteIntent(io.docview.push.controller.ResidentNotificationDismissal.pendingIntent(this))
             .setOnlyAlertOnce(true).setOngoing(true).setSilent(true).build()
     }
 
     private fun restoreWork() {
+        isRunning = true
         initialization = serviceScope.launch {
             try {
                 (application as NotificationRuntimeOwner).notificationRuntime.awaitReady()
@@ -210,7 +231,10 @@ class CoreService : Service() {
                 runtimeReady = true
                 // preferences 预载完成后再读间隔，避免进程重建时误用缓存尚未就绪的默认值。
                 intervalSeconds = effectiveInterval()
-                if (session.refresh()) startKeepAliveTask()
+                if (!session.refresh()) return@launch
+                screenRegistration = TimingCtrl.getInstance().registerServiceScreenReceiver(this@CoreService)
+                PushEventReporter.reportData("Notific_Pull", mapOf("topic" to "permanent"))
+                if (PushEnvironment.host.periodicPushEnabled) startKeepAliveTask()
             } catch (cancelled: CancellationException) { throw cancelled }
             catch (error: Exception) { session.fail(error) }
         }
@@ -234,6 +258,7 @@ class CoreService : Service() {
                 try {
                     // 晋升/刷新失败会同步终止会话，不能继续触发通知或重新安排下一轮。
                     if (!PushEnvironment.host.backgroundServiceEnabled) { session.stop(); return }
+                    if (!PushEnvironment.host.periodicPushEnabled) { stopKeepAliveTask(); return }
                     if (canSendNotification() && !session.refresh()) return
                     Logger.d("执行保活任务")
                     PushEventReporter.reportData("Notific_Pull", mapOf("topic" to "timer"))

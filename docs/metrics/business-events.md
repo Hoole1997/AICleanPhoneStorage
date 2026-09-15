@@ -34,7 +34,7 @@
 | 02-垃圾清理 | `junk_group_click` | 部分接入 | [JunkCleaningActivity.kt](../../app/src/main/java/com/example/aicleanphonestorage/feature/junkcleaner/ui/JunkCleaningActivity.kt)：INSTALLERS→apk、TEMPORARY→temp；其余五类不冒充文档枚举。 |
 | 02-垃圾清理 | `junk_detail_check` | 部分接入 | [CleanupViewModel.kt](../../app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupViewModel.kt)：APK/临时文件三级页可记录；其他分类缺少文档枚举。 |
 | 02-垃圾清理 | `junk_clean_click` | 部分接入 | [CleanupViewModel.kt](../../app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupViewModel.kt)：现有 Smart Clean 路径已接；空扫描按钮仍隐藏，got_it 路径缺失。 |
-| 02-垃圾清理 | `junk_result_show` | 部分接入 | [CompletionActivity.kt](../../app/src/main/java/com/example/aicleanphonestorage/core/ui/completion/CompletionActivity.kt)：实际 deleted_size；有成功删除时 type=cleaned。未实现空扫描完成页，不用删除数 0 推断 already_clean。 |
+| 02-垃圾清理 | `junk_result_show` | 已接入 | [CleanupTelemetry.kt](../../app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/analytics/CleanupTelemetry.kt)：明确 emptyScan 时 type=already_clean；成功删除时 type=cleaned，deleted_size 为实际 MB。失败/取消不按删除数 0 误判为空扫描。 |
 | 03-流量使用 | `traffic_page_show` | 已接入 | [NetworkTrafficActivity.kt](../../app/src/main/java/com/example/aicleanphonestorage/feature/networktraffic/ui/NetworkTrafficActivity.kt)：现有触发时机和参数已接入。 |
 | 03-流量使用 | `traffic_manager_click` | 已接入 | [NetworkTrafficActivity.kt](../../app/src/main/java/com/example/aicleanphonestorage/feature/networktraffic/ui/NetworkTrafficActivity.kt)：现有触发时机和参数已接入。 |
 | 04-通知清理 | `notify_page_show` | 已接入 | [NotificationCleanerActivity.kt](../../app/src/main/java/com/example/aicleanphonestorage/feature/notifications/ui/NotificationCleanerActivity.kt)：现有触发时机和参数已接入。 |
@@ -70,7 +70,7 @@
 3. 垃圾分组需要统一定义。目前七类为安装包、临时文件、旧日志、空文件、重复、相似、低质量照片，不能直接套用文档的四类。
 4. 未使用文件需要文档的三分组及相应真实统计、三级页；不能从当前“未修改时间候选”推断 90 天未访问。
 5. 通知栏 App/Accelerate、App 数量角标、Photos→截图跳转，以及 A/B 入口布局仍需业务调整。
-6. 垃圾空扫描 Got it 及 already_clean 完成页、大文件尚缺的三个筛选选项未在此次新增。
+6. 2026-09-15 更新：空扫描完成页已有明确 emptyScan 标记，本次补齐 junk_result_show.type=already_clean；大文件筛选项不在本次修复范围。
 
 未知大小时省略 size_band；区间边界按 <50MB、50–200MB（含200）、>200–500MB（含500）、>500MB 处理。
 

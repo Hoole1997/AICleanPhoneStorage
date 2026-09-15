@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.docview.push.NotificationDestination
+import com.example.aicleanphonestorage.feature.push.NotificationClickContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -15,7 +16,7 @@ internal data class StartupEntry(
     val destination: NotificationDestination,
     val previewMode: String? = null,
     val hotStart: Boolean = false,
-    val notificationOrigin: String? = null,
+    val notification: NotificationClickContext? = null,
 )
 
 internal data class StartupState(
@@ -67,7 +68,12 @@ internal class StartupViewModel(
         saved[DESTINATION] = entry.destination.key
         saved[PREVIEW] = entry.previewMode
         saved[HOT_START] = entry.hotStart
-        saved["startup.notification.origin"] = entry.notificationOrigin
+        // 只保存有界基本字段，供广告/权限等待期间的页面重建使用，不保存 Notification/完整 Intent。
+        val notification = entry.notification
+        saved["startup.notification.origin"] = notification?.origin
+        saved["startup.notification.title"] = notification?.content?.bounded()?.title
+        saved["startup.notification.text"] = notification?.content?.bounded()?.text
+        saved["startup.notification.background"] = notification?.fromBackground
         // 等待中的新通知只更新目标；已交接后的新入口才开启下一次广告请求。
         if (current.value.consumed) {
             offlineJob?.cancel()
@@ -87,7 +93,11 @@ internal class StartupViewModel(
 
     fun hasEntry() = saved.contains(DESTINATION)
 
-    fun entry() = StartupEntry(NotificationDestination.fromKey(saved[DESTINATION]), saved[PREVIEW], saved[HOT_START] ?: false, saved["startup.notification.origin"])
+    fun entry() = StartupEntry(
+        NotificationDestination.fromKey(saved[DESTINATION]), saved[PREVIEW], saved[HOT_START] ?: false,
+        NotificationClickContext.create(saved["startup.notification.origin"], saved["startup.notification.title"],
+            saved["startup.notification.text"], saved["startup.notification.background"] ?: true),
+    )
 
     fun permissionFinished() {
         if (!cleared) current.value = current.value.copy(permissionCompleted = true)

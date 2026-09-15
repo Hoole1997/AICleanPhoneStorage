@@ -128,12 +128,13 @@ class FirebaseReporter : ReporterData {
             }
 
             // 将Map转换为Bundle
-            val bundle = mapToBundle(data)
+            val normalized = firebaseNotificationParameters(eventName, data)
+            val bundle = mapToBundle(normalized)
 
             // 上报到Firebase Analytics
             analytics.logEvent(eventName, bundle)
 
-            MetricsLogger.d("Firebase Analytics数据上报: $eventName, JSON: ${mapToJson(data)}")
+            MetricsLogger.d("Firebase Analytics数据上报: $eventName, JSON: ${mapToJson(normalized)}")
 
         } catch (e: Exception) {
             MetricsLogger.e("Firebase Analytics数据上报失败", e)

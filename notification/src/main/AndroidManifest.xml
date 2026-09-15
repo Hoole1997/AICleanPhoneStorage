@@ -26,6 +26,9 @@
                 android:value="androidx.startup" />
         </provider>
 
+        <!-- 常驻通知划除回调仅由显式 immutable PendingIntent 进入。 -->
+        <receiver android:name=".receiver.ResidentDismissReceiver" android:exported="false" />
+
         <!-- 通知删除监听器 -->
         <receiver
             android:name=".receiver.DeleteReceiver"
@@ -54,7 +57,11 @@
             android:name=".service.CoreService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="specialUse" />
+            android:foregroundServiceType="specialUse">
+            <!-- 复用常驻快捷入口，事件驱动接收用户锁屏/解锁，不执行后台扫描或定时唤醒。 -->
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Maintain user-visible cleaning shortcuts and receive screen lock/unlock events without polling" />
+        </service>
     </application>
 
 </manifest>

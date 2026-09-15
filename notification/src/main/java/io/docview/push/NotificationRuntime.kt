@@ -25,7 +25,8 @@ class NotificationRuntime(context: Context, host: NotificationHost) {
 
     fun initialize() {
         if (started.getAndSet(true)) return
-        Utils.init(app as Application)
+        io.docview.push.analytics.NotificationVisibility.install(app as Application)
+        Utils.init(app)
         PushEnvironment.scope.launch {
             try {
                 PushPreferences.initialize(app)
@@ -37,8 +38,9 @@ class NotificationRuntime(context: Context, host: NotificationHost) {
                 // 清除旧实现的两个固定通知，迁移后只由新模块发布。
                 NotificationManagerCompat.from(app).cancel(4101)
                 NotificationManagerCompat.from(app).cancel(4102)
-                ready.complete(Unit)
                 withContext(Dispatchers.Main.immediate) { TimingCtrl.getInstance().initialize(app) }
+                // Service 恢复必须等到事件分发器/生命周期状态准备好，再注册第二份监听。
+                ready.complete(Unit)
                 PushRemoteConfig.initialize()
                 ConfigCtrl.initialize(app)
                 ContentController.initialize(app)
@@ -62,6 +64,8 @@ class NotificationRuntime(context: Context, host: NotificationHost) {
         PushEnvironment.scope.launch {
             ready.await()
             TriggerCtrl.triggerResidentNotification()
+            // 授权回调也走这里，保证首次前台因无通知权限跳过后可以补建服务。
+            io.docview.push.service.KeepAliveServiceManager.startKeepAliveService(app)
         }
     }
 

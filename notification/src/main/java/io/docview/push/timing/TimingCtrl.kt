@@ -1,9 +1,6 @@
 package io.docview.push.timing
 
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.Lifecycle
@@ -24,10 +21,7 @@ import io.docview.push.service.KeepAliveServiceManager
 import io.docview.push.utils.TopicMgr
 import io.docview.push.utils.Logger
 import io.docview.push.worker.KeepAliveWorker
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.SupervisorJob
 import io.docview.push.host.PushEventReporter
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -51,33 +45,38 @@ class TimingCtrl private constructor() : DefaultLifecycleObserver {
         }
     }
 
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private val isInitialized = AtomicBoolean(false)
     private val isAppInForeground = AtomicBoolean(false)  // 添加前台状态标识位
     private var context: Context? = null
-    private var screenReceiver: ScreenReceiver? = null
+    private var applicationScreenRegistration: ScreenEventRegistration? = null
+    private val screenEvents = ScreenEventGate()
 
     /**
      * 初始化通知时机控制器
      * @param context 上下文
      */
+    @androidx.annotation.MainThread
     fun initialize(context: Context) {
+        this.context = context.applicationContext
+        // 即便之前注册失败，下一次初始化仍可补注册；失败不能伪装成已持有接收器。
+        registerApplicationScreenReceiver()
         if (isInitialized.getAndSet(true)) {
             Logger.d("通知时机控制器已经初始化")
             return
         }
 
-        this.context = context.applicationContext
         Logger.d("通知时机控制器初始化开始")
-
-        // 注册锁屏监听
-        registerScreenReceiver()
 
         // 注册应用生命周期监听
         registerAppLifecycleObserver()
 
-        // 启动 WorkManager 保活
-        if (io.docview.push.host.PushEnvironment.host.backgroundServiceEnabled) startWorkManagerKeepAlive()
+        // 前台事件监听与旧定时推送分开；启用 Service 不会顺带开启 15 分钟任务。
+        if (io.docview.push.host.PushEnvironment.host.periodicPushEnabled) startWorkManagerKeepAlive()
+        else io.docview.push.host.PushEnvironment.scope.launch {
+            runCatching {
+                WorkManager.getInstance(context.applicationContext).cancelUniqueWork("notification_keep_alive")
+            }.onFailure { Logger.e("清理旧周期通知任务失败", it) }
+        }
 
         // 订阅 FCM 主题
         if (io.docview.push.BuildConfig.REMOTE_PUSH_ENABLED) subscribeFCMTopics()
@@ -151,23 +150,22 @@ class TimingCtrl private constructor() : DefaultLifecycleObserver {
         }
     }
 
-    /**
-     * 注册锁屏广播接收器
-     */
-    private fun registerScreenReceiver() {
+    /** Application 与 Service 各持有自己的句柄；其中一处失败/注销不会清掉另一处。 */
+    private fun registerApplicationScreenReceiver() {
+        if (applicationScreenRegistration != null) return
+        val app = context ?: return
         try {
-            screenReceiver = ScreenReceiver()
-            val filter = IntentFilter().apply {
-                addAction(Intent.ACTION_SCREEN_OFF)
-                addAction(Intent.ACTION_SCREEN_ON)
-                addAction(Intent.ACTION_USER_PRESENT)
-            }
-            context?.let { androidx.core.content.ContextCompat.registerReceiver(it, screenReceiver, filter, androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED) }
-            Logger.d("锁屏监听器注册成功")
-        } catch (e: Exception) {
-            Logger.e("注册锁屏监听器失败", e)
+            applicationScreenRegistration = ScreenEventRegistration.register(
+                app, ScreenListenerOwner.APPLICATION, ::onScreenEvent
+            )
+        } catch (error: Exception) {
+            Logger.e("Application 屏幕监听注册失败", error)
         }
     }
+
+    @androidx.annotation.MainThread
+    internal fun registerServiceScreenReceiver(service: Context): AutoCloseable =
+        ScreenEventRegistration.register(service, ScreenListenerOwner.SERVICE, ::onScreenEvent)
 
     /**
      * 注册应用生命周期观察者
@@ -217,29 +215,15 @@ class TimingCtrl private constructor() : DefaultLifecycleObserver {
         return isAppInForeground.get()
     }
 
-    /**
-     * 锁屏广播接收器
-     */
-    inner class ScreenReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            // 亮屏不等于解除锁屏；记录系统事件和当时状态，便于区分未收到解锁与收到后被限频。
-            val keyguardLocked = context?.getSystemService(android.app.KeyguardManager::class.java)?.isKeyguardLocked
-            Logger.d("收到屏幕广播: action=${intent?.action}, keyguard_locked=$keyguardLocked, app_in_foreground=${isAppInForeground.get()}")
-            when (intent?.action) {
-                Intent.ACTION_SCREEN_OFF -> {
-                    Logger.d("屏幕关闭")
-                    TriggerCtrl.stopRepeatNotification()
-                }
-                Intent.ACTION_SCREEN_ON -> {
-                    Logger.d("屏幕点亮：此事件仅处理常驻通知；解锁推送等待 ACTION_USER_PRESENT")
-                    context?.let {
-                        KeepAliveServiceManager.startKeepAliveService(context)
-                    }
-                }
-                Intent.ACTION_USER_PRESENT -> {
-                    handleUnlock()
-                }
-            }
+    /** 两份系统投递都可进入这里，业务动作只在真实状态转换时执行一次。 */
+    private fun onScreenEvent(owner: ScreenListenerOwner, event: ScreenEvent, interactive: Boolean, locked: Boolean) {
+        val accepted = screenEvents.accept(event, interactive, locked)
+        Logger.d("屏幕事件: owner=$owner event=$event interactive=$interactive keyguard_locked=$locked app_in_foreground=${isAppInForeground.get()} accepted=$accepted")
+        if (!accepted) return
+        when (event) {
+            ScreenEvent.OFF -> TriggerCtrl.stopRepeatNotification()
+            ScreenEvent.ON -> context?.let { KeepAliveServiceManager.startKeepAliveService(it) }
+            ScreenEvent.UNLOCK -> handleUnlock()
         }
     }
 
@@ -297,12 +281,11 @@ class TimingCtrl private constructor() : DefaultLifecycleObserver {
     /**
      * 释放资源
      */
+    @androidx.annotation.MainThread
     fun release() {
         try {
-            screenReceiver?.let { receiver ->
-                context?.unregisterReceiver(receiver)
-                screenReceiver = null
-            }
+            applicationScreenRegistration?.close()
+            applicationScreenRegistration = null
 
             ProcessLifecycleOwner.get().lifecycle.removeObserver(this)
 

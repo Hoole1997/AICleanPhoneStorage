@@ -32,3 +32,8 @@ data class HomeToolMetrics(
     val unusedFiles: HomeToolMetric = HomeToolMetric.NotScanned,
     val screenshots: HomeToolMetric = HomeToolMetric.NotScanned,
 )
+
+/** 数量模式使用共享结果；已授权时的容量模式保持原样，未知数值不填成 0。 */
+internal fun HomeToolMetric.withSharedAppCount(count: Int?): HomeToolMetric =
+    if (this is HomeToolMetric.AppCount) count?.let { copy(value = it) } ?: HomeToolMetric.Unavailable
+    else this

@@ -20,7 +20,9 @@ class CleanApplication : Application(), NotificationRuntimeOwner {
     internal val languages: AppLanguageController by lazy { AppLanguageController(this) }
     internal val homeCleaning by lazy { HomeCleaningState(BuildConfig.DEFAULT_USER_CHANNEL == "paid") }
     private val notificationHost: CleanNotificationHost by lazy {
-        CleanNotificationHost(this, homeCleaning) { notificationRuntime.refreshResident() }
+        CleanNotificationHost(this, homeCleaning, appCount = { container.installedAppCount.count.value }) {
+            notificationRuntime.refreshResident()
+        }
     }
     override val notificationRuntime: NotificationRuntime by lazy { NotificationRuntime(this, notificationHost) }
 
@@ -35,6 +37,9 @@ class CleanApplication : Application(), NotificationRuntimeOwner {
         registerActivityLifecycleCallbacks(LanguageActivityCallbacks(languages))
         languages.initialize()
         notificationRuntime.initialize()
+        com.example.aicleanphonestorage.core.data.apps.InstalledAppCountMonitor(
+            this, container.installedAppCount, notificationRuntime::refreshResident,
+        ).start()
         AdSdkInitializer.initialize(this)
         HotStartAdCoordinator(this)
         com.example.aicleanphonestorage.core.analytics.LaunchTelemetry()
