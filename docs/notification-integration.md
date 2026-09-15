@@ -93,3 +93,14 @@ Firebase 保持当前核验的版本：BoM 34.18.0（Messaging 25.1.2、Remote C
 业务协调验证：`ContentBusinessContractTest` 覆盖六种类型、无效浏览器动作、未知图标和实际 assets 配置；`NotificationBusinessRoutingTest` 在真机验证内容构建、六种资源映射、两类 Intent 的统一消费与独立 PendingIntent。
 
 本次实测结果：local/google 的 Debug 和 Release 均构建通过；Lint 通过；app 78 个单元测试，notification 每个渠道 9 个单元测试通过；7 个真机测试通过，包含新增业务映射用例。Firebase token 获取和 ALL_TOKEN 主题订阅成功。真实 token 上报请求得到 HTTP 200，但当前响应未通过业务成功校验，尚不能宣称上报成功；不会将此结果计为成功或伪造成功记录。
+
+## 2026-09-15：前台服务恢复与失败退出
+
+- 保留 `specialUse` 和宿主默认关闭的保活开关。`CoreService` 的运行状态改为每个实例独立管理。
+- 系统以空 Intent 恢复时重建前台会话，先建立最小原生通知，异步等待模块配置就绪，再恢复完整常驻通知和唯一一套定时任务。重复启动只刷新通知，不重复创建任务；未知命令、无运行实例的更新命令不留下空壳服务。
+- 平台晋升在 `onCreate` 中完成，再处理开关及命令。Android 15 真机验证发现：直接收到 `startForegroundService` 后未晋升就停止，会触发 `ForegroundServiceDidNotStartInTimeException`；先完成晋升再立即停止的退出路径已回归通过。正常宿主入口仍在开关关闭时提前返回，不主动启动服务。
+- 通知构建、晋升、配置恢复或刷新抛出可处理异常时，取消恢复协程和 Handler 回调，退出前台并执行 `stopSelf()`。停止清理幂等；单步清理异常、统计异常不会阻断后续停止动作。退出路径返回 `START_NOT_STICKY`，当前失败实例不再重启任务。
+- 实现两种系统 `onTimeout` 回调，收到回调立即停止；没有人为给 `specialUse` 增加六小时计时，也不声称能够捕获所有系统异步致命异常。公开停止入口使用 `Context.stopService()`，避免为了停止而新建服务。
+- 验证：local Debug 构建、Lint、21 项 notification 单元测试通过（新增 10 项覆盖恢复、重复启动、晋升/初始化/刷新失败和清理异常）；Android 15 真机通过关闭开关下的两种直接 FGS 请求退出检查。没有开启生产保活做长期运行或系统强杀恢复实验。
+
+依据：[前台服务异常说明](https://developer.android.com/develop/background-work/services/fgs/troubleshooting)、[START_STICKY](https://developer.android.com/reference/android/app/Service#START_STICKY)、[AOSP ActiveServices 的未晋升即停止处理](https://android.googlesource.com/platform/frameworks/base.git/+/master/services/core/java/com/android/server/am/ActiveServices.java)。

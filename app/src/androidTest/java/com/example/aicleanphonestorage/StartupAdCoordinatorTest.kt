@@ -13,6 +13,7 @@ import com.example.aicleanphonestorage.feature.settings.AboutActivity
 import com.example.aicleanphonestorage.feature.startup.*
 import io.docview.push.NotificationDestination
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.channels.awaitClose
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,6 +21,57 @@ import org.junit.runner.RunWith
 /** 使用假开屏请求验证回调和生命周期，不请求真实广告。About 仅作为原生 Activity 测试宿主。 */
 @RunWith(AndroidJUnit4::class)
 class StartupAdCoordinatorTest {
+    @get:org.junit.Rule val noHotStartAds = com.example.aicleanphonestorage.testing.NoHotStartAdsRule()
+
+    @Test fun offlineDeadlineCancelsRequestBeforeReleasingRouteAndLateCallbackIsIgnored() {
+        ActivityScenario.launch(AboutActivity::class.java).use { scenario ->
+            lateinit var host: Host
+            lateinit var complete: (Boolean) -> Unit
+            lateinit var loaded: (Boolean) -> Unit
+            var cancelled = 0
+            scenario.onActivity { activity ->
+                host = bind(activity, network = kotlinx.coroutines.flow.MutableStateFlow(StartupNetworkState.OFFLINE),
+                    onRequestLoaded = { loaded = it },
+                    cancel = {
+                        cancelled++
+                        try { loaded(true); fail("Expired request reached ad display") }
+                        catch (_: kotlinx.coroutines.CancellationException) { }
+                        complete(false)
+                        assertFalse(host.model.state.value.ready)
+                    }) { _, callback -> complete = callback }
+                host.model.accept(StartupEntry(NotificationDestination.NETWORK))
+            }
+            waitUntil {
+                var ready = false
+                scenario.onActivity { host.ads.windowFocusChanged(it.hasWindowFocus()); ready = host.model.state.value.ready }
+                ready
+            }
+            scenario.onActivity {
+                assertEquals(1, cancelled)
+                complete(true)
+                assertEquals(NotificationDestination.NETWORK, host.model.consume()?.destination)
+                assertNull(host.model.consume())
+            }
+        }
+    }
+
+    @Test fun networkObservationStopsWithPageAndResubscribesOnlyOnResume() {
+        val subscriptions = java.util.concurrent.atomic.AtomicInteger()
+        val network = kotlinx.coroutines.flow.callbackFlow {
+            subscriptions.incrementAndGet()
+            trySend(StartupNetworkState.ONLINE)
+            awaitClose { subscriptions.decrementAndGet() }
+        }
+        ActivityScenario.launch(AboutActivity::class.java).use { scenario ->
+            scenario.onActivity { bind(it, network = network) { _, _ -> } }
+            waitUntil { subscriptions.get() == 1 }
+            scenario.moveToState(Lifecycle.State.CREATED)
+            waitUntil { subscriptions.get() == 0 }
+            scenario.moveToState(Lifecycle.State.RESUMED)
+            waitUntil { subscriptions.get() == 1 }
+        }
+        waitUntil { subscriptions.get() == 0 }
+    }
     @Test
     fun failedAdCallbackReleasesStartupAndBackgroundStopsLoopWithoutRequestingAgain() {
         ActivityScenario.launch(AboutActivity::class.java).use { scenario ->
@@ -161,6 +213,9 @@ class StartupAdCoordinatorTest {
     private fun bind(
         activity: AppCompatActivity,
         permissionsComplete: Boolean = true,
+        network: kotlinx.coroutines.flow.Flow<StartupNetworkState> = kotlinx.coroutines.flow.MutableStateFlow(StartupNetworkState.ONLINE),
+        cancel: () -> Unit = {},
+        onRequestLoaded: ((Boolean) -> Unit) -> Unit = {},
         request: (String, (Boolean) -> Unit) -> Unit,
     ): Host {
         val model =
@@ -186,7 +241,8 @@ class StartupAdCoordinatorTest {
             }
         )
         activity.lifecycleScope.launch { model.state.collect(renderer::render) }
-        return Host(model, StartupAdCoordinator(activity, binding.root, model, request), binding)
+        return Host(model, StartupAdCoordinator(activity, binding.root, model,
+            request = { position, loaded, done -> onRequestLoaded(loaded); request(position, done); cancel }, network = network), binding)
     }
 
     private fun waitUntil(check: () -> Boolean) {

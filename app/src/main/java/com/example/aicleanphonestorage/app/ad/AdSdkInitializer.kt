@@ -37,7 +37,7 @@ internal object AdSdkInitializer {
                 if (FirebaseApp.getApps(application).isNotEmpty()) ConfigRemoteManager.initialize()
                 Log.i(TAG, "SDK initialization: invoking AppOpenBiddingInitializer")
                 // 与来源项目一致，在 SDK 的配置回调中安装默认值。SDK 自行拉取云端 ID 并管理请求时限；
-                // 启动页的 15 秒停留上限不应取消应用级 SDK 初始化，google 本地 ID 为空也必须调用。
+                // 启动页离线退出不取消应用级 SDK 初始化，google 本地 ID 为空也必须调用。
                 val result = AppOpenBiddingInitializer.initialize(application, R.mipmap.ic_launcher) {
                     AdConfiguration.install()
                     Log.i(TAG, "SDK initialization: local configuration applied")

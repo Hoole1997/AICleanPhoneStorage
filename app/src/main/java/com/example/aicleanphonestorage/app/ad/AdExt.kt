@@ -86,9 +86,9 @@ fun FragmentActivity.loadInterstitial(
 fun FragmentActivity.loadSplash(
     positionName: String,
     condition: () -> Boolean = { true },
+    onLoaded: (Boolean) -> Unit = {},
     call: (Boolean) -> Unit,
-) {
-    lifecycleScope.launch {
+) = lifecycleScope.launch {
         val transition = ForegroundTransitionGuard.hold("splash:$positionName")
         try {
             if (!condition.invoke() || !isAdSlotEnabled(positionName)) {
@@ -96,16 +96,23 @@ fun FragmentActivity.loadSplash(
                 return@launch
             }
 
-            when (AdShowExt.showAppOpenAd(this@loadSplash, position = positionName)) {
+            val requestContext = coroutineContext
+            when (AdShowExt.showAppOpenAd(this@loadSplash, onLoaded = {
+                requestContext.ensureActive()
+                onLoaded(it)
+            }, position = positionName)) {
                 is AdResult.Success -> call.invoke(true)
                 is AdResult.Failure -> call.invoke(false)
             }
+        } catch (cancelled: CancellationException) {
+            // 保留 Activity 重建时的收尾回调；离线退出已先失效请求，回调不会重复跳转。
+            call.invoke(false)
+            throw cancelled
         } catch (_: Exception) {
             call.invoke(false)
         } finally {
             transition.close()
         }
-    }
 }
 
 internal fun isAdSlotEnabled(positionName: String): Boolean {

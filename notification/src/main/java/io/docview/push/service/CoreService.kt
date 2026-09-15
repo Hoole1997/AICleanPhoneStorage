@@ -1,6 +1,13 @@
 package io.docview.push.service
 
 import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import androidx.core.app.NotificationCompat
+import io.docview.push.NotificationDestination
+import io.docview.push.NotificationRuntimeOwner
+import io.docview.push.host.PushEnvironment
+import kotlinx.coroutines.*
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -33,13 +40,9 @@ class CoreService : Service() {
         var defaultIntervalSeconds by PushLongPreference("notification_keep_alive_default_interval", DEFAULT_INTERVAL_SECONDS)
 
         // 服务控制参数
-        private const val ACTION_START_SERVICE = "io.docview.push.START_KEEP_ALIVE_SERVICE"
-        private const val ACTION_STOP_SERVICE = "io.docview.push.STOP_KEEP_ALIVE_SERVICE"
-        private const val ACTION_UPDATE_NOTIFICATION = "io.docview.push.UPDATE_FOREGROUND_NOTIFICATION"
+        private const val ACTION_START_SERVICE = CoreServiceCommand.ACTION_START
+        private const val ACTION_UPDATE_NOTIFICATION = CoreServiceCommand.ACTION_UPDATE
         private const val EXTRA_INTERVAL_SECONDS = "interval_seconds"
-
-        private var isServiceRunning = false
-
         /**
          * 设置默认间隔时间
          * @param seconds 间隔时间（秒）
@@ -82,12 +85,9 @@ class CoreService : Service() {
          * @param context 上下文
          */
         fun stopService(context: Context) {
-            val intent = Intent(context, CoreService::class.java).apply {
-                action = ACTION_STOP_SERVICE
-            }
-
+            // 停止请求直接交给系统，不能为了停止而启动一个新的 Service。
             try {
-                context.startService(intent)
+                context.stopService(Intent(context, CoreService::class.java))
                 Logger.d("停止保活服务")
             } catch (e: Exception) {
                 Logger.e("停止保活服务失败", e)
@@ -115,177 +115,142 @@ class CoreService : Service() {
 
     private var handler: Handler? = null
     private var keepAliveRunnable: Runnable? = null
-    private var intervalSeconds: Long = defaultIntervalSeconds
+    private var intervalSeconds = DEFAULT_INTERVAL_SECONDS
+    private var requestedIntervalSeconds: Long? = null
+    private var runtimeReady = false
+    private var initialization: Job? = null
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private val session = CoreServiceLifecycle(
+        promote = {
+            startForeground(NOTIFICATION_ID,
+                if (runtimeReady) TriggerCtrl.buildResidentNotification(this) else bootstrapNotification())
+        },
+        beginWork = ::restoreWork,
+        cancelWork = { initialization?.cancel(); initialization = null; stopKeepAliveTask() },
+        leaveForeground = { stopForeground(STOP_FOREGROUND_REMOVE) },
+        stopService = { stopSelf() },
+        reportFailure = ::reportServiceFailure,
+    )
 
     override fun onCreate() {
         super.onCreate()
+        // Android 对已经接收的 startForegroundService 请求要求先晋升；直接 stopSelf 也可能被判启动失败。
+        // 这里只履行平台契约，不启动保活任务；开关关闭时 onStartCommand 随即停止。
+        session.prepareForeground()
         Logger.d("保活服务创建")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        when (intent?.action) {
-            ACTION_START_SERVICE -> {
-                intervalSeconds =
-                    intent.getLongExtra(EXTRA_INTERVAL_SECONDS, defaultIntervalSeconds)
-                startForegroundService()
+        return try {
+            // 检查放在 Service 内部，系统 sticky 恢复也必须遵守当前宿主开关。
+            if (!PushEnvironment.host.backgroundServiceEnabled) {
+                session.stop()
+                return START_NOT_STICKY
             }
-
-            ACTION_STOP_SERVICE -> {
-                stopForegroundService()
+            val running = when (CoreServiceCommand.from(intent == null, intent?.action)) {
+                CoreServiceCommand.START, CoreServiceCommand.RESTORE -> {
+                    requestedIntervalSeconds = if (intent?.hasExtra(EXTRA_INTERVAL_SECONDS) == true)
+                        intent.getLongExtra(EXTRA_INTERVAL_SECONDS, DEFAULT_INTERVAL_SECONDS) else null
+                    if (runtimeReady) intervalSeconds = effectiveInterval()
+                    session.start(enabled = true)
+                }
+                CoreServiceCommand.UPDATE -> session.refresh()
+                CoreServiceCommand.STOP, CoreServiceCommand.UNKNOWN -> { session.stop(); false }
             }
-
-            ACTION_UPDATE_NOTIFICATION -> {
-                updateForegroundNotification()
-            }
+            if (running) START_STICKY else START_NOT_STICKY
+        } catch (error: Exception) {
+            session.fail(error)
+            START_NOT_STICKY
         }
-        return START_STICKY // 服务被杀死后自动重启
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onDestroy() {
+        session.stop()
+        serviceScope.cancel()
         super.onDestroy()
-        stopForegroundService()
         Logger.d("保活服务销毁")
     }
 
-    /**
-     * 启动前台服务
-     */
-    private fun startForegroundService() {
-        if (isServiceRunning) {
-            Logger.d("保活服务已在运行中，刷新通知，间隔: ${intervalSeconds}秒")
-            // 服务已运行，只刷新通知
-            updateForegroundNotification()
-            return
-        }
-
-        // 检查通知权限
-        val hasNotificationPermission = canSendNotification()
-        Logger.d("通知权限状态: $hasNotificationPermission")
-
-        if (!hasNotificationPermission) {
-            Logger.w("没有通知权限，前台服务通知可能不会显示")
-        }
-
-        isServiceRunning = true
-
-        // 创建前台通知
-        val notification = createForegroundNotification()
-
-        // 启动前台服务
-        startForeground(NOTIFICATION_ID, notification)
-
-        // 启动定时任务
-        startKeepAliveTask()
-
-        Logger.d("保活服务启动成功，间隔: ${intervalSeconds}秒")
+    // specialUse 当前没有六小时预算。仍响应系统的停止回调，不在回调中启动服务或等待异步清理。
+    override fun onTimeout(startId: Int) {
+        Logger.w("前台服务收到停止超时回调: startId=$startId")
+        session.stop()
     }
 
-    /**
-     * 停止前台服务
-     */
-    private fun stopForegroundService() {
-        if (!isServiceRunning) {
-            return
-        }
-
-        isServiceRunning = false
-
-        // 停止定时任务
-        stopKeepAliveTask()
-
-        // 停止前台服务
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            stopForeground(STOP_FOREGROUND_REMOVE)
-        } else {
-            @Suppress("DEPRECATION")
-            stopForeground(true)
-        }
-        stopSelf()
-
-        Logger.d("保活服务停止")
+    override fun onTimeout(startId: Int, fgsType: Int) {
+        Logger.w("前台服务收到停止超时回调: startId=$startId, type=$fgsType")
+        session.stop()
     }
 
-    /**
-     * 启动保活任务
-     */
+    /** 冷进程先同步建立最小前台通知，不等待配置 I/O/网络或依赖尚未初始化的 TriggerCtrl。 */
+    private fun bootstrapNotification(): Notification {
+        val host = PushEnvironment.host
+        require(host.smallIcon != 0) { "Missing foreground notification icon" }
+        if (Build.VERSION.SDK_INT >= 26) {
+            getSystemService(NotificationManager::class.java).createNotificationChannel(
+                NotificationChannel(TriggerCtrl.CHANNEL_ID_RESIDENT, host.residentChannelName, NotificationManager.IMPORTANCE_LOW)
+            )
+        }
+        return NotificationCompat.Builder(this, TriggerCtrl.CHANNEL_ID_RESIDENT)
+            .setSmallIcon(host.smallIcon)
+            .setContentTitle(host.appName)
+            .setContentIntent(host.contentIntent(NotificationDestination.HOME))
+            .setOnlyAlertOnce(true).setOngoing(true).setSilent(true).build()
+    }
+
+    private fun restoreWork() {
+        initialization = serviceScope.launch {
+            try {
+                (application as NotificationRuntimeOwner).notificationRuntime.awaitReady()
+                ensureActive()
+                if (!session.running) return@launch
+                if (!PushEnvironment.host.backgroundServiceEnabled) { session.stop(); return@launch }
+                runtimeReady = true
+                // preferences 预载完成后再读间隔，避免进程重建时误用缓存尚未就绪的默认值。
+                intervalSeconds = effectiveInterval()
+                if (session.refresh()) startKeepAliveTask()
+            } catch (cancelled: CancellationException) { throw cancelled }
+            catch (error: Exception) { session.fail(error) }
+        }
+    }
+
+    private fun effectiveInterval(): Long = (requestedIntervalSeconds ?: defaultIntervalSeconds)
+        .takeIf { it > 0 && it <= Long.MAX_VALUE / 1000 } ?: DEFAULT_INTERVAL_SECONDS
+
+    private fun reportServiceFailure(error: Exception) {
+        Logger.e("前台服务启动/恢复失败，停止当前实例", error)
+        PushEventReporter.reportData("Notific_Show_Fail",
+            mapOf("reason" to "alive_service_${error.javaClass.simpleName}"))
+    }
+
     private fun startKeepAliveTask() {
+        stopKeepAliveTask()
         handler = Handler(Looper.getMainLooper())
-
         keepAliveRunnable = object : Runnable {
             override fun run() {
-                if (!isServiceRunning) {
-                    return
-                }
-
+                if (!session.running) return
                 try {
+                    // 晋升/刷新失败会同步终止会话，不能继续触发通知或重新安排下一轮。
+                    if (!PushEnvironment.host.backgroundServiceEnabled) { session.stop(); return }
+                    if (canSendNotification() && !session.refresh()) return
                     Logger.d("执行保活任务")
                     PushEventReporter.reportData("Notific_Pull", mapOf("topic" to "timer"))
-                    updateForegroundNotification()
-
                     EarthquakeController.checkAndTriggerScheduledPush()
-
-                    // 尝试触发保活通知
-                    TimingCtrl.getInstance().triggerNotificationIfAllowed(
-                        CheckCtrl.NotificationType.KEEPALIVE
-                    )
-
-                    Logger.d("保活任务执行完成，下次间隔: ${intervalSeconds}秒")
-
-                } catch (e: Exception) {
-                    Logger.e("保活任务执行失败", e)
+                    TimingCtrl.getInstance().triggerNotificationIfAllowed(CheckCtrl.NotificationType.KEEPALIVE)
+                } catch (error: Exception) {
+                    Logger.e("保活任务执行失败", error)
                 }
-
-                // 调度下次执行
-                handler?.postDelayed(this, intervalSeconds * 1000)
+                if (session.running) handler?.postDelayed(this, intervalSeconds * 1000)
             }
         }
-
-        // 延迟执行首次任务
         handler?.postDelayed(keepAliveRunnable!!, intervalSeconds * 1000)
     }
 
-    /**
-     * 停止保活任务
-     */
     private fun stopKeepAliveTask() {
-        keepAliveRunnable?.let { runnable ->
-            handler?.removeCallbacks(runnable)
-        }
+        keepAliveRunnable?.let { handler?.removeCallbacks(it) }
         keepAliveRunnable = null
         handler = null
     }
-
-    /**
-     * 更新前台服务通知
-     */
-    private fun updateForegroundNotification() {
-        if (!isServiceRunning) {
-            Logger.d("前台服务未运行，无法更新通知")
-            return
-        }
-
-        if (!canSendNotification()) {
-            Logger.d("无通知权限，忽略本次更新通知")
-            return
-        }
-
-        try {
-            val newNotification = createForegroundNotification()
-            startForeground(NOTIFICATION_ID, newNotification)
-            Logger.d("前台服务通知已更新")
-        } catch (e: Exception) {
-            Logger.e("更新前台服务通知失败", e)
-        }
-    }
-
-    /**
-     * 创建前台通知
-     */
-    private fun createForegroundNotification(): Notification {
-        // 使用TriggerCtrl提供的构建函数
-        return TriggerCtrl.buildResidentNotification(this)
-    }
-
 }
