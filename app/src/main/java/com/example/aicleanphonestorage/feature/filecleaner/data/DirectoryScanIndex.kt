@@ -11,6 +11,7 @@ internal data class ScanDirectory(
     val modified: Long = 0,
     val depth: Int = 0,
     val nonempty: Boolean = false,
+    val flags: Int = 0,
 )
 
 /** SAF 文档树队列和空目录后序归并保存在临时 SQLite 中，不保存全量树或打开多层 Cursor。 */
@@ -22,17 +23,18 @@ internal class DirectoryScanIndex(private val index: ScanIndex) {
             put("scan", scan); put("document", entry.document); put("parent", entry.parent)
             put("name", entry.name); put("folder", entry.folder); put("modified", entry.modified)
             put("depth", entry.depth)
+            put("flags", entry.flags)
         }, SQLiteDatabase.CONFLICT_IGNORE,
     ) != -1L
 
     fun take(scan: Long, completed: Boolean = false): ScanDirectory? {
         val state = if (completed) 1 else 0
         return db.rawQuery(
-            "SELECT document,parent,name,folder,modified,depth,nonempty FROM directories WHERE scan=? AND done=? ORDER BY depth ${if (completed) "DESC" else "ASC"} LIMIT 1",
+            "SELECT document,parent,name,folder,modified,depth,nonempty,flags FROM directories WHERE scan=? AND done=? ORDER BY depth ${if (completed) "DESC" else "ASC"} LIMIT 1",
             arrayOf(scan.toString(), state.toString()),
         ).use {
             if (!it.moveToFirst()) return@use null
-            ScanDirectory(it.getString(0), it.getString(1), it.getString(2), it.getString(3), it.getLong(4), it.getInt(5), it.getInt(6) != 0).also { entry ->
+            ScanDirectory(it.getString(0), it.getString(1), it.getString(2), it.getString(3), it.getLong(4), it.getInt(5), it.getInt(6) != 0, it.getInt(7)).also { entry ->
                 db.execSQL("UPDATE directories SET done=? WHERE scan=? AND document=?", arrayOf(state + 1, scan, entry.document))
             }
         }
@@ -46,7 +48,7 @@ internal class DirectoryScanIndex(private val index: ScanIndex) {
         fun create(db: SQLiteDatabase) {
             db.execSQL("""CREATE TABLE directories(scan INTEGER NOT NULL, document TEXT NOT NULL,
                 done INTEGER NOT NULL DEFAULT 0, parent TEXT, name TEXT NOT NULL DEFAULT '', folder TEXT NOT NULL DEFAULT '',
-                modified INTEGER NOT NULL DEFAULT 0, depth INTEGER NOT NULL DEFAULT 0, nonempty INTEGER NOT NULL DEFAULT 0,
+                modified INTEGER NOT NULL DEFAULT 0, depth INTEGER NOT NULL DEFAULT 0, nonempty INTEGER NOT NULL DEFAULT 0, flags INTEGER NOT NULL DEFAULT 0,
                 PRIMARY KEY(scan,document))""")
             db.execSQL("CREATE INDEX directories_work ON directories(scan,done,depth)")
         }

@@ -26,7 +26,8 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @SdkSuppress(minSdkVersion = 29)
 class JunkDocumentTreeDeviceTest {
-    private data class Node(val id: String, val parent: String?, val name: String, val directory: Boolean, val size: Long = 0)
+    private data class Node(val id: String, val parent: String?, val name: String, val directory: Boolean, val size: Long = 0,
+        val flags: Int = DocumentsContract.Document.FLAG_SUPPORTS_DELETE)
 
     private class Provider : ContentProvider() {
         val nodes = linkedMapOf(
@@ -41,6 +42,7 @@ class JunkDocumentTreeDeviceTest {
             "8" to Node("8", "7", "normal.pdf", false, 55),
         )
         val deleted = mutableListOf<String>()
+        val deleteCalls = mutableListOf<String>()
         var unreadable: String? = null
         override fun onCreate() = true
         override fun query(uri: Uri, projection: Array<out String>?, selection: String?, selectionArgs: Array<out String>?, sortOrder: String?): Cursor {
@@ -55,6 +57,7 @@ class JunkDocumentTreeDeviceTest {
                     DocumentsContract.Document.COLUMN_MIME_TYPE -> if (row.directory) DocumentsContract.Document.MIME_TYPE_DIR else "application/octet-stream"
                     DocumentsContract.Document.COLUMN_SIZE -> row.size
                     DocumentsContract.Document.COLUMN_LAST_MODIFIED -> 1L
+                    DocumentsContract.Document.COLUMN_FLAGS -> row.flags
                     else -> null
                 } })
             }
@@ -64,6 +67,8 @@ class JunkDocumentTreeDeviceTest {
             check(method == "android:deleteDocument")
             val uri = extras!!.getParcelable<Uri>("uri")!!
             val id = DocumentsContract.getDocumentId(uri)
+            deleteCalls += id
+            require(nodes[id]!!.flags and DocumentsContract.Document.FLAG_SUPPORTS_DELETE != 0)
             check(id != "0" && nodes.values.none { it.parent == id })
             nodes.remove(id)
             deleted += id
@@ -73,6 +78,47 @@ class JunkDocumentTreeDeviceTest {
         override fun insert(uri: Uri, values: ContentValues?): Uri? = null
         override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<out String>?) = 0
         override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?) = 0
+    }
+
+    @Test fun protectedEmptyChildAlsoPreventsItsParentFromBeingACleanupCandidate() = runBlocking {
+        val original = InstrumentationRegistry.getInstrumentation().targetContext
+        val folder = File(original.cacheDir, "saf_protected_${UUID.randomUUID()}").apply { mkdirs() }
+        val provider = Provider().apply {
+            nodes["6"] = nodes.getValue("6").copy(flags = 0)
+            nodes["9"] = Node("9", "0", "deletable", true)
+        }
+        val context = object : ContextWrapper(original) {
+            override fun getApplicationContext(): Context = this
+            override fun getContentResolver() = ContentResolver.wrap(provider)
+            override fun getDatabasePath(name: String) = File(folder, name)
+        }
+        try { ScanIndex(context).use { index ->
+            val scan = index.start(CleanupFeature.SMART_CLEAN)
+            val tree = DocumentsContract.buildTreeDocumentUri("fixture.documents", "0")
+            val rows = mutableListOf<ScannedFile>()
+            DocumentTreeScanner(context, index) { "application/octet-stream" }.scan(tree, scan, true, { row, _ -> rows += row }) { _, _ -> }
+            assertFalse(rows.any { it.name == "parent" || it.name == "child" })
+            assertTrue(rows.any { it.isDirectory && it.name == "deletable" })
+            assertTrue(provider.deleteCalls.isEmpty())
+        } } finally { folder.deleteRecursively() }
+    }
+
+    @Test fun deletionCapabilityRevokedAfterScanIsRejectedBeforeProviderDelete() = runBlocking {
+        val original = InstrumentationRegistry.getInstrumentation().targetContext
+        val provider = Provider()
+        val context = object : ContextWrapper(original) {
+            override fun getApplicationContext(): Context = this
+            override fun getContentResolver() = ContentResolver.wrap(provider)
+        }
+        val tree = DocumentsContract.buildTreeDocumentUri("fixture.documents", "0")
+        val row = ScannedFile(uri = DocumentsContract.buildDocumentUriUsingTree(tree, "6").toString(),
+            name = "child", mime = DocumentsContract.Document.MIME_TYPE_DIR, size = 0, modifiedMillis = 1,
+            category = FileCategory.OTHER, backend = FileBackend.DOCUMENT, scope = tree.toString())
+        provider.nodes["6"] = provider.nodes.getValue("6").copy(flags = DocumentsContract.Document.FLAG_SUPPORTS_WRITE)
+        try { EmptyDirectoryDeleter(FileContentAccess(context)).delete(row); fail("Read/write does not imply delete") }
+        catch (_: IOException) { }
+        assertTrue(provider.deleteCalls.isEmpty())
+        assertTrue(provider.nodes.containsKey("6"))
     }
 
     @Test

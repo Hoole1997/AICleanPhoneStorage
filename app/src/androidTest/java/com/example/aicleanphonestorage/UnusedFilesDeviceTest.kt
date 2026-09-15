@@ -94,6 +94,7 @@ class UnusedFilesDeviceTest {
                 }
                 DocumentsContract.Document.COLUMN_SIZE -> row.size
                 DocumentsContract.Document.COLUMN_LAST_MODIFIED -> row.modified
+                DocumentsContract.Document.COLUMN_FLAGS -> DocumentsContract.Document.FLAG_SUPPORTS_DELETE
                 else -> null
             } }) } }
         }

@@ -77,7 +77,8 @@ internal class FileScanRepository(
                                 }
                             },
                             includeEmptyDirectories = smartClean || unused != null,
-                            directories = unused,
+                            // 不适合垃圾清理的文档树在扫描层静默过滤，不改变已有目录授权/页面流程。
+                            directories = if (smartClean) DocumentAccessPolicy else unused,
                         ) { done, total ->
                             progress(ScanProgress(done, total, junkBytes = junkBytes.takeIf { smartClean }))
                         }

@@ -38,9 +38,12 @@ internal class EmptyDirectoryDeleter(private val content: FileContentAccess) {
                     DocumentsContract.getTreeDocumentId(uri) == rootId) { "Directory outside authorized tree" }
                 require(uri == DocumentsContract.buildDocumentUriUsingTree(tree, documentId))
                 // 使用带授权 treeId 的 URI 查询/删除，由 DocumentsProvider 每次校验子树归属；兼容 API 26。
-                query(uri, arrayOf(DocumentsContract.Document.COLUMN_MIME_TYPE)) {
+                query(uri, arrayOf(DocumentsContract.Document.COLUMN_MIME_TYPE, DocumentsContract.Document.COLUMN_FLAGS)) {
                     if (!it.moveToFirst() || it.getString(0) != DocumentsContract.Document.MIME_TYPE_DIR)
                         throw IOException("Directory changed or missing")
+                    val flags = it.getColumnIndex(DocumentsContract.Document.COLUMN_FLAGS)
+                    if (flags < 0 || it.isNull(flags) || !com.example.aicleanphonestorage.feature.filecleaner.scan.DocumentAccessPolicy.supportsDelete(it.getInt(flags)))
+                        throw IOException("Provider does not support directory deletion")
                 }
                 query(DocumentsContract.buildChildDocumentsUriUsingTree(tree, documentId), arrayOf(DocumentsContract.Document.COLUMN_DOCUMENT_ID)) {
                     if (it.moveToFirst()) throw IOException("Directory is no longer empty")

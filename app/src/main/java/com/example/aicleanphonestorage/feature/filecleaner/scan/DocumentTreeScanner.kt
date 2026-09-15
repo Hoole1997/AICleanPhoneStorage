@@ -45,12 +45,13 @@ internal class DocumentTreeScanner(context: Context, index: ScanIndex, private v
                     val name = cursor.text(DocumentsContract.Document.COLUMN_DISPLAY_NAME)
                     val type = cursor.text(DocumentsContract.Document.COLUMN_MIME_TYPE)
                     val modified = cursor.number(DocumentsContract.Document.COLUMN_LAST_MODIFIED)
+                    val flags = cursor.number(DocumentsContract.Document.COLUMN_FLAGS).toInt()
                     if (type == DocumentsContract.Document.MIME_TYPE_DIR) {
                         if (policy?.visitDirectory(DocumentsContract.buildDocumentUriUsingTree(tree, id)) == false) {
                             directories.markNonempty(scan, directory.document)
                             continue
                         }
-                        val entry = ScanDirectory(id, directory.document, name, "${directory.folder}/$name", modified, directory.depth + 1)
+                        val entry = ScanDirectory(id, directory.document, name, "${directory.folder}/$name", modified, directory.depth + 1, flags = flags)
                         // 深度截断/提供者循环不是空目录；在父链上传播，避免误判整棵子树为空。
                         if (entry.depth >= 64 || !directories.enqueue(scan, entry)) directories.markNonempty(scan, directory.document)
                     } else {
@@ -71,6 +72,11 @@ internal class DocumentTreeScanner(context: Context, index: ScanIndex, private v
                 context.ensureActive()
                 val entry = directories.take(scan, completed = true) ?: break
                 val parent = entry.parent ?: continue // 授权根目录不参与清理。
+                if (!DocumentAccessPolicy.supportsDelete(entry.flags)) {
+                    // 此目录即使看起来为空也会保留，父目录因此不能被视为可清空。
+                    directories.markNonempty(scan, parent)
+                    continue
+                }
                 if (entry.nonempty) directories.markNonempty(scan, parent)
                 // 残留子树按文件快照清理后，再按后序尝试删除选中的空目录，绝不递归连带删除。
                 if (!entry.nonempty || policy?.includeNonemptyDirectory(DocumentsContract.buildDocumentUriUsingTree(tree, entry.document)) == true) emit(ScannedFile(
@@ -92,6 +98,7 @@ internal class DocumentTreeScanner(context: Context, index: ScanIndex, private v
                 DocumentsContract.Document.COLUMN_DOCUMENT_ID, DocumentsContract.Document.COLUMN_DISPLAY_NAME,
                 DocumentsContract.Document.COLUMN_MIME_TYPE, DocumentsContract.Document.COLUMN_SIZE,
                 DocumentsContract.Document.COLUMN_LAST_MODIFIED,
+                DocumentsContract.Document.COLUMN_FLAGS,
             ), null, null, null, signal)?.use(consume) ?: throw IOException("Directory cannot be read")
             if (continuation.isActive) continuation.resume(Unit)
         } catch (error: Exception) {

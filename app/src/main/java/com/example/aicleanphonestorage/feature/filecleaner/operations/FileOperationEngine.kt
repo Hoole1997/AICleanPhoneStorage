@@ -99,6 +99,11 @@ internal class FileOperationEngine(
                     for (file in batch) {
                         currentCoroutineContext().ensureActive()
                         try {
+                            // 旧版本缓存的垃圾候选同样要检查来源，不允许从旧结果页删除应用文档提供者内容。
+                            if (file.backend == FileBackend.DOCUMENT &&
+                                com.example.aicleanphonestorage.feature.junkcleaner.data.JunkKind.from(file.bucket) != null &&
+                                !com.example.aicleanphonestorage.feature.filecleaner.scan.DocumentAccessPolicy.isLocalStorageTree(file.scope))
+                                throw IOException("Junk cleanup requires local shared storage")
                             com.example.aicleanphonestorage.feature.unused.data.UnusedKind.from(file.bucket)?.let { kind ->
                                 if (unused.classify(file, System.currentTimeMillis()) != kind)
                                     throw IOException("Unused candidate no longer eligible")

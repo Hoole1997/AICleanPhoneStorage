@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.update
 
 /** 仅缓存元数据/选择状态的临时索引。所有方法由Repository在I/O线程调用，不存文件内容或Bitmap。 */
 internal class ScanIndex(context: Context) :
-    SQLiteOpenHelper(context.applicationContext, "cleanup_index.db", null, 4) {
+    SQLiteOpenHelper(context.applicationContext, "cleanup_index.db", null, 5) {
     private val revision = kotlinx.coroutines.flow.MutableStateFlow(0L)
     val changes: kotlinx.coroutines.flow.StateFlow<Long> = revision
     private val sources = Collections.newSetFromMap(WeakHashMap<PagingSource<*, *>, Boolean>())
@@ -57,6 +57,8 @@ internal class ScanIndex(context: Context) :
             db.execSQL("DROP TABLE IF EXISTS directories")
             DirectoryScanIndex.create(db)
         }
+        // 旧临时队列没有能力字段时按不可删处理；文件选择和已有操作记录不变。
+        if (oldVersion == 4) db.execSQL("ALTER TABLE directories ADD COLUMN flags INTEGER NOT NULL DEFAULT 0")
     }
 
     private fun createIdentityIndexes(db: SQLiteDatabase) {

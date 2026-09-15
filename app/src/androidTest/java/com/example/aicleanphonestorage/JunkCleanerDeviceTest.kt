@@ -231,7 +231,7 @@ class JunkCleanerDeviceTest {
         }
         try {
             ScanIndex(isolated).use { database ->
-                assertEquals(4, database.readableDatabase.version)
+                assertEquals(5, database.readableDatabase.version)
                 assertEquals(CleanupFeature.LARGE_FILES, database.handle(1)!!.feature)
                 val restored = database.get(1)!!
                 assertTrue(restored.selected)
