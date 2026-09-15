@@ -85,7 +85,7 @@ jobs:
           AAB_NAME="$(./gradlew -q :app:printGoogleReleaseAabName "${COMMON_ARGS[@]}")"
           echo "aab_name=$AAB_NAME" >> "$GITHUB_OUTPUT"
           # 保留当前 AGP 9.3 的优化和已审计 consumer rules，不照搬来源的关闭优化/R8 full mode 参数。
-          ./gradlew :app:bundleGoogleRelease :app:testGoogleReleaseUnitTest :app:lintGoogleRelease \
+          ./gradlew :app:bundleGoogleRelease :app:testGoogleDebugUnitTest :app:lintGoogleRelease \
             "${COMMON_ARGS[@]}" --stacktrace
 
       - name: Verify signature and collect release files

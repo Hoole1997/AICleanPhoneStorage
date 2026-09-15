@@ -45,7 +45,7 @@ python3 scripts/github_aab.py download 123456789
 1. Checkout 实际触发提交，配置 JDK 25、SDK 37.0、Gradle Wrapper 9.5。
 2. 校验 google 配置包名与 Firebase JSON、版本及私有 Maven 访问权限。
 3. 从 main 读取/首次生成 keystore，首次生成必须成功提交 main 才继续打包；注入 `ANDROID_SIGNING_*`。
-4. 执行 `bundleGoogleRelease`、Google Release JVM 测试和 Lint，保留本项目 AGP 9.3.2 的优化与混淆规则。
+4. 执行 `bundleGoogleRelease`、Google Debug JVM 测试及 Google Release Lint（当前 AGP 不创建 Release 单元测试任务），保留本项目 AGP 9.3.2 的优化与混淆规则。
 5. 验证 AAB 签名和证书，生成 `aiclean_google_release_<versionName>_<versionCode>.aab`。
 6. 上传 AAB、`mapping.txt`、公开证书、含源码提交/签名提交的 `build-info.json` 和 `SHA256SUMS`，保留 30 天。失败报告保留 7 天，私钥不进入 artifact。
 
