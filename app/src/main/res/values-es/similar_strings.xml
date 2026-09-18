@@ -1,0 +1,13 @@
+<resources>
+    <string name="similar_title">Fotos similares</string>
+    <string name="similar_original">Original</string>
+    <string name="similar_group_title">%1$s fotos similares</string>
+    <string name="similar_group_size">Hasta %1$s</string>
+    <string name="similar_selected">Seleccionadas: %1$s fotos · %2$s</string>
+    <string name="similar_confirmation">Seleccionadas: %1$s fotos\nTamaño total: %2$s\n\nLas fotos seleccionadas se eliminarán del dispositivo. Confirma.</string>
+    <string name="similar_make_original">Conservar %1$s como original</string>
+    <string name="similar_original_reason">Recomendado por resolución, nitidez, tamaño y antigüedad. Desmarca otra foto y tócala para cambiar el original.</string>
+    <string name="similar_skipped">No se pudieron analizar algunas fotos (%1$d). Revisa las candidatas antes de limpiar.</string>
+    <string name="similar_permission_title">Permitir acceso a tus fotos</string>
+    <string name="similar_permission_message">El limpiador de fotos duplicadas necesita acceder a tus fotos para encontrar imágenes duplicadas y similares.</string>
+</resources>

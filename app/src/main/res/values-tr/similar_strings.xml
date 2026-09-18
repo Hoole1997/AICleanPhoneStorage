@@ -1,0 +1,13 @@
+<resources>
+    <string name="similar_title">Benzer fotoğraflar</string>
+    <string name="similar_original">Orijinal</string>
+    <string name="similar_group_title">%1$s benzer fotoğraf</string>
+    <string name="similar_group_size">En fazla %1$s</string>
+    <string name="similar_selected">Seçilen: %1$s fotoğraf · %2$s</string>
+    <string name="similar_confirmation">Seçilen: %1$s fotoğraf\nToplam boyut: %2$s\n\nSeçilen fotoğraflar cihazınızdan silinecek. Lütfen onaylayın.</string>
+    <string name="similar_make_original">%1$s öğesini orijinal olarak tut</string>
+    <string name="similar_original_reason">Çözünürlük, netlik, boyut ve tarihe göre önerilir. Orijinali değiştirmek için başka bir fotoğrafın seçimini kaldırıp fotoğrafa dokunun.</string>
+    <string name="similar_skipped">Bazı fotoğraflar analiz edilemedi (%1$d). Temizlemeden önce adayları inceleyin.</string>
+    <string name="similar_permission_title">Fotoğraflarınıza erişime izin verin</string>
+    <string name="similar_permission_message">Yinelenen Fotoğraf Temizleyici, aynı ve benzer görüntüleri bulmak için fotoğraflarınıza erişmelidir.</string>
+</resources>

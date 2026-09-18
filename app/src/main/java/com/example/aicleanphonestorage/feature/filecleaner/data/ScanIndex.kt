@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.update
 
 /** 仅缓存元数据/选择状态的临时索引。所有方法由Repository在I/O线程调用，不存文件内容或Bitmap。 */
 internal class ScanIndex(context: Context) :
-    SQLiteOpenHelper(context.applicationContext, "cleanup_index.db", null, 6) {
+    SQLiteOpenHelper(context.applicationContext, "cleanup_index.db", null, 7) {
     private val revision = kotlinx.coroutines.flow.MutableStateFlow(0L)
     val changes: kotlinx.coroutines.flow.StateFlow<Long> = revision
     private val sources = Collections.newSetFromMap(WeakHashMap<PagingSource<*, *>, Boolean>())
@@ -26,7 +26,7 @@ internal class ScanIndex(context: Context) :
             """CREATE TABLE files(id INTEGER PRIMARY KEY AUTOINCREMENT, scan INTEGER NOT NULL, uri TEXT NOT NULL,
             name TEXT NOT NULL, mime TEXT NOT NULL, size INTEGER NOT NULL, modified INTEGER NOT NULL, category TEXT NOT NULL,
             backend TEXT NOT NULL, scope TEXT NOT NULL, path TEXT NOT NULL, selected INTEGER NOT NULL DEFAULT 0,
-            quality INTEGER NOT NULL DEFAULT 75, bucket TEXT NOT NULL DEFAULT '', group_key TEXT NOT NULL DEFAULT '', retained INTEGER NOT NULL DEFAULT 0, fingerprint TEXT NOT NULL DEFAULT '', UNIQUE(scan,uri))"""
+            quality INTEGER NOT NULL DEFAULT 75, bucket TEXT NOT NULL DEFAULT '', group_key TEXT NOT NULL DEFAULT '', retained INTEGER NOT NULL DEFAULT 0, fingerprint TEXT NOT NULL DEFAULT '', taken INTEGER NOT NULL DEFAULT 0, width INTEGER NOT NULL DEFAULT 0, height INTEGER NOT NULL DEFAULT 0, available INTEGER NOT NULL DEFAULT 1, UNIQUE(scan,uri))"""
         )
         db.execSQL("CREATE INDEX files_scan_sort ON files(scan,size DESC,id)")
         db.execSQL("CREATE INDEX files_selection ON files(scan,selected)")
@@ -34,6 +34,7 @@ internal class ScanIndex(context: Context) :
         createIdentityIndexes(db)
         com.example.aicleanphonestorage.feature.videos.data.VideoIndex.create(db)
         DirectoryScanIndex.create(db)
+        com.example.aicleanphonestorage.feature.similar.data.SimilarPhotoIndex.create(db)
         db.execSQL(
             "CREATE TABLE operations(id INTEGER PRIMARY KEY AUTOINCREMENT, feature TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'prepared')"
         )
@@ -44,6 +45,13 @@ internal class ScanIndex(context: Context) :
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        if (oldVersion < 7) {
+            db.execSQL("ALTER TABLE files ADD COLUMN taken INTEGER NOT NULL DEFAULT 0")
+            db.execSQL("ALTER TABLE files ADD COLUMN width INTEGER NOT NULL DEFAULT 0")
+            db.execSQL("ALTER TABLE files ADD COLUMN height INTEGER NOT NULL DEFAULT 0")
+            db.execSQL("ALTER TABLE files ADD COLUMN available INTEGER NOT NULL DEFAULT 1")
+            com.example.aicleanphonestorage.feature.similar.data.SimilarPhotoIndex.create(db)
+        }
         if (oldVersion < 6) com.example.aicleanphonestorage.feature.videos.data.VideoIndex.create(db)
         if (oldVersion < 2) {
             db.execSQL("ALTER TABLE scans ADD COLUMN analysis_skipped INTEGER NOT NULL DEFAULT 0")
@@ -103,12 +111,12 @@ internal class ScanIndex(context: Context) :
         val db = writableDatabase
         db.beginTransaction()
         try {
-            if (handle.feature in setOf(CleanupFeature.SMART_CLEAN, CleanupFeature.UNUSED_FILES, CleanupFeature.LARGE_FILES, CleanupFeature.VIDEOS)) {
+            if (handle.feature in setOf(CleanupFeature.SMART_CLEAN, CleanupFeature.UNUSED_FILES, CleanupFeature.LARGE_FILES, CleanupFeature.VIDEOS, CleanupFeature.SIMILAR_PHOTOS)) {
                 // 按当前功能的有效筛选范围全选，覆盖所有分页；隐藏的旧垃圾分类不进入选择。
                 // 仅对未发布的新扫描执行；重复完成、页面恢复不能覆盖用户手动取消的选择。
                 val (selection, args) = where(handle.id, handle.feature, CleanupFilter())
                 db.execSQL(
-                    """UPDATE files SET selected=1 WHERE $selection AND retained=0
+                    """UPDATE files SET selected=1 WHERE $selection AND retained=0 AND available=1
                     AND EXISTS (SELECT 1 FROM scans WHERE id=? AND ready=0)""",
                     arrayOf(*args, handle.id.toString()),
                 )
@@ -187,6 +195,10 @@ internal class ScanIndex(context: Context) :
             put("bucket", item.bucket)
             put("group_key", item.groupKey)
             put("retained", if (item.retained) 1 else 0)
+            put("taken", item.takenMillis)
+            put("width", item.width)
+            put("height", item.height)
+            put("available", if (item.available) 1 else 0)
         }
 
     private fun where(
@@ -207,6 +219,10 @@ internal class ScanIndex(context: Context) :
                 clauses += "modified>=?"
                 args += (filter.referenceMillis - filter.recentDays * 86_400_000L).toString()
             }
+        }
+        if (feature == CleanupFeature.SIMILAR_PHOTOS) {
+            clauses += "group_key<>'' AND EXISTS (SELECT 1 FROM similar_groups g WHERE g.scan=files.scan AND g.group_key=files.group_key) AND EXISTS (SELECT 1 FROM files original WHERE original.scan=files.scan AND original.group_key=files.group_key AND original.retained=1 AND original.available=1)"
+            if (filter.bucket != null) { clauses += "group_key=?"; args += filter.bucket }
         }
         if (feature == CleanupFeature.VIDEOS && filter.bucket != null) {
             clauses += "bucket=?"
@@ -287,7 +303,7 @@ internal class ScanIndex(context: Context) :
         val (selection, args) = where(handle.id, handle.feature, filter)
         return readableDatabase
             .rawQuery(
-                """SELECT COUNT(*),TOTAL(size),TOTAL(selected),TOTAL(CASE WHEN selected=1 THEN size ELSE 0 END) FROM files WHERE $selection AND retained=0""",
+                """SELECT COUNT(*),TOTAL(size),TOTAL(selected),TOTAL(CASE WHEN selected=1 THEN size ELSE 0 END) FROM files WHERE $selection AND retained=0 AND available=1""",
                 args,
             )
             .use {
@@ -305,7 +321,7 @@ internal class ScanIndex(context: Context) :
         writableDatabase.update(
             "files",
             ContentValues().apply { put("selected", if (value) 1 else 0) },
-            "id=? AND retained=0",
+            "id=? AND retained=0 AND available=1",
             arrayOf(id.toString()),
         )
         invalidate()
@@ -316,7 +332,7 @@ internal class ScanIndex(context: Context) :
         writableDatabase.update(
             "files",
             ContentValues().apply { put("selected", if (value) 1 else 0) },
-            "$selection AND retained=0",
+            "$selection AND retained=0 AND available=1",
             args,
         )
         invalidate()
@@ -396,6 +412,8 @@ internal class ScanIndex(context: Context) :
     fun discard(scan: Long) {
         writableDatabase.delete("files", "scan=?", arrayOf(scan.toString()))
         writableDatabase.delete("directories", "scan=?", arrayOf(scan.toString()))
+        writableDatabase.delete("similar_signatures", "scan=?", arrayOf(scan.toString()))
+        writableDatabase.delete("similar_groups", "scan=?", arrayOf(scan.toString()))
         writableDatabase.delete("video_collapsed", "scan=?", arrayOf(scan.toString()))
         writableDatabase.delete("scans", "id=?", arrayOf(scan.toString()))
         invalidate()
@@ -426,7 +444,7 @@ internal class ScanIndex(context: Context) :
                     },
                 )
             db.execSQL(
-                "INSERT INTO operation_items(op,file,file_bytes) SELECT ?,id,size FROM files WHERE $selection AND selected=1 AND retained=0",
+                "INSERT INTO operation_items(op,file,file_bytes) SELECT ?,id,size FROM files WHERE $selection AND selected=1 AND retained=0 AND available=1",
                 arrayOf(id.toString(), *args),
             )
             db.setTransactionSuccessful()
@@ -580,6 +598,7 @@ internal class ScanIndex(context: Context) :
             string("bucket"),
             string("group_key"),
             number("retained") == 1L,
+            number("taken"), number("width").toInt(), number("height").toInt(), number("available") == 1L,
         )
     }
 }

@@ -1,0 +1,13 @@
+{
+  "file_key": "dVsTL6ggoDPXVPcEKg856G",
+  "node": "6194:1725",
+  "source": "design/figma/similar-cleaner/source/ic_tool_similar.png",
+  "sha256": "b43a8b789157619290a5d2262aa1607b661333d9ab506b8d7f5ff1895ee2acd9",
+  "dp": 32,
+  "screen_node": "5986:996",
+  "reused_icons": [
+    "cleanup_photo_check_on",
+    "cleanup_photo_check_off",
+    "ic_traffic_back"
+  ]
+}

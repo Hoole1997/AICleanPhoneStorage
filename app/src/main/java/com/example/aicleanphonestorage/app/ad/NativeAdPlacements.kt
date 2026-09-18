@@ -8,6 +8,7 @@ internal enum class NativeAdFeature(val suffix: String) {
     JUNK("junk"),
     SCREENSHOTS("screenshots"),
     VIDEO("video"),
+    DUPLICATE("duplicate"),
     PHOTO("photo"),
     LARGE("large"),
     UNUSED("unused"),
@@ -29,6 +30,7 @@ internal object NativeAdPlacements {
     fun feature(feature: CleanupFeature): NativeAdFeature =
         when (feature) {
             CleanupFeature.SMART_CLEAN -> NativeAdFeature.JUNK
+            CleanupFeature.SIMILAR_PHOTOS -> NativeAdFeature.DUPLICATE
             CleanupFeature.VIDEOS -> NativeAdFeature.VIDEO
             CleanupFeature.SCREENSHOTS -> NativeAdFeature.SCREENSHOTS
             CleanupFeature.PHOTO_COMPRESS -> NativeAdFeature.PHOTO

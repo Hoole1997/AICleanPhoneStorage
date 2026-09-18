@@ -1,0 +1,13 @@
+<resources>
+    <string name="similar_title">相似照片</string>
+    <string name="similar_original">原图</string>
+    <string name="similar_group_title">%1$s 张相似照片</string>
+    <string name="similar_group_size">最多可释放 %1$s</string>
+    <string name="similar_selected">已选：%1$s 张照片 · %2$s</string>
+    <string name="similar_confirmation">已选：%1$s 张照片\n总大小：%2$s\n\n选中的照片将从设备中删除，请确认。</string>
+    <string name="similar_make_original">将 %1$s 保留为原图</string>
+    <string name="similar_original_reason">根据分辨率、清晰度、大小和时间推荐保留。取消勾选其他照片后，点击该照片可更换原图。</string>
+    <string name="similar_skipped">部分照片无法分析（%1$d）。清理前请检查现有候选。</string>
+    <string name="similar_permission_title">允许访问您的照片</string>
+    <string name="similar_permission_message">重复照片清理需要访问您的照片，以查找重复和相似的图片。</string>
+</resources>

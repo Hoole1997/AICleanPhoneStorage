@@ -13,13 +13,14 @@ internal object InterstitialPlacements {
     val homeExits: Set<String> = CleanupFeature.entries.mapNotNull(::exit).toSet() +
         setOf(NOTIFICATIONS_EXIT, APPS_EXIT, NETWORK_EXIT)
 
-    fun clean(feature: CleanupFeature?): String? = suffix(feature)?.let { "clean_confirm_$it" }
+    fun clean(feature: CleanupFeature?): String? = if (feature == CleanupFeature.SIMILAR_PHOTOS) null else suffix(feature)?.let { "clean_confirm_$it" }
 
     /** 功能页退出与完成页退出共用一个 Key；未知来源不生成总表以外的广告位。 */
     fun exit(feature: CleanupFeature?): String? = suffix(feature)?.let { "back_home_$it" }
 
     private fun suffix(feature: CleanupFeature?): String? = when (feature) {
         CleanupFeature.SMART_CLEAN -> "junk"
+        CleanupFeature.SIMILAR_PHOTOS -> "duplicate"
         CleanupFeature.VIDEOS -> "video"
         CleanupFeature.SCREENSHOTS -> "screenshots"
         CleanupFeature.PHOTO_COMPRESS -> "photo"

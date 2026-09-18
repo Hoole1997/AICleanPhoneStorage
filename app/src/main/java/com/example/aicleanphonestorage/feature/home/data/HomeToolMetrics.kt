@@ -32,6 +32,7 @@ data class HomeToolMetrics(
     val unusedFiles: HomeToolMetric = HomeToolMetric.NotScanned,
     val screenshots: HomeToolMetric = HomeToolMetric.NotScanned,
     val videos: HomeToolMetric = HomeToolMetric.NotScanned,
+    val similar: HomeToolMetric = HomeToolMetric.NotScanned,
 )
 
 /** 数量模式使用共享结果；已授权时的容量模式保持原样，未知数值不填成 0。 */

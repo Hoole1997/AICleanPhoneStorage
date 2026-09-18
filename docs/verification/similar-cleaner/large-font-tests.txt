@@ -1,0 +1,8 @@
+
+com.example.aicleanphonestorage.SimilarCleanerDeviceTest:.
+
+Time: 3.514
+
+OK (1 test)
+
+

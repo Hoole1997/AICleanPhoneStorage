@@ -1,0 +1,13 @@
+<resources>
+    <string name="similar_title">Похожие фото</string>
+    <string name="similar_original">Оригинал</string>
+    <string name="similar_group_title">Похожие фото: %1$s</string>
+    <string name="similar_group_size">До %1$s</string>
+    <string name="similar_selected">Выбрано фото: %1$s · %2$s</string>
+    <string name="similar_confirmation">Выбрано фото: %1$s\nОбщий размер: %2$s\n\nВыбранные фото будут удалены с устройства. Подтвердите действие.</string>
+    <string name="similar_make_original">Сохранить %1$s как оригинал</string>
+    <string name="similar_original_reason">Рекомендация учитывает разрешение, чёткость, размер и возраст. Снимите отметку с другого фото и нажмите на него для смены оригинала.</string>
+    <string name="similar_skipped">Не удалось проанализировать некоторые фото (%1$d). Проверьте кандидатов перед очисткой.</string>
+    <string name="similar_permission_title">Разрешить доступ к фото</string>
+    <string name="similar_permission_message">Для поиска одинаковых и похожих изображений приложению нужен доступ к вашим фото.</string>
+</resources>

@@ -12,7 +12,7 @@ internal fun OperationSummary.completionReport(
 ): CompletionReport {
     val compression = feature == CleanupFeature.PHOTO_COMPRESS
     return CompletionReport(
-        kind = if (compression) CompletionKind.COMPRESSION else if (feature == CleanupFeature.VIDEOS) CompletionKind.VIDEOS else CompletionKind.CLEANUP,
+        kind = if (compression) CompletionKind.COMPRESSION else if (feature == CleanupFeature.SIMILAR_PHOTOS) CompletionKind.PHOTO_CLEANUP else if (feature == CleanupFeature.VIDEOS) CompletionKind.VIDEOS else CompletionKind.CLEANUP,
         completed = if (compression) copied else deleted,
         failed = failed,
         skipped = skipped,

@@ -37,7 +37,7 @@ internal class CleanupActionRenderer(
             if (text.toString() != label) text = label
             // 选择写入是短暂的内部状态，不改变按钮视觉资格；所有入口保持同一规则，避免蓝/灰闪烁。
             // 写入期间只拦截点击，零选择/执行操作时才置灰；prepare() 仍等待总量并校验快照。
-            val enabled = selected && state.operation == CleanupOperationState.Idle
+            val enabled = selected && state.operation == CleanupOperationState.Idle && !state.refreshing
             val clickable = enabled && state.editing == 0
             if (isEnabled != enabled) isEnabled = enabled
             if (isClickable != clickable) isClickable = clickable

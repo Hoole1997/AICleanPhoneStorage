@@ -89,9 +89,11 @@ internal class CleanupEntryCoordinator(
                     AccessRequest.NONE -> null
                 }
             }
-        val purpose = if ((state as? CleanupEntryState.Permission)?.feature ==
-            com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature.VIDEOS)
-            PermissionPurpose.VIDEO_CLEANER else PermissionPurpose.DEFAULT
+        val purpose = when ((state as? CleanupEntryState.Permission)?.feature) {
+            com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature.VIDEOS -> PermissionPurpose.VIDEO_CLEANER
+            com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature.SIMILAR_PHOTOS -> PermissionPurpose.SIMILAR_PHOTOS
+            else -> PermissionPurpose.DEFAULT
+        }
         permissions.rationale(ROUTE, kind, purpose)
         val dialog = manager.findFragmentByTag(CleanupMessageDialog.TAG) as? CleanupMessageDialog
         if (state !is CleanupEntryState.Failed) dialog?.dismiss()

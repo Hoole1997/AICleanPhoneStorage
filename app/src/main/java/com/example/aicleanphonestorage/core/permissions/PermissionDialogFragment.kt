@@ -14,7 +14,7 @@ import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.databinding.DialogAppPermissionBinding
 
 /** 功能说明与系统权限类型分开：同一种所有文件权限可用于不同的用户操作。 */
-internal enum class PermissionPurpose { DEFAULT, VIDEO_CLEANER }
+internal enum class PermissionPurpose { DEFAULT, VIDEO_CLEANER, SIMILAR_PHOTOS }
 
 /** App 风格的说明弹框，不模拟系统权限开关；实际授权仍进入 Android 标准界面。 */
 class PermissionDialogFragment : DialogFragment() {
@@ -46,6 +46,8 @@ class PermissionDialogFragment : DialogFragment() {
         val binding = DialogAppPermissionBinding.inflate(inflater, container, false)
         val spec = if (purpose == PermissionPurpose.VIDEO_CLEANER)
             Triple(R.string.video_permission_title, R.string.video_permission_message, R.drawable.ic_tool_videos)
+        else if (purpose == PermissionPurpose.SIMILAR_PHOTOS)
+            Triple(R.string.similar_permission_title, R.string.similar_permission_message, R.drawable.ic_tool_similar)
         else when (kind) {
                 PermissionKind.POST_NOTIFICATIONS ->
                     Triple(R.string.push_permission_title, R.string.push_permission_message,
@@ -93,7 +95,7 @@ class PermissionDialogFragment : DialogFragment() {
         binding.permissionIcon.setImageResource(spec.third)
         val settings = requireArguments().getBoolean("settings")
         binding.permissionContinue.setText(
-            if (purpose == PermissionPurpose.VIDEO_CLEANER) R.string.video_permission_allow
+            if (purpose != PermissionPurpose.DEFAULT) R.string.permission_allow
             else if (kind == PermissionKind.DIRECTORY) R.string.cleanup_choose_folder
             else if (kind.special || settings) R.string.permission_open_settings
             else if (kind == PermissionKind.VIDEOS) R.string.video_permission_allow

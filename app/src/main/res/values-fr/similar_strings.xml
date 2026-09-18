@@ -1,0 +1,13 @@
+<resources>
+    <string name="similar_title">Photos similaires</string>
+    <string name="similar_original">Original</string>
+    <string name="similar_group_title">%1$s photos similaires</string>
+    <string name="similar_group_size">Jusqu’à %1$s</string>
+    <string name="similar_selected">Sélection : %1$s photos · %2$s</string>
+    <string name="similar_confirmation">Sélection : %1$s photos\nTaille totale : %2$s\n\nLes photos sélectionnées seront supprimées de votre appareil. Veuillez confirmer.</string>
+    <string name="similar_make_original">Conserver %1$s comme original</string>
+    <string name="similar_original_reason">Recommandé selon la résolution, la netteté, la taille et l’ancienneté. Désélectionnez une autre photo et touchez-la pour changer l’original.</string>
+    <string name="similar_skipped">Certaines photos n’ont pas pu être analysées (%1$d). Vérifiez les propositions avant le nettoyage.</string>
+    <string name="similar_permission_title">Autoriser l’accès à vos photos</string>
+    <string name="similar_permission_message">Le nettoyeur de photos en double a besoin d’accéder à vos photos pour trouver les images identiques et similaires.</string>
+</resources>

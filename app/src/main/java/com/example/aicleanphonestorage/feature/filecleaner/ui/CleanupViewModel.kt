@@ -35,6 +35,7 @@ internal data class CleanupUiState(
     val editing: Int = 0,
     val error: Long = 0,
     val totalsReady: Boolean = false,
+    val refreshing: Boolean = false,
     val unusedGroups: List<com.example.aicleanphonestorage.feature.unused.data.UnusedGroup> = emptyList(),
 )
 
@@ -79,20 +80,28 @@ internal class CleanupViewModel(
             .cachedIn(viewModelScope)
     val videoRows = query.filterNotNull().filter { it.first.feature == CleanupFeature.VIDEOS }
         .flatMapLatest { repository.videos.pager(it.first.id).flow }.cachedIn(viewModelScope)
+    private val similarColumns = MutableStateFlow(3)
+    val similarRows = combine(query.filterNotNull(), similarColumns) { q, columns -> q.first to columns }
+        .filter { it.first.feature == CleanupFeature.SIMILAR_PHOTOS }
+        .flatMapLatest { (handle, columns) -> repository.similarPaging.pager(handle.id, columns).flow }.cachedIn(viewModelScope)
+    private var similarRefreshPending = false
+    private var similarRefresh: Job? = null
     private var videoRefresh: Job? = null
     private var videoRefreshPending = false
     private var work: Job? = null
     private var totalsJob: Job? = null
 
     init {
-        saved[SCAN] = scanId
+        val restoredScan = saved.get<Long>(SCAN) ?: scanId
+        saved[SCAN] = restoredScan
         viewModelScope.launch(failures) {
-            val handle = repository.handle(scanId)
+            val handle = repository.handle(restoredScan)
             current.update { it.copy(handle = handle, error = if (handle == null) 1 else 0) }
             handle?.let {
                 query.value = it to current.value.filter
                 refreshTotals()
                 onVideoForeground()
+                onSimilarForeground()
             }
             // 进程重建只恢复结果；不会自动重启压缩或跳过删除确认。
             saved.get<Long>(OP)?.let { id ->
@@ -188,6 +197,34 @@ internal class CleanupViewModel(
 
     fun onVideoForeground() {
         if (videoRefreshPending && videoRefresh?.isActive != true) refreshVideos()
+    }
+
+    fun setSimilarColumns(columns: Int) { similarColumns.value = columns.coerceIn(2, 3) }
+    fun makeOriginal(id: Long) = edit {
+        current.value.handle?.takeIf { it.feature == CleanupFeature.SIMILAR_PHOTOS }?.let { repository.original(it, id) }
+    }
+    fun photoUnavailable(id: Long) {
+        viewModelScope.launch(failures) { repository.unavailable(id); refreshTotals() }
+    }
+    fun refreshSimilar() {
+        similarRefreshPending = true
+        if (current.value.handle?.feature != CleanupFeature.SIMILAR_PHOTOS ||
+            current.value.operation != CleanupOperationState.Idle || similarRefresh?.isActive == true) return
+        current.update { it.copy(editing = it.editing + 1, refreshing = true) }
+        similarRefresh = viewModelScope.launch(failures) {
+            try {
+                val handle = repository.scan(CleanupFeature.SIMILAR_PHOTOS) { }
+                ensureActive()
+                saved[SCAN] = handle.id
+                current.update { it.copy(handle = handle, totalsReady = false) }
+                query.value = handle to current.value.filter
+                similarRefreshPending = false
+                refreshTotals()
+            } finally { current.update { it.copy(editing = (it.editing - 1).coerceAtLeast(0), refreshing = false) } }
+        }
+    }
+    fun onSimilarForeground() {
+        if (similarRefreshPending && similarRefresh?.isActive != true) refreshSimilar()
     }
 
     fun quality(id: Long, quality: Int) = edit { repository.quality(id, quality) }
@@ -335,7 +372,7 @@ internal class CleanupViewModel(
                 else {
                     val summary = operations.summary(id)
                     current.update {
-                        if (it.handle?.feature == CleanupFeature.VIDEOS && summary.deleted == 0) {
+                        if (it.handle?.feature in setOf(CleanupFeature.VIDEOS, CleanupFeature.SIMILAR_PHOTOS) && summary.deleted == 0) {
                             saved.remove<Long>(OP)
                             it.copy(operation = CleanupOperationState.Idle)
                         } else it.copy(operation = CleanupOperationState.Result(id, summary))
@@ -359,6 +396,7 @@ internal class CleanupViewModel(
 
     fun onBackground() {
         if (current.value.handle?.feature == CleanupFeature.VIDEOS && current.value.operation == CleanupOperationState.Idle) videoRefreshPending = true
+        similarRefresh?.cancel()
         videoRefresh?.cancel()
         val running = current.value.operation as? CleanupOperationState.Running ?: return
         if (waitingSystem) return

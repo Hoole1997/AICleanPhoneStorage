@@ -24,6 +24,7 @@ internal class HomeFileMetricsSource(
                             unusedFiles = HomeToolMetric.Unavailable,
                             screenshots = HomeToolMetric.Unavailable,
                             videos = HomeToolMetric.Unavailable,
+                            similar = HomeToolMetric.Unavailable,
                         )
                     )
                 else throw it
@@ -35,9 +36,9 @@ internal class HomeFileMetricsSource(
             .rawQuery(
                 """
                 SELECT s.feature,TOTAL(f.size)
-                FROM scans s LEFT JOIN files f ON f.scan=s.id
+                FROM scans s LEFT JOIN files f ON f.scan=s.id AND (s.feature<>'SIMILAR_PHOTOS' OR (f.group_key<>'' AND f.retained=0 AND f.available=1))
                 WHERE s.id IN (SELECT MAX(id) FROM scans WHERE ready=1 GROUP BY feature)
-                  AND s.feature IN ('PHOTO_COMPRESS','LARGE_FILES','UNUSED_FILES','SCREENSHOTS','VIDEOS')
+                  AND s.feature IN ('PHOTO_COMPRESS','LARGE_FILES','UNUSED_FILES','SCREENSHOTS','VIDEOS','SIMILAR_PHOTOS')
                 GROUP BY s.id,s.feature
                 """
                     .trimIndent(),
@@ -53,6 +54,7 @@ internal class HomeFileMetricsSource(
             unusedFiles = values["UNUSED_FILES"] ?: HomeToolMetric.NotScanned,
             screenshots = values["SCREENSHOTS"] ?: HomeToolMetric.NotScanned,
             videos = values["VIDEOS"] ?: HomeToolMetric.NotScanned,
+            similar = values["SIMILAR_PHOTOS"] ?: HomeToolMetric.NotScanned,
         )
     }
 }

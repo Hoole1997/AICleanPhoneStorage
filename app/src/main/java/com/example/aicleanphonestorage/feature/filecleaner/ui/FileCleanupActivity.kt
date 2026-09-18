@@ -65,6 +65,7 @@ class FileCleanupActivity : AppCompatActivity() {
     private lateinit var listState: CleanupListStateRenderer
     private lateinit var filters: CleanupFilters
     private var adapter: CleanupFilesAdapter? = null
+    private var similar: com.example.aicleanphonestorage.feature.similar.ui.SimilarCleanupController? = null
     private var videos: com.example.aicleanphonestorage.feature.videos.ui.VideoFilesAdapter? = null
     private var unusedGroups: UnusedGroupsAdapter? = null
     private var lastError = 0L
@@ -122,7 +123,7 @@ class FileCleanupActivity : AppCompatActivity() {
         binding.cleanupAction.setOnClickListener {
             if (!ads.busy) model.prepare()
         }
-        binding.cleanupError.setOnClickListener { adapter?.retry(); videos?.retry() }
+        binding.cleanupError.setOnClickListener { adapter?.retry(); videos?.retry(); similar?.retry() }
         filters = CleanupFilters(binding, model::setFilter)
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) { model.state.collect(::render) }
@@ -134,7 +135,12 @@ class FileCleanupActivity : AppCompatActivity() {
             com.example.aicleanphonestorage.feature.junkcleaner.data.JunkKind.from(
                 intent.getStringExtra(EXTRA_BUCKET)
             )
-        if (adapter != null || unusedGroups != null || videos != null) return
+        if (adapter != null || unusedGroups != null || videos != null || similar != null) return
+        if (feature == CleanupFeature.SIMILAR_PHOTOS) {
+            similar = com.example.aicleanphonestorage.feature.similar.ui.SimilarCleanupController(
+                this, binding, model, container.taskExecutor, listState, ::preview)
+            return
+        }
         if (feature == CleanupFeature.VIDEOS) {
             attachVideos()
             return
@@ -285,6 +291,7 @@ class FileCleanupActivity : AppCompatActivity() {
             binding.cleanupFiles.isVisible = true
             binding.cleanupFooter.isVisible = true
         }
+        similar?.render(state)
         operationCoordinator.render(state.operation)
     }
 
@@ -351,12 +358,15 @@ class FileCleanupActivity : AppCompatActivity() {
         adapter?.resume()
         videos?.resume()
         model.onVideoForeground()
+        model.onSimilarForeground()
+        similar?.resume()
     }
 
     override fun onStop() {
         filters.close()
         adapter?.pause()
         videos?.pause()
+        similar?.pause()
         if (!isChangingConfigurations) model.onBackground()
         super.onStop()
     }
@@ -370,6 +380,7 @@ class FileCleanupActivity : AppCompatActivity() {
         binding.cleanupFiles.adapter = null
         adapter?.pause()
         videos?.pause()
+        similar?.pause()
         super.onDestroy()
     }
 

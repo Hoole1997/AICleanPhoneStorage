@@ -95,7 +95,7 @@ class CompletionActivity : AppCompatActivity() {
     private fun exitToHome() {
         if (leaving) return
         // 返回结果交给原功能页，它附上业务来源并导航首页；本页不请求退出广告。
-        complete(if (report?.kind == CompletionKind.VIDEOS) CompletionContract.HOME else CompletionContract.CONTINUE)
+        complete(if (report?.kind in setOf(CompletionKind.VIDEOS, CompletionKind.PHOTO_CLEANUP)) CompletionContract.HOME else CompletionContract.CONTINUE)
     }
 
     private fun complete(action: String) {

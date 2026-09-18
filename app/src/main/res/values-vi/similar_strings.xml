@@ -1,0 +1,13 @@
+<resources>
+    <string name="similar_title">Ảnh tương tự</string>
+    <string name="similar_original">Ảnh gốc</string>
+    <string name="similar_group_title">%1$s ảnh tương tự</string>
+    <string name="similar_group_size">Tối đa %1$s</string>
+    <string name="similar_selected">Đã chọn: %1$s ảnh · %2$s</string>
+    <string name="similar_confirmation">Đã chọn: %1$s ảnh\nTổng dung lượng: %2$s\n\nCác ảnh đã chọn sẽ bị xóa khỏi thiết bị. Vui lòng xác nhận.</string>
+    <string name="similar_make_original">Giữ %1$s làm ảnh gốc</string>
+    <string name="similar_original_reason">Đề xuất dựa trên độ phân giải, độ rõ, kích thước và thời gian. Bỏ chọn ảnh khác rồi chạm để đổi ảnh gốc.</string>
+    <string name="similar_skipped">Không thể phân tích một số ảnh (%1$d). Kiểm tra các ảnh đề xuất trước khi dọn.</string>
+    <string name="similar_permission_title">Cho phép truy cập ảnh</string>
+    <string name="similar_permission_message">Trình dọn ảnh trùng lặp cần truy cập ảnh của bạn để tìm hình ảnh trùng lặp và tương tự.</string>
+</resources>

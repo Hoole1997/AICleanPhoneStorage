@@ -47,7 +47,7 @@ internal class CleanupTelemetry(private val sink: EventSink = BusinessTelemetry)
                 params["group"] = group(JunkKind.from(bucket)) ?: return
                 MetricEvent.JUNK_DETAIL_CHECK
             }
-            CleanupFeature.VIDEOS -> return
+            CleanupFeature.VIDEOS, CleanupFeature.SIMILAR_PHOTOS -> return
             CleanupFeature.SCREENSHOTS -> MetricEvent.SHOT_CHECK
             CleanupFeature.PHOTO_COMPRESS -> MetricEvent.PHOTO_CHECK
             CleanupFeature.LARGE_FILES -> MetricEvent.LARGE_FILE_CHECK
@@ -63,7 +63,7 @@ internal class CleanupTelemetry(private val sink: EventSink = BusinessTelemetry)
     fun cleanClick(feature: CleanupFeature, totals: SelectionTotals) {
         val event = when (feature) {
             CleanupFeature.SMART_CLEAN -> MetricEvent.JUNK_CLEAN_CLICK
-            CleanupFeature.VIDEOS -> return
+            CleanupFeature.VIDEOS, CleanupFeature.SIMILAR_PHOTOS -> return
             CleanupFeature.SCREENSHOTS -> MetricEvent.SHOT_CLEAN_CLICK
             CleanupFeature.PHOTO_COMPRESS -> MetricEvent.PHOTO_COMPRESS_CLICK
             CleanupFeature.LARGE_FILES -> MetricEvent.LARGE_CLEAN_CLICK
@@ -111,7 +111,7 @@ internal class CleanupTelemetry(private val sink: EventSink = BusinessTelemetry)
         fun mb(bytes: Long): Double = bytes.coerceAtLeast(0) / 1_000_000.0
         fun group(kind: JunkKind?): String? = when (kind) { JunkKind.INSTALLERS -> "apk"; JunkKind.TEMPORARY -> "temp"; JunkKind.EMPTY_FOLDERS -> "empty_folder"; JunkKind.AD_FILES -> "ad_file"; else -> null }
         fun page(feature: CleanupFeature): String = when (feature) {
-            CleanupFeature.VIDEOS -> "video"; CleanupFeature.SMART_CLEAN -> "junk"; CleanupFeature.SCREENSHOTS -> "screenshots"; CleanupFeature.PHOTO_COMPRESS -> "photo"; CleanupFeature.LARGE_FILES -> "large"; CleanupFeature.UNUSED_FILES -> "unused"
+            CleanupFeature.SIMILAR_PHOTOS -> "duplicate"; CleanupFeature.VIDEOS -> "video"; CleanupFeature.SMART_CLEAN -> "junk"; CleanupFeature.SCREENSHOTS -> "screenshots"; CleanupFeature.PHOTO_COMPRESS -> "photo"; CleanupFeature.LARGE_FILES -> "large"; CleanupFeature.UNUSED_FILES -> "unused"
         }
     }
 }

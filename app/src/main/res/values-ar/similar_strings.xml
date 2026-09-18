@@ -1,0 +1,13 @@
+<resources>
+    <string name="similar_title">صور متشابهة</string>
+    <string name="similar_original">الأصلية</string>
+    <string name="similar_group_title">%1$s صور متشابهة</string>
+    <string name="similar_group_size">حتى %1$s</string>
+    <string name="similar_selected">المحدد: %1$s صور · %2$s</string>
+    <string name="similar_confirmation">المحدد: %1$s صور\nالحجم الإجمالي: %2$s\n\nستُحذف الصور المحددة من جهازك. يرجى التأكيد.</string>
+    <string name="similar_make_original">الاحتفاظ بـ %1$s كصورة أصلية</string>
+    <string name="similar_original_reason">التوصية حسب الدقة والوضوح والحجم والوقت. ألغِ تحديد صورة أخرى ثم اضغط عليها لتغيير الأصلية.</string>
+    <string name="similar_skipped">تعذر تحليل بعض الصور (%1$d). راجع الصور المقترحة قبل التنظيف.</string>
+    <string name="similar_permission_title">السماح بالوصول إلى صورك</string>
+    <string name="similar_permission_message">يحتاج منظف الصور المكررة إلى الوصول إلى صورك للعثور على الصور المكررة والمتشابهة.</string>
+</resources>

@@ -59,7 +59,8 @@ class PermissionUiDeviceTest {
     @Test
     fun everyPermissionDialogMeasuresNormallyAndWithLargeFonts() {
         val variants = PermissionKind.entries.map { it to PermissionPurpose.DEFAULT } +
-            (PermissionKind.ALL_FILES to PermissionPurpose.VIDEO_CLEANER)
+            (PermissionKind.ALL_FILES to PermissionPurpose.VIDEO_CLEANER) +
+            (PermissionKind.ALL_FILES to PermissionPurpose.SIMILAR_PHOTOS)
         for ((kind, purpose) in variants) for (scale in listOf(1f, 2f)) {
             var image: Bitmap? = null
             instrumentation.runOnMainSync {
@@ -77,6 +78,13 @@ class PermissionUiDeviceTest {
                     assertEquals(themed.getString(R.string.video_permission_title), binding.permissionTitle.text.toString())
                     assertEquals(themed.getString(R.string.video_permission_message), binding.permissionMessage.text.toString())
                     assertEquals(themed.getString(R.string.video_permission_allow), binding.permissionContinue.text.toString())
+                    assertEquals(PermissionKind.ALL_FILES.name, fragment.requireArguments().getString("kind"))
+                }
+                if (purpose == PermissionPurpose.SIMILAR_PHOTOS) {
+                    assertEquals(themed.getString(R.string.similar_permission_title), binding.permissionTitle.text.toString())
+                    assertEquals(themed.getString(R.string.similar_permission_message), binding.permissionMessage.text.toString())
+                    assertEquals(themed.getString(R.string.permission_allow), binding.permissionContinue.text.toString())
+                    assertEquals(themed.getString(R.string.permission_not_now), binding.permissionCancel.text.toString())
                     assertEquals(PermissionKind.ALL_FILES.name, fragment.requireArguments().getString("kind"))
                 }
                 val density = themed.resources.displayMetrics.density

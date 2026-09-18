@@ -47,12 +47,13 @@ internal class CleanupAccess(context: Context) {
     @Suppress("DEPRECATION")
     suspend fun resolve(feature: CleanupFeature): ScanAccess {
         val allFiles = Build.VERSION.SDK_INT >= 30 && Environment.isExternalStorageManager()
-        if (feature == CleanupFeature.VIDEOS) {
-            // Android 11+ 与垃圾清理共用所有文件访问授权；仅有媒体读取/选定视频权限不能进入。
-            // 保持 MediaStore 视频索引，不因更宽授权退回全盘目录遍历。
-            if (Build.VERSION.SDK_INT >= 30) return if (allFiles)
-                ScanAccess(AccessRequest.NONE, ScanSourceKind.MEDIA, videos = true)
+        // 视频与相似照片共用用户要求的所有文件访问门槛；扫描仍限定各自 MediaStore 集合。
+        if (feature.usesAllFilesMediaAccess && Build.VERSION.SDK_INT >= 30) {
+            return if (allFiles)
+                ScanAccess(AccessRequest.NONE, ScanSourceKind.MEDIA, videos = feature == CleanupFeature.VIDEOS)
             else ScanAccess(AccessRequest.ALL_FILES)
+        }
+        if (feature == CleanupFeature.VIDEOS) {
             val readable = granted(Manifest.permission.READ_EXTERNAL_STORAGE)
             val writable = Build.VERSION.SDK_INT > 28 || granted(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             return if (readable && writable)
@@ -60,7 +61,7 @@ internal class CleanupAccess(context: Context) {
             else ScanAccess(AccessRequest.VIDEOS)
         }
         val images =
-            feature == CleanupFeature.PHOTO_COMPRESS || feature == CleanupFeature.SCREENSHOTS
+            feature == CleanupFeature.PHOTO_COMPRESS || feature == CleanupFeature.SCREENSHOTS || feature == CleanupFeature.SIMILAR_PHOTOS
         if (images) {
             val full =
                 if (Build.VERSION.SDK_INT >= 33) granted(Manifest.permission.READ_MEDIA_IMAGES)

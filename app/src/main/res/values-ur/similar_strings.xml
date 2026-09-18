@@ -1,0 +1,13 @@
+<resources>
+    <string name="similar_title">ملتی جلتی تصاویر</string>
+    <string name="similar_original">اصل</string>
+    <string name="similar_group_title">%1$s ملتی جلتی تصاویر</string>
+    <string name="similar_group_size">زیادہ سے زیادہ %1$s</string>
+    <string name="similar_selected">منتخب: %1$s تصاویر · %2$s</string>
+    <string name="similar_confirmation">منتخب: %1$s تصاویر\nکل سائز: %2$s\n\nمنتخب تصاویر آپ کے آلے سے حذف ہو جائیں گی۔ تصدیق کریں۔</string>
+    <string name="similar_make_original">%1$s کو اصل کے طور پر رکھیں</string>
+    <string name="similar_original_reason">ریزولیوشن، وضاحت، سائز اور وقت کے مطابق تجویز۔ اصل بدلنے کے لیے دوسری تصویر کا انتخاب ہٹائیں اور اس پر ٹیپ کریں۔</string>
+    <string name="similar_skipped">کچھ تصاویر کا تجزیہ نہیں ہو سکا (%1$d)۔ صفائی سے پہلے تجاویز دیکھیں۔</string>
+    <string name="similar_permission_title">اپنی تصاویر تک رسائی دیں</string>
+    <string name="similar_permission_message">ڈپلیکیٹ فوٹو کلینر کو یکساں اور ملتی جلتی تصاویر تلاش کرنے کے لیے آپ کی تصاویر تک رسائی درکار ہے۔</string>
+</resources>

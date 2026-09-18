@@ -49,6 +49,9 @@ internal class FileScanSources(context: Context, private val index: ScanIndex) {
                             MediaStore.MediaColumns.MIME_TYPE,
                             MediaStore.MediaColumns.DATE_MODIFIED,
                             MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
+                            MediaStore.Images.ImageColumns.DATE_TAKEN,
+                            MediaStore.MediaColumns.WIDTH,
+                            MediaStore.MediaColumns.HEIGHT,
                         )
                     if (Build.VERSION.SDK_INT >= 29)
                         columns += MediaStore.MediaColumns.RELATIVE_PATH
@@ -88,6 +91,9 @@ internal class FileScanSources(context: Context, private val index: ScanIndex) {
                                     backend = FileBackend.MEDIA,
                                     scope = collection.toString(),
                                     path = cursor.text(MediaStore.MediaColumns.DATA),
+                                    takenMillis = cursor.long(MediaStore.Images.ImageColumns.DATE_TAKEN),
+                                    width = cursor.long(MediaStore.MediaColumns.WIDTH).toInt(),
+                                    height = cursor.long(MediaStore.MediaColumns.HEIGHT).toInt(),
                                 ),
                                 folder,
                             )

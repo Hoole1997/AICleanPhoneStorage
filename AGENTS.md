@@ -35,3 +35,5 @@
 - 用户于 2026-09-18 要求视频清理在 Android 11 及以上必须检查 MANAGE_EXTERNAL_STORAGE，复用垃圾清理的所有文件授权流程；仍只索引 MediaStore 视频。在保留应用内删除确认和操作前校验的前提下，有所有文件访问权时直接通过 MediaStore 删除；系统拒绝或权限撤销时才退回系统确认。旧 Android 保留运行时存储权限兼容，不改变其他模块删除策略。
 
 - 视频清理的权限说明独立于权限类型：标题 “Allow access to your videos”，说明 “Video Cleaner needs access to videos on your device to scan and organize them.”，按钮 “Not now / Allow”；Android 11+ 底层仍使用 MANAGE_EXTERNAL_STORAGE。不要因复用所有文件权限而替换成通用文件管理文案，也不要影响其他入口文案。
+
+- 用户已授权独立相似照片清理。按最新要求，Android 11+ 与视频清理共用 MANAGE_EXTERNAL_STORAGE 门槛和媒体直接删除策略；保留应用内确认、每组 Original 保护及完全重复内容删除前 SHA-256 复核。权限文案使用 “Allow access to your photos” / “Duplicate Photo Cleaner needs access to your photos to find duplicate and similar images.” / “Allow” / “Not now”。页面内不显示顶部刷新进度，点击 Original 不弹说明 Toast。

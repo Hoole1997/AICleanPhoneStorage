@@ -203,7 +203,7 @@ class MainActivity : AppCompatActivity() {
             override fun onToolSelected(tool: HomeTool) {
                 val entry = when (tool) {
                     HomeTool.Network -> "traffic"; HomeTool.Notifications -> "notify"; HomeTool.Apps -> "apps"
-                    HomeTool.Compress -> "photo"; HomeTool.LargeFiles -> "large"; HomeTool.UnusedFiles -> "unused"; HomeTool.Screenshots -> "screenshots"; HomeTool.Videos -> "video"
+                    HomeTool.Compress -> "photo"; HomeTool.LargeFiles -> "large"; HomeTool.UnusedFiles -> "unused"; HomeTool.Screenshots -> "screenshots"; HomeTool.Videos -> "video"; HomeTool.Similar -> "duplicate"
                 }
                 if (previewSelection == null) FeatureTelemetry.entry(app, entry)
                 homeActions.onToolSelected(tool)

@@ -66,8 +66,8 @@ internal class CleanupEntryViewModel(
                     val handle =
                         TimedEntryLoader().load(
                             initialStage = "FILES",
-                            finalStage = "FILES",
-                            continuousStages = listOf("FILES"),
+                            finalStage = if (feature == CleanupFeature.SIMILAR_PHOTOS) "PHOTOS" else "FILES",
+                            continuousStages = if (feature == CleanupFeature.SIMILAR_PHOTOS) listOf("FILES", "PHOTOS") else listOf("FILES"),
                             count = { it: ScanHandle -> it.scannedCount },
                             onStalled = { failLoading(id, feature) },
                             onFrame = {

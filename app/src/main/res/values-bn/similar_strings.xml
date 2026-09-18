@@ -1,0 +1,13 @@
+<resources>
+    <string name="similar_title">একই রকম ছবি</string>
+    <string name="similar_original">মূল</string>
+    <string name="similar_group_title">%1$sটি একই রকম ছবি</string>
+    <string name="similar_group_size">সর্বোচ্চ %1$s</string>
+    <string name="similar_selected">নির্বাচিত: %1$sটি ছবি · %2$s</string>
+    <string name="similar_confirmation">নির্বাচিত: %1$sটি ছবি\nমোট আকার: %2$s\n\nনির্বাচিত ছবিগুলি আপনার ডিভাইস থেকে মুছে যাবে। নিশ্চিত করুন।</string>
+    <string name="similar_make_original">%1$s মূল হিসেবে রাখুন</string>
+    <string name="similar_original_reason">রেজোলিউশন, স্পষ্টতা, আকার ও সময়ের ভিত্তিতে সুপারিশ। মূল বদলাতে অন্য ছবির নির্বাচন সরিয়ে তাতে ট্যাপ করুন।</string>
+    <string name="similar_skipped">কিছু ছবি বিশ্লেষণ করা যায়নি (%1$d)। পরিষ্কারের আগে প্রস্তাবিত ছবিগুলি যাচাই করুন।</string>
+    <string name="similar_permission_title">আপনার ছবি অ্যাক্সেসের অনুমতি দিন</string>
+    <string name="similar_permission_message">একই ও মিল রয়েছে এমন ছবি খুঁজতে ডুপ্লিকেট ফটো ক্লিনারের আপনার ছবিতে অ্যাক্সেস প্রয়োজন।</string>
+</resources>

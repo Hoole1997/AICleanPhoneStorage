@@ -40,6 +40,7 @@ internal class CleanupListStateRenderer(private val binding: ScreenFileCleanupBi
         val empty =
             state.handle != null && presented && refresh is LoadState.NotLoading && count == 0
         val failed = refresh is LoadState.Error && count == 0
+        val similar = state.handle?.feature == CleanupFeature.SIMILAR_PHOTOS
         val detail = state.handle?.feature == CleanupFeature.SMART_CLEAN ||
             (state.handle?.feature == CleanupFeature.UNUSED_FILES && state.filter.bucket != null)
         screenshots.render(state)
@@ -61,10 +62,11 @@ internal class CleanupListStateRenderer(private val binding: ScreenFileCleanupBi
             binding.cleanupScope.isVisible = !empty && !failed && state.filter.bucket != null
         binding.cleanupEmpty.isVisible = empty
         binding.cleanupError.isVisible = failed
-        binding.cleanupFiles.isVisible = !empty && !failed
-        binding.cleanupProgress.isVisible = refresh is LoadState.Loading && count == 0
+        binding.cleanupFiles.isVisible = !empty && !failed && (!state.refreshing || similar)
+        // 相似页的索引刷新不显示顶部进度；入口扫描仍由共享 loading 弹框负责。
+        binding.cleanupProgress.isVisible = state.handle != null && !similar && (state.refreshing || (refresh is LoadState.Loading && count == 0))
         binding.cleanupFooter.isVisible =
-            !detail && count > 0
+            !detail && count > 0 && (!state.refreshing || similar)
         binding.cleanupPhotoHeader.isVisible =
             state.handle?.feature == CleanupFeature.PHOTO_COMPRESS && !empty && !failed
         binding.cleanupSelectAll.isVisible = !empty && !failed

@@ -24,6 +24,8 @@ internal class FileScanRepository(
     val index = ScanIndex(context)
     val access = CleanupAccess(context)
     val videos = com.example.aicleanphonestorage.feature.videos.data.VideoIndex(index, executor)
+    val similar = com.example.aicleanphonestorage.feature.similar.data.SimilarPhotoIndex(index)
+    val similarPaging = com.example.aicleanphonestorage.feature.similar.data.SimilarPhotoPaging(index, executor)
     private val junkIndex =
         com.example.aicleanphonestorage.feature.junkcleaner.data.JunkIndex(index)
     private val sources = FileScanSources(context, index)
@@ -85,6 +87,10 @@ internal class FileScanRepository(
                         }
                     currentCoroutineContext().ensureActive()
                     if (batch.isNotEmpty()) junkBytes += index.insert(session, batch)
+                    val analysisSkipped = if (feature == CleanupFeature.SIMILAR_PHOTOS)
+                        com.example.aicleanphonestorage.feature.similar.data.SimilarPhotoAnalyzer(app, similar).analyze(session) {
+                            progress(ScanProgress(it, stage = "PHOTOS"))
+                        } else 0
                     val label =
                         when (permission.source) {
                             ScanSourceKind.MEDIA ->
@@ -94,7 +100,7 @@ internal class FileScanRepository(
                             ScanSourceKind.DOCUMENT -> "Selected folder"
                             null -> ""
                         }
-                    ScanHandle(session, feature, count, label, permission.limited)
+                    ScanHandle(session, feature, count, label, permission.limited, analysisSkipped)
                         .also { handle ->
                             index.finishScan(handle)
                             if (smartClean) {
@@ -155,6 +161,9 @@ internal class FileScanRepository(
 
     suspend fun selectAll(handle: ScanHandle, filter: CleanupFilter, selected: Boolean) =
         executor.io { index.selectAll(handle, filter, selected) }
+
+    suspend fun original(handle: ScanHandle, id: Long) = executor.io { similar.makeOriginal(handle.id, id) }
+    suspend fun unavailable(id: Long) = executor.io { similar.unavailable(id) }
 
     suspend fun quality(id: Long, quality: Int) =
         executor.io { index.quality(id, quality.coerceIn(40, 95)) }

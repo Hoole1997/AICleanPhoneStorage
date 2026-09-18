@@ -14,6 +14,7 @@ internal object FeatureTelemetry {
     fun permission(app: CleanApplication, page: String): suspend () -> String = {
         val feature = when (page) {
             "junk", "junk_detail" -> CleanupFeature.SMART_CLEAN
+            "duplicate" -> CleanupFeature.SIMILAR_PHOTOS
             "video" -> CleanupFeature.VIDEOS
             "screenshots" -> CleanupFeature.SCREENSHOTS
             "photo" -> CleanupFeature.PHOTO_COMPRESS

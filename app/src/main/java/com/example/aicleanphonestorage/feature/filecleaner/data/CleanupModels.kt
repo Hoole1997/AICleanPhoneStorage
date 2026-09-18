@@ -9,7 +9,12 @@ enum class CleanupFeature {
     UNUSED_FILES,
     SCREENSHOTS,
     VIDEOS,
-    SMART_CLEAN,
+    SIMILAR_PHOTOS,
+    SMART_CLEAN;
+
+    /** 用户明确授权的视频/相似照片入口：Android 11+ 共用文件管理权限与媒体直接删除策略。 */
+    val usesAllFilesMediaAccess: Boolean
+        get() = this == VIDEOS || this == SIMILAR_PHOTOS
 }
 
 enum class FileCategory {
@@ -54,6 +59,10 @@ data class ScannedFile(
     val bucket: String = "",
     val groupKey: String = "",
     val retained: Boolean = false,
+    val takenMillis: Long = 0,
+    val width: Int = 0,
+    val height: Int = 0,
+    val available: Boolean = true,
 ) {
     // 使用索引已有 MIME 字段区分目录，不把空文件伪装成空目录。
     val isDirectory: Boolean get() = mime == "vnd.android.document/directory"
@@ -122,6 +131,7 @@ internal object CleanupPolicy {
                 file.mime in setOf("image/jpeg", "image/png") && file.size >= 100_000
             CleanupFeature.SCREENSHOTS ->
                 file.category == FileCategory.PHOTOS && screenshot(file.name, folder)
+            CleanupFeature.SIMILAR_PHOTOS -> com.example.aicleanphonestorage.feature.similar.data.SimilarPolicy.candidate(file, folder)
             CleanupFeature.VIDEOS -> file.category == FileCategory.VIDEOS && file.backend == FileBackend.MEDIA
             CleanupFeature.LARGE_FILES -> file.size >= 10_000_000
             // 闲置需要包状态/下载目录证据，由 UnusedClassifier 处理，不能退回全盘按年龄筛选。

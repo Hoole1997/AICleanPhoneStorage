@@ -1,0 +1,10 @@
+
+com.example.aicleanphonestorage.SimilarCleanerDeviceTest:......
+com.example.aicleanphonestorage.PermissionUiDeviceTest:.
+com.example.aicleanphonestorage.ScreenshotSummaryDeviceTest:.
+
+Time: 6.608
+
+OK (8 tests)
+
+

@@ -1,0 +1,13 @@
+<resources>
+    <string name="similar_title">मिलती-जुलती फ़ोटो</string>
+    <string name="similar_original">मूल</string>
+    <string name="similar_group_title">%1$s मिलती-जुलती फ़ोटो</string>
+    <string name="similar_group_size">अधिकतम %1$s</string>
+    <string name="similar_selected">चुनी गईं: %1$s फ़ोटो · %2$s</string>
+    <string name="similar_confirmation">चुनी गईं: %1$s फ़ोटो\nकुल आकार: %2$s\n\nचुनी गई फ़ोटो आपके डिवाइस से मिटा दी जाएँगी। पुष्टि करें।</string>
+    <string name="similar_make_original">%1$s को मूल के रूप में रखें</string>
+    <string name="similar_original_reason">रिज़ॉल्यूशन, स्पष्टता, आकार और समय के आधार पर सुझाव। मूल बदलने के लिए दूसरी फ़ोटो का चयन हटाकर उस पर टैप करें।</string>
+    <string name="similar_skipped">कुछ फ़ोटो का विश्लेषण नहीं हो सका (%1$d)। सफ़ाई से पहले सुझाव जाँचें।</string>
+    <string name="similar_permission_title">अपनी फ़ोटो का ऐक्सेस दें</string>
+    <string name="similar_permission_message">डुप्लिकेट और मिलती-जुलती तस्वीरें खोजने के लिए डुप्लिकेट फ़ोटो क्लीनर को आपकी फ़ोटो का ऐक्सेस चाहिए।</string>
+</resources>

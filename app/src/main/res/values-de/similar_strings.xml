@@ -1,0 +1,13 @@
+<resources>
+    <string name="similar_title">Ähnliche Fotos</string>
+    <string name="similar_original">Original</string>
+    <string name="similar_group_title">%1$s ähnliche Fotos</string>
+    <string name="similar_group_size">Bis zu %1$s</string>
+    <string name="similar_selected">Ausgewählt: %1$s Bilder · %2$s</string>
+    <string name="similar_confirmation">Ausgewählt: %1$s Bilder\nGesamtgröße: %2$s\n\nDie ausgewählten Fotos werden vom Gerät gelöscht. Bitte bestätige.</string>
+    <string name="similar_make_original">%1$s als Original behalten</string>
+    <string name="similar_original_reason">Empfohlen nach Auflösung, Schärfe, Größe und Alter. Wähle ein anderes Foto ab und tippe darauf, um das Original zu ändern.</string>
+    <string name="similar_skipped">Einige Fotos konnten nicht analysiert werden (%1$d). Prüfe die Vorschläge vor dem Löschen.</string>
+    <string name="similar_permission_title">Zugriff auf deine Fotos erlauben</string>
+    <string name="similar_permission_message">Die Fotobereinigung benötigt Zugriff auf deine Fotos, um doppelte und ähnliche Bilder zu finden.</string>
+</resources>

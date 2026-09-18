@@ -37,6 +37,7 @@ internal class HomeEntryActions(
             HomeTool.UnusedFiles -> cleanup.begin(CleanupFeature.UNUSED_FILES)
             HomeTool.Screenshots -> cleanup.begin(CleanupFeature.SCREENSHOTS)
             HomeTool.Videos -> cleanup.begin(CleanupFeature.VIDEOS)
+            HomeTool.Similar -> cleanup.begin(CleanupFeature.SIMILAR_PHOTOS)
         }
     }
 }

@@ -1,0 +1,13 @@
+<resources>
+    <string name="similar_title">Foto serupa</string>
+    <string name="similar_original">Asli</string>
+    <string name="similar_group_title">%1$s foto serupa</string>
+    <string name="similar_group_size">Hingga %1$s</string>
+    <string name="similar_selected">Dipilih: %1$s foto · %2$s</string>
+    <string name="similar_confirmation">Dipilih: %1$s foto\nUkuran total: %2$s\n\nFoto yang dipilih akan dihapus dari perangkat. Silakan konfirmasi.</string>
+    <string name="similar_make_original">Simpan %1$s sebagai foto asli</string>
+    <string name="similar_original_reason">Direkomendasikan berdasarkan resolusi, ketajaman, ukuran, dan usia. Batalkan pilihan foto lain lalu ketuk untuk mengganti foto asli.</string>
+    <string name="similar_skipped">Beberapa foto tidak dapat dianalisis (%1$d). Tinjau kandidat sebelum membersihkan.</string>
+    <string name="similar_permission_title">Izinkan akses ke foto Anda</string>
+    <string name="similar_permission_message">Pembersih Foto Duplikat memerlukan akses ke foto Anda untuk menemukan gambar duplikat dan serupa.</string>
+</resources>

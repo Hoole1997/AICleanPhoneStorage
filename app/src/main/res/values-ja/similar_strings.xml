@@ -1,0 +1,13 @@
+<resources>
+    <string name="similar_title">類似の写真</string>
+    <string name="similar_original">オリジナル</string>
+    <string name="similar_group_title">%1$s 枚の類似写真</string>
+    <string name="similar_group_size">最大 %1$s</string>
+    <string name="similar_selected">選択済み：%1$s 枚 · %2$s</string>
+    <string name="similar_confirmation">選択済み：%1$s 枚\n合計サイズ：%2$s\n\n選択した写真は端末から削除されます。確認してください。</string>
+    <string name="similar_make_original">%1$s をオリジナルとして残す</string>
+    <string name="similar_original_reason">解像度、鮮明さ、サイズ、古さで推奨します。別の写真の選択を外してタップすると、オリジナルを変更できます。</string>
+    <string name="similar_skipped">一部の写真を解析できませんでした（%1$d）。削除前に候補を確認してください。</string>
+    <string name="similar_permission_title">写真へのアクセスを許可</string>
+    <string name="similar_permission_message">重複した写真や類似画像を探すには、写真へのアクセスが必要です。</string>
+</resources>

@@ -55,7 +55,7 @@ class ScreenshotSummaryDeviceTest {
                 assertSame(background, binding.cleanupAction.background)
                 assertSame(colors, binding.cleanupAction.backgroundTintList)
             }
-            val fixedLabel = feature == CleanupFeature.VIDEOS || feature == CleanupFeature.SMART_CLEAN
+            val fixedLabel = feature == CleanupFeature.VIDEOS || feature == CleanupFeature.SMART_CLEAN || feature == CleanupFeature.SIMILAR_PHOTOS
             assertEquals(if (fixedLabel) 0 else 1, textChanges.size)
             if (feature == CleanupFeature.SCREENSHOTS) assertTrue(textChanges.single().contains("4.2 MB"))
             // 有选择也不能在已开始操作时继续点击；区别于仅写入选择的短暂状态。

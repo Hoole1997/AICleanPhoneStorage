@@ -46,6 +46,10 @@ internal class CleanupOperationCoordinator(
                     val source = CleanupFeature.entries.firstOrNull {
                         it.name == result.data?.getStringExtra(CompletionContract.SOURCE)
                     } ?: model.state.value.handle?.feature
+                    if (source == CleanupFeature.SIMILAR_PHOTOS && action == CompletionContract.CONTINUE) {
+                        model.refreshSimilar()
+                        return@registerForActivityResult
+                    }
                     if (source == CleanupFeature.VIDEOS && action == CompletionContract.CONTINUE) {
                         model.refreshVideos()
                         return@registerForActivityResult
@@ -148,7 +152,7 @@ internal class CleanupOperationCoordinator(
                     CleanupMessageDialog.create(
                         "confirm:${operation.id}",
                         activity.getString(R.string.cleanup_tips),
-                        activity.getString(if (model.state.value.handle?.feature == com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature.VIDEOS) R.string.video_delete_confirm else R.string.cleanup_delete_confirm),
+                        confirmationMessage(operation),
                         activity.getString(R.string.cleanup_confirm),
                         activity.getString(R.string.cleanup_cancel),
                     )
@@ -191,6 +195,13 @@ internal class CleanupOperationCoordinator(
                 toast(R.string.cleanup_action_failed)
             }
         }
+    }
+
+    private fun confirmationMessage(operation: CleanupOperationState.Confirm): String = when(model.state.value.handle?.feature) {
+        CleanupFeature.VIDEOS -> activity.getString(R.string.video_delete_confirm)
+        CleanupFeature.SIMILAR_PHOTOS -> activity.getString(R.string.similar_confirmation,
+            java.text.NumberFormat.getIntegerInstance().format(operation.count), Formatter.formatFileSize(activity, operation.bytes))
+        else -> activity.getString(R.string.cleanup_delete_confirm)
     }
 
     private fun toast(res: Int) = Toast.makeText(activity, res, Toast.LENGTH_SHORT).show()

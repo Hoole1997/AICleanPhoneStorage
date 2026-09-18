@@ -1,0 +1,13 @@
+<resources>
+    <string name="similar_title">비슷한 사진</string>
+    <string name="similar_original">원본</string>
+    <string name="similar_group_title">비슷한 사진 %1$s장</string>
+    <string name="similar_group_size">최대 %1$s</string>
+    <string name="similar_selected">선택: 사진 %1$s장 · %2$s</string>
+    <string name="similar_confirmation">선택: 사진 %1$s장\n총 크기: %2$s\n\n선택한 사진이 기기에서 삭제됩니다. 확인해 주세요.</string>
+    <string name="similar_make_original">%1$s을(를) 원본으로 유지</string>
+    <string name="similar_original_reason">해상도, 선명도, 크기, 촬영 시점을 기준으로 추천합니다. 다른 사진의 선택을 해제하고 누르면 원본을 바꿀 수 있습니다.</string>
+    <string name="similar_skipped">일부 사진을 분석하지 못했습니다(%1$d). 정리하기 전에 후보를 확인하세요.</string>
+    <string name="similar_permission_title">사진 접근 허용</string>
+    <string name="similar_permission_message">중복 및 비슷한 이미지를 찾으려면 중복 사진 정리 기능에 사진 접근 권한이 필요합니다.</string>
+</resources>

@@ -8,6 +8,7 @@ import org.junit.Test
 class InterstitialPlacementsTest {
     @Test fun confirmationAndHomeSlotsKeepTheSameFeatureIdentity() {
         val expected = mapOf(
+            CleanupFeature.SIMILAR_PHOTOS to (null to "back_home_duplicate"),
             CleanupFeature.VIDEOS to ("clean_confirm_video" to "back_home_video"),
             CleanupFeature.SMART_CLEAN to ("clean_confirm_junk" to "back_home_junk"),
             CleanupFeature.SCREENSHOTS to ("clean_confirm_screenshots" to "back_home_screenshots"),
@@ -21,7 +22,7 @@ class InterstitialPlacementsTest {
             assertEquals(slots.second, InterstitialPlacements.exit(feature))
         }
         assertEquals(setOf(
-            "back_home_video", "back_home_junk", "back_home_screenshots", "back_home_photo", "back_home_large",
+            "back_home_duplicate", "back_home_video", "back_home_junk", "back_home_screenshots", "back_home_photo", "back_home_large",
             "back_home_unused", "back_home_notify", "back_home_apps", "back_home_network",
         ), InterstitialPlacements.homeExits)
     }

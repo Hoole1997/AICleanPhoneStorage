@@ -87,7 +87,7 @@ internal class FileOperationEngine(
     suspend fun delete(operation: Long, progress: (Int, Int) -> Unit): OperationStep =
         lock.withLock {
             executor.io {
-                val videoOperation = index.operationFeature(operation) == CleanupFeature.VIDEOS
+                val managedMedia = index.operationFeature(operation)?.usesAllFilesMediaAccess == true
                 val operationContext = currentCoroutineContext()
                 val unused = com.example.aicleanphonestorage.feature.unused.data.UnusedClassifier(app, unusedPackages) { operationContext.ensureActive() }
                 val total = index.operationCount(operation)
@@ -109,6 +109,8 @@ internal class FileOperationEngine(
                                 if (unused.classify(file, System.currentTimeMillis()) != kind)
                                     throw IOException("Unused candidate no longer eligible")
                             }
+                            val live = index.get(file.id)
+                            if (live?.available != true || live.retained) throw IOException("Selection no longer available")
                             if (file.retained) throw IOException("Reference photo is protected")
                             if (file.isDirectory) {
                                 if (!emptyDirectories.delete(file)) throw IOException("Directory deletion rejected")
@@ -121,6 +123,7 @@ internal class FileOperationEngine(
                                 val reference =
                                     index.retainedPeer(file)
                                         ?: throw IOException("Reference photo missing")
+                                if (!reference.available) throw IOException("Original unavailable")
                                 content.validate(reference)
                                 if (file.groupKey.startsWith("exact:")) {
                                     val expected =
@@ -139,10 +142,10 @@ internal class FileOperationEngine(
                             index.output(operation, file.id)?.let { (uri, sha) ->
                                 verifyCopy(uri, sha)
                             }
-                            // 视频已由用户授予所有文件访问时，直接走 Provider 删除；不主动创建额外系统确认。
+                            // 视频/相似照片已由用户授予所有文件访问时，直接走 Provider 删除；不主动创建额外系统确认。
                             // 每项重新读取权限，兼容操作过程中撤权；其他清理入口仍保持原来的系统确认流程。
                             if (file.backend == FileBackend.MEDIA && Build.VERSION.SDK_INT >= 30 &&
-                                !(videoOperation && android.os.Environment.isExternalStorageManager())) {
+                                !(managedMedia && android.os.Environment.isExternalStorageManager())) {
                                 media += file
                                 continue
                             }
@@ -158,7 +161,7 @@ internal class FileOperationEngine(
                                         content.resolver.delete(Uri.parse(file.uri), null, null) > 0
                                     } catch (error: SecurityException) {
                                         // OEM Provider 仍要求确认或授权在检查后被撤销时，退回公开系统确认 API。
-                                        if (videoOperation && Build.VERSION.SDK_INT >= 30) {
+                                        if (managedMedia && Build.VERSION.SDK_INT >= 30) {
                                             media += file
                                             continue
                                         }
@@ -213,10 +216,11 @@ internal class FileOperationEngine(
                 index.finishOperation(operation, "cancelled")
             } else {
                 val systemDeleted = index.operationStatus(operation) == "awaiting_delete"
+                val verifyPhotos = index.operationFeature(operation) == CleanupFeature.SIMILAR_PHOTOS
                 index.operationFiles(operation, "awaiting", 500).forEach {
                     if (systemDeleted) {
                         // 视频结果以系统媒体库中真实消失为准，避免把部分失败/撤销读取权统计成删除成功。
-                        val removed = if (it.category != FileCategory.VIDEOS) true else try {
+                        val removed = if (it.category != FileCategory.VIDEOS && !verifyPhotos) true else try {
                             content.resolver.query(Uri.parse(it.uri), arrayOf(MediaStore.MediaColumns._ID), null, null, null)
                                 ?.use { cursor -> !cursor.moveToFirst() } == true
                         } catch (_: SecurityException) { false }

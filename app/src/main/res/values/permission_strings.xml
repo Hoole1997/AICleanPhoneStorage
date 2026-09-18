@@ -16,4 +16,5 @@
     <string name="permission_open_settings">Open settings</string>
     <string name="permission_not_now">Not now</string>
     <string name="permission_unavailable">Couldn’t open or complete this permission request. Please try again.</string>
+    <string name="permission_allow" translatable="false">@string/push_guide_allow</string>
 </resources>

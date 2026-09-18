@@ -1,0 +1,13 @@
+<resources>
+    <string name="similar_title">Similar Photos</string>
+    <string name="similar_original">Original</string>
+    <string name="similar_group_title">%1$s Similar Photos</string>
+    <string name="similar_group_size">Up to %1$s</string>
+    <string name="similar_selected">Selected: %1$s Pictures · %2$s</string>
+    <string name="similar_confirmation">Selected: %1$s Pictures\nTotal size: %2$s\n\nThe selected photos will be deleted from your device. Please confirm.</string>
+    <string name="similar_make_original">Keep %1$s as Original</string>
+    <string name="similar_original_reason">Original: recommended by resolution, clarity, size and age. Uncheck another photo and tap it to change the Original.</string>
+    <string name="similar_skipped">Some photos could not be analyzed (%1$d). Review the available candidates before cleaning.</string>
+    <string name="similar_permission_title">Allow access to your photos</string>
+    <string name="similar_permission_message">Duplicate Photo Cleaner needs access to your photos to find duplicate and similar images.</string>
+</resources>
