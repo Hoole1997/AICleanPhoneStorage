@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="video_select_all">@string/cleanup_select_all</string>
+    <string name="video_all">सभी</string>
+    <string name="video_permission_title">अपने वीडियो का ऐक्सेस दें</string>
+    <string name="video_permission_message">वीडियो स्कैन करने और व्यवस्थित करने के लिए वीडियो क्लीनर को आपके डिवाइस के वीडियो का ऐक्सेस चाहिए।</string>
+    <string name="video_delete_confirm">क्या आप ये वीडियो मिटाना चाहते हैं? कृपया पुष्टि करें।</string>
+    <string name="video_toggle_month">%1$s को फैलाएँ या समेटें</string>
+    <string name="video_select_month">%1$s के सभी वीडियो चुनें</string>
+    <string name="video_limited">केवल वे वीडियो दिखाए जाते हैं जिनका ऐक्सेस आपने दिया है।</string>
+    <plurals name="video_month_summary">
+        <item quantity="one">%1$s फ़ाइलें/%2$s</item>
+        <item quantity="other">%1$s फ़ाइलें/%2$s</item>
+    </plurals>
+    <!-- 数量由完成页独立的大数字展示，此处只提供单位。 -->
+    <plurals name="completion_videos" tools:ignore="ImpliedQuantity">
+        <item quantity="one">वीडियो</item>
+        <item quantity="other">वीडियो</item>
+    </plurals>
+</resources>

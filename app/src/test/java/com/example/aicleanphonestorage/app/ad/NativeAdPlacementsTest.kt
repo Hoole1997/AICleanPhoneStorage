@@ -8,12 +8,12 @@ import org.junit.Test
 
 class NativeAdPlacementsTest {
     @Test
-    fun allEighteenKeysAreUniqueAndMatchRequirementNames() {
+    fun allTwentyKeysAreUniqueAndMatchRequirementNames() {
         val keys =
             NativeAdFeature.entries.flatMap { listOf(it.featureSlot, it.resultSlot) } +
                 listOf(NativeAdPlacements.HOME, NativeAdPlacements.SCAN_DIALOG)
-        assertEquals(18, keys.size)
-        assertEquals(18, keys.toSet().size)
+        assertEquals(20, keys.size)
+        assertEquals(20, keys.toSet().size)
         assertEquals(
             "native_feature_photo",
             NativeAdPlacements.feature(CleanupFeature.PHOTO_COMPRESS).featureSlot,
@@ -28,6 +28,7 @@ class NativeAdPlacementsTest {
     fun sharedCompletionPageUsesSourceInsteadOfTreatingAllDeletesAsJunk() {
         val sources =
             mapOf(
+                CleanupFeature.VIDEOS to "video",
                 CleanupFeature.SMART_CLEAN to "junk",
                 CleanupFeature.SCREENSHOTS to "screenshots",
                 CleanupFeature.PHOTO_COMPRESS to "photo",

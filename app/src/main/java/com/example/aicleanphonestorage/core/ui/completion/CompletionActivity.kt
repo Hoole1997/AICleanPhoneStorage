@@ -79,7 +79,7 @@ class CompletionActivity : AppCompatActivity() {
         }
         ViewCompat.setAccessibilityHeading(binding.completionTitle, true)
         binding.completionBack.setOnClickListener { exitToHome() }
-        binding.completionContinue.setOnClickListener { exitToHome() }
+        binding.completionContinue.setOnClickListener { complete(CompletionContract.CONTINUE) }
         binding.completionOriginals.setOnClickListener {
             complete(CompletionContract.REMOVE_ORIGINALS)
         }
@@ -95,7 +95,7 @@ class CompletionActivity : AppCompatActivity() {
     private fun exitToHome() {
         if (leaving) return
         // 返回结果交给原功能页，它附上业务来源并导航首页；本页不请求退出广告。
-        complete(CompletionContract.CONTINUE)
+        complete(if (report?.kind == CompletionKind.VIDEOS) CompletionContract.HOME else CompletionContract.CONTINUE)
     }
 
     private fun complete(action: String) {

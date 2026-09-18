@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="video_select_all">@string/cleanup_select_all</string>
+    <string name="video_all">Alle</string>
+    <string name="video_permission_title">Zugriff auf deine Videos erlauben</string>
+    <string name="video_permission_message">Die Videobereinigung benötigt Zugriff auf Videos auf deinem Gerät, um sie zu scannen und zu organisieren.</string>
+    <string name="video_delete_confirm">Möchtest du diese Videos wirklich löschen? Bitte bestätige.</string>
+    <string name="video_toggle_month">%1$s ein- oder ausklappen</string>
+    <string name="video_select_month">Alle Videos in %1$s auswählen</string>
+    <string name="video_limited">Nur freigegebene Videos werden angezeigt.</string>
+    <plurals name="video_month_summary">
+        <item quantity="one">%1$s Datei/%2$s</item>
+        <item quantity="other">%1$s Dateien/%2$s</item>
+    </plurals>
+    <!-- 数量由完成页独立的大数字展示，此处只提供单位。 -->
+    <plurals name="completion_videos" tools:ignore="ImpliedQuantity">
+        <item quantity="one">Video</item>
+        <item quantity="other">Videos</item>
+    </plurals>
+</resources>

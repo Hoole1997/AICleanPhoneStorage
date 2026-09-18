@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.update
 
 /** 仅缓存元数据/选择状态的临时索引。所有方法由Repository在I/O线程调用，不存文件内容或Bitmap。 */
 internal class ScanIndex(context: Context) :
-    SQLiteOpenHelper(context.applicationContext, "cleanup_index.db", null, 5) {
+    SQLiteOpenHelper(context.applicationContext, "cleanup_index.db", null, 6) {
     private val revision = kotlinx.coroutines.flow.MutableStateFlow(0L)
     val changes: kotlinx.coroutines.flow.StateFlow<Long> = revision
     private val sources = Collections.newSetFromMap(WeakHashMap<PagingSource<*, *>, Boolean>())
@@ -32,6 +32,7 @@ internal class ScanIndex(context: Context) :
         db.execSQL("CREATE INDEX files_selection ON files(scan,selected)")
         createGroupIndexes(db)
         createIdentityIndexes(db)
+        com.example.aicleanphonestorage.feature.videos.data.VideoIndex.create(db)
         DirectoryScanIndex.create(db)
         db.execSQL(
             "CREATE TABLE operations(id INTEGER PRIMARY KEY AUTOINCREMENT, feature TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'prepared')"
@@ -43,6 +44,7 @@ internal class ScanIndex(context: Context) :
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        if (oldVersion < 6) com.example.aicleanphonestorage.feature.videos.data.VideoIndex.create(db)
         if (oldVersion < 2) {
             db.execSQL("ALTER TABLE scans ADD COLUMN analysis_skipped INTEGER NOT NULL DEFAULT 0")
             db.execSQL("ALTER TABLE files ADD COLUMN bucket TEXT NOT NULL DEFAULT ''")
@@ -101,7 +103,7 @@ internal class ScanIndex(context: Context) :
         val db = writableDatabase
         db.beginTransaction()
         try {
-            if (handle.feature in setOf(CleanupFeature.SMART_CLEAN, CleanupFeature.UNUSED_FILES, CleanupFeature.LARGE_FILES)) {
+            if (handle.feature in setOf(CleanupFeature.SMART_CLEAN, CleanupFeature.UNUSED_FILES, CleanupFeature.LARGE_FILES, CleanupFeature.VIDEOS)) {
                 // 按当前功能的有效筛选范围全选，覆盖所有分页；隐藏的旧垃圾分类不进入选择。
                 // 仅对未发布的新扫描执行；重复完成、页面恢复不能覆盖用户手动取消的选择。
                 val (selection, args) = where(handle.id, handle.feature, CleanupFilter())
@@ -206,6 +208,10 @@ internal class ScanIndex(context: Context) :
                 args += (filter.referenceMillis - filter.recentDays * 86_400_000L).toString()
             }
         }
+        if (feature == CleanupFeature.VIDEOS && filter.bucket != null) {
+            clauses += "bucket=?"
+            args += filter.bucket
+        }
         if (feature == CleanupFeature.UNUSED_FILES) {
             // 新三分类索引才可展示/清理；旧版按年龄生成的无分类候选不再进入清理快照。
             clauses += "bucket IN (${com.example.aicleanphonestorage.feature.unused.data.UnusedKind.entries.joinToString { "?" }})"
@@ -245,7 +251,7 @@ internal class ScanIndex(context: Context) :
                         filter.bucket in listOf("DUPLICATES", "SIMILAR")
                 )
                     "group_key,retained DESC,id"
-                else if (handle.feature == CleanupFeature.UNUSED_FILES) "modified DESC,id"
+                else if (handle.feature == CleanupFeature.UNUSED_FILES || handle.feature == CleanupFeature.VIDEOS) "modified DESC,id"
                 else "size DESC,id",
                 "$offset,$limit",
             )
@@ -390,6 +396,7 @@ internal class ScanIndex(context: Context) :
     fun discard(scan: Long) {
         writableDatabase.delete("files", "scan=?", arrayOf(scan.toString()))
         writableDatabase.delete("directories", "scan=?", arrayOf(scan.toString()))
+        writableDatabase.delete("video_collapsed", "scan=?", arrayOf(scan.toString()))
         writableDatabase.delete("scans", "id=?", arrayOf(scan.toString()))
         invalidate()
     }
@@ -428,6 +435,11 @@ internal class ScanIndex(context: Context) :
             db.endTransaction()
         }
     }
+
+    /** 操作类型取自已冻结的快照，不能根据当前页面/媒体 MIME 推断授权策略。 */
+    fun operationFeature(operation: Long): CleanupFeature? = readableDatabase
+        .rawQuery("SELECT feature FROM operations WHERE id=?", arrayOf(operation.toString()))
+        .use { cursor -> if (cursor.moveToFirst()) CleanupFeature.entries.firstOrNull { it.name == cursor.getString(0) } else null }
 
     fun operationFiles(
         operation: Long,

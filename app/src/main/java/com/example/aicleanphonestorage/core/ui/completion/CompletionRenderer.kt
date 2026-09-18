@@ -20,6 +20,7 @@ internal class CompletionRenderer(private val binding: ScreenCompletionBinding) 
             binding.completionCount.text = NumberFormat.getIntegerInstance().format(value.completed)
             val units =
                 when (value.kind) {
+                    CompletionKind.VIDEOS -> R.plurals.completion_videos
                     CompletionKind.CLEANUP -> R.plurals.completion_files
                     CompletionKind.COMPRESSION -> R.plurals.completion_photos
                     CompletionKind.NOTIFICATIONS -> R.plurals.completion_apps

@@ -29,12 +29,12 @@ class ScreenshotSummaryDeviceTest {
     private val context get() = instrumentation.targetContext
 
     @Test fun selectionWritesOnlyChangeCapacityWithoutFlashingButtonState() {
-        instrumentation.runOnMainSync {
+        for (feature in CleanupFeature.entries) instrumentation.runOnMainSync {
             val themed = ContextThemeWrapper(context, R.style.Theme_AICleanPhoneStorage)
             val binding = ScreenFileCleanupBinding.inflate(LayoutInflater.from(themed))
             val renderer = CleanupActionRenderer(binding)
             val initial = CleanupUiState(
-                handle = ScanHandle(1, CleanupFeature.SCREENSHOTS, 15, "Test fixtures"),
+                handle = ScanHandle(1, feature, 15, "Test fixtures"),
                 totals = SelectionTotals(count = 15, bytes = 27_900_000, selectedCount = 2, selectedBytes = 3_500_000),
                 totalsReady = true,
             )
@@ -55,12 +55,17 @@ class ScreenshotSummaryDeviceTest {
                 assertSame(background, binding.cleanupAction.background)
                 assertSame(colors, binding.cleanupAction.backgroundTintList)
             }
-            assertEquals(1, textChanges.size)
-            assertTrue(textChanges.single().contains("4.2 MB"))
+            val fixedLabel = feature == CleanupFeature.VIDEOS || feature == CleanupFeature.SMART_CLEAN
+            assertEquals(if (fixedLabel) 0 else 1, textChanges.size)
+            if (feature == CleanupFeature.SCREENSHOTS) assertTrue(textChanges.single().contains("4.2 MB"))
+            // 有选择也不能在已开始操作时继续点击；区别于仅写入选择的短暂状态。
+            renderer.render(updated.copy(operation = CleanupOperationState.Running(1)))
+            assertFalse(binding.cleanupAction.isEnabled)
+            assertFalse(binding.cleanupAction.isClickable)
             renderer.render(updated.copy(totals = updated.totals.copy(selectedCount = 0, selectedBytes = 0)))
             assertFalse(binding.cleanupAction.isEnabled)
             assertFalse(binding.cleanupAction.isClickable)
-            assertEquals(themed.getString(R.string.cleanup_clean), binding.cleanupAction.text.toString())
+            assertEquals(themed.getString(if (feature == CleanupFeature.PHOTO_COMPRESS) R.string.cleanup_compress else R.string.cleanup_clean), binding.cleanupAction.text.toString())
         }
     }
 

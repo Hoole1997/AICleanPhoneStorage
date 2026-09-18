@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="video_select_all">@string/cleanup_select_all</string>
+    <string name="video_all">الكل</string>
+    <string name="video_permission_title">السماح بالوصول إلى فيديوهاتك</string>
+    <string name="video_permission_message">يحتاج منظف الفيديو إلى الوصول إلى الفيديوهات على جهازك لفحصها وتنظيمها.</string>
+    <string name="video_delete_confirm">هل تريد بالتأكيد حذف هذه الفيديوهات؟ يرجى التأكيد.</string>
+    <string name="video_toggle_month">توسيع %1$s أو طيه</string>
+    <string name="video_select_month">تحديد كل فيديوهات %1$s</string>
+    <string name="video_limited">تظهر فقط الفيديوهات التي سمحت بالوصول إليها.</string>
+    <plurals name="video_month_summary">
+        <item quantity="zero">%1$s ملف/%2$s</item>
+        <item quantity="one">%1$s ملف/%2$s</item>
+        <item quantity="two">%1$s ملف/%2$s</item>
+        <item quantity="few">%1$s ملف/%2$s</item>
+        <item quantity="many">%1$s ملف/%2$s</item>
+        <item quantity="other">%1$s ملف/%2$s</item>
+    </plurals>
+    <!-- 数量由完成页独立的大数字展示，此处只提供单位。 -->
+    <plurals name="completion_videos" tools:ignore="ImpliedQuantity">
+        <item quantity="zero">فيديوهات</item>
+        <item quantity="one">فيديو</item>
+        <item quantity="two">فيديوهات</item>
+        <item quantity="few">فيديوهات</item>
+        <item quantity="many">فيديوهات</item>
+        <item quantity="other">فيديوهات</item>
+    </plurals>
+</resources>

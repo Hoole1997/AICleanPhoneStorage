@@ -30,6 +30,7 @@ internal class FileScanSources(context: Context, private val index: ScanIndex) {
         directories: DirectoryScanPolicy? = null,
         progress: (Int, Int?) -> Unit,
     ): Int {
+        if (access.videos) return com.example.aicleanphonestorage.feature.videos.data.VideoMediaScanner(app).scan(emit, progress)
         var seen = 0
         val context = currentCoroutineContext()
         when (access.source) {

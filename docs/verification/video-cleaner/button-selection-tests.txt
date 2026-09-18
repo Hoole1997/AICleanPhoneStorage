@@ -1,0 +1,9 @@
+
+com.example.aicleanphonestorage.ScreenshotSummaryDeviceTest:.
+com.example.aicleanphonestorage.VideoCleanerDeviceTest:...
+
+Time: 3.307
+
+OK (4 tests)
+
+

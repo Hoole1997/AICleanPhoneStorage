@@ -39,9 +39,28 @@ class PermissionUiDeviceTest {
     private val context
         get() = instrumentation.targetContext
 
+    private var transition: AutoCloseable? = null
+
+    @org.junit.Before fun isolatePermissionUi() {
+        // 本套件测试权限交互；不让 ActivityScenario 的跨测试切页触发无关热启动广告。
+        instrumentation.runOnMainSync {
+            transition = com.example.aicleanphonestorage.core.lifecycle.ForegroundTransitionGuard.hold("permission-ui-test")
+        }
+    }
+
+    @org.junit.After fun releaseIsolation() {
+        instrumentation.runOnMainSync { transition?.close(); transition = null }
+    }
+
+    private fun homeIntent() = Intent(context, MainActivity::class.java)
+        .putExtra(com.example.aicleanphonestorage.feature.home.preview.HomePreviewSupport.EXTRA_MODE, "initial")
+        .putExtra(com.example.aicleanphonestorage.feature.startup.StartupNavigation.PERMISSION_COMPLETED, true)
+
     @Test
     fun everyPermissionDialogMeasuresNormallyAndWithLargeFonts() {
-        for (kind in PermissionKind.entries) for (scale in listOf(1f, 2f)) {
+        val variants = PermissionKind.entries.map { it to PermissionPurpose.DEFAULT } +
+            (PermissionKind.ALL_FILES to PermissionPurpose.VIDEO_CLEANER)
+        for ((kind, purpose) in variants) for (scale in listOf(1f, 2f)) {
             var image: Bitmap? = null
             instrumentation.runOnMainSync {
                 val config =
@@ -51,9 +70,15 @@ class PermissionUiDeviceTest {
                         context.createConfigurationContext(config),
                         R.style.Theme_AICleanPhoneStorage,
                     )
-                val fragment = PermissionDialogFragment.create("test", kind, false)
+                val fragment = PermissionDialogFragment.create("test", kind, false, purpose)
                 val root = fragment.onCreateView(LayoutInflater.from(themed), null, null)
                 val binding = DialogAppPermissionBinding.bind(root)
+                if (purpose == PermissionPurpose.VIDEO_CLEANER) {
+                    assertEquals(themed.getString(R.string.video_permission_title), binding.permissionTitle.text.toString())
+                    assertEquals(themed.getString(R.string.video_permission_message), binding.permissionMessage.text.toString())
+                    assertEquals(themed.getString(R.string.video_permission_allow), binding.permissionContinue.text.toString())
+                    assertEquals(PermissionKind.ALL_FILES.name, fragment.requireArguments().getString("kind"))
+                }
                 val density = themed.resources.displayMetrics.density
                 val width = (315 * density).toInt()
                 val maxHeight = (560 * density).toInt()
@@ -76,7 +101,7 @@ class PermissionUiDeviceTest {
             val directory =
                 File(context.getExternalFilesDir(null), "permission-ui-tests").apply { mkdirs() }
             image!!.let { bitmap ->
-                File(directory, "${kind}_$scale.png").outputStream().use {
+                File(directory, "${kind}_${purpose}_$scale.png").outputStream().use {
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
                 }
                 bitmap.recycle()
@@ -120,7 +145,7 @@ class PermissionUiDeviceTest {
             context.getSystemService(PowerManager::class.java).isInteractive &&
                 !context.getSystemService(KeyguardManager::class.java).isKeyguardLocked
         )
-        ActivityScenario.launch(MainActivity::class.java).use { scenario ->
+        ActivityScenario.launch<MainActivity>(homeIntent()).use { scenario ->
             onView(withText(R.string.home_tool_network)).perform(click())
             val deadline = SystemClock.uptimeMillis() + 5000
             var shown = false
@@ -153,7 +178,7 @@ class PermissionUiDeviceTest {
             context.getSystemService(PowerManager::class.java).isInteractive &&
                 !context.getSystemService(KeyguardManager::class.java).isKeyguardLocked
         )
-        ActivityScenario.launch(MainActivity::class.java).use { scenario ->
+        ActivityScenario.launch<MainActivity>(homeIntent()).use { scenario ->
             scenario.onActivity { activity ->
                 var action: String? = null
                 activity.supportFragmentManager.setFragmentResultListener(

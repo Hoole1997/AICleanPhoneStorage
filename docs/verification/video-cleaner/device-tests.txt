@@ -1,0 +1,10 @@
+
+com.example.aicleanphonestorage.VideoCleanerDeviceTest:...
+com.example.aicleanphonestorage.VideoMediaDeviceTest:.
+com.example.aicleanphonestorage.PermissionUiDeviceTest:....
+
+Time: 11.639
+
+OK (8 tests)
+
+

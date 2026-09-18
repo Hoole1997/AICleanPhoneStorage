@@ -7,6 +7,7 @@ import com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature
 internal enum class NativeAdFeature(val suffix: String) {
     JUNK("junk"),
     SCREENSHOTS("screenshots"),
+    VIDEO("video"),
     PHOTO("photo"),
     LARGE("large"),
     UNUSED("unused"),
@@ -28,6 +29,7 @@ internal object NativeAdPlacements {
     fun feature(feature: CleanupFeature): NativeAdFeature =
         when (feature) {
             CleanupFeature.SMART_CLEAN -> NativeAdFeature.JUNK
+            CleanupFeature.VIDEOS -> NativeAdFeature.VIDEO
             CleanupFeature.SCREENSHOTS -> NativeAdFeature.SCREENSHOTS
             CleanupFeature.PHOTO_COMPRESS -> NativeAdFeature.PHOTO
             CleanupFeature.LARGE_FILES -> NativeAdFeature.LARGE

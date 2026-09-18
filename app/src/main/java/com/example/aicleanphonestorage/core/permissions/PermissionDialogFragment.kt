@@ -13,6 +13,9 @@ import androidx.fragment.app.DialogFragment
 import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.databinding.DialogAppPermissionBinding
 
+/** 功能说明与系统权限类型分开：同一种所有文件权限可用于不同的用户操作。 */
+internal enum class PermissionPurpose { DEFAULT, VIDEO_CLEANER }
+
 /** App 风格的说明弹框，不模拟系统权限开关；实际授权仍进入 Android 标准界面。 */
 class PermissionDialogFragment : DialogFragment() {
     val route: String
@@ -20,6 +23,13 @@ class PermissionDialogFragment : DialogFragment() {
 
     private val kind: PermissionKind
         get() = PermissionKind.valueOf(requireArguments().getString("kind")!!)
+
+    private val purpose: PermissionPurpose
+        get() = PermissionPurpose.entries.firstOrNull { it.name == arguments?.getString("purpose") }
+            ?: PermissionPurpose.DEFAULT
+
+    internal fun matches(route: String, kind: PermissionKind, purpose: PermissionPurpose) =
+        this.route == route && this.kind == kind && this.purpose == purpose
 
     override fun onCreateDialog(savedInstanceState: Bundle?) =
         Dialog(requireContext()).apply {
@@ -34,8 +44,9 @@ class PermissionDialogFragment : DialogFragment() {
         state: Bundle?,
     ): View {
         val binding = DialogAppPermissionBinding.inflate(inflater, container, false)
-        val spec =
-            when (kind) {
+        val spec = if (purpose == PermissionPurpose.VIDEO_CLEANER)
+            Triple(R.string.video_permission_title, R.string.video_permission_message, R.drawable.ic_tool_videos)
+        else when (kind) {
                 PermissionKind.POST_NOTIFICATIONS ->
                     Triple(R.string.push_permission_title, R.string.push_permission_message,
                         R.drawable.ic_tool_notifications)
@@ -57,6 +68,7 @@ class PermissionDialogFragment : DialogFragment() {
                         R.string.permission_files_message,
                         R.drawable.ic_tool_large_files,
                     )
+                PermissionKind.VIDEOS -> Triple(R.string.video_permission_title, R.string.video_permission_message, R.drawable.ic_tool_videos)
                 PermissionKind.PHOTOS ->
                     Triple(
                         R.string.permission_photos_title,
@@ -81,8 +93,10 @@ class PermissionDialogFragment : DialogFragment() {
         binding.permissionIcon.setImageResource(spec.third)
         val settings = requireArguments().getBoolean("settings")
         binding.permissionContinue.setText(
-            if (kind == PermissionKind.DIRECTORY) R.string.cleanup_choose_folder
+            if (purpose == PermissionPurpose.VIDEO_CLEANER) R.string.video_permission_allow
+            else if (kind == PermissionKind.DIRECTORY) R.string.cleanup_choose_folder
             else if (kind.special || settings) R.string.permission_open_settings
+            else if (kind == PermissionKind.VIDEOS) R.string.video_permission_allow
             else R.string.permission_continue
         )
         binding.permissionCancel.setText(
@@ -141,13 +155,20 @@ class PermissionDialogFragment : DialogFragment() {
         const val TAG = "permission.rationale"
         const val RESULT = "permission.rationale.result"
 
-        internal fun create(route: String, kind: PermissionKind, settings: Boolean) =
+        internal fun create(
+            route: String,
+            kind: PermissionKind,
+            settings: Boolean,
+            purpose: PermissionPurpose = PermissionPurpose.DEFAULT,
+        ) =
             PermissionDialogFragment().apply {
                 arguments =
                     Bundle().apply {
                         putString("route", route)
                         putString("kind", kind.name)
                         putBoolean("settings", settings)
+                        // 保存语义标识，旋转/进程重建后继续使用当前功能文案；回调仍携带实际权限 kind。
+                        putString("purpose", purpose.name)
                     }
             }
     }

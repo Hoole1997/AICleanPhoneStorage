@@ -18,6 +18,7 @@ private val Context.cleanupAccessData by preferencesDataStore("cleanup_access")
 internal enum class AccessRequest {
     NONE,
     PHOTOS,
+    VIDEOS,
     ALL_FILES,
     DIRECTORY,
 }
@@ -33,6 +34,7 @@ internal data class ScanAccess(
     val source: ScanSourceKind? = null,
     val roots: List<String> = emptyList(),
     val limited: Boolean = false,
+    val videos: Boolean = false,
 )
 
 /** 授权策略集中在入口；所有文件访问只用于用户触发的清理，仍不访问其他应用私有目录。 */
@@ -45,6 +47,18 @@ internal class CleanupAccess(context: Context) {
     @Suppress("DEPRECATION")
     suspend fun resolve(feature: CleanupFeature): ScanAccess {
         val allFiles = Build.VERSION.SDK_INT >= 30 && Environment.isExternalStorageManager()
+        if (feature == CleanupFeature.VIDEOS) {
+            // Android 11+ 与垃圾清理共用所有文件访问授权；仅有媒体读取/选定视频权限不能进入。
+            // 保持 MediaStore 视频索引，不因更宽授权退回全盘目录遍历。
+            if (Build.VERSION.SDK_INT >= 30) return if (allFiles)
+                ScanAccess(AccessRequest.NONE, ScanSourceKind.MEDIA, videos = true)
+            else ScanAccess(AccessRequest.ALL_FILES)
+            val readable = granted(Manifest.permission.READ_EXTERNAL_STORAGE)
+            val writable = Build.VERSION.SDK_INT > 28 || granted(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            return if (readable && writable)
+                ScanAccess(AccessRequest.NONE, ScanSourceKind.MEDIA, videos = true)
+            else ScanAccess(AccessRequest.VIDEOS)
+        }
         val images =
             feature == CleanupFeature.PHOTO_COMPRESS || feature == CleanupFeature.SCREENSHOTS
         if (images) {

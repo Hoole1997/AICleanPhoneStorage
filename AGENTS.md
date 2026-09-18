@@ -31,3 +31,7 @@
 - 通知权限埋点 Notific_Allow_Start 仅在未授权且真正调用申请 API 时上报，排队和引导展示不算申请。Notific_Allow_Result 按协议使用 allow、denied、deined_forever、allow1；仅 Android 12/12L 及以下默认已授权时上报 allow1；Android 13 及以上已授权检查不补报结果，实际申请成功上报 allow。位置为 SplashScreen/HomeScreen，同一次申请结果保留原位置，防止生命周期重复上报。
 
 - 用户要求 Google Play（google）渠道仅通过 GitHub CLI / GitHub Actions 编译打包，本机不得编译、打包或安装该渠道。本机仅允许静态检查和元数据读取。上传签名文件由 GitHub Actions 首次生成并提交 main，密码单独保存在 GitHub Secrets；后续构建从 main 复用原签名，不在本机生成、不自动更换。
+
+- 用户于 2026-09-18 要求视频清理在 Android 11 及以上必须检查 MANAGE_EXTERNAL_STORAGE，复用垃圾清理的所有文件授权流程；仍只索引 MediaStore 视频。在保留应用内删除确认和操作前校验的前提下，有所有文件访问权时直接通过 MediaStore 删除；系统拒绝或权限撤销时才退回系统确认。旧 Android 保留运行时存储权限兼容，不改变其他模块删除策略。
+
+- 视频清理的权限说明独立于权限类型：标题 “Allow access to your videos”，说明 “Video Cleaner needs access to videos on your device to scan and organize them.”，按钮 “Not now / Allow”；Android 11+ 底层仍使用 MANAGE_EXTERNAL_STORAGE。不要因复用所有文件权限而替换成通用文件管理文案，也不要影响其他入口文案。

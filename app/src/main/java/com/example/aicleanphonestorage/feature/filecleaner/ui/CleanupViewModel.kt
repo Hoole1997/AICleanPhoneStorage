@@ -77,6 +77,10 @@ internal class CleanupViewModel(
             .filterNotNull()
             .flatMapLatest { (handle, filter) -> repository.pager(handle, filter).flow }
             .cachedIn(viewModelScope)
+    val videoRows = query.filterNotNull().filter { it.first.feature == CleanupFeature.VIDEOS }
+        .flatMapLatest { repository.videos.pager(it.first.id).flow }.cachedIn(viewModelScope)
+    private var videoRefresh: Job? = null
+    private var videoRefreshPending = false
     private var work: Job? = null
     private var totalsJob: Job? = null
 
@@ -88,6 +92,7 @@ internal class CleanupViewModel(
             handle?.let {
                 query.value = it to current.value.filter
                 refreshTotals()
+                onVideoForeground()
             }
             // 进程重建只恢复结果；不会自动重启压缩或跳过删除确认。
             saved.get<Long>(OP)?.let { id ->
@@ -156,6 +161,33 @@ internal class CleanupViewModel(
         }
         val totals = repository.totals(handle, value.filter)
         telemetry.selection(handle.feature, value.filter.bucket, selected, totals)
+    }
+
+    fun collapseVideoMonth(month: String, collapsed: Boolean) = edit {
+        current.value.handle?.takeIf { it.feature == CleanupFeature.VIDEOS }?.let {
+            repository.videos.collapse(it.id, month, collapsed)
+        }
+    }
+
+    fun refreshVideos() {
+        // 完成页可能比索引恢复更早返回，保留刷新意图，初始化完成后再执行。
+        videoRefreshPending = true
+        val handle = current.value.handle?.takeIf { it.feature == CleanupFeature.VIDEOS } ?: return
+        if (current.value.operation != CleanupOperationState.Idle || videoRefresh?.isActive == true) return
+        current.update { it.copy(editing = it.editing + 1) }
+        videoRefresh = viewModelScope.launch {
+            try {
+                repository.refreshVideos(handle)
+                videoRefreshPending = false
+                refreshTotals()
+            } catch (e: CancellationException) { throw e }
+            catch (_: Exception) { current.update { it.copy(error = it.error + 1) } }
+            finally { current.update { it.copy(editing = (it.editing - 1).coerceAtLeast(0)) } }
+        }
+    }
+
+    fun onVideoForeground() {
+        if (videoRefreshPending && videoRefresh?.isActive != true) refreshVideos()
     }
 
     fun quality(id: Long, quality: Int) = edit { repository.quality(id, quality) }
@@ -303,8 +335,12 @@ internal class CleanupViewModel(
                 else {
                     val summary = operations.summary(id)
                     current.update {
-                        it.copy(operation = CleanupOperationState.Result(id, summary))
+                        if (it.handle?.feature == CleanupFeature.VIDEOS && summary.deleted == 0) {
+                            saved.remove<Long>(OP)
+                            it.copy(operation = CleanupOperationState.Idle)
+                        } else it.copy(operation = CleanupOperationState.Result(id, summary))
                     }
+                    refreshTotals()
                 }
             }
     }
@@ -322,6 +358,8 @@ internal class CleanupViewModel(
     }
 
     fun onBackground() {
+        if (current.value.handle?.feature == CleanupFeature.VIDEOS && current.value.operation == CleanupOperationState.Idle) videoRefreshPending = true
+        videoRefresh?.cancel()
         val running = current.value.operation as? CleanupOperationState.Running ?: return
         if (waitingSystem) return
         val previous = work

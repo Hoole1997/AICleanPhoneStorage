@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="video_select_all">Select All</string>
+    <string name="video_title" translatable="false">@string/cleanup_videos</string>
+    <string name="video_permission_title">Allow access to your videos</string>
+    <string name="video_permission_message">Video Cleaner needs access to videos on your device to scan and organize them.</string>
+    <string name="video_permission_allow" translatable="false">@string/push_guide_allow</string>
+    <string name="video_delete_confirm">Are you sure you want to delete these videos? Please confirm.</string>
+    <string name="video_all">All</string>
+    <string name="video_toggle_month">Expand or collapse %1$s</string>
+    <string name="video_select_month">Select all videos in %1$s</string>
+    <string name="video_limited">Only videos you have allowed are shown.</string>
+    <plurals name="video_month_summary"><item quantity="one">%1$s file/%2$s</item><item quantity="other">%1$s files/%2$s</item></plurals>
+    <plurals name="completion_videos"><item quantity="one">Video</item><item quantity="other">Videos</item></plurals>
+</resources>

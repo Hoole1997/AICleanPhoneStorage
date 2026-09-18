@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="video_select_all">@string/cleanup_select_all</string>
+    <string name="video_all">Semua</string>
+    <string name="video_permission_title">Izinkan akses ke video Anda</string>
+    <string name="video_permission_message">Pembersih Video memerlukan akses ke video di perangkat Anda untuk memindai dan mengaturnya.</string>
+    <string name="video_delete_confirm">Yakin ingin menghapus video ini? Silakan konfirmasi.</string>
+    <string name="video_toggle_month">Perluas atau ciutkan %1$s</string>
+    <string name="video_select_month">Pilih semua video di %1$s</string>
+    <string name="video_limited">Hanya video yang Anda izinkan yang ditampilkan.</string>
+    <plurals name="video_month_summary">
+        <item quantity="other">%1$s file/%2$s</item>
+    </plurals>
+    <!-- 数量由完成页独立的大数字展示，此处只提供单位。 -->
+    <plurals name="completion_videos" tools:ignore="ImpliedQuantity">
+        <item quantity="other">Video</item>
+    </plurals>
+</resources>

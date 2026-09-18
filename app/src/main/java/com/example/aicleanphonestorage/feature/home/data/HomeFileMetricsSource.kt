@@ -6,7 +6,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.mapLatest
 
-/** 聚合最近已完成的四类扫描索引，不在首页再次遍历文件系统。选择/筛选不会改变入口的总占用。 */
+/** 聚合各入口最近已完成的扫描索引，不在首页再次遍历文件系统。选择/筛选不会改变入口的总占用。 */
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class HomeFileMetricsSource(
     private val index: ScanIndex,
@@ -23,6 +23,7 @@ internal class HomeFileMetricsSource(
                             largeFiles = HomeToolMetric.Unavailable,
                             unusedFiles = HomeToolMetric.Unavailable,
                             screenshots = HomeToolMetric.Unavailable,
+                            videos = HomeToolMetric.Unavailable,
                         )
                     )
                 else throw it
@@ -36,7 +37,7 @@ internal class HomeFileMetricsSource(
                 SELECT s.feature,TOTAL(f.size)
                 FROM scans s LEFT JOIN files f ON f.scan=s.id
                 WHERE s.id IN (SELECT MAX(id) FROM scans WHERE ready=1 GROUP BY feature)
-                  AND s.feature IN ('PHOTO_COMPRESS','LARGE_FILES','UNUSED_FILES','SCREENSHOTS')
+                  AND s.feature IN ('PHOTO_COMPRESS','LARGE_FILES','UNUSED_FILES','SCREENSHOTS','VIDEOS')
                 GROUP BY s.id,s.feature
                 """
                     .trimIndent(),
@@ -51,6 +52,7 @@ internal class HomeFileMetricsSource(
             largeFiles = values["LARGE_FILES"] ?: HomeToolMetric.NotScanned,
             unusedFiles = values["UNUSED_FILES"] ?: HomeToolMetric.NotScanned,
             screenshots = values["SCREENSHOTS"] ?: HomeToolMetric.NotScanned,
+            videos = values["VIDEOS"] ?: HomeToolMetric.NotScanned,
         )
     }
 }

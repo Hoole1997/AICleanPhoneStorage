@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="video_select_all">@string/cleanup_select_all</string>
+    <string name="video_all">Tümü</string>
+    <string name="video_permission_title">Videolarınıza erişime izin verin</string>
+    <string name="video_permission_message">Video Temizleyici, taramak ve düzenlemek için cihazınızdaki videolara erişmelidir.</string>
+    <string name="video_delete_confirm">Bu videoları silmek istediğinizden emin misiniz? Lütfen onaylayın.</string>
+    <string name="video_toggle_month">%1$s grubunu genişlet veya daralt</string>
+    <string name="video_select_month">%1$s içindeki tüm videoları seç</string>
+    <string name="video_limited">Yalnızca erişim izni verdiğiniz videolar gösterilir.</string>
+    <plurals name="video_month_summary">
+        <item quantity="one">%1$s dosya/%2$s</item>
+        <item quantity="other">%1$s dosya/%2$s</item>
+    </plurals>
+    <!-- 数量由完成页独立的大数字展示，此处只提供单位。 -->
+    <plurals name="completion_videos" tools:ignore="ImpliedQuantity">
+        <item quantity="one">Video</item>
+        <item quantity="other">Video</item>
+    </plurals>
+</resources>

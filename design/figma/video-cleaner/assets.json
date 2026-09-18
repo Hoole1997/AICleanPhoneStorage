@@ -1,0 +1,30 @@
+[
+  {
+    "resource": "ic_tool_videos",
+    "node": "6194:1711",
+    "url": "https://www.figma.com/api/mcp/asset/09eb1da2-a5e2-49ec-bb1e-98cfa7cfd835",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "dp": 32,
+    "sha256": "a7171133f9d201c03b6f9d51c91e3628089ad58cafb5cac2ec31d41608946ca1",
+    "source_size": [
+      335,
+      342
+    ]
+  },
+  {
+    "resource": "video_play",
+    "node": "5986:594",
+    "url": "https://www.figma.com/api/mcp/asset/7592d893-17d7-42e0-a4f5-189af0c6e55d.svg",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "dp": 36,
+    "sha256": "7aecc5c11b6a1608bc2573ff31f03b200cea9fcde81c94681890ba8872f77a10"
+  },
+  {
+    "resource": "video_collapse",
+    "node": "5986:579",
+    "url": "https://www.figma.com/api/mcp/asset/670f2c38-d5d1-4511-bbfb-09bb4c8e90d7.svg",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "dp": 16,
+    "sha256": "0059e9116efce0f3d7840700fa40011044d8487b7aa7fcb3474f56dcd1b8e5b2"
+  }
+]

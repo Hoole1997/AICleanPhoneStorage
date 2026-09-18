@@ -42,6 +42,7 @@ enum class HomeTool(@param:StringRes val titleRes: Int, @param:DrawableRes val i
     LargeFiles(R.string.home_tool_large_files, R.drawable.ic_tool_large_files),
     UnusedFiles(R.string.home_tool_unused_files, R.drawable.ic_tool_unused_files),
     Screenshots(R.string.home_tool_screenshots, R.drawable.ic_tool_screenshots),
+    Videos(R.string.video_title, R.drawable.ic_tool_videos),
 }
 
 data class HomeToolItem(
@@ -92,6 +93,7 @@ internal fun HomeOverview.toHomeContent(locale: Locale, cleaning: HomeCleaningSn
                         HomeTool.LargeFiles -> tools.largeFiles
                         HomeTool.UnusedFiles -> tools.unusedFiles
                         HomeTool.Screenshots -> tools.screenshots
+                        HomeTool.Videos -> tools.videos
                     }
                 HomeToolItem(
                     tool,

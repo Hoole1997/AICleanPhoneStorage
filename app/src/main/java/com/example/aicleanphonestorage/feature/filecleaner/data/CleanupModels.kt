@@ -2,12 +2,13 @@ package com.example.aicleanphonestorage.feature.filecleaner.data
 
 import java.util.Locale
 
-/** 四个入口的差异由策略枚举和筛选描述，不复制扫描器或文件操作实现。 */
+/** 清理入口的差异由策略枚举和筛选描述，不复制扫描器或文件操作实现。 */
 enum class CleanupFeature {
     PHOTO_COMPRESS,
     LARGE_FILES,
     UNUSED_FILES,
     SCREENSHOTS,
+    VIDEOS,
     SMART_CLEAN,
 }
 
@@ -121,6 +122,7 @@ internal object CleanupPolicy {
                 file.mime in setOf("image/jpeg", "image/png") && file.size >= 100_000
             CleanupFeature.SCREENSHOTS ->
                 file.category == FileCategory.PHOTOS && screenshot(file.name, folder)
+            CleanupFeature.VIDEOS -> file.category == FileCategory.VIDEOS && file.backend == FileBackend.MEDIA
             CleanupFeature.LARGE_FILES -> file.size >= 10_000_000
             // 闲置需要包状态/下载目录证据，由 UnusedClassifier 处理，不能退回全盘按年龄筛选。
             CleanupFeature.UNUSED_FILES -> false

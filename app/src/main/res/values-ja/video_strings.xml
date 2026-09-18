@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="video_select_all">@string/cleanup_select_all</string>
+    <string name="video_all">すべて</string>
+    <string name="video_permission_title">動画へのアクセスを許可</string>
+    <string name="video_permission_message">動画をスキャンして整理するには、端末の動画へのアクセスが必要です。</string>
+    <string name="video_delete_confirm">これらの動画を削除しますか？確認してください。</string>
+    <string name="video_toggle_month">%1$s を展開または折りたたむ</string>
+    <string name="video_select_month">%1$s の動画をすべて選択</string>
+    <string name="video_limited">アクセスを許可した動画のみ表示されます。</string>
+    <plurals name="video_month_summary">
+        <item quantity="other">%1$s ファイル/%2$s</item>
+    </plurals>
+    <!-- 数量由完成页独立的大数字展示，此处只提供单位。 -->
+    <plurals name="completion_videos" tools:ignore="ImpliedQuantity">
+        <item quantity="other">動画</item>
+    </plurals>
+</resources>

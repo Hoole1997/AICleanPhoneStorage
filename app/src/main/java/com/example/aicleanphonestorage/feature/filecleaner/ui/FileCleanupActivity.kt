@@ -65,6 +65,7 @@ class FileCleanupActivity : AppCompatActivity() {
     private lateinit var listState: CleanupListStateRenderer
     private lateinit var filters: CleanupFilters
     private var adapter: CleanupFilesAdapter? = null
+    private var videos: com.example.aicleanphonestorage.feature.videos.ui.VideoFilesAdapter? = null
     private var unusedGroups: UnusedGroupsAdapter? = null
     private var lastError = 0L
     private lateinit var operationCoordinator: CleanupOperationCoordinator
@@ -121,7 +122,7 @@ class FileCleanupActivity : AppCompatActivity() {
         binding.cleanupAction.setOnClickListener {
             if (!ads.busy) model.prepare()
         }
-        binding.cleanupError.setOnClickListener { adapter?.retry() }
+        binding.cleanupError.setOnClickListener { adapter?.retry(); videos?.retry() }
         filters = CleanupFilters(binding, model::setFilter)
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) { model.state.collect(::render) }
@@ -133,7 +134,11 @@ class FileCleanupActivity : AppCompatActivity() {
             com.example.aicleanphonestorage.feature.junkcleaner.data.JunkKind.from(
                 intent.getStringExtra(EXTRA_BUCKET)
             )
-        if (adapter != null || unusedGroups != null) return
+        if (adapter != null || unusedGroups != null || videos != null) return
+        if (feature == CleanupFeature.VIDEOS) {
+            attachVideos()
+            return
+        }
         if (feature == CleanupFeature.UNUSED_FILES && !intent.hasExtra(EXTRA_BUCKET)) {
             NativeAdCoordinator(this, binding.nativeAd, NativeAdPlacements.feature(feature).featureSlot)
             binding.cleanupFiles.layoutManager = LinearLayoutManager(this)
@@ -185,6 +190,30 @@ class FileCleanupActivity : AppCompatActivity() {
         }
     }
 
+    private fun attachVideos() {
+        NativeAdCoordinator(this, binding.nativeAd, NativeAdPlacements.feature(CleanupFeature.VIDEOS).featureSlot)
+        val files = com.example.aicleanphonestorage.feature.videos.ui.VideoFilesAdapter(
+            com.example.aicleanphonestorage.feature.videos.ui.VideoThumbnailLoader(this, container.taskExecutor),
+            lifecycleScope, model::toggle, model::selectBucket, model::collapseVideoMonth, ::preview)
+        videos = files
+        // 正常字号遵循 Figma 三列；无障碍大字号切为两列，给大小文案和 48dp 触控区留足空间。
+        val columns = if (resources.configuration.fontScale >= 1.5f) 2 else 3
+        binding.cleanupFiles.layoutManager = GridLayoutManager(this, columns).apply {
+            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int) = if (files.isHeader(position)) columns else 1
+            }
+        }
+        binding.cleanupFiles.itemAnimator = null
+        binding.cleanupFiles.addItemDecoration(com.example.aicleanphonestorage.feature.videos.ui.VideoGridSpacing((6 * resources.displayMetrics.density).toInt()))
+        binding.cleanupFiles.adapter = files
+        files.addLoadStateListener { listState.loading(it, files.itemCount) }
+        files.addOnPagesUpdatedListener { listState.pagesPresented(files.itemCount) }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) { model.videoRows.collectLatest(files::submitData) }
+        }
+        files.resume()
+    }
+
     private fun render(state: CleanupUiState) {
         val handle = state.handle
         if (handle != null) {
@@ -213,7 +242,7 @@ class FileCleanupActivity : AppCompatActivity() {
             binding.cleanupScope.isVisible =
                 handle.partial || handle.scopeLabel == "Selected folder"
             binding.cleanupScope.text =
-                if (handle.partial) getString(R.string.cleanup_limited) else scanScopeText(handle.scopeLabel)
+                if (handle.partial) getString(if (handle.feature == CleanupFeature.VIDEOS) R.string.video_limited else R.string.cleanup_limited) else scanScopeText(handle.scopeLabel)
             if (handle.feature == CleanupFeature.SMART_CLEAN && junkKind != null) {
                 binding.cleanupScope.isVisible = true
                 binding.cleanupScope.setText(junkKind.descriptionRes)
@@ -226,11 +255,19 @@ class FileCleanupActivity : AppCompatActivity() {
         val idle = state.operation == CleanupOperationState.Idle
         // 底部按钮统一交给 CleanupActionRenderer，Activity 不再重复改写文案或启用状态。
         binding.cleanupSelectAll.isEnabled = idle && state.editing == 0 && state.totals.count > 0
+        val allSelected = state.totals.selectedCount == state.totals.count && state.totals.count > 0
+        val videoPage = handle?.feature == CleanupFeature.VIDEOS
         binding.cleanupSelectAll.setText(
-            if (state.totals.selectedCount == state.totals.count && state.totals.count > 0)
-                R.string.cleanup_deselect_all
+            if (videoPage && allSelected) R.string.cleanup_cancel
+            else if (videoPage) R.string.video_select_all
+            else if (allSelected) R.string.cleanup_deselect_all
             else R.string.cleanup_select_all
         )
+        if (videoPage) {
+            binding.cleanupSelectAll.letterSpacing = 0f
+            binding.cleanupSelectAll.setTextColor(androidx.core.content.ContextCompat.getColor(this,
+                if (allSelected) R.color.home_text_secondary else R.color.traffic_blue))
+        }
         filters.render(state.filter, idle)
         if (state.error > lastError) {
             lastError = state.error
@@ -312,11 +349,14 @@ class FileCleanupActivity : AppCompatActivity() {
         if (model.state.value.handle?.feature == CleanupFeature.UNUSED_FILES) model.refreshTotals()
         render(model.state.value)
         adapter?.resume()
+        videos?.resume()
+        model.onVideoForeground()
     }
 
     override fun onStop() {
         filters.close()
         adapter?.pause()
+        videos?.pause()
         if (!isChangingConfigurations) model.onBackground()
         super.onStop()
     }
@@ -329,6 +369,7 @@ class FileCleanupActivity : AppCompatActivity() {
     override fun onDestroy() {
         binding.cleanupFiles.adapter = null
         adapter?.pause()
+        videos?.pause()
         super.onDestroy()
     }
 

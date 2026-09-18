@@ -1,0 +1,8 @@
+
+com.example.aicleanphonestorage.VideoMediaDeviceTest:.
+
+Time: 0.118
+
+OK (1 test)
+
+

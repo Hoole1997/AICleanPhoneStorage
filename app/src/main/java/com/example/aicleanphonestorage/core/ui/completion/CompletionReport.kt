@@ -2,6 +2,7 @@ package com.example.aicleanphonestorage.core.ui.completion
 
 internal enum class CompletionKind {
     CLEANUP,
+    VIDEOS,
     COMPRESSION,
     NOTIFICATIONS,
 }

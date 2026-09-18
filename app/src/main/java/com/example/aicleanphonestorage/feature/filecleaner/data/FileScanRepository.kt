@@ -15,7 +15,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
-/** 四种清理共享扫描、批量写索引、分页和选择；扫描是只读操作，真正写文件由操作引擎负责。 */
+/** 各清理功能共享扫描、批量写索引、分页和选择；扫描是只读操作，真正写文件由操作引擎负责。 */
 internal class FileScanRepository(
     context: Context, private val executor: TaskExecutor,
     private val telemetry: com.example.aicleanphonestorage.feature.filecleaner.analytics.CleanupTelemetry = com.example.aicleanphonestorage.feature.filecleaner.analytics.CleanupTelemetry(),
@@ -23,6 +23,7 @@ internal class FileScanRepository(
     private val app = context.applicationContext
     val index = ScanIndex(context)
     val access = CleanupAccess(context)
+    val videos = com.example.aicleanphonestorage.feature.videos.data.VideoIndex(index, executor)
     private val junkIndex =
         com.example.aicleanphonestorage.feature.junkcleaner.data.JunkIndex(index)
     private val sources = FileScanSources(context, index)
@@ -87,7 +88,8 @@ internal class FileScanRepository(
                     val label =
                         when (permission.source) {
                             ScanSourceKind.MEDIA ->
-                                if (permission.limited) "Selected photos" else "Photos"
+                                if (permission.videos) { if (permission.limited) "Selected videos" else "Videos" }
+                                else if (permission.limited) "Selected photos" else "Photos"
                             ScanSourceKind.DIRECT -> "Shared storage"
                             ScanSourceKind.DOCUMENT -> "Selected folder"
                             null -> ""
@@ -109,6 +111,27 @@ internal class FileScanRepository(
                 }
             }
         }
+
+    /** 同一扫描会话重新查询系统媒体，保留未变化文件的选择；不把新出现/已改变的视频自动选中。 */
+    suspend fun refreshVideos(handle: ScanHandle) = scanLock.withLock {
+        executor.io {
+            val permission = access.resolve(CleanupFeature.VIDEOS)
+            if (permission.request != AccessRequest.NONE) throw SecurityException("Video access revoked")
+            val staging = index.start(CleanupFeature.VIDEOS)
+            try {
+                val batch = ArrayList<ScannedFile>(200)
+                sources.scan(permission, staging, { file, _ ->
+                    batch += file
+                    if (batch.size == 200) { index.insert(staging, batch); batch.clear() }
+                }) { _, _ -> }
+                currentCoroutineContext().ensureActive()
+                if (batch.isNotEmpty()) index.insert(staging, batch)
+                videos.reconcile(handle.id, staging)
+            } finally {
+                withContext(NonCancellable) { index.discard(staging) }
+            }
+        }
+    }
 
     fun pager(handle: ScanHandle, filter: CleanupFilter) =
         Pager(

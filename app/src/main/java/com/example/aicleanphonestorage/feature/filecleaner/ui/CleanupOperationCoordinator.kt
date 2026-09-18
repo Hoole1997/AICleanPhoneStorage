@@ -41,11 +41,15 @@ internal class CleanupOperationCoordinator(
                 render(model.state.value.operation)
             } else {
                 model.dismissOperation()
-                if (action == CompletionContract.CONTINUE) {
+                if (action == CompletionContract.CONTINUE || action == CompletionContract.HOME) {
                     // 父页进程重建时索引可能尚未恢复，仍保留完成页携回的来源功能。
                     val source = CleanupFeature.entries.firstOrNull {
                         it.name == result.data?.getStringExtra(CompletionContract.SOURCE)
                     } ?: model.state.value.handle?.feature
+                    if (source == CleanupFeature.VIDEOS && action == CompletionContract.CONTINUE) {
+                        model.refreshVideos()
+                        return@registerForActivityResult
+                    }
                     activity.startActivity(
                         HomeExitAdContract.intent(activity,
                             InterstitialPlacements.exit(source))
@@ -144,7 +148,7 @@ internal class CleanupOperationCoordinator(
                     CleanupMessageDialog.create(
                         "confirm:${operation.id}",
                         activity.getString(R.string.cleanup_tips),
-                        activity.getString(R.string.cleanup_delete_confirm),
+                        activity.getString(if (model.state.value.handle?.feature == com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature.VIDEOS) R.string.video_delete_confirm else R.string.cleanup_delete_confirm),
                         activity.getString(R.string.cleanup_confirm),
                         activity.getString(R.string.cleanup_cancel),
                     )

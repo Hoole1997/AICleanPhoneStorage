@@ -20,6 +20,7 @@ internal object InterstitialPlacements {
 
     private fun suffix(feature: CleanupFeature?): String? = when (feature) {
         CleanupFeature.SMART_CLEAN -> "junk"
+        CleanupFeature.VIDEOS -> "video"
         CleanupFeature.SCREENSHOTS -> "screenshots"
         CleanupFeature.PHOTO_COMPRESS -> "photo"
         CleanupFeature.LARGE_FILES -> "large"

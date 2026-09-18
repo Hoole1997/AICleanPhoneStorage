@@ -120,7 +120,7 @@ internal class PermissionCoordinator(
         handlers[route] = Handler(before, result, onLaunch)
     }
 
-    fun rationale(route: String, kind: PermissionKind?) {
+    fun rationale(route: String, kind: PermissionKind?, purpose: PermissionPurpose = PermissionPurpose.DEFAULT) {
         val manager = activity.supportFragmentManager
         if (
             manager.isStateSaved ||
@@ -134,16 +134,16 @@ internal class PermissionCoordinator(
             return
         }
         if (pending) return
-        if (old?.route == route) return
+        if (old?.matches(route, kind, purpose) == true) return
         old?.dismissNow()
         val permissions = PermissionChecks.runtimePermissions(kind)
-        val settings =
+        val settings = if (kind == PermissionKind.VIDEOS) VideoPermissionRequest.needsSettings(activity) else
             !kind.special &&
                 kind != PermissionKind.DIRECTORY &&
                 model.requestedRuntime(kind) &&
                 permissions.isNotEmpty() &&
                 permissions.all { !activity.shouldShowRequestPermissionRationale(it) }
-        PermissionDialogFragment.create(route, kind, settings)
+        PermissionDialogFragment.create(route, kind, settings, purpose)
             .showNow(manager, PermissionDialogFragment.TAG)
     }
 
@@ -194,6 +194,10 @@ internal class PermissionCoordinator(
                                     )
                                 )
                                     model.launchFailed(value.id)
+                            value.kind == PermissionKind.VIDEOS -> VideoPermissionRequest.request(activity) {
+                                releaseExternalUi()
+                                model.runtimeResult()
+                            }
                             else -> runtime.launch(PermissionChecks.runtimePermissions(value.kind))
                         }
                     } catch (_: ActivityNotFoundException) {

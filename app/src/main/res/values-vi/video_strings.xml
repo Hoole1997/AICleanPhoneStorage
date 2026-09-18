@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="video_select_all">@string/cleanup_select_all</string>
+    <string name="video_all">Tất cả</string>
+    <string name="video_permission_title">Cho phép truy cập video</string>
+    <string name="video_permission_message">Trình dọn video cần truy cập video trên thiết bị để quét và sắp xếp.</string>
+    <string name="video_delete_confirm">Bạn có chắc muốn xóa các video này không? Vui lòng xác nhận.</string>
+    <string name="video_toggle_month">Mở rộng hoặc thu gọn %1$s</string>
+    <string name="video_select_month">Chọn tất cả video trong %1$s</string>
+    <string name="video_limited">Chỉ hiển thị các video bạn đã cho phép truy cập.</string>
+    <plurals name="video_month_summary">
+        <item quantity="other">%1$s tệp/%2$s</item>
+    </plurals>
+    <!-- 数量由完成页独立的大数字展示，此处只提供单位。 -->
+    <plurals name="completion_videos" tools:ignore="ImpliedQuantity">
+        <item quantity="other">Video</item>
+    </plurals>
+</resources>

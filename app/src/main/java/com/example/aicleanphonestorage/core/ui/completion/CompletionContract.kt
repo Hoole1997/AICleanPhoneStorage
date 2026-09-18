@@ -9,6 +9,7 @@ internal object CompletionContract {
     const val ACTION = "completion.action"
     const val OPERATION = "completion.operation"
     const val CONTINUE = "continue"
+    const val HOME = "home"
     const val REMOVE_ORIGINALS = "remove_originals"
 
     fun intent(context: Context, report: CompletionReport, source: String? = null) =

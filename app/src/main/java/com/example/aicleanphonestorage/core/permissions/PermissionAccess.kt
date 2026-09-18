@@ -20,6 +20,7 @@ internal enum class PermissionKind {
     POST_NOTIFICATIONS,
     ALL_FILES,
     PHOTOS,
+    VIDEOS,
     PHONE,
     DIRECTORY;
 
@@ -62,6 +63,7 @@ internal object PermissionChecks {
             PermissionKind.PHONE ->
                 if (Build.VERSION.SDK_INT <= 28) arrayOf(Manifest.permission.READ_PHONE_STATE)
                 else emptyArray()
+            PermissionKind.VIDEOS -> VideoPermissionRequest.permissions().map { it.permissionName }.toTypedArray()
             PermissionKind.PHOTOS ->
                 when {
                     Build.VERSION.SDK_INT >= 34 ->
@@ -84,6 +86,11 @@ internal object PermissionChecks {
         fun has(permission: String) =
             ContextCompat.checkSelfPermission(context, permission) ==
                 PackageManager.PERMISSION_GRANTED
+        if (kind == PermissionKind.VIDEOS) {
+            if (Build.VERSION.SDK_INT >= 30 && Environment.isExternalStorageManager()) return true
+            if (Build.VERSION.SDK_INT >= 33 && has(Manifest.permission.READ_MEDIA_VIDEO)) return true
+            if (Build.VERSION.SDK_INT >= 34 && has(Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED)) return true
+        }
         if (kind == PermissionKind.PHOTOS) {
             if (Build.VERSION.SDK_INT >= 30 && Environment.isExternalStorageManager()) return true
             if (Build.VERSION.SDK_INT >= 33 && has(Manifest.permission.READ_MEDIA_IMAGES))
@@ -115,6 +122,7 @@ internal class AndroidPermissionAccess(
                     io.docview.push.NotificationPermissionAccess.isGranted(app)
                 PermissionKind.ALL_FILES ->
                     Build.VERSION.SDK_INT >= 30 && Environment.isExternalStorageManager()
+                PermissionKind.VIDEOS,
                 PermissionKind.PHOTOS,
                 PermissionKind.PHONE -> PermissionChecks.grantedRuntime(app, kind)
                 PermissionKind.DIRECTORY -> false // 授权范围以系统选择器返回的 URI 为准。

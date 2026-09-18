@@ -87,6 +87,7 @@ internal class FileOperationEngine(
     suspend fun delete(operation: Long, progress: (Int, Int) -> Unit): OperationStep =
         lock.withLock {
             executor.io {
+                val videoOperation = index.operationFeature(operation) == CleanupFeature.VIDEOS
                 val operationContext = currentCoroutineContext()
                 val unused = com.example.aicleanphonestorage.feature.unused.data.UnusedClassifier(app, unusedPackages) { operationContext.ensureActive() }
                 val total = index.operationCount(operation)
@@ -138,7 +139,10 @@ internal class FileOperationEngine(
                             index.output(operation, file.id)?.let { (uri, sha) ->
                                 verifyCopy(uri, sha)
                             }
-                            if (file.backend == FileBackend.MEDIA && Build.VERSION.SDK_INT >= 30) {
+                            // 视频已由用户授予所有文件访问时，直接走 Provider 删除；不主动创建额外系统确认。
+                            // 每项重新读取权限，兼容操作过程中撤权；其他清理入口仍保持原来的系统确认流程。
+                            if (file.backend == FileBackend.MEDIA && Build.VERSION.SDK_INT >= 30 &&
+                                !(videoOperation && android.os.Environment.isExternalStorageManager())) {
                                 media += file
                                 continue
                             }
@@ -150,8 +154,16 @@ internal class FileOperationEngine(
                                             content.resolver,
                                             Uri.parse(file.uri),
                                         )
-                                    FileBackend.MEDIA ->
+                                    FileBackend.MEDIA -> try {
                                         content.resolver.delete(Uri.parse(file.uri), null, null) > 0
+                                    } catch (error: SecurityException) {
+                                        // OEM Provider 仍要求确认或授权在检查后被撤销时，退回公开系统确认 API。
+                                        if (videoOperation && Build.VERSION.SDK_INT >= 30) {
+                                            media += file
+                                            continue
+                                        }
+                                        throw error
+                                    }
                                 }
                             if (!deleted) throw IOException("Deletion rejected")
                             index.mark(operation, file.id, "deleted")
@@ -203,8 +215,15 @@ internal class FileOperationEngine(
                 val systemDeleted = index.operationStatus(operation) == "awaiting_delete"
                 index.operationFiles(operation, "awaiting", 500).forEach {
                     if (systemDeleted) {
-                        index.mark(operation, it.id, "deleted")
-                        index.remove(it.id, notify = false)
+                        // 视频结果以系统媒体库中真实消失为准，避免把部分失败/撤销读取权统计成删除成功。
+                        val removed = if (it.category != FileCategory.VIDEOS) true else try {
+                            content.resolver.query(Uri.parse(it.uri), arrayOf(MediaStore.MediaColumns._ID), null, null, null)
+                                ?.use { cursor -> !cursor.moveToFirst() } == true
+                        } catch (_: SecurityException) { false }
+                        if (removed) {
+                            index.mark(operation, it.id, "deleted")
+                            index.remove(it.id, notify = false)
+                        } else index.mark(operation, it.id, "failed")
                     } else index.mark(operation, it.id, "pending")
                 }
                 index.finishOperation(operation, "running")

@@ -82,13 +82,17 @@ internal class CleanupEntryCoordinator(
         val kind =
             (state as? CleanupEntryState.Permission)?.request?.let {
                 when (it) {
+                    AccessRequest.VIDEOS -> PermissionKind.VIDEOS
                     AccessRequest.PHOTOS -> PermissionKind.PHOTOS
                     AccessRequest.ALL_FILES -> PermissionKind.ALL_FILES
                     AccessRequest.DIRECTORY -> PermissionKind.DIRECTORY
                     AccessRequest.NONE -> null
                 }
             }
-        permissions.rationale(ROUTE, kind)
+        val purpose = if ((state as? CleanupEntryState.Permission)?.feature ==
+            com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature.VIDEOS)
+            PermissionPurpose.VIDEO_CLEANER else PermissionPurpose.DEFAULT
+        permissions.rationale(ROUTE, kind, purpose)
         val dialog = manager.findFragmentByTag(CleanupMessageDialog.TAG) as? CleanupMessageDialog
         if (state !is CleanupEntryState.Failed) dialog?.dismiss()
         else if (dialog == null)
