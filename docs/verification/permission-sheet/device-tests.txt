@@ -1,0 +1,9 @@
+
+com.example.aicleanphonestorage.PermissionUiDeviceTest:.....
+com.example.aicleanphonestorage.PushPermissionGuideTest:...
+
+Time: 12.48
+
+OK (8 tests)
+
+

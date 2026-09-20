@@ -1,0 +1,32 @@
+<resources>
+    <style name="ThemeOverlay.Clean.PermissionSheet" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.Clean.PermissionSheet</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:backgroundDimAmount">0.63</item>
+        <item name="enableEdgeToEdge">true</item>
+        <!-- 内容面板处理安全区；透明外层不能再次添加 inset，否则导航栏处会露出蒙层。 -->
+        <item name="paddingBottomSystemWindowInsets">false</item>
+        <item name="paddingLeftSystemWindowInsets">false</item>
+        <item name="paddingRightSystemWindowInsets">false</item>
+    </style>
+    <style name="Widget.Clean.PermissionSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+    <style name="Widget.Clean.PermissionAction" parent="Widget.Traffic.Button">
+        <item name="android:textSize">16sp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingVertical">12dp</item>
+        <item name="android:paddingHorizontal">12dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="cornerRadius">24dp</item>
+    </style>
+    <style name="Widget.Clean.PermissionAction.Secondary" parent="Widget.Clean.PermissionAction">
+        <item name="backgroundTint">#F3F3F3</item>
+        <item name="android:textColor">#666666</item>
+    </style>
+</resources>

@@ -88,7 +88,7 @@ class PermissionUiDeviceTest {
                     assertEquals(PermissionKind.ALL_FILES.name, fragment.requireArguments().getString("kind"))
                 }
                 val density = themed.resources.displayMetrics.density
-                val width = (315 * density).toInt()
+                val width = ((if (scale > 1f) 320 else 375) * density).toInt()
                 val maxHeight = (560 * density).toInt()
                 root.measure(
                     View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
@@ -114,6 +114,64 @@ class PermissionUiDeviceTest {
                 }
                 bitmap.recycle()
             }
+        }
+    }
+
+    @Test
+    fun unifiedPhotoPermissionUsesBottomSheetAndKeepsPermissionResult() {
+        var returnedKind: String? = null
+        var results = 0
+        ActivityScenario.launch<com.example.aicleanphonestorage.feature.settings.AboutActivity>(
+            Intent(context, com.example.aicleanphonestorage.feature.settings.AboutActivity::class.java)
+        ).use { scenario ->
+            scenario.onActivity { activity ->
+                activity.supportFragmentManager.setFragmentResultListener(PermissionDialogFragment.RESULT, activity) { _, bundle ->
+                    results++
+                    returnedKind = bundle.getString("kind")
+                    assertEquals("cancel", bundle.getString("action"))
+                }
+                PermissionDialogFragment.create("sheet-test", PermissionKind.ALL_FILES, false, PermissionPurpose.SIMILAR_PHOTOS)
+                    .showNow(activity.supportFragmentManager, PermissionDialogFragment.TAG)
+            }
+            val deadline = SystemClock.uptimeMillis() + 5000
+            var expanded = false
+            while (!expanded && SystemClock.uptimeMillis() < deadline) {
+                scenario.onActivity { activity ->
+                    val fragment = activity.supportFragmentManager.findFragmentByTag(PermissionDialogFragment.TAG) as PermissionDialogFragment
+                    val dialog = fragment.requireDialog() as com.google.android.material.bottomsheet.BottomSheetDialog
+                    expanded = dialog.behavior.state == com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED && fragment.requireView().height > 0
+                }
+                if (!expanded) SystemClock.sleep(25)
+            }
+            assertTrue(expanded)
+            instrumentation.waitForIdleSync()
+            scenario.onActivity { activity ->
+                val fragment = activity.supportFragmentManager.findFragmentByTag(PermissionDialogFragment.TAG) as PermissionDialogFragment
+                val binding = DialogAppPermissionBinding.bind(fragment.requireView())
+                val position = IntArray(2)
+                binding.root.getLocationOnScreen(position)
+                val screen = activity.resources.displayMetrics
+                assertTrue(position[1] > screen.heightPixels / 3)
+                assertEquals(screen.widthPixels, binding.root.width)
+                assertTrue("White sheet must reach the navigation edge", position[1] + binding.root.height >= screen.heightPixels - 1)
+                assertTrue(binding.permissionIcon.height > 0)
+                assertEquals(android.widget.LinearLayout.HORIZONTAL, binding.permissionActions.orientation)
+                assertEquals(binding.permissionContinue.top, binding.permissionCancel.top)
+            }
+            // 仅截图测试等待系统窗口的合成动画完成；生产弹层没有延时或轮询。
+            SystemClock.sleep(500)
+            instrumentation.uiAutomation.takeScreenshot()?.let { bitmap ->
+                val folder = File(context.getExternalFilesDir(null), "permission-ui-tests").apply { mkdirs() }
+                try { File(folder, "unified-sheet-device.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) } }
+                finally { bitmap.recycle() }
+            }
+            scenario.onActivity { activity ->
+                val fragment = activity.supportFragmentManager.findFragmentByTag(PermissionDialogFragment.TAG) as PermissionDialogFragment
+                DialogAppPermissionBinding.bind(fragment.requireView()).permissionCancel.performClick()
+            }
+            instrumentation.waitForIdleSync()
+            assertEquals(PermissionKind.ALL_FILES.name, returnedKind)
+            assertEquals(1, results)
         }
     }
 

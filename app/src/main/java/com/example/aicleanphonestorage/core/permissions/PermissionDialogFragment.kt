@@ -1,23 +1,33 @@
 package com.example.aicleanphonestorage.core.permissions
 
-import android.app.Dialog
 import android.content.DialogInterface
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import androidx.core.graphics.drawable.toDrawable
-import androidx.fragment.app.DialogFragment
 import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.databinding.DialogAppPermissionBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 /** 功能说明与系统权限类型分开：同一种所有文件权限可用于不同的用户操作。 */
-internal enum class PermissionPurpose { DEFAULT, VIDEO_CLEANER, SIMILAR_PHOTOS }
+internal enum class PermissionPurpose {
+    DEFAULT,
+    VIDEO_CLEANER,
+    SIMILAR_PHOTOS,
+}
 
 /** App 风格的说明弹框，不模拟系统权限开关；实际授权仍进入 Android 标准界面。 */
-class PermissionDialogFragment : DialogFragment() {
+class PermissionDialogFragment : BottomSheetDialogFragment() {
+    override fun getTheme() = R.style.ThemeOverlay_Clean_PermissionSheet
+
+    private var resultSent = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        resultSent = savedInstanceState?.getBoolean("result.sent") ?: false
+    }
+
     val route: String
         get() = requireArguments().getString("route").orEmpty()
 
@@ -25,18 +35,12 @@ class PermissionDialogFragment : DialogFragment() {
         get() = PermissionKind.valueOf(requireArguments().getString("kind")!!)
 
     private val purpose: PermissionPurpose
-        get() = PermissionPurpose.entries.firstOrNull { it.name == arguments?.getString("purpose") }
-            ?: PermissionPurpose.DEFAULT
+        get() =
+            PermissionPurpose.entries.firstOrNull { it.name == arguments?.getString("purpose") }
+                ?: PermissionPurpose.DEFAULT
 
     internal fun matches(route: String, kind: PermissionKind, purpose: PermissionPurpose) =
         this.route == route && this.kind == kind && this.purpose == purpose
-
-    override fun onCreateDialog(savedInstanceState: Bundle?) =
-        Dialog(requireContext()).apply {
-            requestWindowFeature(Window.FEATURE_NO_TITLE)
-            setCanceledOnTouchOutside(false)
-            window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
-        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,52 +48,70 @@ class PermissionDialogFragment : DialogFragment() {
         state: Bundle?,
     ): View {
         val binding = DialogAppPermissionBinding.inflate(inflater, container, false)
-        val spec = if (purpose == PermissionPurpose.VIDEO_CLEANER)
-            Triple(R.string.video_permission_title, R.string.video_permission_message, R.drawable.ic_tool_videos)
-        else if (purpose == PermissionPurpose.SIMILAR_PHOTOS)
-            Triple(R.string.similar_permission_title, R.string.similar_permission_message, R.drawable.ic_tool_similar)
-        else when (kind) {
-                PermissionKind.POST_NOTIFICATIONS ->
-                    Triple(R.string.push_permission_title, R.string.push_permission_message,
-                        R.drawable.ic_tool_notifications)
-                PermissionKind.USAGE ->
-                    Triple(
-                        R.string.permission_usage_title,
-                        R.string.permission_usage_message,
-                        R.drawable.ic_tool_network,
-                    )
-                PermissionKind.NOTIFICATIONS ->
-                    Triple(
-                        R.string.permission_notification_title,
-                        R.string.permission_notification_message,
-                        R.drawable.ic_tool_notifications,
-                    )
-                PermissionKind.ALL_FILES ->
-                    Triple(
-                        R.string.permission_files_title,
-                        R.string.permission_files_message,
-                        R.drawable.ic_tool_large_files,
-                    )
-                PermissionKind.VIDEOS -> Triple(R.string.video_permission_title, R.string.video_permission_message, R.drawable.ic_tool_videos)
-                PermissionKind.PHOTOS ->
-                    Triple(
-                        R.string.permission_photos_title,
-                        R.string.permission_photos_message,
-                        R.drawable.ic_tool_compress,
-                    )
-                PermissionKind.PHONE ->
-                    Triple(
-                        R.string.permission_phone_title,
-                        R.string.permission_phone_message,
-                        R.drawable.ic_tool_network,
-                    )
-                PermissionKind.DIRECTORY ->
-                    Triple(
-                        R.string.permission_folder_title,
-                        R.string.permission_folder_message,
-                        R.drawable.junk_file,
-                    )
-            }
+        val spec =
+            if (purpose == PermissionPurpose.VIDEO_CLEANER)
+                Triple(
+                    R.string.video_permission_title,
+                    R.string.video_permission_message,
+                    R.drawable.permission_sheet_video,
+                )
+            else if (purpose == PermissionPurpose.SIMILAR_PHOTOS)
+                Triple(
+                    R.string.similar_permission_title,
+                    R.string.similar_permission_message,
+                    R.drawable.permission_sheet_photos,
+                )
+            else
+                when (kind) {
+                    PermissionKind.POST_NOTIFICATIONS ->
+                        Triple(
+                            R.string.push_permission_title,
+                            R.string.push_permission_message,
+                            R.drawable.push_permission_bell,
+                        )
+                    PermissionKind.USAGE ->
+                        Triple(
+                            R.string.permission_usage_title,
+                            R.string.permission_usage_message,
+                            R.drawable.ic_tool_network,
+                        )
+                    PermissionKind.NOTIFICATIONS ->
+                        Triple(
+                            R.string.permission_notification_title,
+                            R.string.permission_notification_message,
+                            R.drawable.push_permission_bell,
+                        )
+                    PermissionKind.ALL_FILES ->
+                        Triple(
+                            R.string.permission_files_title,
+                            R.string.permission_files_message,
+                            R.drawable.ic_tool_large_files,
+                        )
+                    PermissionKind.VIDEOS ->
+                        Triple(
+                            R.string.video_permission_title,
+                            R.string.video_permission_message,
+                            R.drawable.permission_sheet_video,
+                        )
+                    PermissionKind.PHOTOS ->
+                        Triple(
+                            R.string.permission_photos_title,
+                            R.string.permission_photos_message,
+                            R.drawable.permission_sheet_photos,
+                        )
+                    PermissionKind.PHONE ->
+                        Triple(
+                            R.string.permission_phone_title,
+                            R.string.permission_phone_message,
+                            R.drawable.ic_tool_network,
+                        )
+                    PermissionKind.DIRECTORY ->
+                        Triple(
+                            R.string.permission_folder_title,
+                            R.string.permission_folder_message,
+                            R.drawable.junk_file,
+                        )
+                }
         binding.permissionTitle.setText(spec.first)
         binding.permissionMessage.setText(spec.second)
         binding.permissionIcon.setImageResource(spec.third)
@@ -114,28 +136,18 @@ class PermissionDialogFragment : DialogFragment() {
             result(if (kind == PermissionKind.PHONE) "skip" else "cancel")
             dismiss()
         }
+        PermissionSheetUi.prepare(binding)
         return binding.root
     }
 
     override fun onStart() {
         super.onStart()
-        val metrics = resources.displayMetrics
-        val width =
-            minOf(
-                (315 * metrics.density).toInt(),
-                metrics.widthPixels - (48 * metrics.density).toInt(),
-            )
-        val maxHeight = metrics.heightPixels - (80 * metrics.density).toInt()
-        requireView()
-            .measure(
-                View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.makeMeasureSpec(maxHeight, View.MeasureSpec.AT_MOST),
-            )
-        dialog?.window?.apply {
-            setLayout(width, requireView().measuredHeight)
-            addFlags(android.view.WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            setDimAmount(0.65f)
-        }
+        (dialog as? BottomSheetDialog)?.let(PermissionSheetUi::show)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean("result.sent", resultSent)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -143,7 +155,10 @@ class PermissionDialogFragment : DialogFragment() {
         super.onCancel(dialog)
     }
 
-    private fun result(action: String) =
+    private fun result(action: String) {
+        // 按钮/返回键与生命周期恢复共用单次结果，样式切换不重复启动授权页。
+        if (resultSent) return
+        resultSent = true
         parentFragmentManager.setFragmentResult(
             RESULT,
             Bundle().apply {
@@ -152,6 +167,7 @@ class PermissionDialogFragment : DialogFragment() {
                 putString("action", action)
             },
         )
+    }
 
     companion object {
         const val TAG = "permission.rationale"

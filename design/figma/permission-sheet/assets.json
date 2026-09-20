@@ -1,0 +1,35 @@
+[
+  {
+    "resource": "permission_sheet_photos",
+    "source": "design/figma/permission-sheet/source/photos.png",
+    "node": "6044:6989",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "dp": [
+      93,
+      100
+    ],
+    "sha256": "25874104086aed431b6615a9dd4eae243a718fefc51007ff8b2758299a62df7a"
+  },
+  {
+    "resource": "permission_sheet_shadow",
+    "source": "design/figma/permission-sheet/source/shadow.svg",
+    "node": "6044:6988",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "dp": [
+      63,
+      8
+    ],
+    "sha256": "96d0940758ea64bc98205270466b1b28cfc3f7d91730099ff326256944e20e27"
+  },
+  {
+    "resource": "permission_sheet_video",
+    "source": "design/figma/video-cleaner/source/ic_tool_videos.png",
+    "node": "6194:1711",
+    "file_key": "dVsTL6ggoDPXVPcEKg856G",
+    "dp": [
+      93,
+      100
+    ],
+    "sha256": "a7171133f9d201c03b6f9d51c91e3628089ad58cafb5cac2ec31d41608946ca1"
+  }
+]

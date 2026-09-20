@@ -12,7 +12,7 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.aicleanphonestorage.app.CleanApplication
-import com.example.aicleanphonestorage.databinding.DialogPushPermissionGuideBinding
+import com.example.aicleanphonestorage.databinding.DialogAppPermissionBinding
 import com.example.aicleanphonestorage.feature.push.*
 import com.example.aicleanphonestorage.feature.settings.AboutActivity
 import java.io.File
@@ -94,7 +94,7 @@ class PushPermissionGuideTest {
             scenario.onActivity { activity ->
                 assertTrue(permissions.requests.isEmpty())
                 val guide = activity.supportFragmentManager.findFragmentByTag(PushPermissionGuideDialog.TAG) as PushPermissionGuideDialog
-                guide.requireView().findViewById<View>(R.id.push_guide_allow).performClick()
+                guide.requireView().findViewById<View>(R.id.permission_continue).performClick()
             }
             instrumentation.waitForIdleSync()
             scenario.onActivity {
@@ -124,7 +124,12 @@ class PushPermissionGuideTest {
                         }
                     )
                 val themed = ContextThemeWrapper(configured, R.style.Theme_AICleanPhoneStorage)
-                val binding = DialogPushPermissionGuideBinding.inflate(LayoutInflater.from(themed))
+                val binding = DialogAppPermissionBinding.inflate(LayoutInflater.from(themed))
+                binding.permissionTitle.setText(R.string.push_guide_title)
+                binding.permissionMessage.setText(R.string.push_guide_message)
+                binding.permissionContinue.setText(R.string.push_guide_allow)
+                binding.permissionCancel.setText(R.string.permission_not_now)
+                binding.permissionIcon.setImageResource(R.drawable.push_permission_bell)
                 val density = themed.resources.displayMetrics.density
                 val pixels = (width * density).toInt()
                 binding.root.measure(
@@ -135,13 +140,13 @@ class PushPermissionGuideTest {
                     ),
                 )
                 binding.root.layout(0, 0, pixels, binding.root.measuredHeight)
-                assertTrue(binding.pushGuideClose.height >= 48 * density)
-                assertTrue(binding.pushGuideAllow.height >= 48 * density)
+                assertTrue(binding.permissionCancel.height >= 48 * density)
+                assertTrue(binding.permissionContinue.height >= 48 * density)
                 for (text in
                     listOf(
-                        binding.pushGuideTitle,
-                        binding.pushGuideMessage,
-                        binding.pushGuideAllow,
+                        binding.permissionTitle,
+                        binding.permissionMessage,
+                        binding.permissionContinue,
                     )) {
                     assertTrue(
                         text.height - text.compoundPaddingTop - text.compoundPaddingBottom >=
@@ -149,9 +154,12 @@ class PushPermissionGuideTest {
                     )
                 }
                 // 正文自然测量，OEM 字体度量会改变总高；验证内容顺序和可滚动边界，不能锁死设计稿总高。
-                assertTrue(binding.pushGuideTitle.bottom <= binding.pushGuideMessage.top)
-                assertTrue(binding.pushGuideMessage.bottom <= binding.pushGuideAllow.top)
-                assertTrue(binding.pushGuideAllow.bottom <= binding.root.getChildAt(0).height)
+                fun bounds(view: View) = android.graphics.Rect(0, 0, view.width, view.height).also {
+                    binding.root.offsetDescendantRectToMyCoords(view, it)
+                }
+                assertTrue(bounds(binding.permissionTitle).bottom <= bounds(binding.permissionMessage).top)
+                assertTrue(bounds(binding.permissionMessage).bottom <= bounds(binding.permissionContinue).top)
+                assertTrue(bounds(binding.permissionContinue).bottom <= binding.root.getChildAt(0).height)
                 assertTrue(binding.root.height <= 600 * density)
                 image =
                     Bitmap.createBitmap(pixels, binding.root.height, Bitmap.Config.ARGB_8888).also {

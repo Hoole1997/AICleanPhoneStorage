@@ -1,6 +1,6 @@
 # 统一权限入口
 
-权限说明使用 `PermissionDialogFragment`：白色圆角卡片、现有蓝色按钮和 Figma 原版 WebP 图标。覆盖使用情况访问、通知监听、所有文件、照片、旧版手机状态及目录授权。普通运行时权限、目录选择器和 MediaStore 删除确认仍由 Android 提供，应用不能替换真正的系统授权界面。
+权限说明使用 `PermissionDialogFragment`，并与通知权限引导 `PushPermissionGuideDialog` 共用 `dialog_app_permission.xml` 和 `PermissionSheetUi`。按 [Figma 6044:6974](https://www.figma.com/design/dVsTL6ggoDPXVPcEKg856G/lcb?node-id=6044-6974) 统一为底部弹层：16dp 顶部圆角、93×100dp 悬浮图标、18sp 标题、14sp 正文、左右并排 48dp 最小触控按钮和 0.63 遮罩。覆盖使用情况访问、通知监听、所有文件、照片、旧版手机状态及目录授权。普通运行时权限、目录选择器和 MediaStore 删除确认仍由 Android 提供，应用不能替换真正的系统授权界面。
 
 ## 职责与接入
 
@@ -24,3 +24,12 @@ Android 没有 `launcherTask` 启动模式，本项目申请页配置为 `single
 `PermissionFlowViewModelTest` 覆盖授权后停止、超时、取消、旧回调隔离、目录结果、状态恢复和单次消费。`PermissionUiDeviceTest` 覆盖各类弹框正常/双倍字号测量、目录替代选择、Manifest 与 Intent 标记，不自动授予或撤销设备权限。
 
 真实授权开关、不同 OEM 的直达详情支持和后台自动返回仍需人工验证：从首页分别触发授权，打开开关，观察是否返回并继续；再验证拒绝、返回、超时后返回及旋转屏幕。系统拦截自动返回时，手动返回也应只续接一次。
+
+## 统一底部弹层验证（2026-09-18）
+
+- 权限类型、业务文案、设置页/运行时授权和通知埋点流程保持原契约；允许与取消结果只消费一次。
+- 大字号或长翻译无法并排容纳时，`PermissionActionsLayout` 按实际文字宽度改为纵排。说明自然测量，整体内容由 NestedScrollView 承载，不将行高设为固定文本高度。
+- 面板负责系统栏与刘海 inset，关闭透明外层的重复 inset；白色背景覆盖导航栏区域。弹层最大宽度 600dp、最大高度窗口的 92%，不增加轮询或持续动画。
+- 原版照片插画/阴影源文件与来源位于 `design/figma/permission-sheet/`；开发期转换脚本为 `tools/convert_permission_sheet_assets.py`，应用只加载 mdpi–xxxhdpi WebP。
+- local 编译、Lint、194 项 JVM 单元测试通过；8 项设备测试覆盖底部定位、单次回调、通知设置入口以及 320/375/600dp、普通/双倍字号测量。
+- [设备截图](verification/permission-sheet/device.png)使用约 375dp 宽窗口，已恢复模拟器尺寸；[双倍字号布局](verification/permission-sheet/large-font.png)。未在各 OEM 上逐一验证。

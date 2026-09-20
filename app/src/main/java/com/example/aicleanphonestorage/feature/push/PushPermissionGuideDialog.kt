@@ -5,10 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
 import com.example.aicleanphonestorage.R
-import com.example.aicleanphonestorage.databinding.DialogPushPermissionGuideBinding
-import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.example.aicleanphonestorage.core.permissions.PermissionSheetUi
+import com.example.aicleanphonestorage.databinding.DialogAppPermissionBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -16,7 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class PushPermissionGuideDialog : BottomSheetDialogFragment() {
     private var resultSent = false
 
-    override fun getTheme() = R.style.ThemeOverlay_Clean_PushGuide
+    override fun getTheme() = R.style.ThemeOverlay_Clean_PermissionSheet
 
     override fun onCreate(state: Bundle?) {
         super.onCreate(state)
@@ -28,13 +27,18 @@ class PushPermissionGuideDialog : BottomSheetDialogFragment() {
         container: ViewGroup?,
         state: Bundle?,
     ): View {
-        val binding = DialogPushPermissionGuideBinding.inflate(inflater, container, false)
-        ViewCompat.setAccessibilityHeading(binding.pushGuideTitle, true)
-        binding.pushGuideAllow.setOnClickListener {
+        val binding = DialogAppPermissionBinding.inflate(inflater, container, false)
+        binding.permissionTitle.setText(R.string.push_guide_title)
+        binding.permissionMessage.setText(R.string.push_guide_message)
+        binding.permissionIcon.setImageResource(R.drawable.push_permission_bell)
+        binding.permissionContinue.setText(R.string.push_guide_allow)
+        binding.permissionCancel.setText(R.string.permission_not_now)
+        PermissionSheetUi.prepare(binding)
+        binding.permissionContinue.setOnClickListener {
             result(true)
             dismiss()
         }
-        binding.pushGuideClose.setOnClickListener {
+        binding.permissionCancel.setOnClickListener {
             result(false)
             dismiss()
         }
@@ -43,27 +47,7 @@ class PushPermissionGuideDialog : BottomSheetDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        (dialog as? BottomSheetDialog)?.apply {
-            setCanceledOnTouchOutside(false)
-            behavior.apply {
-                maxWidth = (600 * resources.displayMetrics.density).toInt()
-                // 小屏、横屏与大字号下限制弹层高度，长内容由原生滚动容器承载。
-                maxHeight = (resources.displayMetrics.heightPixels * 0.9f).toInt()
-                setShouldRemoveExpandedCorners(false)
-                isDraggable = false
-                skipCollapsed = true
-                state = BottomSheetBehavior.STATE_EXPANDED
-            }
-            window?.let { window ->
-                window.setDimAmount(0.63f)
-                androidx.core.view
-                    .WindowInsetsControllerCompat(window, window.decorView)
-                    .isAppearanceLightNavigationBars = true
-                // API 26 不支持深色导航图标，保留深色系统栏以保证返回键可见。
-                if (android.os.Build.VERSION.SDK_INT < 27)
-                    window.navigationBarColor = android.graphics.Color.BLACK
-            }
-        }
+        (dialog as? BottomSheetDialog)?.let(PermissionSheetUi::show)
     }
 
     override fun onCancel(dialog: DialogInterface) {
