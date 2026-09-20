@@ -4,7 +4,7 @@ import android.util.Log
 import io.docview.push.BuildConfig
 
 /**
- * 广告日志工具类
+ * 通知模块日志工具类
  * 提供统一的日志输出控制和管理
  */
 object Logger {

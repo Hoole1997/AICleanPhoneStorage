@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Android 13 (API 33) 专用布局，高度限制约 94dp -->
+<!-- Android 13+ 紧凑展开布局；文字高度自然测量，系统通知面板管理最终可用空间。 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -63,30 +63,10 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <!-- 按钮区域 (32dp + 6dp margin = 38dp) -->
-    <FrameLayout
+    <include
+        layout="@layout/view_notification_general_action"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp">
-
-        <ProgressBar
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:indeterminate="true"
-            android:indeterminateDrawable="@drawable/noti_timing_notify_btn_long"
-            android:minWidth="0dp"
-            android:minHeight="0dp" />
-
-        <TextView
-            android:id="@+id/tvAction"
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:background="@android:color/transparent"
-            android:gravity="center"
-            android:text="Clear"
-            android:textColor="#fff"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-    </FrameLayout>
+        android:layout_marginTop="6dp" />
 
 </LinearLayout>

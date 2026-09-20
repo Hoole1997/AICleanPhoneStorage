@@ -1,0 +1,1313 @@
+{
+  "schemaVersion": 2,
+  "configVersion": "preview-v1",
+  "pool": "D1",
+  "defaultLanguage": "en",
+  "contents": [
+    {
+      "id": "local_001_clean",
+      "title": "✨ Your first phone check is ready!",
+      "desc": "See what is using your space and review your phone at a glance.",
+      "buttonText": "Check",
+      "iconType": 1,
+      "actionType": 1,
+      "translations": {
+        "pt-BR": {
+          "title": "✨ Sua primeira verificação do telefone está pronta!",
+          "desc": "Veja o que está ocupando espaço e revise seu telefone rapidamente.",
+          "buttonText": "Verificar"
+        },
+        "es-MX": {
+          "title": "✨ ¡Tu primera revisión del teléfono está lista!",
+          "desc": "Mira qué está usando tu espacio y revisa tu teléfono de un vistazo.",
+          "buttonText": "Comprobar"
+        },
+        "es-ES": {
+          "title": "✨ ¡Tu primera revisión del móvil está lista!",
+          "desc": "Mira qué está ocupando espacio y revisa tu móvil de un vistazo.",
+          "buttonText": "Comprobar"
+        },
+        "id-ID": {
+          "title": "✨ Pemeriksaan ponsel pertama Anda siap!",
+          "desc": "Lihat apa yang memakai ruang dan tinjau ponsel Anda sekilas.",
+          "buttonText": "Periksa"
+        },
+        "hi-IN": {
+          "title": "✨ आपके फ़ोन की पहली जाँच तैयार है!",
+          "desc": "देखें कि स्टोरेज किसने घेरा है और फ़ोन की स्थिति एक नज़र में जानें।",
+          "buttonText": "जाँचें"
+        },
+        "ja-JP": {
+          "title": "✨ 最初のスマホチェックの準備ができました！",
+          "desc": "容量を使っている項目を確認し、スマホの状態をひと目でチェックしましょう。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "title": "✨ 첫 휴대전화 점검이 준비되었습니다!",
+          "desc": "어떤 항목이 저장공간을 사용하는지 한눈에 확인하세요.",
+          "buttonText": "확인"
+        }
+      }
+    },
+    {
+      "id": "local_002_clean",
+      "title": "🧹 4.5 GB of junk is ready to clear!",
+      "desc": "Free up space with one quick cleanup.",
+      "buttonText": "Clean",
+      "iconType": 1,
+      "actionType": 1,
+      "translations": {
+        "pt-BR": {
+          "title": "🧹 4,5 GB de lixo prontos para limpar!",
+          "desc": "Libere espaço com uma limpeza rápida.",
+          "buttonText": "Limpar"
+        },
+        "es-MX": {
+          "title": "🧹 ¡Hay 4,5 GB de basura listos para limpiar!",
+          "desc": "Libera espacio con una limpieza rápida.",
+          "buttonText": "Limpiar"
+        },
+        "es-ES": {
+          "title": "🧹 ¡Hay 4,5 GB de basura listos para limpiar!",
+          "desc": "Libera espacio con una limpieza rápida.",
+          "buttonText": "Limpiar"
+        },
+        "id-ID": {
+          "title": "🧹 4,5 GB file sampah siap dibersihkan!",
+          "desc": "Bebaskan ruang dengan satu pembersihan cepat.",
+          "buttonText": "Bersihkan"
+        },
+        "hi-IN": {
+          "title": "🧹 4.5 GB जंक साफ़ करने के लिए तैयार है!",
+          "desc": "एक त्वरित क्लीनअप से जगह खाली करें।",
+          "buttonText": "क्लीन"
+        },
+        "ja-JP": {
+          "title": "🧹 4.5 GBのジャンクを削除できます！",
+          "desc": "簡単なクリーンアップで空き容量を増やしましょう。",
+          "buttonText": "クリーン"
+        },
+        "ko-KR": {
+          "title": "🧹 4.5GB 정크를 정리할 수 있습니다!",
+          "desc": "빠른 정리로 저장공간을 확보하세요.",
+          "buttonText": "정리"
+        }
+      }
+    },
+    {
+      "id": "local_003_large",
+      "title": "📦 2.8 GB of large files found!",
+      "desc": "Review videos and downloads using the most space.",
+      "buttonText": "Review",
+      "iconType": 1001,
+      "actionType": 1001,
+      "translations": {
+        "pt-BR": {
+          "title": "📦 2,8 GB de arquivos grandes encontrados!",
+          "desc": "Revise vídeos e downloads que ocupam mais espaço.",
+          "buttonText": "Revisar"
+        },
+        "es-MX": {
+          "title": "📦 ¡Encontramos 2,8 GB de archivos grandes!",
+          "desc": "Revisa los vídeos y descargas que más espacio ocupan.",
+          "buttonText": "Revisar"
+        },
+        "es-ES": {
+          "title": "📦 ¡Hemos encontrado 2,8 GB de archivos grandes!",
+          "desc": "Revisa los vídeos y descargas que más espacio ocupan.",
+          "buttonText": "Revisar"
+        },
+        "id-ID": {
+          "title": "📦 Ditemukan 2,8 GB file besar!",
+          "desc": "Tinjau video dan unduhan yang paling banyak memakai ruang.",
+          "buttonText": "Tinjau"
+        },
+        "hi-IN": {
+          "title": "📦 2.8 GB की बड़ी फ़ाइलें मिलीं!",
+          "desc": "सबसे ज़्यादा जगह लेने वाले वीडियो और डाउनलोड देखें।",
+          "buttonText": "समीक्षा करें"
+        },
+        "ja-JP": {
+          "title": "📦 大きなファイルが2.8 GB見つかりました！",
+          "desc": "容量を多く使う動画やダウンロードを確認しましょう。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "title": "📦 2.8GB의 대용량 파일을 찾았습니다!",
+          "desc": "저장공간을 많이 사용하는 동영상과 다운로드를 확인하세요.",
+          "buttonText": "확인"
+        }
+      }
+    },
+    {
+      "id": "local_004_duplicate",
+      "title": "📸 Duplicate photos detected!",
+      "desc": "Review 18 copies and keep the ones you love.",
+      "buttonText": "Clean",
+      "iconType": 1005,
+      "actionType": 1005,
+      "translations": {
+        "pt-BR": {
+          "title": "📸 Fotos duplicadas detectadas!",
+          "desc": "Revise 18 cópias e mantenha as fotos que você gosta.",
+          "buttonText": "Limpar"
+        },
+        "es-MX": {
+          "title": "📸 ¡Se detectaron fotos duplicadas!",
+          "desc": "Revisa 18 copias y conserva las que más te gusten.",
+          "buttonText": "Limpiar"
+        },
+        "es-ES": {
+          "title": "📸 ¡Se han detectado fotos duplicadas!",
+          "desc": "Revisa 18 copias y conserva las que más te gusten.",
+          "buttonText": "Limpiar"
+        },
+        "id-ID": {
+          "title": "📸 Foto duplikat terdeteksi!",
+          "desc": "Tinjau 18 salinan dan simpan foto yang Anda sukai.",
+          "buttonText": "Bersihkan"
+        },
+        "hi-IN": {
+          "title": "📸 डुप्लिकेट फ़ोटो मिलीं!",
+          "desc": "18 कॉपी देखें और पसंदीदा फ़ोटो रखें।",
+          "buttonText": "क्लीन"
+        },
+        "ja-JP": {
+          "title": "📸 重複した写真が見つかりました！",
+          "desc": "18枚のコピーを確認し、残したい写真を選びましょう。",
+          "buttonText": "クリーン"
+        },
+        "ko-KR": {
+          "title": "📸 중복 사진이 발견되었습니다!",
+          "desc": "18개의 사본을 확인하고 필요한 사진만 남기세요.",
+          "buttonText": "정리"
+        }
+      }
+    },
+    {
+      "id": "local_005_malware",
+      "title": "🦠 Malware detected on your phone!",
+      "desc": "2 security risks need your attention.",
+      "buttonText": "Scan",
+      "iconType": 1006,
+      "actionType": 1006,
+      "translations": {
+        "pt-BR": {
+          "title": "🦠 Malware detectado no seu telefone!",
+          "desc": "2 riscos de segurança precisam da sua atenção.",
+          "buttonText": "Verificar"
+        },
+        "es-MX": {
+          "title": "🦠 ¡Se detectó malware en tu teléfono!",
+          "desc": "Hay 2 riesgos de seguridad que requieren tu atención.",
+          "buttonText": "Analizar"
+        },
+        "es-ES": {
+          "title": "🦠 ¡Se ha detectado malware en tu móvil!",
+          "desc": "Hay 2 riesgos de seguridad que requieren tu atención.",
+          "buttonText": "Analizar"
+        },
+        "id-ID": {
+          "title": "🦠 Malware terdeteksi di ponsel Anda!",
+          "desc": "Ada 2 risiko keamanan yang perlu Anda periksa.",
+          "buttonText": "Pindai"
+        },
+        "hi-IN": {
+          "title": "🦠 आपके फ़ोन पर मैलवेयर मिला!",
+          "desc": "2 सुरक्षा जोखिमों पर आपका ध्यान ज़रूरी है।",
+          "buttonText": "स्कैन करें"
+        },
+        "ja-JP": {
+          "title": "🦠 スマホでマルウェアが検出されました！",
+          "desc": "2件のセキュリティリスクを確認してください。",
+          "buttonText": "スキャン"
+        },
+        "ko-KR": {
+          "title": "🦠 휴대전화에서 악성 코드가 감지되었습니다!",
+          "desc": "확인이 필요한 보안 위험이 2개 있습니다.",
+          "buttonText": "스캔"
+        }
+      }
+    },
+    {
+      "id": "local_006_video",
+      "title": "🎬 2.4 GB of videos may be taking up space!",
+      "desc": "Review large videos and keep the moments you love.",
+      "buttonText": "Review",
+      "iconType": 1004,
+      "actionType": 1004,
+      "translations": {
+        "pt-BR": {
+          "title": "🎬 2,4 GB de vídeos podem estar ocupando espaço!",
+          "desc": "Revise vídeos grandes e mantenha os momentos importantes.",
+          "buttonText": "Revisar"
+        },
+        "es-MX": {
+          "title": "🎬 ¡Puede que 2,4 GB de vídeos estén ocupando espacio!",
+          "desc": "Revisa los vídeos grandes y conserva tus momentos favoritos.",
+          "buttonText": "Revisar"
+        },
+        "es-ES": {
+          "title": "🎬 ¡Puede que 2,4 GB de vídeos estén ocupando espacio!",
+          "desc": "Revisa los vídeos grandes y conserva tus momentos favoritos.",
+          "buttonText": "Revisar"
+        },
+        "id-ID": {
+          "title": "🎬 2,4 GB video mungkin memenuhi ruang!",
+          "desc": "Tinjau video besar dan simpan momen yang Anda sukai.",
+          "buttonText": "Tinjau"
+        },
+        "hi-IN": {
+          "title": "🎬 2.4 GB के वीडियो जगह घेर रहे हो सकते हैं!",
+          "desc": "बड़े वीडियो देखें और अपने पसंदीदा पल रखें।",
+          "buttonText": "समीक्षा करें"
+        },
+        "ja-JP": {
+          "title": "🎬 2.4 GBの動画が容量を使っている可能性があります！",
+          "desc": "大きな動画を確認して、大切な思い出を残しましょう。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "title": "🎬 동영상 2.4GB가 저장공간을 차지할 수 있습니다!",
+          "desc": "큰 동영상을 확인하고 소중한 순간은 남겨 두세요.",
+          "buttonText": "확인"
+        }
+      }
+    },
+    {
+      "id": "local_007_photos",
+      "title": "🗜️ Compress 20 photos to save space!",
+      "desc": "Reduce photo size while keeping your memories.",
+      "buttonText": "Shrink",
+      "iconType": 3,
+      "actionType": 3,
+      "translations": {
+        "pt-BR": {
+          "title": "🗜️ Comprima 20 fotos para economizar espaço!",
+          "desc": "Reduza o tamanho das fotos sem perder suas memórias.",
+          "buttonText": "Reduzir"
+        },
+        "es-MX": {
+          "title": "🗜️ ¡Comprime 20 fotos para ahorrar espacio!",
+          "desc": "Reduce el tamaño de las fotos y conserva tus recuerdos.",
+          "buttonText": "Reducir"
+        },
+        "es-ES": {
+          "title": "🗜️ ¡Comprime 20 fotos para ahorrar espacio!",
+          "desc": "Reduce el tamaño de las fotos y conserva tus recuerdos.",
+          "buttonText": "Reducir"
+        },
+        "id-ID": {
+          "title": "🗜️ Kompres 20 foto untuk menghemat ruang!",
+          "desc": "Kurangi ukuran foto sambil tetap menyimpan kenangan Anda.",
+          "buttonText": "Kompres"
+        },
+        "hi-IN": {
+          "title": "🗜️ 20 फ़ोटो कंप्रेस करके जगह बचाएँ!",
+          "desc": "अपनी यादें सुरक्षित रखते हुए फ़ोटो का आकार कम करें।",
+          "buttonText": "कंप्रेस करें"
+        },
+        "ja-JP": {
+          "title": "🗜️ 20枚の写真を圧縮して容量を節約！",
+          "desc": "思い出を残したまま写真のサイズを小さくできます。",
+          "buttonText": "圧縮"
+        },
+        "ko-KR": {
+          "title": "🗜️ 사진 20장을 압축해 공간을 절약하세요!",
+          "desc": "추억은 그대로 두고 사진 크기를 줄이세요.",
+          "buttonText": "압축"
+        }
+      }
+    },
+    {
+      "id": "local_008_notifications",
+      "title": "🔔 36 old notifications are waiting!",
+      "desc": "Clear outdated alerts and keep your panel tidy.",
+      "buttonText": "Open",
+      "iconType": 1002,
+      "actionType": 1002,
+      "translations": {
+        "pt-BR": {
+          "title": "🔔 36 notificações antigas estão esperando!",
+          "desc": "Apague alertas antigos e mantenha o painel organizado.",
+          "buttonText": "Abrir"
+        },
+        "es-MX": {
+          "title": "🔔 ¡Hay 36 notificaciones antiguas esperando!",
+          "desc": "Elimina alertas antiguas y mantén limpio el panel.",
+          "buttonText": "Abrir"
+        },
+        "es-ES": {
+          "title": "🔔 ¡Hay 36 notificaciones antiguas esperando!",
+          "desc": "Elimina alertas antiguas y mantén limpio el panel.",
+          "buttonText": "Abrir"
+        },
+        "id-ID": {
+          "title": "🔔 Ada 36 notifikasi lama yang menunggu!",
+          "desc": "Hapus peringatan lama dan jaga panel tetap rapi.",
+          "buttonText": "Buka"
+        },
+        "hi-IN": {
+          "title": "🔔 36 पुराने नोटिफ़िकेशन इंतज़ार कर रहे हैं!",
+          "desc": "पुराने अलर्ट हटाएँ और पैनल व्यवस्थित रखें।",
+          "buttonText": "खोलें"
+        },
+        "ja-JP": {
+          "title": "🔔 古い通知が36件あります！",
+          "desc": "不要な通知を消して通知パネルを整理しましょう。",
+          "buttonText": "開く"
+        },
+        "ko-KR": {
+          "title": "🔔 오래된 알림 36개가 있습니다!",
+          "desc": "지난 알림을 지우고 알림 패널을 깔끔하게 정리하세요.",
+          "buttonText": "열기"
+        }
+      }
+    },
+    {
+      "id": "local_009_battery",
+      "title": "🔋 Battery level is at 23% — check your status!",
+      "desc": "View battery details and charging information.",
+      "buttonText": "Check",
+      "iconType": 1007,
+      "actionType": 1007,
+      "translations": {
+        "pt-BR": {
+          "title": "🔋 A bateria está em 23% — verifique o status!",
+          "desc": "Veja os detalhes da bateria e as informações de carregamento.",
+          "buttonText": "Verificar"
+        },
+        "es-MX": {
+          "title": "🔋 La batería está al 23 %: ¡revisa su estado!",
+          "desc": "Consulta los detalles de la batería y la información de carga.",
+          "buttonText": "Comprobar"
+        },
+        "es-ES": {
+          "title": "🔋 La batería está al 23 %: ¡revisa su estado!",
+          "desc": "Consulta los detalles de la batería y la información de carga.",
+          "buttonText": "Comprobar"
+        },
+        "id-ID": {
+          "title": "🔋 Baterai berada di 23% — periksa statusnya!",
+          "desc": "Lihat detail baterai dan informasi pengisian daya.",
+          "buttonText": "Periksa"
+        },
+        "hi-IN": {
+          "title": "🔋 बैटरी 23% पर है—स्थिति देखें!",
+          "desc": "बैटरी विवरण और चार्जिंग जानकारी देखें।",
+          "buttonText": "जाँचें"
+        },
+        "ja-JP": {
+          "title": "🔋 バッテリー残量は23%です—状態を確認しましょう！",
+          "desc": "バッテリーの詳細と充電情報を確認できます。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "title": "🔋 배터리 잔량이 23%입니다—상태를 확인하세요!",
+          "desc": "배터리 세부 정보와 충전 정보를 확인하세요.",
+          "buttonText": "확인"
+        }
+      }
+    },
+    {
+      "id": "local_010_network",
+      "title": "📶 1.8 GB of mobile data was used recently!",
+      "desc": "Review your data usage and see which apps use the most traffic.",
+      "buttonText": "Check",
+      "iconType": 2,
+      "actionType": 2,
+      "translations": {
+        "pt-BR": {
+          "title": "📶 1,8 GB de dados móveis usados recentemente!",
+          "desc": "Veja o uso de dados e quais apps consomem mais tráfego.",
+          "buttonText": "Verificar"
+        },
+        "es-MX": {
+          "title": "📶 ¡Se han usado 1,8 GB de datos móviles recientemente!",
+          "desc": "Revisa el uso de datos y qué apps consumen más tráfico.",
+          "buttonText": "Comprobar"
+        },
+        "es-ES": {
+          "title": "📶 ¡Se han usado 1,8 GB de datos móviles recientemente!",
+          "desc": "Revisa el uso de datos y qué apps consumen más tráfico.",
+          "buttonText": "Comprobar"
+        },
+        "id-ID": {
+          "title": "📶 1,8 GB data seluler baru-baru ini digunakan!",
+          "desc": "Tinjau penggunaan data dan aplikasi yang paling banyak memakai lalu lintas.",
+          "buttonText": "Periksa"
+        },
+        "hi-IN": {
+          "title": "📶 हाल में 1.8 GB मोबाइल डेटा इस्तेमाल हुआ!",
+          "desc": "डेटा उपयोग और सबसे अधिक ट्रैफ़िक लेने वाले ऐप देखें।",
+          "buttonText": "जाँचें"
+        },
+        "ja-JP": {
+          "title": "📶 最近1.8 GBのモバイルデータを使用しました！",
+          "desc": "データ使用量と通信量の多いアプリを確認しましょう。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "title": "📶 최근 모바일 데이터를 1.8GB 사용했습니다!",
+          "desc": "데이터 사용량과 가장 많은 트래픽을 사용하는 앱을 확인하세요.",
+          "buttonText": "확인"
+        }
+      }
+    },
+    {
+      "id": "local_011_apps",
+      "title": "📱 5 installed apps are ready to review!",
+      "desc": "Review installed apps and manage the ones you no longer need.",
+      "buttonText": "Review",
+      "iconType": 1003,
+      "actionType": 1003,
+      "translations": {
+        "pt-BR": {
+          "title": "📱 5 apps instalados estão prontos para revisão!",
+          "desc": "Revise os apps instalados e gerencie os que não usa mais.",
+          "buttonText": "Revisar"
+        },
+        "es-MX": {
+          "title": "📱 ¡Hay 5 apps instaladas listas para revisar!",
+          "desc": "Revisa las apps instaladas y gestiona las que ya no necesitas.",
+          "buttonText": "Revisar"
+        },
+        "es-ES": {
+          "title": "📱 ¡Hay 5 aplicaciones instaladas listas para revisar!",
+          "desc": "Revisa las aplicaciones instaladas y gestiona las que ya no necesitas.",
+          "buttonText": "Revisar"
+        },
+        "id-ID": {
+          "title": "📱 5 aplikasi terpasang siap ditinjau!",
+          "desc": "Tinjau aplikasi terpasang dan kelola yang tidak lagi diperlukan.",
+          "buttonText": "Tinjau"
+        },
+        "hi-IN": {
+          "title": "📱 5 इंस्टॉल किए गए ऐप समीक्षा के लिए तैयार हैं!",
+          "desc": "इंस्टॉल किए गए ऐप देखें और जिनकी ज़रूरत नहीं है उन्हें प्रबंधित करें।",
+          "buttonText": "समीक्षा करें"
+        },
+        "ja-JP": {
+          "title": "📱 インストール済みアプリ5件を確認できます！",
+          "desc": "インストール済みアプリを確認し、不要なものを管理しましょう。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "title": "📱 설치된 앱 5개를 확인할 수 있습니다!",
+          "desc": "설치된 앱을 확인하고 더 이상 필요하지 않은 앱을 관리하세요.",
+          "buttonText": "확인"
+        }
+      }
+    },
+    {
+      "id": "local_012_unused",
+      "title": "📂 Unused files may be taking up space!",
+      "desc": "Review files left behind by apps and downloads.",
+      "buttonText": "Review",
+      "iconType": 4,
+      "actionType": 4,
+      "translations": {
+        "pt-BR": {
+          "title": "📂 Arquivos não usados podem estar ocupando espaço!",
+          "desc": "Revise arquivos deixados por apps e downloads.",
+          "buttonText": "Revisar"
+        },
+        "es-MX": {
+          "title": "📂 ¡Los archivos sin usar pueden estar ocupando espacio!",
+          "desc": "Revisa los archivos que dejaron las apps y las descargas.",
+          "buttonText": "Revisar"
+        },
+        "es-ES": {
+          "title": "📂 ¡Los archivos sin usar pueden estar ocupando espacio!",
+          "desc": "Revisa los archivos que dejaron las aplicaciones y las descargas.",
+          "buttonText": "Revisar"
+        },
+        "id-ID": {
+          "title": "📂 File yang tidak digunakan mungkin memenuhi ruang!",
+          "desc": "Tinjau file yang ditinggalkan aplikasi dan unduhan.",
+          "buttonText": "Tinjau"
+        },
+        "hi-IN": {
+          "title": "📂 इस्तेमाल न होने वाली फ़ाइलें जगह घेर सकती हैं!",
+          "desc": "ऐप और डाउनलोड से बची फ़ाइलें देखें।",
+          "buttonText": "समीक्षा करें"
+        },
+        "ja-JP": {
+          "title": "📂 使っていないファイルが容量を使っている可能性があります！",
+          "desc": "アプリやダウンロードの残りファイルを確認しましょう。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "title": "📂 사용하지 않는 파일이 저장공간을 차지할 수 있습니다!",
+          "desc": "앱과 다운로드에서 남은 파일을 확인하세요.",
+          "buttonText": "확인"
+        }
+      }
+    },
+    {
+      "id": "local_013_screenshots",
+      "title": "🖼️ Your screenshots are ready for a cleanup!",
+      "desc": "Review old screenshots and remove the ones you no longer need.",
+      "buttonText": "Clean",
+      "iconType": 5,
+      "actionType": 5,
+      "translations": {
+        "pt-BR": {
+          "title": "🖼️ Suas capturas de tela estão prontas para limpar!",
+          "desc": "Revise capturas antigas e remova as que não precisa mais.",
+          "buttonText": "Limpar"
+        },
+        "es-MX": {
+          "title": "🖼️ ¡Tus capturas de pantalla están listas para limpiar!",
+          "desc": "Revisa las capturas antiguas y elimina las que ya no necesitas.",
+          "buttonText": "Limpiar"
+        },
+        "es-ES": {
+          "title": "🖼️ ¡Tus capturas de pantalla están listas para limpiar!",
+          "desc": "Revisa las capturas antiguas y elimina las que ya no necesitas.",
+          "buttonText": "Limpiar"
+        },
+        "id-ID": {
+          "title": "🖼️ Tangkapan layar Anda siap dibersihkan!",
+          "desc": "Tinjau tangkapan layar lama dan hapus yang tidak diperlukan.",
+          "buttonText": "Bersihkan"
+        },
+        "hi-IN": {
+          "title": "🖼️ आपके स्क्रीनशॉट क्लीनअप के लिए तैयार हैं!",
+          "desc": "पुराने स्क्रीनशॉट देखें और अनावश्यक हटाएँ।",
+          "buttonText": "क्लीन"
+        },
+        "ja-JP": {
+          "title": "🖼️ スクリーンショットを整理できます！",
+          "desc": "古いスクリーンショットを確認し、不要なものを削除しましょう。",
+          "buttonText": "クリーン"
+        },
+        "ko-KR": {
+          "title": "🖼️ 스크린샷을 정리할 수 있습니다!",
+          "desc": "오래된 스크린샷을 확인하고 필요 없는 항목을 삭제하세요.",
+          "buttonText": "정리"
+        }
+      }
+    },
+    {
+      "id": "local_014_clean",
+      "title": "🚨 3.2 GB of clutter is taking up space!",
+      "desc": "Review cached and leftover files now.",
+      "buttonText": "Clean",
+      "iconType": 1,
+      "actionType": 1,
+      "translations": {
+        "pt-BR": {
+          "title": "🚨 3,2 GB de arquivos acumulados estão ocupando espaço!",
+          "desc": "Revise agora os arquivos em cache e residuais.",
+          "buttonText": "Limpar"
+        },
+        "es-MX": {
+          "title": "🚨 ¡Hay 3,2 GB de archivos acumulados ocupando espacio!",
+          "desc": "Revisa ahora los archivos de caché y residuales.",
+          "buttonText": "Limpiar"
+        },
+        "es-ES": {
+          "title": "🚨 ¡Hay 3,2 GB de archivos acumulados ocupando espacio!",
+          "desc": "Revisa ahora los archivos de caché y residuales.",
+          "buttonText": "Limpiar"
+        },
+        "id-ID": {
+          "title": "🚨 3,2 GB file menumpuk memenuhi ruang!",
+          "desc": "Tinjau file cache dan sisa sekarang.",
+          "buttonText": "Bersihkan"
+        },
+        "hi-IN": {
+          "title": "🚨 3.2 GB की अव्यवस्था जगह घेर रही है!",
+          "desc": "कैश और बची हुई फ़ाइलें अभी देखें।",
+          "buttonText": "क्लीन"
+        },
+        "ja-JP": {
+          "title": "🚨 不要なファイルが3.2 GBあります！",
+          "desc": "キャッシュや残存ファイルを確認しましょう。",
+          "buttonText": "クリーン"
+        },
+        "ko-KR": {
+          "title": "🚨 불필요한 파일 3.2GB가 공간을 차지합니다!",
+          "desc": "캐시와 잔여 파일을 지금 확인하세요.",
+          "buttonText": "정리"
+        }
+      }
+    },
+    {
+      "id": "local_015_large",
+      "title": "⚠️ 1.6 GB is tied up in large files!",
+      "desc": "Make room by checking your biggest files.",
+      "buttonText": "Review",
+      "iconType": 1001,
+      "actionType": 1001,
+      "translations": {
+        "pt-BR": {
+          "title": "⚠️ 1,6 GB está ocupado por arquivos grandes!",
+          "desc": "Libere espaço verificando os maiores arquivos.",
+          "buttonText": "Revisar"
+        },
+        "es-MX": {
+          "title": "⚠️ ¡1,6 GB están ocupados por archivos grandes!",
+          "desc": "Haz espacio revisando tus archivos más grandes.",
+          "buttonText": "Revisar"
+        },
+        "es-ES": {
+          "title": "⚠️ ¡1,6 GB están ocupados por archivos grandes!",
+          "desc": "Haz espacio revisando tus archivos más grandes.",
+          "buttonText": "Revisar"
+        },
+        "id-ID": {
+          "title": "⚠️ 1,6 GB dipakai oleh file besar!",
+          "desc": "Buat ruang dengan memeriksa file terbesar Anda.",
+          "buttonText": "Tinjau"
+        },
+        "hi-IN": {
+          "title": "⚠️ बड़ी फ़ाइलें 1.6 GB जगह ले रही हैं!",
+          "desc": "सबसे बड़ी फ़ाइलें देखकर जगह खाली करें।",
+          "buttonText": "समीक्षा करें"
+        },
+        "ja-JP": {
+          "title": "⚠️ 大きなファイルが1.6 GBの容量を使っています！",
+          "desc": "大きなファイルを確認して空き容量を増やしましょう。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "title": "⚠️ 대용량 파일이 1.6GB를 차지하고 있습니다!",
+          "desc": "가장 큰 파일을 확인해 공간을 확보하세요.",
+          "buttonText": "확인"
+        }
+      }
+    },
+    {
+      "id": "local_016_duplicate",
+      "title": "🔁 18 duplicate photos are waiting!",
+      "desc": "Clear unwanted copies and organize your gallery.",
+      "buttonText": "Clean",
+      "iconType": 1005,
+      "actionType": 1005,
+      "translations": {
+        "pt-BR": {
+          "title": "🔁 18 fotos duplicadas estão esperando!",
+          "desc": "Limpe cópias indesejadas e organize sua galeria.",
+          "buttonText": "Limpar"
+        },
+        "es-MX": {
+          "title": "🔁 ¡Hay 18 fotos duplicadas esperando!",
+          "desc": "Elimina copias innecesarias y organiza tu galería.",
+          "buttonText": "Limpiar"
+        },
+        "es-ES": {
+          "title": "🔁 ¡Hay 18 fotos duplicadas esperando!",
+          "desc": "Elimina copias innecesarias y organiza tu galería.",
+          "buttonText": "Limpiar"
+        },
+        "id-ID": {
+          "title": "🔁 Ada 18 foto duplikat yang menunggu!",
+          "desc": "Hapus salinan yang tidak diperlukan dan rapikan galeri.",
+          "buttonText": "Bersihkan"
+        },
+        "hi-IN": {
+          "title": "🔁 18 डुप्लिकेट फ़ोटो इंतज़ार कर रही हैं!",
+          "desc": "अनचाही कॉपी हटाकर गैलरी व्यवस्थित करें।",
+          "buttonText": "क्लीन"
+        },
+        "ja-JP": {
+          "title": "🔁 重複写真が18枚あります！",
+          "desc": "不要なコピーを削除してギャラリーを整理しましょう。",
+          "buttonText": "クリーン"
+        },
+        "ko-KR": {
+          "title": "🔁 중복 사진 18개가 있습니다!",
+          "desc": "불필요한 사본을 정리하고 갤러리를 깔끔하게 관리하세요.",
+          "buttonText": "정리"
+        }
+      }
+    },
+    {
+      "id": "local_017_malware",
+      "title": "🚨 A possible virus was found on your phone!",
+      "desc": "Scan now to review the affected app or APK.",
+      "buttonText": "Scan",
+      "iconType": 1006,
+      "actionType": 1006,
+      "translations": {
+        "pt-BR": {
+          "title": "🚨 Um possível vírus foi encontrado no seu telefone!",
+          "desc": "Verifique agora o app ou APK afetado.",
+          "buttonText": "Verificar"
+        },
+        "es-MX": {
+          "title": "🚨 ¡Se encontró un posible virus en tu teléfono!",
+          "desc": "Analiza ahora la app o el APK afectado.",
+          "buttonText": "Analizar"
+        },
+        "es-ES": {
+          "title": "🚨 ¡Se ha encontrado un posible virus en tu móvil!",
+          "desc": "Analiza ahora la aplicación o el APK afectado.",
+          "buttonText": "Analizar"
+        },
+        "id-ID": {
+          "title": "🚨 Virus mungkin ditemukan di ponsel Anda!",
+          "desc": "Pindai sekarang untuk memeriksa aplikasi atau APK yang terpengaruh.",
+          "buttonText": "Pindai"
+        },
+        "hi-IN": {
+          "title": "🚨 आपके फ़ोन पर संभावित वायरस मिला!",
+          "desc": "प्रभावित ऐप या APK की जाँच के लिए अभी स्कैन करें।",
+          "buttonText": "स्कैन करें"
+        },
+        "ja-JP": {
+          "title": "🚨 スマホでウイルスの可能性が検出されました！",
+          "desc": "影響を受けたアプリまたはAPKを確認するためスキャンしてください。",
+          "buttonText": "スキャン"
+        },
+        "ko-KR": {
+          "title": "🚨 휴대전화에서 바이러스가 발견되었을 수 있습니다!",
+          "desc": "영향받은 앱 또는 APK를 확인하려면 지금 스캔하세요.",
+          "buttonText": "스캔"
+        }
+      }
+    },
+    {
+      "id": "local_018_video",
+      "title": "📽️ Your video library has 16 files to review!",
+      "desc": "Remove videos you no longer need.",
+      "buttonText": "Clean",
+      "iconType": 1004,
+      "actionType": 1004,
+      "translations": {
+        "pt-BR": {
+          "title": "📽️ Sua biblioteca de vídeos tem 16 arquivos para revisar!",
+          "desc": "Remova os vídeos que você não precisa mais.",
+          "buttonText": "Limpar"
+        },
+        "es-MX": {
+          "title": "📽️ ¡Tu biblioteca de vídeos tiene 16 archivos para revisar!",
+          "desc": "Elimina los vídeos que ya no necesitas.",
+          "buttonText": "Limpiar"
+        },
+        "es-ES": {
+          "title": "📽️ ¡Tu biblioteca de vídeos tiene 16 archivos para revisar!",
+          "desc": "Elimina los vídeos que ya no necesitas.",
+          "buttonText": "Limpiar"
+        },
+        "id-ID": {
+          "title": "📽️ Perpustakaan video Anda memiliki 16 file untuk ditinjau!",
+          "desc": "Hapus video yang tidak lagi diperlukan.",
+          "buttonText": "Bersihkan"
+        },
+        "hi-IN": {
+          "title": "📽️ आपकी वीडियो लाइब्रेरी में 16 फ़ाइलें जाँचने के लिए हैं!",
+          "desc": "जिन वीडियो की ज़रूरत नहीं है उन्हें हटाएँ।",
+          "buttonText": "क्लीन"
+        },
+        "ja-JP": {
+          "title": "📽️ ビデオライブラリに確認できるファイルが16件あります！",
+          "desc": "不要な動画を削除しましょう。",
+          "buttonText": "クリーン"
+        },
+        "ko-KR": {
+          "title": "📽️ 동영상 라이브러리에 확인할 파일 16개가 있습니다!",
+          "desc": "더 이상 필요하지 않은 동영상을 삭제하세요.",
+          "buttonText": "정리"
+        }
+      }
+    },
+    {
+      "id": "local_019_photos",
+      "title": "✨ Your photos could use 28% less space!",
+      "desc": "Compress selected photos and manage storage better.",
+      "buttonText": "Shrink",
+      "iconType": 3,
+      "actionType": 3,
+      "translations": {
+        "pt-BR": {
+          "title": "✨ Suas fotos podem ocupar 28% menos espaço!",
+          "desc": "Comprima fotos selecionadas e gerencie melhor o armazenamento.",
+          "buttonText": "Reduzir"
+        },
+        "es-MX": {
+          "title": "✨ ¡Tus fotos podrían ocupar un 28 % menos de espacio!",
+          "desc": "Comprime fotos seleccionadas y gestiona mejor el almacenamiento.",
+          "buttonText": "Reducir"
+        },
+        "es-ES": {
+          "title": "✨ ¡Tus fotos podrían ocupar un 28 % menos de espacio!",
+          "desc": "Comprime fotos seleccionadas y gestiona mejor el almacenamiento.",
+          "buttonText": "Reducir"
+        },
+        "id-ID": {
+          "title": "✨ Foto Anda bisa memakai ruang 28% lebih sedikit!",
+          "desc": "Kompres foto yang dipilih dan kelola penyimpanan dengan lebih baik.",
+          "buttonText": "Kompres"
+        },
+        "hi-IN": {
+          "title": "✨ आपकी फ़ोटो 28% कम जगह ले सकती हैं!",
+          "desc": "चुनी हुई फ़ोटो कंप्रेस करके स्टोरेज बेहतर प्रबंधित करें।",
+          "buttonText": "कंप्रेस करें"
+        },
+        "ja-JP": {
+          "title": "✨ 写真の使用容量を28%減らせます！",
+          "desc": "選択した写真を圧縮して容量を効率よく管理しましょう。",
+          "buttonText": "圧縮"
+        },
+        "ko-KR": {
+          "title": "✨ 사진이 차지하는 공간을 28% 줄일 수 있습니다!",
+          "desc": "선택한 사진을 압축해 저장공간을 더 효율적으로 관리하세요.",
+          "buttonText": "압축"
+        }
+      }
+    },
+    {
+      "id": "local_020_notifications",
+      "title": "📣 Your notification panel has 24 alerts to review!",
+      "desc": "Remove notifications you no longer need.",
+      "buttonText": "Check",
+      "iconType": 1002,
+      "actionType": 1002,
+      "translations": {
+        "pt-BR": {
+          "title": "📣 Seu painel de notificações tem 24 alertas para revisar!",
+          "desc": "Remova as notificações de que você não precisa mais.",
+          "buttonText": "Verificar"
+        },
+        "es-MX": {
+          "title": "📣 ¡Tu panel de notificaciones tiene 24 alertas para revisar!",
+          "desc": "Elimina las notificaciones que ya no necesitas.",
+          "buttonText": "Comprobar"
+        },
+        "es-ES": {
+          "title": "📣 ¡Tu panel de notificaciones tiene 24 alertas para revisar!",
+          "desc": "Elimina las notificaciones que ya no necesitas.",
+          "buttonText": "Comprobar"
+        },
+        "id-ID": {
+          "title": "📣 Panel notifikasi Anda memiliki 24 peringatan untuk ditinjau!",
+          "desc": "Hapus notifikasi yang tidak lagi diperlukan.",
+          "buttonText": "Periksa"
+        },
+        "hi-IN": {
+          "title": "📣 आपके नोटिफ़िकेशन पैनल में 24 अलर्ट हैं!",
+          "desc": "जिन नोटिफ़िकेशन की ज़रूरत नहीं उन्हें हटाएँ।",
+          "buttonText": "जाँचें"
+        },
+        "ja-JP": {
+          "title": "📣 通知パネルに確認できる通知が24件あります！",
+          "desc": "不要な通知を削除しましょう。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "title": "📣 알림 패널에 확인할 알림 24개가 있습니다!",
+          "desc": "더 이상 필요하지 않은 알림을 삭제하세요.",
+          "buttonText": "확인"
+        }
+      }
+    },
+    {
+      "id": "local_021_battery",
+      "title": "⚠️ Your battery is at 18% — time for a quick check!",
+      "desc": "Monitor temperature, health, and charging status.",
+      "buttonText": "Check",
+      "iconType": 1007,
+      "actionType": 1007,
+      "translations": {
+        "pt-BR": {
+          "title": "⚠️ Sua bateria está em 18% — faça uma verificação rápida!",
+          "desc": "Monitore a temperatura, a saúde e o status do carregamento.",
+          "buttonText": "Verificar"
+        },
+        "es-MX": {
+          "title": "⚠️ La batería está al 18 %: ¡es hora de revisarla!",
+          "desc": "Controla la temperatura, la salud y el estado de carga.",
+          "buttonText": "Comprobar"
+        },
+        "es-ES": {
+          "title": "⚠️ La batería está al 18 %: ¡es hora de revisarla!",
+          "desc": "Controla la temperatura, la salud y el estado de carga.",
+          "buttonText": "Comprobar"
+        },
+        "id-ID": {
+          "title": "⚠️ Baterai Anda berada di 18% — periksa sekarang!",
+          "desc": "Pantau suhu, kesehatan, dan status pengisian daya.",
+          "buttonText": "Periksa"
+        },
+        "hi-IN": {
+          "title": "⚠️ आपकी बैटरी 18% पर है—जल्दी जाँच करें!",
+          "desc": "तापमान, स्वास्थ्य और चार्जिंग स्थिति देखें।",
+          "buttonText": "जाँचें"
+        },
+        "ja-JP": {
+          "title": "⚠️ バッテリー残量は18%です—状態を確認しましょう！",
+          "desc": "温度、状態、充電状況を確認できます。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "title": "⚠️ 배터리 잔량이 18%입니다—빠르게 확인하세요!",
+          "desc": "온도, 상태, 충전 정보를 확인하세요.",
+          "buttonText": "확인"
+        }
+      }
+    },
+    {
+      "id": "local_022_network",
+      "title": "🌐 2.6 GB of network traffic needs a quick check!",
+      "desc": "Check recent network activity and manage your data usage.",
+      "buttonText": "Open",
+      "iconType": 2,
+      "actionType": 2,
+      "translations": {
+        "pt-BR": {
+          "title": "🌐 2,6 GB de tráfego de rede precisa de uma verificação!",
+          "desc": "Veja a atividade recente e gerencie o uso de dados.",
+          "buttonText": "Abrir"
+        },
+        "es-MX": {
+          "title": "🌐 ¡Hay 2,6 GB de tráfico de red para revisar!",
+          "desc": "Comprueba la actividad reciente y gestiona el uso de datos.",
+          "buttonText": "Abrir"
+        },
+        "es-ES": {
+          "title": "🌐 ¡Hay 2,6 GB de tráfico de red para revisar!",
+          "desc": "Comprueba la actividad reciente y gestiona el uso de datos.",
+          "buttonText": "Abrir"
+        },
+        "id-ID": {
+          "title": "🌐 2,6 GB lalu lintas jaringan perlu diperiksa!",
+          "desc": "Periksa aktivitas terbaru dan kelola penggunaan data.",
+          "buttonText": "Buka"
+        },
+        "hi-IN": {
+          "title": "🌐 2.6 GB नेटवर्क ट्रैफ़िक की जाँच ज़रूरी है!",
+          "desc": "हाल की नेटवर्क गतिविधि देखें और डेटा उपयोग प्रबंधित करें।",
+          "buttonText": "खोलें"
+        },
+        "ja-JP": {
+          "title": "🌐 2.6 GBの通信量を確認しましょう！",
+          "desc": "最近の通信状況を確認し、データ使用量を管理できます。",
+          "buttonText": "開く"
+        },
+        "ko-KR": {
+          "title": "🌐 네트워크 트래픽 2.6GB를 확인하세요!",
+          "desc": "최근 네트워크 활동을 확인하고 데이터 사용량을 관리하세요.",
+          "buttonText": "열기"
+        }
+      }
+    },
+    {
+      "id": "local_023_apps",
+      "title": "🧩 12 apps are ready for a quick check!",
+      "desc": "Check your app list and keep your phone organized.",
+      "buttonText": "Open",
+      "iconType": 1003,
+      "actionType": 1003,
+      "translations": {
+        "pt-BR": {
+          "title": "🧩 12 apps estão prontos para uma verificação rápida!",
+          "desc": "Confira a lista de apps e mantenha seu telefone organizado.",
+          "buttonText": "Abrir"
+        },
+        "es-MX": {
+          "title": "🧩 ¡Hay 12 apps listas para una revisión rápida!",
+          "desc": "Revisa tu lista de apps y mantén tu teléfono organizado.",
+          "buttonText": "Abrir"
+        },
+        "es-ES": {
+          "title": "🧩 ¡Hay 12 aplicaciones listas para una revisión rápida!",
+          "desc": "Revisa tu lista de aplicaciones y mantén tu móvil organizado.",
+          "buttonText": "Abrir"
+        },
+        "id-ID": {
+          "title": "🧩 12 aplikasi siap diperiksa dengan cepat!",
+          "desc": "Periksa daftar aplikasi dan jaga ponsel tetap rapi.",
+          "buttonText": "Buka"
+        },
+        "hi-IN": {
+          "title": "🧩 12 ऐप त्वरित जाँच के लिए तैयार हैं!",
+          "desc": "ऐप सूची देखें और फ़ोन व्यवस्थित रखें।",
+          "buttonText": "खोलें"
+        },
+        "ja-JP": {
+          "title": "🧩 アプリ12件をすぐに確認できます！",
+          "desc": "アプリ一覧を確認してスマホを整理しましょう。",
+          "buttonText": "開く"
+        },
+        "ko-KR": {
+          "title": "🧩 앱 12개를 빠르게 확인할 수 있습니다!",
+          "desc": "앱 목록을 확인해 휴대전화를 깔끔하게 관리하세요.",
+          "buttonText": "열기"
+        }
+      }
+    },
+    {
+      "id": "local_024_unused",
+      "title": "🗃️ 1.2 GB of unused files found!",
+      "desc": "Choose files you no longer need and free up storage.",
+      "buttonText": "Clean",
+      "iconType": 4,
+      "actionType": 4,
+      "translations": {
+        "pt-BR": {
+          "title": "🗃️ 1,2 GB de arquivos não usados encontrados!",
+          "desc": "Escolha arquivos de que não precisa mais e libere armazenamento.",
+          "buttonText": "Limpar"
+        },
+        "es-MX": {
+          "title": "🗃️ ¡Encontramos 1,2 GB de archivos sin usar!",
+          "desc": "Elige los archivos que ya no necesitas y libera espacio.",
+          "buttonText": "Limpiar"
+        },
+        "es-ES": {
+          "title": "🗃️ ¡Hemos encontrado 1,2 GB de archivos sin usar!",
+          "desc": "Elige los archivos que ya no necesitas y libera espacio.",
+          "buttonText": "Limpiar"
+        },
+        "id-ID": {
+          "title": "🗃️ Ditemukan 1,2 GB file yang tidak digunakan!",
+          "desc": "Pilih file yang tidak lagi diperlukan dan bebaskan penyimpanan.",
+          "buttonText": "Bersihkan"
+        },
+        "hi-IN": {
+          "title": "🗃️ 1.2 GB की इस्तेमाल न होने वाली फ़ाइलें मिलीं!",
+          "desc": "अनावश्यक फ़ाइलें चुनकर स्टोरेज खाली करें।",
+          "buttonText": "क्लीन"
+        },
+        "ja-JP": {
+          "title": "🗃️ 使っていないファイルが1.2 GB見つかりました！",
+          "desc": "不要なファイルを選んで空き容量を増やしましょう。",
+          "buttonText": "クリーン"
+        },
+        "ko-KR": {
+          "title": "🗃️ 사용하지 않는 파일 1.2GB를 찾았습니다!",
+          "desc": "더 이상 필요하지 않은 파일을 선택해 저장공간을 확보하세요.",
+          "buttonText": "정리"
+        }
+      }
+    },
+    {
+      "id": "local_025_screenshots",
+      "title": "📸 14 screenshots are waiting for review!",
+      "desc": "Organize your screenshot folder and make room for new images.",
+      "buttonText": "Review",
+      "iconType": 5,
+      "actionType": 5,
+      "translations": {
+        "pt-BR": {
+          "title": "📸 14 capturas de tela estão esperando para revisão!",
+          "desc": "Organize a pasta de capturas e abra espaço para novas imagens.",
+          "buttonText": "Revisar"
+        },
+        "es-MX": {
+          "title": "📸 ¡Hay 14 capturas de pantalla para revisar!",
+          "desc": "Organiza la carpeta de capturas y deja espacio para nuevas imágenes.",
+          "buttonText": "Revisar"
+        },
+        "es-ES": {
+          "title": "📸 ¡Hay 14 capturas de pantalla para revisar!",
+          "desc": "Organiza la carpeta de capturas y deja espacio para nuevas imágenes.",
+          "buttonText": "Revisar"
+        },
+        "id-ID": {
+          "title": "📸 14 tangkapan layar menunggu untuk ditinjau!",
+          "desc": "Rapikan folder tangkapan layar dan buat ruang untuk gambar baru.",
+          "buttonText": "Tinjau"
+        },
+        "hi-IN": {
+          "title": "📸 14 स्क्रीनशॉट समीक्षा के लिए तैयार हैं!",
+          "desc": "स्क्रीनशॉट फ़ोल्डर व्यवस्थित करें और नई तस्वीरों के लिए जगह बनाएँ।",
+          "buttonText": "समीक्षा करें"
+        },
+        "ja-JP": {
+          "title": "📸 スクリーンショット14枚を確認できます！",
+          "desc": "スクリーンショットフォルダを整理して新しい画像のための容量を確保しましょう。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "title": "📸 스크린샷 14개를 확인할 수 있습니다!",
+          "desc": "스크린샷 폴더를 정리하고 새 이미지를 위한 공간을 확보하세요.",
+          "buttonText": "확인"
+        }
+      }
+    },
+    {
+      "id": "local_026_clean",
+      "title": "⚠️ Your phone has 1.8 GB of unnecessary files!",
+      "desc": "Check what you can safely remove.",
+      "buttonText": "Check",
+      "iconType": 1,
+      "actionType": 1,
+      "translations": {
+        "pt-BR": {
+          "title": "⚠️ Seu telefone tem 1,8 GB de arquivos desnecessários!",
+          "desc": "Veja o que pode ser removido com segurança.",
+          "buttonText": "Verificar"
+        },
+        "es-MX": {
+          "title": "⚠️ ¡Tu teléfono tiene 1,8 GB de archivos innecesarios!",
+          "desc": "Comprueba qué puedes eliminar de forma segura.",
+          "buttonText": "Comprobar"
+        },
+        "es-ES": {
+          "title": "⚠️ ¡Tu móvil tiene 1,8 GB de archivos innecesarios!",
+          "desc": "Comprueba qué puedes eliminar de forma segura.",
+          "buttonText": "Comprobar"
+        },
+        "id-ID": {
+          "title": "⚠️ Ponsel Anda memiliki 1,8 GB file yang tidak diperlukan!",
+          "desc": "Periksa apa yang dapat dihapus dengan aman.",
+          "buttonText": "Periksa"
+        },
+        "hi-IN": {
+          "title": "⚠️ आपके फ़ोन में 1.8 GB अनावश्यक फ़ाइलें हैं!",
+          "desc": "देखें कि क्या सुरक्षित रूप से हटाया जा सकता है।",
+          "buttonText": "जाँचें"
+        },
+        "ja-JP": {
+          "title": "⚠️ スマホに不要なファイルが1.8 GBあります！",
+          "desc": "安全に削除できる項目を確認しましょう。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "title": "⚠️ 휴대전화에 불필요한 파일 1.8GB가 있습니다!",
+          "desc": "안전하게 삭제할 항목을 확인하세요.",
+          "buttonText": "확인"
+        }
+      }
+    },
+    {
+      "id": "local_027_large",
+      "title": "💾 3.7 GB may be worth reviewing!",
+      "desc": "Find files you no longer need before storage gets low.",
+      "buttonText": "Free",
+      "iconType": 1001,
+      "actionType": 1001,
+      "translations": {
+        "pt-BR": {
+          "title": "💾 Vale a pena revisar 3,7 GB!",
+          "desc": "Encontre arquivos que você não precisa mais antes que o armazenamento fique cheio.",
+          "buttonText": "Liberar"
+        },
+        "es-MX": {
+          "title": "💾 ¡Merece la pena revisar 3,7 GB!",
+          "desc": "Encuentra archivos que ya no necesitas antes de quedarte sin espacio.",
+          "buttonText": "Liberar"
+        },
+        "es-ES": {
+          "title": "💾 ¡Merece la pena revisar 3,7 GB!",
+          "desc": "Encuentra archivos que ya no necesitas antes de quedarte sin espacio.",
+          "buttonText": "Liberar"
+        },
+        "id-ID": {
+          "title": "💾 3,7 GB mungkin perlu ditinjau!",
+          "desc": "Temukan file yang tidak lagi diperlukan sebelum ruang habis.",
+          "buttonText": "Bebaskan"
+        },
+        "hi-IN": {
+          "title": "💾 3.7 GB की फ़ाइलों की समीक्षा करें!",
+          "desc": "स्टोरेज कम होने से पहले अनावश्यक फ़ाइलें खोजें।",
+          "buttonText": "जगह खाली करें"
+        },
+        "ja-JP": {
+          "title": "💾 3.7 GB分のファイルを確認しましょう！",
+          "desc": "容量が少なくなる前に不要なファイルを見つけてください。",
+          "buttonText": "空き容量を増やす"
+        },
+        "ko-KR": {
+          "title": "💾 3.7GB의 파일을 확인해 보세요!",
+          "desc": "저장공간이 부족해지기 전에 필요 없는 파일을 찾으세요.",
+          "buttonText": "공간 확보"
+        }
+      }
+    },
+    {
+      "id": "local_028_duplicate",
+      "title": "🧹 Remove 24 repeated photos and free up space!",
+      "desc": "Choose the copies you no longer need.",
+      "buttonText": "Clean",
+      "iconType": 1005,
+      "actionType": 1005,
+      "translations": {
+        "pt-BR": {
+          "title": "🧹 Remova 24 fotos repetidas e libere espaço!",
+          "desc": "Escolha as cópias de que você não precisa mais.",
+          "buttonText": "Limpar"
+        },
+        "es-MX": {
+          "title": "🧹 ¡Elimina 24 fotos repetidas y libera espacio!",
+          "desc": "Elige las copias que ya no necesitas.",
+          "buttonText": "Limpiar"
+        },
+        "es-ES": {
+          "title": "🧹 ¡Elimina 24 fotos repetidas y libera espacio!",
+          "desc": "Elige las copias que ya no necesitas.",
+          "buttonText": "Limpiar"
+        },
+        "id-ID": {
+          "title": "🧹 Hapus 24 foto berulang dan bebaskan ruang!",
+          "desc": "Pilih salinan yang tidak lagi diperlukan.",
+          "buttonText": "Bersihkan"
+        },
+        "hi-IN": {
+          "title": "🧹 24 दोहराई गई फ़ोटो हटाकर जगह खाली करें!",
+          "desc": "जिन कॉपी की ज़रूरत नहीं है उन्हें चुनें।",
+          "buttonText": "क्लीन"
+        },
+        "ja-JP": {
+          "title": "🧹 重複写真24枚を削除して空き容量を増やしましょう！",
+          "desc": "不要なコピーを選択してください。",
+          "buttonText": "クリーン"
+        },
+        "ko-KR": {
+          "title": "🧹 중복 사진 24개를 삭제해 공간을 확보하세요!",
+          "desc": "더 이상 필요하지 않은 사본을 선택하세요.",
+          "buttonText": "정리"
+        }
+      }
+    },
+    {
+      "id": "local_029_malware",
+      "title": "⚠️ 3 suspicious items need review!",
+      "desc": "Check your apps and APKs for known security risks.",
+      "buttonText": "Scan",
+      "iconType": 1006,
+      "actionType": 1006,
+      "translations": {
+        "pt-BR": {
+          "title": "⚠️ 3 itens suspeitos precisam ser revisados!",
+          "desc": "Verifique seus apps e APKs em busca de riscos de segurança conhecidos.",
+          "buttonText": "Verificar"
+        },
+        "es-MX": {
+          "title": "⚠️ ¡Hay 3 elementos sospechosos para revisar!",
+          "desc": "Comprueba tus apps y APK en busca de riesgos de seguridad conocidos.",
+          "buttonText": "Analizar"
+        },
+        "es-ES": {
+          "title": "⚠️ ¡Hay 3 elementos sospechosos para revisar!",
+          "desc": "Comprueba tus aplicaciones y APK en busca de riesgos de seguridad conocidos.",
+          "buttonText": "Analizar"
+        },
+        "id-ID": {
+          "title": "⚠️ 3 item mencurigakan perlu ditinjau!",
+          "desc": "Periksa aplikasi dan APK untuk risiko keamanan yang dikenal.",
+          "buttonText": "Pindai"
+        },
+        "hi-IN": {
+          "title": "⚠️ 3 संदिग्ध आइटम की समीक्षा ज़रूरी है!",
+          "desc": "ज्ञात सुरक्षा जोखिमों के लिए ऐप और APK जाँचें।",
+          "buttonText": "स्कैन करें"
+        },
+        "ja-JP": {
+          "title": "⚠️ 確認が必要な不審な項目が3件あります！",
+          "desc": "アプリやAPKに既知のセキュリティリスクがないか確認しましょう。",
+          "buttonText": "スキャン"
+        },
+        "ko-KR": {
+          "title": "⚠️ 확인이 필요한 의심스러운 항목 3개가 있습니다!",
+          "desc": "앱과 APK에서 알려진 보안 위험을 확인하세요.",
+          "buttonText": "스캔"
+        }
+      }
+    }
+  ]
+}

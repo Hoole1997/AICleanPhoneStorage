@@ -20,7 +20,8 @@ class CleanApplication : Application(), NotificationRuntimeOwner {
     internal val languages: AppLanguageController by lazy { AppLanguageController(this) }
     internal val homeCleaning by lazy { HomeCleaningState(BuildConfig.DEFAULT_USER_CHANNEL == "paid") }
     private val notificationHost: CleanNotificationHost by lazy {
-        CleanNotificationHost(this, homeCleaning, appCount = { container.installedAppCount.count.value }) {
+        CleanNotificationHost(this, homeCleaning, appCount = { container.installedAppCount.count.value },
+            awaitLanguage = { languages.ready.await() }) {
             notificationRuntime.refreshResident()
         }
     }

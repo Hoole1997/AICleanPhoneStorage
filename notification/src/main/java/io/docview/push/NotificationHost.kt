@@ -10,6 +10,10 @@ interface NotificationHost {
     val residentChannelName: String
     val pushChannelName: String
     val versionName: String
+    /** 普通通知构建时读取 APP 当前语言，不缓存初始化时的语言。 */
+    val contentLanguageTag: String get() = "en"
+    /** 冷启动先恢复 APP 语言，防止后台首条通知抢在语言偏好恢复之前生成。 */
+    suspend fun awaitContentLanguage() {}
     fun contentIntent(destination: NotificationDestination): PendingIntent
     fun residentViews(compact: Boolean): RemoteViews
     fun residentContent() = io.docview.push.analytics.NotificationContent(appName, "")

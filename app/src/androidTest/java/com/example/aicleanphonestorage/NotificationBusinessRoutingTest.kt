@@ -35,6 +35,10 @@ class NotificationBusinessRoutingTest {
             NotificationDestination.LARGE_FILES to R.drawable.ic_tool_large_files,
             NotificationDestination.NOTIFICATION_CLEANER to R.drawable.ic_tool_notifications,
             NotificationDestination.APP_MANAGER to R.drawable.ic_tool_apps,
+            NotificationDestination.VIDEOS to R.drawable.ic_tool_videos,
+            NotificationDestination.DUPLICATE_PHOTOS to R.drawable.ic_tool_similar,
+            NotificationDestination.MALWARE to R.drawable.malware_entry,
+            NotificationDestination.BATTERY to R.drawable.ic_tool_battery,
         )
         val pendingIntents = NotificationDestination.entries.map { destination ->
             val content = Content("test", "Review", "Choose what to keep", "Open", destination.contentType, destination.contentType)

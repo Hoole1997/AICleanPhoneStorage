@@ -71,30 +71,11 @@
         </LinearLayout>
     </LinearLayout>
 
-    <FrameLayout
-        android:layout_marginTop="29dp"
+    <include
+        layout="@layout/view_notification_general_action"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ProgressBar
-            android:layout_width="match_parent"
-            android:layout_height="39dp"
-            android:indeterminate="true"
-            android:indeterminateDrawable="@drawable/noti_timing_notify_btn_long"
-            android:minWidth="0dp"
-            android:minHeight="0dp" />
-
-        <TextView
-            android:id="@+id/tvAction"
-            android:layout_width="match_parent"
-            android:layout_height="39dp"
-            android:gravity="center"
-            android:text="Clear"
-            android:textStyle="bold"
-            android:background="@android:color/transparent"
-            android:textColor="#fff"
-            android:textSize="14sp" />
-    </FrameLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="29dp" />
 
 
 </LinearLayout>

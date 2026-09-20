@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- RemoteViews 共用操作区：设计尺寸仅为最小高度，译文和 OEM 大字体按真实字体度量撑开。 -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/noti_timing_notify_btn_long"
+        android:minWidth="0dp"
+        android:minHeight="0dp" />
+
+    <TextView
+        android:id="@+id/tvAction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/notification_general_action_min_height"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="4dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:background="@android:color/transparent"
+        android:textColor="#fff"
+        android:textSize="@dimen/notification_general_action_text_size" />
+</FrameLayout>

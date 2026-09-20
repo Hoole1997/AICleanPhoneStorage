@@ -1,143 +1,58 @@
 package io.docview.push.config
 
 import android.content.Context
-import android.content.SharedPreferences
-import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
-import com.google.gson.reflect.TypeToken
-import io.docview.push.utils.Logger
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import io.docview.push.host.PushStringPreference
+import io.docview.push.host.PushEnvironment
 import io.docview.push.host.PushRemoteConfig
-import java.io.IOException
+import io.docview.push.utils.Logger
+import java.time.LocalDate
 
-/**
- * 推送通知内容控制器
- */
+/** 普通通知文案池：IO 初始化与轮播，发送条件/频次仍由原有 CheckCtrl、TimingCtrl 管理。 */
 object ContentController {
+    private var storage: DayContentStorage? = null
+    private var rotation: DayContentRotation? = null
+    private var pools: Map<Int, DayContentPool> = emptyMap()
+    @Volatile private var catalog: DayContentCatalog? = null
 
-    private const val CONTENT_CONFIG_FILE_NAME = "pvvvvush_content_config.json"
-    private const val SP_NAME = "push_content_prefs"
-    private const val KEY_CURRENT_INDEX = "current_index"
-
-    @Volatile private var pushContents: List<Content>? = null
-    private lateinit var sharedPreferences: SharedPreferences
-    private var contentJsonFromRemote by PushStringPreference("n12121otificationContenwewetJsonRemote", "")
-
-    /**
-     * 初始化内容配置
-     * @param context 上下文
-     * @return 是否初始化成功
-     */
-    fun initialize(context: Context): Boolean {
+    /** 由 NotificationRuntime 的同一 IO 初始化任务调用；远程激活后复用游标、更新池快照。 */
+    @Synchronized fun initialize(context: Context, firstObservedEpochDay: Long = LocalDate.now().toEpochDay()): Boolean {
         return try {
-            sharedPreferences = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
-            val jsonString = contentJsonFromRemote.orEmpty().takeIf { it.isNotEmpty() }?:loadContentConfigFromAssets(context)
-            pushContents = runCatching { parseContentConfig(jsonString) }
-                .getOrElse { parseContentConfig(loadContentConfigFromAssets(context)) }
-            Logger.d("推送内容配置初始化成功，共 ${pushContents?.size} 条")
-
-            // 异步获取远程配置
-            fetchRemoteContent()
-
-            true
-        } catch (e: Exception) {
-            Logger.e("推送内容配置初始化失败", e)
-            false
-        }
-    }
-
-    /**
-     * 获取下一个推送内容（顺序获取）
-     * @return 推送内容，首次调用返回第一条，之后按顺序返回
-     */
-    @Synchronized fun getNextContent(): Content? {
-        val contents = pushContents ?: return null
-        if (contents.isEmpty()) return null
-
-        val currentIndex = getCurrentIndex()
-        val nextIndex = if (currentIndex == -1) 0 else (currentIndex + 1) % contents.size
-
-        // 保存下一个索引
-        saveCurrentIndex(nextIndex)
-
-        val content = contents[nextIndex]
-        Logger.d("获取推送内容: ${content.id}, 索引: $nextIndex")
-
-        return content
-    }
-
-    /**
-     * 检查是否已初始化
-     * @return 是否已初始化
-     */
-    fun isInitialized(): Boolean {
-        return pushContents != null
-    }
-
-    /**
-     * 异步获取远程推送内容配置
-     */
-    private fun fetchRemoteContent() {
-        io.docview.push.host.PushEnvironment.scope.launch {
-            try {
-                Logger.d("开始获取远程推送内容配置")
-                val remoteJsonString = PushRemoteConfig.getString("pushContentJson", "")
-
-                if (remoteJsonString != null && remoteJsonString.isNotEmpty()) {
-                    Logger.d("成功获取远程推送内容配置")
-                    val remoteContents = parseContentConfig(remoteJsonString)
-
-                    // 更新本地配置
-                    pushContents = remoteContents
-                    contentJsonFromRemote = remoteJsonString
-                    Logger.d("远程推送内容配置更新成功，共 ${remoteContents.size} 条")
-                } else {
-                    Logger.w("远程推送内容配置为空或获取超时，使用本地配置")
-                }
-
-            } catch (e: Exception) {
-                Logger.e("获取远程推送内容配置异常", e)
+            val disk = storage ?: DayContentStorage(context.applicationContext, firstObservedEpochDay).also { storage = it }
+            if (rotation == null) rotation = DayContentRotation(disk.firstLaunchEpochDay, disk::readIndex, disk::writeIndex, log = { Logger.d(it) })
+            val today = LocalDate.now().toEpochDay()
+            Logger.d("[推送日池] 日龄基准：首次启动日期=${LocalDate.ofEpochDay(disk.firstLaunchEpochDay)}，" +
+                "当前日期=${LocalDate.ofEpochDay(today)}，实际日龄=${(today - disk.firstLaunchEpochDay).coerceAtLeast(0) + 1}，按自然日计算")
+            val next = DayContentPool.days.associateWith { day ->
+                resolveDayContentPool(
+                    day = day,
+                    remoteJson = PushRemoteConfig.getString(DayContentPool.key(day), "", MAX_DAY_POOL_CHARS),
+                    current = pools[day],
+                    cached = { disk.cached(day) },
+                    local = { context.assets.open("${DayContentPool.key(day)}.json").bufferedReader().use { it.readText() } },
+                    cacheRemote = { json ->
+                        runCatching { disk.cache(day, json) }.onFailure { Logger.e("[推送日池] 缓存写入失败：日池=D$day，异常类型=${it.javaClass.simpleName}，本次仍使用有效远程文案") }
+                    },
+                    log = { Logger.d(it) },
+                )
             }
+            pools = next
+            catalog = DayContentCatalog(next)
+            Logger.d("[推送日池] 初始化完成：D1–D5 已就绪，D6+ 按 D1→D5 合并，共 ${next.values.sumOf { it.contents.size }} 条")
+            true
+        } catch (error: Exception) {
+            Logger.e("[推送日池] 初始化失败：异常类型=${error.javaClass.simpleName}，${if (catalog != null) "保留已有有效文案池" else "文案池尚不可用"}")
+            catalog != null
         }
     }
 
-    /**
-     * 从 assets 加载内容配置文件
-     * @param context 上下文
-     * @return JSON 字符串
-     */
-    private fun loadContentConfigFromAssets(context: Context): String {
-        return try {
-            context.assets.open(CONTENT_CONFIG_FILE_NAME).bufferedReader().use { it.readText() }
-        } catch (e: IOException) {
-            Logger.e("加载推送内容配置文件失败", e)
-            throw e
+    /** 每次取用重新检查自然日和 APP 语言；语言切换不清空游标或新增轮询。 */
+    @Synchronized fun getNextContent(): Content? {
+        val current = catalog ?: run {
+            Logger.w("[推送日池] 暂不取用文案：文案池尚未初始化完成")
+            return null
         }
+        return rotation?.next(current, LocalDate.now().toEpochDay(), PushEnvironment.host.contentLanguageTag)
     }
 
-    /**
-     * 解析内容配置 JSON
-     * @param jsonString JSON 字符串
-     * @return 内容列表
-     */
-    private fun parseContentConfig(jsonString: String): List<Content> = parsePushContents(jsonString)
+    fun isInitialized(): Boolean = catalog != null
 
-    /**
-     * 获取当前索引
-     * @return 当前索引，首次调用返回-1
-     */
-    private fun getCurrentIndex(): Int {
-        return sharedPreferences.getInt(KEY_CURRENT_INDEX, -1)
-    }
-
-    /**
-     * 保存当前索引到 SharedPreferences
-     * @param index 索引
-     */
-    private fun saveCurrentIndex(index: Int) {
-        sharedPreferences.edit().putInt(KEY_CURRENT_INDEX, index).apply()
-    }
 }

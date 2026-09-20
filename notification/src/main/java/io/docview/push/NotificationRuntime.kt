@@ -25,6 +25,8 @@ class NotificationRuntime(context: Context, host: NotificationHost) {
 
     fun initialize() {
         if (started.getAndSet(true)) return
+        // 捕获首次进程启动所在自然日，避免 IO 排队跨午夜后误记为次日；不使用安装时间。
+        val firstObservedEpochDay = java.time.LocalDate.now().toEpochDay()
         io.docview.push.analytics.NotificationVisibility.install(app as Application)
         Utils.init(app)
         PushEnvironment.scope.launch {
@@ -32,7 +34,8 @@ class NotificationRuntime(context: Context, host: NotificationHost) {
                 PushPreferences.initialize(app)
                 ResetCtrl.getInstance().initialize(app)
                 ConfigCtrl.initialize(app)
-                ContentController.initialize(app)
+                PushEnvironment.host.awaitContentLanguage()
+                ContentController.initialize(app, firstObservedEpochDay)
                 CheckCtrl.getInstance().initialize(app)
                 TriggerCtrl.initializeChannels(app)
                 // 清除旧实现的两个固定通知，迁移后只由新模块发布。
@@ -43,7 +46,7 @@ class NotificationRuntime(context: Context, host: NotificationHost) {
                 ready.complete(Unit)
                 PushRemoteConfig.initialize()
                 ConfigCtrl.initialize(app)
-                ContentController.initialize(app)
+                ContentController.initialize(app, firstObservedEpochDay)
             } catch (error: CancellationException) { throw error }
             catch (error: Exception) {
                 ready.completeExceptionally(error)

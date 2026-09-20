@@ -19,6 +19,10 @@ class ContentBusinessContractTest {
             Content.TYPE_LARGE_FILES to NotificationDestination.LARGE_FILES,
             Content.TYPE_NOTIFICATION_CLEANER to NotificationDestination.NOTIFICATION_CLEANER,
             Content.TYPE_APP_MANAGER to NotificationDestination.APP_MANAGER,
+            Content.TYPE_VIDEOS to NotificationDestination.VIDEOS,
+            Content.TYPE_DUPLICATE_PHOTOS to NotificationDestination.DUPLICATE_PHOTOS,
+            Content.TYPE_MALWARE to NotificationDestination.MALWARE,
+            Content.TYPE_BATTERY to NotificationDestination.BATTERY,
         )
         for ((type, destination) in expected) {
             val content = parsePushContents("[${json(type)}]").single()

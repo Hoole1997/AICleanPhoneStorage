@@ -21,6 +21,10 @@
     @com.google.gson.annotations.SerializedName <fields>;
 }
 
+-keep,allowobfuscation class io.docview.push.config.ContentTranslation {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+
 # 地震扩展虽不属于当前清理入口，源码和协议仍保留；嵌套泛型元素也经 Gson 创建。
 -keep,allowobfuscation class io.docview.push.earthquake.EarthquakeResponse {
     @com.google.gson.annotations.SerializedName <fields>;

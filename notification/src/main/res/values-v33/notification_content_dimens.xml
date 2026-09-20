@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 保持各系统版本普通字号的设计尺寸，大字号允许自然增高。 -->
+    <dimen name="notification_general_action_min_height">32dp</dimen>
+    <dimen name="notification_general_action_text_size">13sp</dimen>
+</resources>

@@ -22,6 +22,7 @@ internal class CleanNotificationHost(
     context: Context,
     private val cleaning: HomeCleaningState? = null,
     private val appCount: () -> Int? = { null },
+    private val awaitLanguage: suspend () -> Unit = {},
     private val refreshResident: () -> Unit = {},
 ) : NotificationHost {
     private val app = context.applicationContext
@@ -58,6 +59,12 @@ internal class CleanNotificationHost(
     // 用户选择双层屏幕事件监听；不启用 periodicPushEnabled 的旧定时推送。
     override val backgroundServiceEnabled = true
 
+    override suspend fun awaitContentLanguage() = awaitLanguage()
+
+    override val contentLanguageTag: String
+        get() = AppCompatDelegate.getApplicationLocales()[0]?.toLanguageTag()
+            ?: app.resources.configuration.locales[0].toLanguageTag()
+
     override val smallIcon = R.drawable.ic_home_clean
     override val appName get() = localized().getString(R.string.app_name)
     override val residentChannelName get() = localized().getString(R.string.push_shortcuts_channel)
@@ -77,6 +84,10 @@ internal class CleanNotificationHost(
         NotificationDestination.LARGE_FILES -> R.drawable.ic_tool_large_files
         NotificationDestination.NOTIFICATION_CLEANER -> R.drawable.ic_tool_notifications
         NotificationDestination.APP_MANAGER -> R.drawable.ic_tool_apps
+        NotificationDestination.VIDEOS -> R.drawable.ic_tool_videos
+        NotificationDestination.DUPLICATE_PHOTOS -> R.drawable.ic_tool_similar
+        NotificationDestination.MALWARE -> R.drawable.malware_entry
+        NotificationDestination.BATTERY -> R.drawable.ic_tool_battery
     }
 
     override fun contentIntent(destination: NotificationDestination) =

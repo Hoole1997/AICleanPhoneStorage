@@ -422,6 +422,10 @@ class MainActivity : AppCompatActivity() {
             NotificationDestination.LARGE_FILES -> homeActions.onToolSelected(HomeTool.LargeFiles)
             NotificationDestination.NOTIFICATION_CLEANER -> homeActions.onToolSelected(HomeTool.Notifications)
             NotificationDestination.APP_MANAGER -> homeActions.onToolSelected(HomeTool.Apps)
+            NotificationDestination.VIDEOS -> homeActions.onToolSelected(HomeTool.Videos)
+            NotificationDestination.DUPLICATE_PHOTOS -> homeActions.onToolSelected(HomeTool.Similar)
+            NotificationDestination.MALWARE -> homeActions.onMalwareScan()
+            NotificationDestination.BATTERY -> homeActions.onToolSelected(HomeTool.Battery)
         }
     }
 
