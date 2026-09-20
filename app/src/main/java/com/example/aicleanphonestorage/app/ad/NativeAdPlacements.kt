@@ -5,6 +5,7 @@ import com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature
 
 /** 原生 Slot Key 与需求总表一致；APP/NETWORK 的完成页位预留，不新增不存在的业务页面。 */
 internal enum class NativeAdFeature(val suffix: String) {
+    VIRUS("virus"),
     JUNK("junk"),
     SCREENSHOTS("screenshots"),
     VIDEO("video"),

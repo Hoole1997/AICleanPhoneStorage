@@ -1,5 +1,8 @@
 package com.example.aicleanphonestorage.feature.filecleaner.ui
 
+import com.example.aicleanphonestorage.app.ad.InterstitialActions
+import com.example.aicleanphonestorage.app.ad.InterstitialPlacements
+import com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature
 import android.content.Intent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,7 +18,12 @@ internal class CleanupEntryCoordinator(
     private val model: CleanupEntryViewModel,
     private val permissions: PermissionCoordinator,
 ) {
+    private val ads = InterstitialActions(activity)
+
     init {
+        CleanupFeature.entries.forEach { feature ->
+            ads.register(InterstitialPlacements.scan(feature)) { token -> openResult(feature, token) }
+        }
         permissions.register(
             ROUTE,
             before = {
@@ -107,25 +115,22 @@ internal class CleanupEntryCoordinator(
                 )
                 .showNow(manager, CleanupMessageDialog.TAG)
         if (state is CleanupEntryState.Ready) {
+            if (ads.busy) return
+            // 消费成功结果后仅保留索引 ID；SDK 关闭/失败后由当前 Activity 续接导航。
             val handle = model.consume() ?: return
-            activity.startActivity(
-                Intent(
-                        activity,
-                        if (
-                            handle.feature ==
-                                com.example.aicleanphonestorage.feature.filecleaner.data
-                                    .CleanupFeature
-                                    .SMART_CLEAN
-                        )
-                            com.example.aicleanphonestorage.feature.junkcleaner.ui
-                                    .JunkCleaningActivity::class
-                                .java
-                        else FileCleanupActivity::class.java,
-                    )
-                    .putExtra(FileCleanupActivity.EXTRA_SCAN, handle.id)
-                    .putExtra(FileCleanupActivity.EXTRA_FEATURE, handle.feature.name)
-            )
+            val slot = InterstitialPlacements.scan(handle.feature)
+            ads.run(slot, slot, handle.id)
         }
+    }
+
+    private fun openResult(feature: CleanupFeature, token: Long) {
+        activity.startActivity(
+            Intent(activity, if (feature == CleanupFeature.SMART_CLEAN)
+                com.example.aicleanphonestorage.feature.junkcleaner.ui.JunkCleaningActivity::class.java
+                else FileCleanupActivity::class.java)
+                .putExtra(FileCleanupActivity.EXTRA_SCAN, token)
+                .putExtra(FileCleanupActivity.EXTRA_FEATURE, feature.name)
+        )
     }
 
     private fun toast() =

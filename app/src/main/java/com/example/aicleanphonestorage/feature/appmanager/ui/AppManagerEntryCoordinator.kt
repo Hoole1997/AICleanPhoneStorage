@@ -1,5 +1,7 @@
 package com.example.aicleanphonestorage.feature.appmanager.ui
 
+import com.example.aicleanphonestorage.app.ad.InterstitialActions
+import com.example.aicleanphonestorage.app.ad.InterstitialPlacements
 import android.content.Intent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +16,14 @@ internal class AppManagerEntryCoordinator(
     private val model: AppManagerEntryViewModel,
     private val transfer: OneShotTransfer<AppManagerCatalog>,
 ) {
+    private val ads = InterstitialActions(activity)
+
     init {
+        // 广告状态只携带 transfer 令牌，重建后仍由当前页面续接；失败也继续业务。
+        ads.register(InterstitialPlacements.APPS_SCAN) { token ->
+            activity.startActivity(Intent(activity, AppManagerActivity::class.java)
+                .putExtra(AppManagerActivity.EXTRA_CATALOG, token))
+        }
         activity.supportFragmentManager.setFragmentResultListener(CANCEL, activity) { _, result ->
             model.cancel(result.getLong(TaskLoadingDialogFragment.REQUEST_ID))
         }
@@ -50,13 +59,12 @@ internal class AppManagerEntryCoordinator(
             else dialog.render(loading)
         } else dialog?.dismiss()
         when (state) {
-            is AppManagerEntryState.Ready ->
+            is AppManagerEntryState.Ready -> {
+                if (ads.busy) return
                 model.consume()?.let {
-                    activity.startActivity(
-                        Intent(activity, AppManagerActivity::class.java)
-                            .putExtra(AppManagerActivity.EXTRA_CATALOG, transfer.put(it))
-                    )
+                    ads.run(InterstitialPlacements.APPS_SCAN, InterstitialPlacements.APPS_SCAN, transfer.put(it))
                 }
+            }
             AppManagerEntryState.Failed -> {
                 model.cancel()
                 Toast.makeText(activity, R.string.app_manager_load_failed, Toast.LENGTH_LONG).show()

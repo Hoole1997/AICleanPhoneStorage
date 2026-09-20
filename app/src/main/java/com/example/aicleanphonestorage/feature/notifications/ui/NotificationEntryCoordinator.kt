@@ -1,5 +1,7 @@
 package com.example.aicleanphonestorage.feature.notifications.ui
 
+import com.example.aicleanphonestorage.app.ad.InterstitialActions
+import com.example.aicleanphonestorage.app.ad.InterstitialPlacements
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -17,7 +19,14 @@ internal class NotificationEntryCoordinator(
     private val transfer: OneShotTransfer<NotificationCatalog>,
     private val permissions: PermissionCoordinator,
 ) {
+    private val ads = InterstitialActions(activity)
+
     init {
+        // 广告状态只携带 transfer 令牌，重建后仍由当前页面续接；失败也继续业务。
+        ads.register(InterstitialPlacements.NOTIFICATIONS_SCAN) { token ->
+            activity.startActivity(Intent(activity, NotificationCleanerActivity::class.java)
+                .putExtra(NotificationCleanerActivity.EXTRA_CATALOG, token))
+        }
         permissions.register(ROUTE, before = { viewModel.awaitAccess() }) { result ->
             if (result.granted) viewModel.onForeground() else viewModel.cancelEntry()
         }
@@ -82,11 +91,9 @@ internal class NotificationEntryCoordinator(
             NotificationEntryDialogFragment.create(state.phase == NotificationPhase.NeedsAccess)
                 .showNow(manager, NotificationEntryDialogFragment.TAG)
         if (state.phase == NotificationPhase.Ready) {
+            if (ads.busy) return
             val catalog = viewModel.consumeCatalog() ?: return
-            activity.startActivity(
-                Intent(activity, NotificationCleanerActivity::class.java)
-                    .putExtra(NotificationCleanerActivity.EXTRA_CATALOG, transfer.put(catalog))
-            )
+            ads.run(InterstitialPlacements.NOTIFICATIONS_SCAN, InterstitialPlacements.NOTIFICATIONS_SCAN, transfer.put(catalog))
         }
     }
 

@@ -1,6 +1,6 @@
 # 广告位与联调清单
 
-已按 [需求 v2 广告位总表](https://ai-clean-storage-home.pages.dev/requirements-v2) **v11 · 2026-09-11** 同步全部 33 个 Key；后台应使用下表名称。当前有 30 个 Key 接入实际业务入口，另有 1 个条件位与 2 个完成页预留位。接入入口不等于 SDK 一定填充，也不代表总表中每种触发场景均已实现，差异见 [审计报告](slot-key-audit.md)。
+已合并 [v1.0.1 需求第 4 章](https://pic6ktmsyi.feishu.cn/wiki/T4vOwfFKviXZBYkwCgFcH6xmnAc)（2026-09-20 核对）与原 v11 总表，共 **55 个 Key，52 个已接入实际入口**，另有 1 个条件位与 2 个预留完成页位。本次只完善广告位和业务触发，不改内置配置、远程开关、广告 ID 或频控。入口接入不代表真实 SDK 一定填充。原版审计见 [历史审计报告](slot-key-audit.md)。
 
 ## 测试开关与 SDK 参数
 
@@ -46,16 +46,35 @@
 | 32 | 流量 · 完成页 | 原生 | `native_result_network` | 预留；当前没有此完成页，不请求 |
 | 33 | 扫描中弹窗 | 原生 | `native_scanning` | 已接入；仅 showAd=true 的功能加载弹框 |
 
+## v1.0.1 第 4 章新增位
+
+| 功能 | 返回首页 | 扫描成功、进入结果页前 | 确认删除 | 功能页原生 | 结果/完成页原生 |
+| --- | --- | --- | --- | --- | --- |
+| 视频 | `back_home_video` | `scan_complete_video` | `clean_confirm_video` | `native_feature_video` | `native_result_video` |
+| 相似照片 | `back_home_duplicate` | `scan_complete_duplicate` | `clean_confirm_duplicate` | `native_feature_duplicate` | `native_result_duplicate` |
+| 病毒扫描 | `back_home_malware` | `scan_complete_virus` | 无独立位 | `native_feature_virus` | `native_result_virus` |
+
+视频和相似照片 Loading 底部继续共用 `native_scanning`。病毒扫描的返回位后缀为 **malware**，扫描完成/原生位后缀为 **virus**，严格保留文档命名。
+
+其他扫描成功位：`scan_complete_junk`、`scan_complete_screenshots`、`scan_complete_photo`、`scan_complete_large`、`scan_complete_unused`、`scan_complete_notify`、`scan_complete_apps`、`scan_complete_network`。连同上表共 11 个扫描完成插屏。
+
+- 首页各入口在真实扫描成功后消费结果，再通过 `InterstitialActions` 请求广告；广告关闭、无填充或失败均继续导航。只传索引/一次性摘要令牌，广告状态不持有 Activity 或数据列表。
+- 失败、取消、权限不足的入口不会到达成功出口；成功但没有数据仍请求广告。已有页面内排序、筛选、清理后列表刷新不算新的首页扫描入口。
+- 病毒扫描每次成功（包括 Scan Again）以扫描代次等待插屏，回调后展示结果；旧代次回调、翻页、卸载核对和系统风险刷新不重复触发。等待期间保留真实扫描进度并停止光环。
+- 病毒扫描/初始化与结果共用底部全宽原生容器，阶段变化先取消旧请求并释放 View；失败/取消收起。普通状态刷新不重复请求。
+- 病毒页顶部/系统返回使用 `back_home_malware`，复用首页恢复、焦点与首帧后的统一请求流程。APK 清理跳转仍走原有垃圾扫描入口。
+- 相似照片的确认按钮现通过既有清理协调器请求 `clean_confirm_duplicate`，回调后再校验并删除；取消确认不请求。
+
 ## 插屏来源与状态恢复
 
-- `InterstitialPlacements.clean()` 集中映射 5 个清理功能，`exit()` 集中映射同一功能的全部首页出口。通知清理两种出口统一使用 `back_home_notify`；应用管理、流量保留返回广告，不接入功能内插屏。
-- `HomeExitAdContract` 仅接受 8 个 `back_home_*`。首页恢复、获得焦点并绘制后才请求；同一 token 先消费后展示，避免回调、旋转和重复 Intent 重放。
+- `InterstitialPlacements.clean()` 集中映射 7 个清理功能，`exit()` 集中映射同一功能的全部首页出口。通知清理两种出口统一使用 `back_home_notify`；应用管理、流量保留返回广告，不接入功能内插屏。
+- `HomeExitAdContract` 仅接受 11 个 `back_home_*`。首页恢复、获得焦点并绘制后才请求；同一 token 先消费后展示，避免回调、旋转和重复 Intent 重放。
 - 来源缺失时不再生成 `file_cleanup_*` 兜底 Key：正常继续业务/返回首页，跳过无法归属的广告。恢复旧版本待展示状态时，旧 Key 会被过滤；不会再向 SDK 发送历史 Key。
 - `StartupAdCoordinator` 使用 `splash`。冷启动/通知仍先处理推送权限；热启动须通过 APP_OPEN 总控且任一平台限频，广告回调后仅关闭启动页返回原 Activity。详见 [热启动说明](hot-start.md)。
 
 ## 原生广告接入约定
 
-- 共接入 **16 个实际广告位**：首页 1、功能页 8、已有完成页 6、通用加载弹框 1。`native_result_apps`、`native_result_network` 只保留 Key，不为广告新增业务完成页。
+- 共接入 **22 个实际原生广告位**：首页 1、功能页/扫描页 11、结果/完成页 9、通用加载弹框 1。`native_result_apps`、`native_result_network` 只保留 Key，不为广告新增业务完成页。
 - `NativeAdFeature` / `NativeAdPlacements` 集中维护原生 Key。文件功能页依据 `CleanupFeature` 选择；完成页优先依据 `CompletionContract.SOURCE`，通知清理依据结果类型。无法识别的通用清理来源不猜成垃圾清理。
 - 所有 SDK 容器宽度 `match_parent`、高度 `wrap_content`，内部不设额外 padding，外部间距按所在页面布局设置，在 XML 中默认 `GONE`，不设占位素材或固定高度；显示/隐藏由 `loadNative` 完成。成功后占据正常布局空间，失败时整块收起。
 - 功能页底部固定广告（垃圾清理、截图、照片压缩、大文件、未使用文件、通知清理、应用管理、流量）与完成页底部广告均铺满可用宽度，不设置左右外边距。功能页广告位于列表下方、操作按钮上方，采用正常垂直布局避免覆盖按钮；系统栏安全区由页面处理，不加进广告容器内部。
@@ -67,4 +86,4 @@
 
 ## 验证
 
-本次编译、单元测试、模拟器时机测试与限制说明统一记录于 [审计报告](slot-key-audit.md)。
+原版验证记录见 [历史审计报告](slot-key-audit.md)；本次 v1.0.1 的 local 编译、单测、Lint、真机假回调与截图核验见 [验证记录](../verification/ads-v1.0.1/README.md)。

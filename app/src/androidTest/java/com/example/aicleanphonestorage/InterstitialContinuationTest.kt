@@ -12,6 +12,39 @@ import org.junit.runner.RunWith
 /** 假请求仅测试本应用续接机制，不请求/点击真实广告。生产请求仍使用用户提供的 AdExt。 */
 @RunWith(AndroidJUnit4::class)
 class InterstitialContinuationTest {
+    @get:org.junit.Rule val noHotStartAds = com.example.aicleanphonestorage.testing.NoHotStartAdsRule()
+    @Test fun scanResultTokenSurvivesRecreationAndResumesOnceOnFailure() {
+        ActivityScenario.launch(AboutActivity::class.java).use { scenario ->
+            var requests = 0
+            var navigations = 0
+            lateinit var complete: (Boolean) -> Unit
+            val key = com.example.aicleanphonestorage.app.ad.InterstitialPlacements.MALWARE_SCAN
+            scenario.onActivity { activity ->
+                val ads = InterstitialActions(activity) { slot, call ->
+                    assertEquals("scan_complete_virus", slot)
+                    requests++; complete = call
+                }
+                ads.register(key) { fail("Old Activity must not navigate") }
+                ads.run(key, key, 37L)
+                ads.run(key, key, 38L)
+            }
+            scenario.recreate()
+            scenario.moveToState(Lifecycle.State.CREATED)
+            scenario.onActivity { activity ->
+                val ads = InterstitialActions(activity) { _, _ -> fail("Must not request again") }
+                ads.register(key) { token -> assertEquals(37L, token); navigations++ }
+                complete(false); complete(true)
+                assertEquals(0, navigations)
+            }
+            scenario.moveToState(Lifecycle.State.RESUMED)
+            scenario.onActivity {
+                complete(false)
+                assertEquals(1, requests)
+                assertEquals(1, navigations)
+            }
+        }
+    }
+
     @Test fun failureAndDuplicateCallbackContinueExactlyOnceAfterResume() {
         ActivityScenario.launch(AboutActivity::class.java).use { scenario ->
             var requests = 0

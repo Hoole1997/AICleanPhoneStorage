@@ -8,12 +8,12 @@ import org.junit.Test
 
 class NativeAdPlacementsTest {
     @Test
-    fun allTwentyTwoKeysAreUniqueAndMatchRequirementNames() {
+    fun allTwentyFourKeysAreUniqueAndMatchRequirementNames() {
         val keys =
             NativeAdFeature.entries.flatMap { listOf(it.featureSlot, it.resultSlot) } +
                 listOf(NativeAdPlacements.HOME, NativeAdPlacements.SCAN_DIALOG)
-        assertEquals(22, keys.size)
-        assertEquals(22, keys.toSet().size)
+        assertEquals(24, keys.size)
+        assertEquals(24, keys.toSet().size)
         assertEquals(
             "native_feature_photo",
             NativeAdPlacements.feature(CleanupFeature.PHOTO_COMPRESS).featureSlot,

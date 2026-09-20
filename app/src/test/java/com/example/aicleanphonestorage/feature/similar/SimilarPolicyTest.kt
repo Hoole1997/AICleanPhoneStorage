@@ -70,8 +70,8 @@ class SimilarPolicyTest {
     }
 
     @Test
-    fun similarConfirmationNeverRequestsAnInterstitial() {
-        assertNull(InterstitialPlacements.clean(CleanupFeature.SIMILAR_PHOTOS))
+    fun similarConfirmationUsesTheNewRequirementSlot() {
+        assertEquals("clean_confirm_duplicate", InterstitialPlacements.clean(CleanupFeature.SIMILAR_PHOTOS))
         assertEquals(
             "back_home_duplicate",
             InterstitialPlacements.exit(CleanupFeature.SIMILAR_PHOTOS),

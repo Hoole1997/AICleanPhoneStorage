@@ -4,6 +4,11 @@ import com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature
 
 /** 与需求总表同步；只描述触发来源，请求资格、频次和填充继续由 AdExt/SDK 处理。 */
 internal object InterstitialPlacements {
+    const val MALWARE_EXIT = "back_home_malware"
+    const val MALWARE_SCAN = "scan_complete_virus"
+    const val NOTIFICATIONS_SCAN = "scan_complete_notify"
+    const val APPS_SCAN = "scan_complete_apps"
+    const val NETWORK_SCAN = "scan_complete_network"
     const val NOTIFICATIONS_EXIT = "back_home_notify"
     const val APPS_EXIT = "back_home_apps"
     const val NETWORK_EXIT = "back_home_network"
@@ -11,9 +16,12 @@ internal object InterstitialPlacements {
     const val NETWORK_CONFIRM = "clean_confirm_network"
 
     val homeExits: Set<String> = CleanupFeature.entries.mapNotNull(::exit).toSet() +
-        setOf(NOTIFICATIONS_EXIT, APPS_EXIT, NETWORK_EXIT)
+        setOf(NOTIFICATIONS_EXIT, APPS_EXIT, NETWORK_EXIT, MALWARE_EXIT)
 
-    fun clean(feature: CleanupFeature?): String? = if (feature == CleanupFeature.SIMILAR_PHOTOS) null else suffix(feature)?.let { "clean_confirm_$it" }
+    fun clean(feature: CleanupFeature?): String? = suffix(feature)?.let { "clean_confirm_$it" }
+
+    /** 仅由真实扫描成功出口调用；空结果也是成功，失败/取消不调用。 */
+    fun scan(feature: CleanupFeature): String = "scan_complete_${requireNotNull(suffix(feature))}"
 
     /** 功能页退出与完成页退出共用一个 Key；未知来源不生成总表以外的广告位。 */
     fun exit(feature: CleanupFeature?): String? = suffix(feature)?.let { "back_home_$it" }

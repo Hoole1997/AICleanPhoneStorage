@@ -129,6 +129,7 @@ class NativeAdDeviceTest {
                     R.id.native_ad,
                     R.id.notification_done,
                 ),
+                Triple(R.layout.screen_malware, R.id.native_ad, 0),
                 Triple(R.layout.screen_app_manager, R.id.native_ad, 0),
                 Triple(R.layout.screen_network_traffic, R.id.native_ad, 0),
                 Triple(R.layout.screen_completion, R.id.completion_ad, 0),

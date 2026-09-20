@@ -1,5 +1,7 @@
 package com.example.aicleanphonestorage.feature.networktraffic.ui
 
+import com.example.aicleanphonestorage.app.ad.InterstitialActions
+import com.example.aicleanphonestorage.app.ad.InterstitialPlacements
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -18,7 +20,14 @@ internal class NetworkTrafficEntryCoordinator(
     private val transfer: TrafficSnapshotTransfer,
     private val permissions: PermissionCoordinator,
 ) {
+    private val ads = InterstitialActions(activity)
+
     init {
+        // 广告状态只携带 transfer 令牌，重建后仍由当前页面续接；失败也继续业务。
+        ads.register(InterstitialPlacements.NETWORK_SCAN) { token ->
+            activity.startActivity(Intent(activity, NetworkTrafficActivity::class.java)
+                .putExtra(NetworkTrafficActivity.EXTRA_SNAPSHOT_TOKEN, token))
+        }
         permissions.register(
             ROUTE,
             before = { kind ->
@@ -118,12 +127,9 @@ internal class NetworkTrafficEntryCoordinator(
                 .showNow(manager, TrafficEntryDialogFragment.TAG)
 
         if (state.status == TrafficStatus.Ready && permissionKind == null) {
+            if (ads.busy) return
             val snapshot = viewModel.consumeEntrySnapshot() ?: return
-            val token = transfer.put(snapshot)
-            activity.startActivity(
-                Intent(activity, NetworkTrafficActivity::class.java)
-                    .putExtra(NetworkTrafficActivity.EXTRA_SNAPSHOT_TOKEN, token)
-            )
+            ads.run(InterstitialPlacements.NETWORK_SCAN, InterstitialPlacements.NETWORK_SCAN, transfer.put(snapshot))
         }
     }
 
