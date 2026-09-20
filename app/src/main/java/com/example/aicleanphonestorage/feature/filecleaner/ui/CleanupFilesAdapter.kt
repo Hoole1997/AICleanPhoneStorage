@@ -116,10 +116,11 @@ internal class CleanupFilesAdapter(
                 )
                 startImage()
             }
-            if (file != null) bindText(file)
+            if (file != null) bindText(file) else clearText()
         }
 
         abstract fun bindText(file: ScannedFile)
+        open fun clearText() = Unit
 
         fun startImage() {
             val file = row ?: return
@@ -154,7 +155,24 @@ internal class CleanupFilesAdapter(
             }
         }
 
+        override fun clearText() {
+            binding.fileRisk.isVisible = false
+            binding.fileRisk.text = ""
+            binding.fileName.text = ""
+            binding.fileDetail.text = ""
+        }
+
         override fun bindText(file: ScannedFile) {
+            val risk = file.apkRisk.takeIf { feature == CleanupFeature.SMART_CLEAN && file.category == FileCategory.APK }
+            binding.fileRisk.isVisible = risk != null
+            binding.fileRisk.text = risk?.let {
+                val label = if (it == com.example.aicleanphonestorage.core.data.risk.ApkRiskLevel.MALWARE) R.string.malware_malware else R.string.malware_pua
+                binding.root.context.getString(R.string.cleanup_apk_risk, binding.root.context.getString(label))
+            }.orEmpty()
+            val isMalware = risk == com.example.aicleanphonestorage.core.data.risk.ApkRiskLevel.MALWARE
+            binding.fileRisk.setTextColor(android.graphics.Color.parseColor(if (isMalware) "#B4232C" else "#8A5700"))
+            androidx.core.view.ViewCompat.setBackgroundTintList(binding.fileRisk, android.content.res.ColorStateList.valueOf(
+                android.graphics.Color.parseColor(if (isMalware) "#FEEFF2" else "#FFF4D6")))
             binding.fileName.text = file.name
             binding.fileDetail.text =
                 if (feature == CleanupFeature.UNUSED_FILES) date.format(Date(file.modifiedMillis))

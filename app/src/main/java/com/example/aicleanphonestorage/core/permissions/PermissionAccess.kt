@@ -19,6 +19,7 @@ internal enum class PermissionKind {
     NOTIFICATIONS,
     POST_NOTIFICATIONS,
     ALL_FILES,
+    READ_FILES,
     PHOTOS,
     VIDEOS,
     PHONE,
@@ -57,6 +58,8 @@ internal object PermissionChecks {
 
     fun runtimePermissions(kind: PermissionKind): Array<String> =
         when (kind) {
+            PermissionKind.READ_FILES ->
+                if (Build.VERSION.SDK_INT < 30) arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE) else emptyArray()
             PermissionKind.POST_NOTIFICATIONS ->
                 if (Build.VERSION.SDK_INT >= 33) arrayOf(Manifest.permission.POST_NOTIFICATIONS)
                 else emptyArray()
@@ -122,6 +125,8 @@ internal class AndroidPermissionAccess(
                     io.docview.push.NotificationPermissionAccess.isGranted(app)
                 PermissionKind.ALL_FILES ->
                     Build.VERSION.SDK_INT >= 30 && Environment.isExternalStorageManager()
+                PermissionKind.READ_FILES ->
+                    Build.VERSION.SDK_INT < 30 && PermissionChecks.grantedRuntime(app, kind)
                 PermissionKind.VIDEOS,
                 PermissionKind.PHOTOS,
                 PermissionKind.PHONE -> PermissionChecks.grantedRuntime(app, kind)

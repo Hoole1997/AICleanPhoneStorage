@@ -63,7 +63,7 @@ class HomeRenderingTest {
             binding.root.requestLayout()
             binding.root.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY))
             binding.root.layout(0, 0, width, height)
-            assertEquals(10, binding.homeList.adapter?.itemCount)
+            assertEquals(4 + com.example.aicleanphonestorage.feature.home.ui.HomeTool.entries.size, binding.homeList.adapter?.itemCount)
             assertTrue(binding.homeList.childCount > 0)
             val value = binding.root.findViewById<TextView>(R.id.summary_value)
             val unit = binding.root.findViewById<TextView>(R.id.summary_unit)

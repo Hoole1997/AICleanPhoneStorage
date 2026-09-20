@@ -60,7 +60,7 @@ class HomeLifecycleTest {
             assertHero(R.string.home_storage_used, "40.3")
             scenario.onActivity { activity ->
                 val list = activity.findViewById<RecyclerView>(R.id.home_list)
-                assertEquals(10, list.adapter?.itemCount) // 主卡、统计条、标题 + 七张工具卡。
+                assertEquals(4 + com.example.aicleanphonestorage.feature.home.ui.HomeTool.entries.size, list.adapter?.itemCount) // 主卡、统计条、病毒入口、标题及工具。
                 list.scrollToPosition(9)
             }
             onView(withText(R.string.home_tool_screenshots)).check(matches(isDisplayed()))

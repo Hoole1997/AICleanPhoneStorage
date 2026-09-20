@@ -19,7 +19,7 @@ internal class HomeGridSpacing : RecyclerView.ItemDecoration() {
         val gap = parent.resources.getDimensionPixelSize(R.dimen.home_grid_gap)
         val sectionGap = parent.resources.getDimensionPixelSize(R.dimen.home_section_gap)
         when (adapter.getItemViewType(position)) {
-            HomeListAdapter.HERO, HomeListAdapter.STATS -> outRect.bottom = sectionGap
+            HomeListAdapter.HERO, HomeListAdapter.STATS, HomeListAdapter.MALWARE -> outRect.bottom = sectionGap
             HomeListAdapter.SECTION -> outRect.bottom = parent.dp(16)
             HomeListAdapter.TOOL -> {
                 val manager = parent.layoutManager as GridLayoutManager

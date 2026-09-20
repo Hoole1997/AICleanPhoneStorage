@@ -26,6 +26,7 @@ internal data class JunkCategorySummary(
     val count: Int = 0,
     val bytes: Long = 0,
     val selected: Int = 0,
+    val flaggedApks: Int = 0,
 )
 
 /** 分类只产生候选；只处理公开共享存储或用户授权目录，不能访问其他应用私有缓存。 */

@@ -63,6 +63,8 @@ data class ScannedFile(
     val width: Int = 0,
     val height: Int = 0,
     val available: Boolean = true,
+    val apkRisk: com.example.aicleanphonestorage.core.data.risk.ApkRiskLevel? = null,
+    val apkRiskFamily: String = "",
 ) {
     // 使用索引已有 MIME 字段区分目录，不把空文件伪装成空目录。
     val isDirectory: Boolean get() = mime == "vnd.android.document/directory"

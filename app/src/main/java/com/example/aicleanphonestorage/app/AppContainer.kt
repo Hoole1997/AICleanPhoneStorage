@@ -30,6 +30,7 @@ class AppContainer(context: Context) {
         com.example.aicleanphonestorage.feature.filecleaner.data.FileScanRepository(
             applicationContext,
             taskExecutor,
+            riskSource = malwareRepository,
         )
     }
     internal val fileOperations by lazy {
@@ -75,6 +76,8 @@ class AppContainer(context: Context) {
             taskExecutor,
         )
     }
+    internal val malwareConsent by lazy { com.example.aicleanphonestorage.feature.malware.data.MalwareConsentStore(applicationContext) }
+    internal val malwareRepository by lazy { com.example.aicleanphonestorage.feature.malware.data.MalwareRepository(applicationContext, malwareConsent) }
     val taskExecutor: TaskExecutor by lazy { TaskExecutor(AppDispatchers()) }
     val notificationRules by lazy { NotificationRulesStore(applicationContext) }
     val notificationConnection by lazy { NotificationListenerConnection() }

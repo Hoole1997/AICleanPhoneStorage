@@ -1,0 +1,4 @@
+<resources>
+    <string name="cleanup_apk_risk">वायरस स्कैन: %1$s</string>
+    <string name="cleanup_flagged_apks">चिह्नित APK: %1$d</string>
+</resources>

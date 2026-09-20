@@ -19,6 +19,7 @@ import kotlinx.coroutines.withContext
 internal class FileScanRepository(
     context: Context, private val executor: TaskExecutor,
     private val telemetry: com.example.aicleanphonestorage.feature.filecleaner.analytics.CleanupTelemetry = com.example.aicleanphonestorage.feature.filecleaner.analytics.CleanupTelemetry(),
+    private val riskSource: com.example.aicleanphonestorage.core.data.risk.ApkRiskSource = com.example.aicleanphonestorage.core.data.risk.ApkRiskSource.None,
 ) {
     private val app = context.applicationContext
     val index = ScanIndex(context)
@@ -37,7 +38,7 @@ internal class FileScanRepository(
 
     suspend fun handle(id: Long) = executor.io { index.handle(id) }
 
-    suspend fun scan(feature: CleanupFeature, progress: (ScanProgress) -> Unit): ScanHandle =
+    suspend fun scan(feature: CleanupFeature, riskRun: String? = null, progress: (ScanProgress) -> Unit): ScanHandle =
         scanLock.withLock {
             executor.io {
                 val permission = access.resolve(feature)
@@ -87,6 +88,7 @@ internal class FileScanRepository(
                         }
                     currentCoroutineContext().ensureActive()
                     if (batch.isNotEmpty()) junkBytes += index.insert(session, batch)
+                    if (smartClean && riskRun != null) ApkRiskAnnotator(app, index, riskSource).apply(session, riskRun)
                     val analysisSkipped = if (feature == CleanupFeature.SIMILAR_PHOTOS)
                         com.example.aicleanphonestorage.feature.similar.data.SimilarPhotoAnalyzer(app, similar).analyze(session) {
                             progress(ScanProgress(it, stage = "PHOTOS"))

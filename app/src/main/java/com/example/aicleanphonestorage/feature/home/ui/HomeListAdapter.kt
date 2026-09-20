@@ -26,17 +26,21 @@ internal class HomeListAdapter(
     private val actions: HomeUiActions,
     private val nativeContainer: ViewGroup? = null,
 ) : ListAdapter<HomeRow, RecyclerView.ViewHolder>(RowDiff) {
+    private val malwareHolders=mutableSetOf<MalwareHomeHolder>()
     private val heroes=mutableSetOf<HeroHolder>()
     private var motionActive=false
-    fun setMotionActive(active:Boolean){motionActive=active;heroes.forEach{it.motion.setActive(active)}}
-    fun refreshMotionVisibility(){heroes.forEach{it.motion.refreshVisibility()}}
+    fun setMotionActive(active:Boolean){motionActive=active;heroes.forEach{it.motion.setActive(active)};malwareHolders.forEach{it.setActive(active)}}
+    fun refreshMotionVisibility(){heroes.forEach{it.motion.refreshVisibility()};malwareHolders.forEach{it.refresh()}}
     override fun onViewAttachedToWindow(holder:RecyclerView.ViewHolder){
+        if(holder is MalwareHomeHolder){malwareHolders+=holder;holder.setActive(motionActive)}
         if(holder is HeroHolder){heroes+=holder;holder.motion.setActive(motionActive)}
     }
     override fun onViewDetachedFromWindow(holder:RecyclerView.ViewHolder){
+        if(holder is MalwareHomeHolder){malwareHolders-=holder;holder.setActive(false)}
         if(holder is HeroHolder){heroes-=holder;holder.motion.setActive(false)}
     }
     override fun onViewRecycled(holder:RecyclerView.ViewHolder){
+        if(holder is MalwareHomeHolder){malwareHolders-=holder;holder.setActive(false)}
         if(holder is HeroHolder){heroes-=holder;holder.motion.setActive(false)}
     }
     init { stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY }
@@ -45,6 +49,7 @@ internal class HomeListAdapter(
         is HomeRow.Hero -> HERO
         is HomeRow.Statistics -> STATS
         HomeRow.NativeAd -> NATIVE
+        HomeRow.Malware -> MALWARE
         HomeRow.Section -> SECTION
         is HomeRow.Tool -> TOOL
     }
@@ -57,6 +62,7 @@ internal class HomeListAdapter(
             NATIVE -> NativeHolder(FrameLayout(parent.context).apply {
                 layoutParams = RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             })
+            MALWARE -> MalwareHomeHolder(com.example.aicleanphonestorage.databinding.ItemHomeMalwareBinding.inflate(inflater,parent,false), actions)
             SECTION -> SectionHolder(ItemHomeSectionTitleBinding.inflate(inflater, parent, false))
             TOOL -> ToolHolder(ItemHomeToolBinding.inflate(inflater, parent, false), actions)
             else -> error("Unknown home row type: $viewType")
@@ -68,6 +74,7 @@ internal class HomeListAdapter(
             is HomeRow.Hero -> (holder as HeroHolder).bind(row.content)
             is HomeRow.Statistics -> (holder as StatisticsHolder).bind(row.content)
             HomeRow.NativeAd -> (holder as NativeHolder).bind(requireNotNull(nativeContainer))
+            HomeRow.Malware -> (holder as MalwareHomeHolder).bind()
             HomeRow.Section -> Unit
             is HomeRow.Tool -> (holder as ToolHolder).bind(row.content)
         }
@@ -79,6 +86,7 @@ internal class HomeListAdapter(
         const val SECTION = 2
         const val TOOL = 3
         const val NATIVE = 4
+        const val MALWARE = 5
     }
 }
 

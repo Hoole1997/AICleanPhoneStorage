@@ -131,6 +131,8 @@ internal class JunkCategoriesAdapter(
             val data = value.value
             val context = binding.root.context
             binding.junkCategoryTitle.setText(data.kind.titleRes)
+            binding.junkCategoryRisks.visibility = if (data.flaggedApks > 0) android.view.View.VISIBLE else android.view.View.GONE
+            binding.junkCategoryRisks.text = if (data.flaggedApks > 0) context.getString(R.string.cleanup_flagged_apks, data.flaggedApks) else ""
             binding.junkCategorySize.text = Formatter.formatShortFileSize(context, data.bytes)
             binding.junkCategoryCount.text =
                 java.text.NumberFormat.getIntegerInstance().format(data.count)
@@ -147,7 +149,8 @@ internal class JunkCategoriesAdapter(
             binding.junkCategoryBody.contentDescription =
                 context.getString(data.kind.titleRes) +
                     ", " +
-                    context.getString(data.kind.descriptionRes)
+                    context.getString(data.kind.descriptionRes) +
+                    (if (data.flaggedApks > 0) ", " + context.getString(R.string.cleanup_flagged_apks, data.flaggedApks) else "")
         }
     }
 

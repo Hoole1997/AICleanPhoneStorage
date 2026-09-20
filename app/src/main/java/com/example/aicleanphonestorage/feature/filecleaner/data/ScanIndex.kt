@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.update
 
 /** 仅缓存元数据/选择状态的临时索引。所有方法由Repository在I/O线程调用，不存文件内容或Bitmap。 */
 internal class ScanIndex(context: Context) :
-    SQLiteOpenHelper(context.applicationContext, "cleanup_index.db", null, 7) {
+    SQLiteOpenHelper(context.applicationContext, "cleanup_index.db", null, 8) {
     private val revision = kotlinx.coroutines.flow.MutableStateFlow(0L)
     val changes: kotlinx.coroutines.flow.StateFlow<Long> = revision
     private val sources = Collections.newSetFromMap(WeakHashMap<PagingSource<*, *>, Boolean>())
@@ -26,7 +26,7 @@ internal class ScanIndex(context: Context) :
             """CREATE TABLE files(id INTEGER PRIMARY KEY AUTOINCREMENT, scan INTEGER NOT NULL, uri TEXT NOT NULL,
             name TEXT NOT NULL, mime TEXT NOT NULL, size INTEGER NOT NULL, modified INTEGER NOT NULL, category TEXT NOT NULL,
             backend TEXT NOT NULL, scope TEXT NOT NULL, path TEXT NOT NULL, selected INTEGER NOT NULL DEFAULT 0,
-            quality INTEGER NOT NULL DEFAULT 75, bucket TEXT NOT NULL DEFAULT '', group_key TEXT NOT NULL DEFAULT '', retained INTEGER NOT NULL DEFAULT 0, fingerprint TEXT NOT NULL DEFAULT '', taken INTEGER NOT NULL DEFAULT 0, width INTEGER NOT NULL DEFAULT 0, height INTEGER NOT NULL DEFAULT 0, available INTEGER NOT NULL DEFAULT 1, UNIQUE(scan,uri))"""
+            quality INTEGER NOT NULL DEFAULT 75, bucket TEXT NOT NULL DEFAULT '', group_key TEXT NOT NULL DEFAULT '', retained INTEGER NOT NULL DEFAULT 0, fingerprint TEXT NOT NULL DEFAULT '', taken INTEGER NOT NULL DEFAULT 0, width INTEGER NOT NULL DEFAULT 0, height INTEGER NOT NULL DEFAULT 0, available INTEGER NOT NULL DEFAULT 1, risk_level TEXT NOT NULL DEFAULT '', risk_family TEXT NOT NULL DEFAULT '', UNIQUE(scan,uri))"""
         )
         db.execSQL("CREATE INDEX files_scan_sort ON files(scan,size DESC,id)")
         db.execSQL("CREATE INDEX files_selection ON files(scan,selected)")
@@ -45,6 +45,10 @@ internal class ScanIndex(context: Context) :
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        if (oldVersion < 8) {
+            db.execSQL("ALTER TABLE files ADD COLUMN risk_level TEXT NOT NULL DEFAULT ''")
+            db.execSQL("ALTER TABLE files ADD COLUMN risk_family TEXT NOT NULL DEFAULT ''")
+        }
         if (oldVersion < 7) {
             db.execSQL("ALTER TABLE files ADD COLUMN taken INTEGER NOT NULL DEFAULT 0")
             db.execSQL("ALTER TABLE files ADD COLUMN width INTEGER NOT NULL DEFAULT 0")
@@ -267,6 +271,8 @@ internal class ScanIndex(context: Context) :
                         filter.bucket in listOf("DUPLICATES", "SIMILAR")
                 )
                     "group_key,retained DESC,id"
+                else if (handle.feature == CleanupFeature.SMART_CLEAN && filter.bucket == "INSTALLERS")
+                    "CASE risk_level WHEN 'MALWARE' THEN 0 WHEN 'PUA' THEN 1 ELSE 2 END,size DESC,id"
                 else if (handle.feature == CleanupFeature.UNUSED_FILES || handle.feature == CleanupFeature.VIDEOS) "modified DESC,id"
                 else "size DESC,id",
                 "$offset,$limit",
@@ -599,6 +605,8 @@ internal class ScanIndex(context: Context) :
             string("group_key"),
             number("retained") == 1L,
             number("taken"), number("width").toInt(), number("height").toInt(), number("available") == 1L,
+            com.example.aicleanphonestorage.core.data.risk.ApkRiskLevel.entries.firstOrNull { it.name == string("risk_level") },
+            string("risk_family"),
         )
     }
 }

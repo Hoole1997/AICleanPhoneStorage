@@ -75,7 +75,14 @@ def write_resources(lang, values, originals):
     ET.register_namespace('tools','http://schemas.android.com/tools')
     root = ET.Element('resources')
     groups = {}
+    # 功能侧独立 XML 为人工维护翻译；通用生成器不再在 strings.xml 中复制这些键。
+    manual_names = {
+        item.get('name')
+        for file in (RES/('values-'+LOCALES[lang])).glob('*.xml') if file.name != 'strings.xml'
+        for item in ET.parse(file).getroot() if item.tag in ('string', 'plurals')
+    }
     for key, original in originals.items():
+        if key.split('#')[0] in manual_names: continue
         value = values[key]
         if '#' in key:
             name, quantity = key.split('#')
@@ -106,8 +113,19 @@ def generate(lang, originals):
     cached = json.loads(path.read_text()) if path.exists() else {}
     values = {}
     pending = []
+    manual = {}
+    for file in (RES/('values-'+LOCALES[lang])).glob('*.xml'):
+        if file.name == 'strings.xml': continue
+        for item in ET.parse(file).getroot():
+            if item.tag == 'string': manual[item.get('name')] = item.text or ''
+            elif item.tag == 'plurals':
+                for child in item: manual[item.get('name')+'#'+child.get('quantity')] = child.text or ''
     hints = json.loads((ROOT/'tools/i18n/translation_hints.json').read_text())
     for key, raw in originals.items():
+        # 独立功能资源已经人工维护，不发送机器翻译请求，也不覆盖已审核的 HTML/术语。
+        if key in manual:
+            values[key] = manual[key]
+            continue
         raw = hints.get(key, raw)
         # Convert Android escapes to text before translation, then restore when serializing XML.
         text = raw.replace('\\n','\n').replace("\\'", "'").replace('\\"','"')

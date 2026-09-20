@@ -79,6 +79,17 @@ class MainActivity : AppCompatActivity() {
     }
     private lateinit var rating: RatingPromptCoordinator
     private lateinit var homeExitAds: HomeExitAdCoordinator
+    private val malwareEntryModel: com.example.aicleanphonestorage.feature.malware.ui.MalwareEntryViewModel by viewModels {
+        viewModelFactory { initializer {
+            val container = (application as CleanApplication).container
+            com.example.aicleanphonestorage.feature.malware.ui.MalwareEntryViewModel(
+                container.malwareConsent, container.permissionAccess,
+                if (android.os.Build.VERSION.SDK_INT >= 30) PermissionKind.ALL_FILES else PermissionKind.READ_FILES,
+                createSavedStateHandle(),
+            )
+        } }
+    }
+    private lateinit var malwareEntry: com.example.aicleanphonestorage.feature.malware.ui.MalwareEntryCoordinator
     private lateinit var homeActions: HomeEntryActions
     private lateinit var pushPermission: PushPermissionCoordinator
     private lateinit var permissions: PermissionCoordinator
@@ -200,8 +211,10 @@ class MainActivity : AppCompatActivity() {
             (application as CleanApplication).container.batteryTransfer,
         )
         observeEntryState(batteryEntry.state, batteryCoordinator::render)
+        malwareEntry = com.example.aicleanphonestorage.feature.malware.ui.MalwareEntryCoordinator(this, malwareEntryModel, permissions)
+        observeEntryState(malwareEntryModel.state, malwareEntry::render)
         homeActions = HomeEntryActions(
-            permissions, trafficEntry, notificationEntry, cleanupEntry, appManagerEntry, batteryEntry,
+            permissions, trafficEntry, notificationEntry, cleanupEntry, appManagerEntry, batteryEntry, malwareEntry,
             openSettings = {
                 startActivity(Intent(this, com.example.aicleanphonestorage.feature.settings.SettingsActivity::class.java)
                     .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP))
@@ -210,6 +223,10 @@ class MainActivity : AppCompatActivity() {
         val nativeHome = layoutInflater.inflate(R.layout.view_native_ad_slot, binding.homeContent, false) as android.view.ViewGroup
         val app = application as CleanApplication
         val trackedActions = object : HomeUiActions by homeActions {
+            override fun onMalwareScan() {
+                if (previewSelection == null) FeatureTelemetry.entry(app, "malware")
+                homeActions.onMalwareScan()
+            }
             override fun onSmartClean() {
                 if (previewSelection == null) {
                     BusinessTelemetry.emit(MetricEvent.CLEAN_NOW_CLICK, mapOf("state" to if (app.homeCleaning.state.value.dirty) "dirty" else "cleaned"))
@@ -249,6 +266,12 @@ class MainActivity : AppCompatActivity() {
         }
         renderCurrentState()
         handleNotificationIntent(intent)
+        if (intent.getBooleanExtra(com.example.aicleanphonestorage.feature.malware.ui.MalwareScanActivity.EXTRA_CLEAN_APK, false)) {
+            intent.removeExtra(com.example.aicleanphonestorage.feature.malware.ui.MalwareScanActivity.EXTRA_CLEAN_APK)
+            val riskRun = intent.getStringExtra(com.example.aicleanphonestorage.core.data.risk.ApkRiskNavigation.EXTRA_RUN)
+            intent.removeExtra(com.example.aicleanphonestorage.core.data.risk.ApkRiskNavigation.EXTRA_RUN)
+            homeActions.onFlaggedApkCleanup(riskRun)
+        }
         if (intent.getBooleanExtra(NetworkTrafficActivity.EXTRA_REENTER, false)) {
             intent.removeExtra(NetworkTrafficActivity.EXTRA_REENTER)
             trafficEntry.beginEntry()
@@ -265,6 +288,7 @@ class MainActivity : AppCompatActivity() {
                 cleanupEntry.state.value == CleanupEntryState.Idle &&
                 appManagerEntry.state.value == AppManagerEntryState.Idle &&
                 batteryEntry.state.value == BatteryEntryState.Idle &&
+                malwareEntryModel.state.value == com.example.aicleanphonestorage.feature.malware.ui.MalwareEntryPhase.IDLE &&
                 trafficEntry.state.value.status == com.example.aicleanphonestorage.feature.networktraffic.ui.TrafficStatus.Idle &&
                 notificationEntry.state.value.phase == com.example.aicleanphonestorage.feature.notifications.ui.NotificationPhase.Idle
         })
@@ -332,6 +356,7 @@ class MainActivity : AppCompatActivity() {
         cleanupCoordinator.render(cleanupEntry.state.value)
         appManagerCoordinator.render(appManagerEntry.state.value)
         batteryCoordinator.render(batteryEntry.state.value)
+        malwareEntry.render()
         pushPermission.drain()
         if (this::rating.isInitialized) rating.drain()
     }
@@ -344,6 +369,7 @@ class MainActivity : AppCompatActivity() {
             cleanupEntry.onBackground()
             appManagerEntry.cancel()
             batteryEntry.cancel()
+            malwareEntry.onBackground()
         }
         super.onStop()
     }
@@ -365,6 +391,12 @@ class MainActivity : AppCompatActivity() {
             return
         }
         handleNotificationIntent(intent)
+        if (intent.getBooleanExtra(com.example.aicleanphonestorage.feature.malware.ui.MalwareScanActivity.EXTRA_CLEAN_APK, false)) {
+            intent.removeExtra(com.example.aicleanphonestorage.feature.malware.ui.MalwareScanActivity.EXTRA_CLEAN_APK)
+            val riskRun = intent.getStringExtra(com.example.aicleanphonestorage.core.data.risk.ApkRiskNavigation.EXTRA_RUN)
+            intent.removeExtra(com.example.aicleanphonestorage.core.data.risk.ApkRiskNavigation.EXTRA_RUN)
+            homeActions.onFlaggedApkCleanup(riskRun)
+        }
         if (intent.getBooleanExtra(NetworkTrafficActivity.EXTRA_REENTER, false)) {
             permissions.cancel()
             notificationEntry.cancelEntry()

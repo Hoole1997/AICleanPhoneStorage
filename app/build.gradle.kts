@@ -88,6 +88,8 @@ android {
                 buildConfigField("String", "ADJUST_APP_TOKEN", buildString(analytics.text("adjustAppToken")))
                 buildConfigField("String", "THINKING_DATA_APP_ID", buildString(analytics.text("thinkingDataAppId")))
                 buildConfigField("String", "THINKING_DATA_SERVER_URL", buildString(analytics.text("thinkingDataServerUrl")))
+                // SDK 许可证统一由当前渠道的 config.properties 提供，避免环境覆盖或跨渠道串用。
+                manifestPlaceholders["TRUSTLOOK_API_KEY"] = config.getProperty("trustlookApiKey", "").trim()
                 manifestPlaceholders["ADMOB_APPLICATION_ID"] = ads.section("admob").text("applicationId")
 
             }
@@ -118,6 +120,7 @@ android {
 }
 
 dependencies {
+    implementation(files("libs/cloudscan_sdk_5.0.18.20250821.aar"))
     implementation("com.google.android.play:review:2.0.2")
     implementation(libs.lottie)
     implementation("com.github.toukaremax:core:1.0.15")

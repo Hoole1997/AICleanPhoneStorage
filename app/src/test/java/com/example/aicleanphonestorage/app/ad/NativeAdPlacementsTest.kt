@@ -58,7 +58,8 @@ class NativeAdPlacementsTest {
         val rows = content.rows(includeNativeAd = true)
         assertTrue(rows[1] is HomeRow.Statistics)
         assertEquals(HomeRow.NativeAd, rows[2])
-        assertEquals(HomeRow.Section, rows[3])
+        assertEquals(HomeRow.Malware, rows[3])
+        assertEquals(HomeRow.Section, rows[4])
         assertEquals(1, rows.count { it == HomeRow.NativeAd })
     }
 }

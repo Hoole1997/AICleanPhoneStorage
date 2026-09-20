@@ -78,14 +78,14 @@ internal class JunkIndex(private val index: ScanIndex) {
     fun categories(scan: Long): List<JunkCategorySummary> {
         val values = mutableMapOf<String, JunkCategorySummary>()
         db.rawQuery(
-                "SELECT bucket,COUNT(*),TOTAL(size),TOTAL(selected) FROM files WHERE scan=? AND bucket<>'' AND retained=0 GROUP BY bucket",
+                "SELECT bucket,COUNT(*),TOTAL(size),TOTAL(selected),SUM(CASE WHEN risk_level<>'' THEN 1 ELSE 0 END) FROM files WHERE scan=? AND bucket<>'' AND retained=0 GROUP BY bucket",
                 arrayOf(scan.toString()),
             )
             .use { c ->
                 while (c.moveToNext()) {
                     val kind = JunkKind.from(c.getString(0)) ?: continue
                     values[kind.name] =
-                        JunkCategorySummary(kind, c.getInt(1), c.getDouble(2).toLong(), c.getInt(3))
+                        JunkCategorySummary(kind, c.getInt(1), c.getDouble(2).toLong(), c.getInt(3), c.getInt(4))
                 }
             }
         return JunkKind.entries.map { values[it.name] ?: JunkCategorySummary(it) }

@@ -1,0 +1,2 @@
+# Trustlook 官方要求保留 SDK JNI/反射使用的类。
+-keep class com.trustlook.** { *; }

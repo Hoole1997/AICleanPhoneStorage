@@ -1,0 +1,4 @@
+<resources>
+    <string name="cleanup_apk_risk">Análisis de virus: %1$s</string>
+    <string name="cleanup_flagged_apks">APK marcados: %1$d</string>
+</resources>

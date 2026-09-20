@@ -1,7 +1,10 @@
 """Offline verification: locale coverage, Android format arguments and quantity fallback."""
 from pathlib import Path
 from xml.etree import ElementTree as ET
-import json,re
+import json,re,argparse
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--prefix",default="",help="Only validate resource keys with this prefix")
+args=parser.parse_args()
 ROOT=Path(__file__).resolve().parents[2]
 RES=ROOT/'app/src/main/res'
 DIRECTORIES={'zh-CN':'b+zh+Hans','hi':'hi','es':'es','ar':'ar','pt':'pt','bn':'bn','ur':'ur','id':'in','ru':'ru','fr':'fr','de':'de','ja':'ja','ko':'ko','vi':'vi','tr':'tr'}
@@ -11,11 +14,20 @@ for path in (RES/'values').glob('*.xml'):
     for item in ET.parse(path).getroot():
         if item.get('translatable')!='false' and item.tag in ('string','plurals'):
             base[item.get('name')]=item
+base={name:item for name,item in base.items() if name.startswith(args.prefix)}
 errors=[]
 for language,directory in DIRECTORIES.items():
-    path=RES/('values-'+directory)/'strings.xml'
-    if not path.exists():errors.append(f'Missing {directory}');continue
-    translated={item.get('name'):item for item in ET.parse(path).getroot()}
+    folder=RES/('values-'+directory)
+    if not folder.exists():errors.append(f'Missing {directory}');continue
+    translated={}
+    # Android 合并 values 目录内全部 XML；按功能拆分的文案也必须验证覆盖和重复键。
+    for path in folder.glob('*.xml'):
+        for item in ET.parse(path).getroot():
+            if item.tag not in ('string','plurals'):continue
+            name=item.get('name')
+            if name in translated:errors.append(f'{language}: duplicate {name}')
+            translated[name]=item
+    translated={name:item for name,item in translated.items() if name.startswith(args.prefix)}
     if set(base)!=set(translated):errors.append(f'{language}: keys differ {set(base)^set(translated)}')
     for name, original in base.items():
         if name not in translated:continue

@@ -81,7 +81,8 @@ class PermissionDialogFragment : BottomSheetDialogFragment() {
                             R.string.permission_notification_message,
                             R.drawable.push_permission_bell,
                         )
-                    PermissionKind.ALL_FILES ->
+                    PermissionKind.ALL_FILES,
+                    PermissionKind.READ_FILES ->
                         Triple(
                             R.string.permission_files_title,
                             R.string.permission_files_message,

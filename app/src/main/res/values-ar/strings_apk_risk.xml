@@ -1,0 +1,4 @@
+<resources>
+    <string name="cleanup_apk_risk">فحص الفيروسات: %1$s</string>
+    <string name="cleanup_flagged_apks">ملفات APK المحددة: %1$d</string>
+</resources>

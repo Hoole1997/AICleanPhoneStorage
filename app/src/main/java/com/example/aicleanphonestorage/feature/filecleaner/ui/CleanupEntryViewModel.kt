@@ -47,12 +47,15 @@ internal class CleanupEntryViewModel(
     private var job: Job? = null
     private var sequence = 0L
 
-    fun begin(feature: CleanupFeature) {
+    fun begin(feature: CleanupFeature, riskRun: String? = saved[RISK_KEY]) {
         if (current.value is CleanupEntryState.Loading) return
         val id = ++sequence
         job?.cancel()
         current.value = CleanupEntryState.Checking(feature)
         saved[KEY] = feature.name
+        val riskSource = if (feature == CleanupFeature.SMART_CLEAN)
+            com.example.aicleanphonestorage.core.data.risk.ApkRiskNavigation.validRun(riskRun) else null
+        saved[RISK_KEY] = riskSource
         job =
             viewModelScope.launch {
                 try {
@@ -75,7 +78,7 @@ internal class CleanupEntryViewModel(
                                     current.value = CleanupEntryState.Loading(feature, id, it)
                             },
                         ) { report ->
-                            repository.scan(feature) {
+                            repository.scan(feature, riskSource) {
                                 report(TaskProgress(it.stage, it.completed, it.total, it.junkBytes))
                             }
                         }
@@ -129,6 +132,7 @@ internal class CleanupEntryViewModel(
         job?.cancel()
         current.value = CleanupEntryState.Idle
         saved.remove<String>(KEY)
+        saved.remove<String>(RISK_KEY)
     }
 
     fun cancel(id: Long) {
@@ -157,6 +161,7 @@ internal class CleanupEntryViewModel(
     }
 
     companion object {
+        private const val RISK_KEY = "cleanup.entry.apk.risks"
         private const val KEY = "cleanup.entry.feature"
     }
 }

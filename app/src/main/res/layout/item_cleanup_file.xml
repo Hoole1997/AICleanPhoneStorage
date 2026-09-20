@@ -4,6 +4,10 @@
     <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginStart="12dp" android:layout_marginEnd="8dp" app:layout_constraintStart_toEndOf="@id/file_icon" app:layout_constraintEnd_toStartOf="@id/file_check" app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent">
         <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text.Medium" android:id="@+id/file_name" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="middle" android:textSize="16sp" android:textColor="@color/traffic_text"/>
         <com.google.android.material.textview.MaterialTextView style="@style/Widget.Home.Text" android:id="@+id/file_detail" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:textSize="12sp" android:textColor="@color/traffic_secondary"/>
+        <com.google.android.material.textview.MaterialTextView android:id="@+id/file_risk"
+            style="@style/Widget.Home.Text.Medium" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="6dp" android:paddingHorizontal="6dp" android:paddingVertical="3dp"
+            android:textSize="12sp" android:textColor="#B4232C" android:background="@drawable/cleanup_apk_risk_badge" android:visibility="gone"/>
     </LinearLayout>
     <androidx.appcompat.widget.AppCompatImageButton android:id="@+id/file_check" android:layout_width="48dp" android:layout_height="48dp" android:padding="13dp" android:src="@drawable/cleanup_check_selector" android:background="?attr/selectableItemBackgroundBorderless" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

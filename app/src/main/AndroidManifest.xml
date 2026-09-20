@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
+    <!-- 病毒扫描需要包含没有桌面入口的已安装应用，保留 SDK 的 QUERY_ALL_PACKAGES。 -->
     <queries>
         <intent>
             <action android:name="android.intent.action.MAIN" />
@@ -31,9 +32,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="false"
-        tools:replace="android:supportsRtl"
+        android:usesCleartextTraffic="false"
+        tools:replace="android:supportsRtl,android:usesCleartextTraffic"
         android:localeConfig="@xml/locales_config"
         android:theme="@style/Theme.AICleanPhoneStorage">
+        <!-- 本功能只使用前台自定义 cloudScan，不启用 SDK 的周期后台任务服务。 -->
+        <service android:name="com.trustlook.sdk.job.TlJobService" tools:node="remove" />
+        <meta-data android:name="com.trustlook.ApiKey" android:value="${TRUSTLOOK_API_KEY}" />
+        <activity android:name=".feature.malware.ui.MalwareScanActivity" android:screenOrientation="portrait" android:exported="false" />
         <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="${ADMOB_APPLICATION_ID}" />
         <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/ic_home_clean" />
         <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="general_silent_notification" />

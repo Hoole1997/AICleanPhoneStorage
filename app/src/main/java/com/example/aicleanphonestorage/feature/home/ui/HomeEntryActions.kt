@@ -16,9 +16,11 @@ internal class HomeEntryActions(
     private val cleanup: CleanupEntryViewModel,
     private val apps: AppManagerEntryViewModel,
     private val battery: BatteryEntryViewModel,
+    private val malware: com.example.aicleanphonestorage.feature.malware.ui.MalwareEntryCoordinator,
     private val openSettings: () -> Unit,
 ) : HomeUiActions {
     fun cancelPending() {
+        malware.cancel()
         permissions.cancel()
         traffic.cancelEntry()
         notifications.cancelEntry()
@@ -27,7 +29,12 @@ internal class HomeEntryActions(
         battery.cancel()
     }
 
+    override fun onMalwareScan() { cancelPending(); malware.begin() }
     override fun onSettings() { cancelPending(); openSettings() }
+    fun onFlaggedApkCleanup(runId: String?) {
+        cancelPending()
+        cleanup.begin(CleanupFeature.SMART_CLEAN, runId)
+    }
     override fun onSmartClean() { cancelPending(); cleanup.begin(CleanupFeature.SMART_CLEAN) }
     override fun onToolSelected(tool: HomeTool) {
         cancelPending()
