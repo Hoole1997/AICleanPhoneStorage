@@ -6,35 +6,38 @@
 文本文件完整读取，XML/JSON 逐个解析；二进制仅核对类型与大小。命中行包括 import/注释，须结合 [审计结论](r8-audit.md) 判断。
 这份自动清单不代表逐行人工语义审查，也不替代设备验证。
 
-共 1033 个文件。
+共 1335 个文件。
 
 | 模块 | 类型 | 数量 |
 | --- | --- | ---: |
 | app | JSON | 3 |
-| app | XML | 290 |
-| app | 二进制资源 | 306 |
-| app | 构建/配置 | 7 |
-| app | 测试源码 | 92 |
-| app | 生产源码 | 205 |
+| app | XML | 413 |
+| app | 二进制资源 | 403 |
+| app | 构建/配置 | 8 |
+| app | 测试源码 | 109 |
+| app | 生产源码 | 257 |
 | metrics | JSON | 2 |
 | metrics | XML | 1 |
 | metrics | 构建/配置 | 2 |
 | metrics | 测试源码 | 1 |
 | metrics | 生产源码 | 9 |
-| notification | JSON | 2 |
-| notification | XML | 38 |
+| notification | JSON | 7 |
+| notification | XML | 41 |
 | notification | 二进制资源 | 19 |
 | notification | 构建/配置 | 2 |
-| notification | 测试源码 | 6 |
-| notification | 生产源码 | 48 |
+| notification | 测试源码 | 7 |
+| notification | 生产源码 | 51 |
 
 ## app
 
 | 文件 | 字节数 | 类型 | 检查项 |
 | --- | ---: | --- | --- |
-| `app/build.gradle.kts` | 7332 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
+| `app/build.gradle.kts` | 10261 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
+| `app/libs/cloudscan_sdk_5.0.18.20250821.aar` | 131829 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/androidTest/assets/video-fixture.mp4` | 13385 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/AdLoadingAnimationDeviceTest.kt` | 9902 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/AdTimingDeviceTest.kt` | 8938 | 测试源码 | 框架恢复/工厂 L9,115,120,121 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/ApkRiskHandoffDeviceTest.kt` | 12890 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/AppManagerDeviceTest.kt` | 17055 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/BuglistAcceptanceDeviceTest.kt` | 15518 | 测试源码 | 框架恢复/工厂 L14,136,138 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/BusinessMetricsDeviceTest.kt` | 5232 | 测试源码 | 框架恢复/工厂 L6,14,41,43,44 |
@@ -44,17 +47,18 @@
 | `app/src/androidTest/java/com/example/aicleanphonestorage/CompressionQualityLayoutTest.kt` | 3585 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/CompressionSizeDeviceTest.kt` | 9760 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/CoreServiceDeviceTest.kt` | 4158 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/DayPoolNotificationDeviceTest.kt` | 4535 | 测试源码 | Gson 模型/转换 L13,36；资源/动画 L25 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/DirectCompressionDeviceTest.kt` | 5591 | 测试源码 | 框架恢复/工厂 L6,48,50 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/EmptyStateDeviceTest.kt` | 14048 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/EntryStateObserverDeviceTest.kt` | 2606 | 测试源码 | 框架恢复/工厂 L23,25 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/FirebaseRegistrationTest.kt` | 1155 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/HomeCleaningDeviceTest.kt` | 6090 | 测试源码 | 框架恢复/工厂 L44 |
-| `app/src/androidTest/java/com/example/aicleanphonestorage/HomeLifecycleTest.kt` | 3150 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/HomeLifecycleTest.kt` | 3227 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/HomeMetricsDeviceTest.kt` | 7051 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/HomeMotionDeviceTest.kt` | 6460 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/androidTest/java/com/example/aicleanphonestorage/HomeRenderingTest.kt` | 6030 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/HomeRenderingTest.kt` | 6101 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/HotStartAdDeviceTest.kt` | 10556 | 测试源码 | 框架恢复/工厂 L130,136 |
-| `app/src/androidTest/java/com/example/aicleanphonestorage/InterstitialContinuationTest.kt` | 2526 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/InterstitialContinuationTest.kt` | 4079 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/JunkCleanerDeviceTest.kt` | 14932 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/JunkDocumentTreeDeviceTest.kt` | 9166 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/JunkFourCategoriesDeviceTest.kt` | 8058 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
@@ -63,22 +67,29 @@
 | `app/src/androidTest/java/com/example/aicleanphonestorage/LanguageDeviceTest.kt` | 8042 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/LoadingCapacityDeviceTest.kt` | 8134 | 测试源码 | 框架恢复/工厂 L98,104,119 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/LoadingProgressDeviceTest.kt` | 3163 | 测试源码 | 框架恢复/工厂 L30 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/MalwareAdDeviceTest.kt` | 7836 | 测试源码 | 框架恢复/工厂 L47 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/MalwareDeviceTest.kt` | 7361 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/MalwareEntryPermissionDeviceTest.kt` | 7683 | 测试源码 | 框架恢复/工厂 L11,12,13,43,55,57,58,59,63,64,91,92,93,109,119 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/MalwareLocalizationDeviceTest.kt` | 8106 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/MalwareMotionDeviceTest.kt` | 9927 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/MalwarePageLocalizationDeviceTest.kt` | 8947 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/MetricsIntegrationTest.kt` | 2279 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/androidTest/java/com/example/aicleanphonestorage/NativeAdDeviceTest.kt` | 12131 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/androidTest/java/com/example/aicleanphonestorage/NotificationBusinessRoutingTest.kt` | 3567 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/NativeAdDeviceTest.kt` | 12199 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/NotificationBusinessRoutingTest.kt` | 3872 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/NotificationDraftDeviceTest.kt` | 3745 | 测试源码 | 框架恢复/工厂 L4,9,41,42,44 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/NotificationLaunchTelemetryDeviceTest.kt` | 5168 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/NotificationPermissionDeviceTest.kt` | 3620 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/androidTest/java/com/example/aicleanphonestorage/PermissionUiDeviceTest.kt` | 8156 | 测试源码 | 框架恢复/工厂 L54,130,143,160,166 |
-| `app/src/androidTest/java/com/example/aicleanphonestorage/PushPermissionGuideTest.kt` | 8307 | 测试源码 | 框架恢复/工厂 L10,65,89 |
-| `app/src/androidTest/java/com/example/aicleanphonestorage/PushPermissionTelemetryDeviceTest.kt` | 6375 | 测试源码 | 框架恢复/工厂 L3,44,62,86 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/PermissionUiDeviceTest.kt` | 14312 | 测试源码 | 框架恢复/工厂 L74,128,133,134,140,149,169,221,234,251,257 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/PushPermissionGuideTest.kt` | 8953 | 测试源码 | 框架恢复/工厂 L10,65,89 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/PushPermissionTelemetryDeviceTest.kt` | 6599 | 测试源码 | 框架恢复/工厂 L3,44,66,90 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/RatingPromptDeviceTest.kt` | 7972 | 测试源码 | 框架恢复/工厂 L40,43,79,81,82,83,84 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/ResidentAppCountDeviceTest.kt` | 3401 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/ResidentDismissalDeviceTest.kt` | 3831 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/ResidentNotificationTest.kt` | 7338 | 测试源码 | 资源/动画 L25,58,86 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/ScanDialogNativeAdTest.kt` | 6625 | 测试源码 | 框架恢复/工厂 L15,34,38,75,79 |
-| `app/src/androidTest/java/com/example/aicleanphonestorage/ScreenshotSummaryDeviceTest.kt` | 14035 | 测试源码 | 框架恢复/工厂 L11,84,102,119,132,137 |
-| `app/src/androidTest/java/com/example/aicleanphonestorage/SettingsDeviceTest.kt` | 16818 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/ScreenshotSummaryDeviceTest.kt` | 14662 | 测试源码 | 框架恢复/工厂 L11,89,107,124,137,142 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/SettingsDeviceTest.kt` | 16781 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/SimilarCleanerDeviceTest.kt` | 19937 | 测试源码 | 框架恢复/工厂 L8,330,383 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/StartupActivityFlowTest.kt` | 5109 | 测试源码 | 类名依赖 L79,85 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/StartupAdCoordinatorTest.kt` | 10980 | 测试源码 | 框架恢复/工厂 L136,208,222,226,230 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/StartupNavigationTest.kt` | 6454 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
@@ -86,20 +97,24 @@
 | `app/src/androidTest/java/com/example/aicleanphonestorage/StartupTransitionDeviceTest.kt` | 4534 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/TrafficFeatureDeviceTest.kt` | 7387 | 测试源码 | 框架恢复/工厂 L17,79,84,104 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/TrafficRepositoryDeviceTest.kt` | 5743 | 测试源码 | 框架恢复/工厂 L6,13,75 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/TrustlookIntegrationDeviceTest.kt` | 3732 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/UnusedFilesDeviceTest.kt` | 10039 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/UnusedFilesUiDeviceTest.kt` | 4767 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/VideoCleanerDeviceTest.kt` | 10052 | 测试源码 | 框架恢复/工厂 L11,78 |
+| `app/src/androidTest/java/com/example/aicleanphonestorage/VideoMediaDeviceTest.kt` | 8687 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/androidTest/java/com/example/aicleanphonestorage/testing/NoHotStartAdsRule.kt` | 759 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/google/config.gradle` | 3321 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
-| `app/src/google/config.properties` | 308 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
-| `app/src/google/google-services.json.example` | 460 | JSON | 已解析 JSON；配置 DTO 见审计正文，Firebase/Lottie 交由 SDK 规则 |
+| `app/src/google/config.gradle` | 3399 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
+| `app/src/google/config.properties` | 943 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
+| `app/src/google/google-release.keystore` | 3512 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/google/google-services.json` | 713 | JSON | 已解析 JSON；配置 DTO 见审计正文，Firebase/Lottie 交由 SDK 规则 |
 | `app/src/local/config.gradle` | 4153 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
-| `app/src/local/config.properties` | 298 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
+| `app/src/local/config.properties` | 954 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
 | `app/src/local/google-services.json` | 709 | JSON | 已解析 JSON；配置 DTO 见审计正文，Firebase/Lottie 交由 SDK 规则 |
-| `app/src/main/AndroidManifest.xml` | 5512 | XML | Manifest .app.CleanApplication；Manifest .app.MainActivity；Manifest .core.ui.completion.CompletionActivity；Manifest .feature.appmanager.ui.AppManagerActivity；Manifest .feature.filecleaner.ui.FileCleanupActivity；Manifest .feature.junkcleaner.ui.JunkCleaningActivity；Manifest .feature.networktraffic.ui.NetworkTrafficActivity；Manifest .feature.notifications.service.NotificationCleanerService；Manifest .feature.notifications.ui.NotificationCleanerActivity；Manifest .feature.settings.AboutActivity；Manifest .feature.settings.FeedbackActivity；Manifest .feature.settings.LanguageSettingsActivity；Manifest .feature.settings.SettingsActivity；Manifest .feature.startup.StartupActivity；Manifest androidx.core.content.FileProvider |
+| `app/src/main/AndroidManifest.xml` | 6343 | XML | Manifest .app.CleanApplication；Manifest .app.MainActivity；Manifest .core.ui.completion.CompletionActivity；Manifest .feature.appmanager.ui.AppManagerActivity；Manifest .feature.battery.ui.BatteryInfoActivity；Manifest .feature.filecleaner.ui.FileCleanupActivity；Manifest .feature.junkcleaner.ui.JunkCleaningActivity；Manifest .feature.malware.ui.MalwareScanActivity；Manifest .feature.networktraffic.ui.NetworkTrafficActivity；Manifest .feature.notifications.service.NotificationCleanerService；Manifest .feature.notifications.ui.NotificationCleanerActivity；Manifest .feature.settings.AboutActivity；Manifest .feature.settings.FeedbackActivity；Manifest .feature.settings.LanguageSettingsActivity；Manifest .feature.settings.SettingsActivity；Manifest .feature.startup.StartupActivity；Manifest androidx.core.content.FileProvider；Manifest com.trustlook.sdk.job.TlJobService |
 | `app/src/main/assets/licenses/Roboto-OFL.txt` | 4393 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
-| `app/src/main/java/com/example/aicleanphonestorage/app/AppContainer.kt` | 4835 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/app/CleanApplication.kt` | 2537 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/app/MainActivity.kt` | 18489 | 生产源码 | 框架恢复/工厂 L33,36,38,44,50,53,58,61,68,69,72,74,84,87,95,99,108,111,118,121,227,260,272,281 |
+| `app/src/main/java/com/example/aicleanphonestorage/app/AppContainer.kt` | 5541 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/app/CleanApplication.kt` | 2594 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/app/MainActivity.kt` | 22326 | 生产源码 | 框架恢复/工厂 L3,36,39,41,47,53,56,61,64,71,72,75,77,82,85,98,101,109,113,122,125,132,135,141,144,261,302,314,323 |
 | `app/src/main/java/com/example/aicleanphonestorage/app/ad/AdAnalytics.kt` | 823 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/app/ad/AdConfiguration.kt` | 5253 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/app/ad/AdExt.kt` | 4597 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
@@ -114,9 +129,9 @@
 | `app/src/main/java/com/example/aicleanphonestorage/app/ad/HotStartState.kt` | 702 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/app/ad/InterstitialActionState.kt` | 1357 | 生产源码 | 框架恢复/工厂 L3,10 |
 | `app/src/main/java/com/example/aicleanphonestorage/app/ad/InterstitialActions.kt` | 2677 | 生产源码 | 框架恢复/工厂 L7,22,44 |
-| `app/src/main/java/com/example/aicleanphonestorage/app/ad/InterstitialPlacements.kt` | 1378 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/app/ad/InterstitialPlacements.kt` | 1944 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/app/ad/NativeAdCoordinator.kt` | 2790 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/app/ad/NativeAdPlacements.kt` | 1744 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/app/ad/NativeAdPlacements.kt` | 1942 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/app/ad/renderer/AdIconLoader.kt` | 520 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/app/ad/renderer/AdLoadingAnimationView.kt` | 4157 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/app/ad/renderer/DefaultAdLoadingDialogRenderer.kt` | 936 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
@@ -128,7 +143,7 @@
 | `app/src/main/java/com/example/aicleanphonestorage/app/ad/renderer/DefaultPangleNativeAdRenderer.kt` | 1977 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/app/ad/renderer/DefaultToponFullScreenNativeAdRenderer.kt` | 2373 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/app/ad/renderer/DefaultToponNativeAdRenderer.kt` | 1997 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/app/analytics/FeatureTelemetry.kt` | 2353 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/app/analytics/FeatureTelemetry.kt` | 2455 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/analytics/BusinessTelemetry.kt` | 3204 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/analytics/MetricEvent.kt` | 2203 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/analytics/PageTelemetry.kt` | 3099 | 生产源码 | 框架恢复/工厂 L7,8,30,65 |
@@ -139,6 +154,7 @@
 | `app/src/main/java/com/example/aicleanphonestorage/core/data/apps/InstalledAppCountRepository.kt` | 1507 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/data/apps/InstalledAppsReader.kt` | 2731 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/data/apps/LauncherAppCountSource.kt` | 1013 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/core/data/risk/ApkRiskEvidence.kt` | 1026 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/diagnostics/PerformanceDiagnostics.kt` | 925 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/format/StorageSizeFormatter.kt` | 717 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/lifecycle/ForegroundTransitionGuard.kt` | 1281 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
@@ -146,18 +162,24 @@
 | `app/src/main/java/com/example/aicleanphonestorage/core/locale/AppLanguages.kt` | 1606 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/locale/LanguageActivityCallbacks.kt` | 2265 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/locale/LanguagePreferences.kt` | 1387 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/core/permissions/PermissionAccess.kt` | 5191 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/core/permissions/PermissionCoordinator.kt` | 9383 | 生产源码 | 框架恢复/工厂 L25,28,55,131,146,147 |
-| `app/src/main/java/com/example/aicleanphonestorage/core/permissions/PermissionDialogFragment.kt` | 6093 | 生产源码 | 框架恢复/工厂 L12,17,145 |
+| `app/src/main/java/com/example/aicleanphonestorage/core/media/PhotoMetrics.kt` | 2347 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/core/media/PhotoSignatureReader.kt` | 4442 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/core/permissions/PermissionAccess.kt` | 6042 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/core/permissions/PermissionActionsLayout.kt` | 1853 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/core/permissions/PermissionCoordinator.kt` | 9804 | 生产源码 | 框架恢复/工厂 L25,28,55,131,146,147 |
+| `app/src/main/java/com/example/aicleanphonestorage/core/permissions/PermissionDialogFragment.kt` | 7982 | 生产源码 | 框架恢复/工厂 L11,21,183 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/permissions/PermissionFlowViewModel.kt` | 11182 | 生产源码 | 框架恢复/工厂 L3,4,34,36,39 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/permissions/PermissionSettingsNavigator.kt` | 4450 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/core/permissions/PermissionSheetUi.kt` | 2090 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/core/permissions/VideoPermissionRequest.kt` | 1461 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/ui/apps/AppIconLoader.kt` | 1821 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/core/ui/completion/CompletionActivity.kt` | 6553 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/core/ui/apps/PackageUninstallCoordinator.kt` | 4373 | 生产源码 | 框架恢复/工厂 L19,36 |
+| `app/src/main/java/com/example/aicleanphonestorage/core/ui/completion/CompletionActivity.kt` | 6687 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/ui/completion/CompletionBurstView.kt` | 1981 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/core/ui/completion/CompletionContract.kt` | 2833 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/core/ui/completion/CompletionContract.kt` | 2861 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/ui/completion/CompletionMotion.kt` | 2583 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/core/ui/completion/CompletionRenderer.kt` | 5039 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/core/ui/completion/CompletionReport.kt` | 988 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/core/ui/completion/CompletionRenderer.kt` | 5142 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/core/ui/completion/CompletionReport.kt` | 1019 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/ui/empty/EmptyStateView.kt` | 2607 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/ui/loading/AdPlaceholderView.kt` | 580 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/ui/loading/ContinuousEntryProgress.kt` | 3728 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
@@ -165,7 +187,7 @@
 | `app/src/main/java/com/example/aicleanphonestorage/core/ui/loading/EntryStateObserver.kt` | 639 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/ui/loading/LoadingCapacityRenderer.kt` | 2847 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/ui/loading/LoadingDialogScrollView.kt` | 1117 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/core/ui/loading/TaskLoadingDialogFragment.kt` | 8282 | 生产源码 | 框架恢复/工厂 L16,31,35,209；资源/动画 L3,37,161 |
+| `app/src/main/java/com/example/aicleanphonestorage/core/ui/loading/TaskLoadingDialogFragment.kt` | 8633 | 生产源码 | 框架恢复/工厂 L16,31,37,213；资源/动画 L3,39,165 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/ui/loading/TimedEntryLoader.kt` | 4039 | 生产源码 | 框架恢复/工厂 L73 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/ui/loading/TimedEntryProgress.kt` | 2783 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/core/ui/motion/MotionPreferences.kt` | 2738 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
@@ -173,72 +195,107 @@
 | `app/src/main/java/com/example/aicleanphonestorage/feature/appmanager/data/AppManagerModels.kt` | 2614 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/appmanager/data/AppManagerRepository.kt` | 7265 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/appmanager/ui/AppDetailsSettings.kt` | 982 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/appmanager/ui/AppManagerActions.kt` | 4265 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/appmanager/ui/AppManagerActions.kt` | 2016 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/appmanager/ui/AppManagerActivity.kt` | 8038 | 生产源码 | 框架恢复/工厂 L38,41,51,54,125 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/appmanager/ui/AppManagerAdapter.kt` | 5385 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/appmanager/ui/AppManagerEntryCoordinator.kt` | 2858 | 生产源码 | 框架恢复/工厂 L14,19,30,49 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/appmanager/ui/AppManagerEntryCoordinator.kt` | 3324 | 生产源码 | 框架恢复/工厂 L16,28,39,58 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/appmanager/ui/AppManagerEntryViewModel.kt` | 3430 | 生产源码 | 框架恢复/工厂 L3,22,25 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/appmanager/ui/AppManagerPresentation.kt` | 3312 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/appmanager/ui/AppManagerSortControls.kt` | 2064 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/appmanager/ui/AppManagerViewModel.kt` | 3311 | 生产源码 | 框架恢复/工厂 L3,4,22,26,28 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/analytics/CleanupTelemetry.kt` | 7247 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/data/CleanupModels.kt` | 4420 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/battery/data/BatteryRepository.kt` | 8424 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/battery/data/BatterySnapshot.kt` | 883 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/battery/ui/BatteryEntryCoordinator.kt` | 2589 | 生产源码 | 框架恢复/工厂 L14,19,30,42 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/battery/ui/BatteryEntryViewModel.kt` | 3100 | 生产源码 | 框架恢复/工厂 L3,23,26 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/battery/ui/BatteryGaugeView.kt` | 6879 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/battery/ui/BatteryInfoActivity.kt` | 3432 | 生产源码 | 框架恢复/工厂 L25,28 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/battery/ui/BatteryInfoRenderer.kt` | 6000 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/battery/ui/BatteryInfoViewModel.kt` | 773 | 生产源码 | 框架恢复/工厂 L3,10,11 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/analytics/CleanupTelemetry.kt` | 7477 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/data/ApkRiskAnnotator.kt` | 4293 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/data/CleanupModels.kt` | 5162 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/data/DirectoryScanIndex.kt` | 2663 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/data/FileScanRepository.kt` | 8679 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/data/ScanIndex.kt` | 24064 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/data/FileScanRepository.kt` | 11008 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/data/ScanIndex.kt` | 27386 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/operations/EmptyDirectoryDeleter.kt` | 4127 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/operations/FileContentAccess.kt` | 4933 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/operations/FileOperationEngine.kt` | 13258 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/operations/FileOperationEngine.kt` | 15348 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/operations/ImageContentChecks.kt` | 1748 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/operations/PhotoCompressor.kt` | 9505 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/scan/CleanupAccess.kt` | 3814 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/scan/CleanupAccess.kt` | 4736 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/scan/DirectStorageScanner.kt` | 4666 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/scan/DocumentAccessPolicy.kt` | 894 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/scan/DocumentTreeScanner.kt` | 6725 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/scan/FileScanSources.kt` | 6735 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupActionRenderer.kt` | 2876 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupCompletionReport.kt` | 1425 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupEntryCoordinator.kt` | 5848 | 生产源码 | 框架恢复/工厂 L15,36,56,79 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupEntryViewModel.kt` | 6345 | 生产源码 | 框架恢复/工厂 L3,4,35,37,38 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupFilesAdapter.kt` | 8866 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/scan/FileScanSources.kt` | 7355 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupActionRenderer.kt` | 2864 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupCompletionReport.kt` | 1570 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupEntryCoordinator.kt` | 6666 | 生产源码 | 框架恢复/工厂 L18,44,64,87 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupEntryViewModel.kt` | 6842 | 生产源码 | 框架恢复/工厂 L3,4,35,37,38 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupFilesAdapter.kt` | 10091 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupFilters.kt` | 5848 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupListStateRenderer.kt` | 3279 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupListStateRenderer.kt` | 3592 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupMessageDialog.kt` | 4062 | 生产源码 | 框架恢复/工厂 L6,9,10 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupOperationCoordinator.kt` | 9895 | 生产源码 | 框架恢复/工厂 L23,63,113,126 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupPresentation.kt` | 1190 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupOperationCoordinator.kt` | 10883 | 生产源码 | 框架恢复/工厂 L23,71,121,134 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupPresentation.kt` | 1316 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupThumbnailLoader.kt` | 4404 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupViewModel.kt` | 14360 | 生产源码 | 框架恢复/工厂 L4,5,42,45,49 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupViewModel.kt` | 18460 | 生产源码 | 框架恢复/工厂 L4,5,43,46,50 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CompressionQualityDialog.kt` | 5853 | 生产源码 | 框架恢复/工厂 L20,24,25 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/FileCleanupActivity.kt` | 16225 | 生产源码 | 框架恢复/工厂 L49,52 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/FileCleanupActivity.kt` | 19268 | 生产源码 | 框架恢复/工厂 L49,52 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/ScanScopeText.kt` | 616 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/ScreenshotCleanupRenderer.kt` | 1475 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/home/data/AndroidHomeOverviewRepository.kt` | 1821 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/home/data/HomeCleaningState.kt` | 2566 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/home/data/HomeCleaningSync.kt` | 2056 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/home/data/HomeFileMetricsSource.kt` | 2394 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/home/data/HomeFileMetricsSource.kt` | 2789 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/home/data/HomeOverview.kt` | 1219 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/home/data/HomeOverviewRepository.kt` | 695 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/home/data/HomePlatformMetricsSource.kt` | 5457 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/home/data/HomeToolMetrics.kt` | 1451 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/home/data/HomeToolMetrics.kt` | 1572 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/home/preview/HomePreviewSupport.kt` | 3755 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/home/ui/HomeContent.kt` | 4765 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/home/ui/HomeEntryActions.kt` | 1972 | 生产源码 | 框架恢复/工厂 L4,6,7,8,13,14,15,16 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/home/ui/HomeGridSpacing.kt` | 1982 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/home/ui/HomeListAdapter.kt` | 10739 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/home/ui/HomeContent.kt` | 5193 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/home/ui/HomeEntryActions.kt` | 2647 | 生产源码 | 框架恢复/工厂 L3,5,7,8,9,14,15,16,17,18 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/home/ui/HomeGridSpacing.kt` | 2007 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/home/ui/HomeListAdapter.kt` | 11500 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/home/ui/HomeRenderer.kt` | 5632 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/home/ui/HomeRow.kt` | 931 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/home/ui/HomeUiActions.kt` | 468 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/home/ui/HomeRow.kt` | 1023 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/home/ui/HomeUiActions.kt` | 495 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/home/ui/HomeUiState.kt` | 625 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/home/ui/HomeViewModel.kt` | 2989 | 生产源码 | 框架恢复/工厂 L3,22,25 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/home/ui/MalwareHomeHolder.kt` | 2997 | 生产源码 | 资源/动画 L3,4,13,42,43 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/home/ui/motion/HomeHeroMotion.kt` | 3775 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/junkcleaner/data/JunkIndex.kt` | 4696 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/junkcleaner/data/JunkModels.kt` | 5301 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/junkcleaner/data/JunkPhotoAnalyzer.kt` | 8233 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/junkcleaner/data/JunkIndex.kt` | 4757 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/junkcleaner/data/JunkModels.kt` | 3220 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/junkcleaner/data/JunkPhotoAnalyzer.kt` | 4797 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/junkcleaner/data/JunkSummaryRepository.kt` | 1799 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/junkcleaner/ui/JunkCategoriesAdapter.kt` | 7330 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/junkcleaner/ui/JunkCategoriesAdapter.kt` | 7739 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/junkcleaner/ui/JunkCleaningActivity.kt` | 7825 | 生产源码 | 框架恢复/工厂 L42,45,54,56 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/junkcleaner/ui/JunkOverviewViewModel.kt` | 873 | 生产源码 | 框架恢复/工厂 L3,14 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/junkcleaner/ui/JunkPresentation.kt` | 1510 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/data/DeviceRiskReader.kt` | 920 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/data/MalwareConsentStore.kt` | 1093 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/data/MalwareIndex.kt` | 5259 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/data/MalwareModels.kt` | 1379 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/data/MalwareRepository.kt` | 4255 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/data/MalwareTargets.kt` | 2850 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/data/MalwareUninstallReconciliation.kt` | 1125 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/data/TrustlookScanner.kt` | 2570 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/ui/MalwareAdCoordinator.kt` | 2206 | 生产源码 | 框架恢复/工厂 L17 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/ui/MalwareAdapter.kt` | 12505 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/ui/MalwareConsentContent.kt` | 2881 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/ui/MalwareConsentDialog.kt` | 2143 | 生产源码 | 框架恢复/工厂 L8,12 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/ui/MalwareEntryCoordinator.kt` | 2308 | 生产源码 | 框架恢复/工厂 L13 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/ui/MalwareEntryViewModel.kt` | 4106 | 生产源码 | 框架恢复/工厂 L3,4,19,20,24,25 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/ui/MalwareMotionCoordinator.kt` | 2191 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/ui/MalwareNaming.kt` | 494 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/ui/MalwareResultPresentation.kt` | 388 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/ui/MalwareSafeHolder.kt` | 1963 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/ui/MalwareScanActivity.kt` | 7202 | 生产源码 | 框架恢复/工厂 L35,36 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/ui/MalwareScanMotion.kt` | 2219 | 生产源码 | 资源/动画 L3,19,38,41 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/ui/MalwareScanPalette.kt` | 750 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/ui/MalwareSpacing.kt` | 851 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/ui/MalwareStatusHolder.kt` | 5846 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/ui/MalwareViewModel.kt` | 7343 | 生产源码 | 框架恢复/工厂 L3,34 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/malware/ui/ThreatDescription.kt` | 1558 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/networktraffic/data/AndroidNetworkTrafficRepository.kt` | 2981 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/networktraffic/data/AndroidTrafficDataSource.kt` | 4913 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/networktraffic/data/AppMetadataDataSource.kt` | 1806 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
@@ -248,7 +305,7 @@
 | `app/src/main/java/com/example/aicleanphonestorage/feature/networktraffic/data/UsageAccessChecker.kt` | 314 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/networktraffic/ui/EntryLoadingProgress.kt` | 1132 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/networktraffic/ui/NetworkTrafficActivity.kt` | 7151 | 生产源码 | 框架恢复/工厂 L38,40 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/networktraffic/ui/NetworkTrafficEntryCoordinator.kt` | 6094 | 生产源码 | 框架恢复/工厂 L9,14,17,41,44,48,51,95,99,100,114,117,118 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/networktraffic/ui/NetworkTrafficEntryCoordinator.kt` | 6543 | 生产源码 | 框架恢复/工厂 L11,16,19,50,53,57,60,104,108,109,123,126,127 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/networktraffic/ui/NetworkTrafficRenderer.kt` | 5108 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/networktraffic/ui/NetworkTrafficViewModel.kt` | 9881 | 生产源码 | 框架恢复/工厂 L3,4,42,44,50 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/networktraffic/ui/TrafficEntryDialogFragment.kt` | 1902 | 生产源码 | 框架恢复/工厂 L6,10,11,27 |
@@ -266,17 +323,17 @@
 | `app/src/main/java/com/example/aicleanphonestorage/feature/notifications/ui/NotificationCleanerActivity.kt` | 7939 | 生产源码 | 框架恢复/工厂 L33,37 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/notifications/ui/NotificationCleanerRenderer.kt` | 2299 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/notifications/ui/NotificationCleanerViewModel.kt` | 13488 | 生产源码 | 框架恢复/工厂 L3,4,56,59,63 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/notifications/ui/NotificationEntryCoordinator.kt` | 4440 | 生产源码 | 框架恢复/工厂 L10,16,28,31,68,71,78,79,82,83 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/notifications/ui/NotificationEntryCoordinator.kt` | 4937 | 生产源码 | 框架恢复/工厂 L12,18,37,40,77,80,87,88,91,92 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/notifications/ui/NotificationEntryDialogFragment.kt` | 1571 | 生产源码 | 框架恢复/工厂 L6,10,22 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/push/CleanNotificationHost.kt` | 8461 | 生产源码 | 资源/动画 L6,97,102,106,130 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/push/CleanNotificationHost.kt` | 9062 | 生产源码 | 资源/动画 L6,108,113,117,141 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/push/NotificationClickContext.kt` | 1075 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/push/NotificationLaunchTelemetry.kt` | 3010 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/push/NotificationNavigation.kt` | 3549 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/push/PushPermissionCoordinator.kt` | 6820 | 生产源码 | 框架恢复/工厂 L10,14,118 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/push/PushPermissionGuideDialog.kt` | 3351 | 生产源码 | 框架恢复/工厂 L13,16 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/push/PushPermissionRequester.kt` | 2704 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/push/PushPermissionTelemetry.kt` | 3267 | 生产源码 | 框架恢复/工厂 L3,20,22 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/push/PushPermissionViewModel.kt` | 4317 | 生产源码 | 框架恢复/工厂 L3,4,22 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/push/PushPermissionGuideDialog.kt` | 2613 | 生产源码 | 框架恢复/工厂 L12,15 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/push/PushPermissionRequester.kt` | 2722 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/push/PushPermissionTelemetry.kt` | 3593 | 生产源码 | 框架恢复/工厂 L3,20,22 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/push/PushPermissionViewModel.kt` | 4351 | 生产源码 | 框架恢复/工厂 L3,4,22 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/push/ResidentClickTelemetry.kt` | 1179 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/rating/PlayReviewLauncher.kt` | 1865 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/rating/RatingPromptCoordinator.kt` | 5445 | 生产源码 | 框架恢复/工厂 L7,8,20,31,32,76 |
@@ -284,14 +341,20 @@
 | `app/src/main/java/com/example/aicleanphonestorage/feature/rating/RatingPromptStore.kt` | 1178 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/rating/RatingPromptViewModel.kt` | 2973 | 生产源码 | 框架恢复/工厂 L3,4,15,17,19 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/settings/AboutActivity.kt` | 2150 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/settings/FeedbackActivity.kt` | 3104 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/settings/FeedbackActivity.kt` | 3139 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/settings/LanguageOptionsAdapter.kt` | 3603 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/settings/LanguageSettingsActivity.kt` | 3903 | 生产源码 | 框架恢复/工厂 L24,26 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/settings/LanguageSettingsViewModel.kt` | 1953 | 生产源码 | 框架恢复/工厂 L3,21,22 |
-| `app/src/main/java/com/example/aicleanphonestorage/feature/settings/SettingsActivity.kt` | 2497 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/settings/SettingsActivity.kt` | 2531 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/settings/SettingsDestinations.kt` | 2094 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/settings/SettingsItemView.kt` | 7197 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/settings/SettingsPage.kt` | 1843 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/similar/data/SimilarPhotoAnalyzer.kt` | 4002 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/similar/data/SimilarPhotoIndex.kt` | 12139 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/similar/data/SimilarPhotoPaging.kt` | 5784 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/similar/data/SimilarPolicy.kt` | 2344 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/similar/ui/SimilarCleanupController.kt` | 3628 | 生产源码 | 框架恢复/工厂 L22 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/similar/ui/SimilarPhotosAdapter.kt` | 10576 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/startup/StartupActivity.kt` | 7909 | 生产源码 | 框架恢复/工厂 L23,26,33,37,41,44,51,52,69 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/startup/StartupAdCoordinator.kt` | 4636 | 生产源码 | 框架恢复/工厂 L20,39 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/startup/StartupNavigation.kt` | 4094 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
@@ -302,7 +365,12 @@
 | `app/src/main/java/com/example/aicleanphonestorage/feature/unused/data/UnusedPackages.kt` | 900 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/unused/data/UnusedRules.kt` | 1322 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/java/com/example/aicleanphonestorage/feature/unused/ui/UnusedGroupsAdapter.kt` | 3021 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/videos/data/VideoIndex.kt` | 4901 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/videos/data/VideoMediaScanner.kt` | 5111 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/videos/ui/VideoFilesAdapter.kt` | 8375 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/main/java/com/example/aicleanphonestorage/feature/videos/ui/VideoThumbnailLoader.kt` | 2819 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/main/keepRules/rules.keep` | 1091 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
+| `app/src/main/keepRules/trustlook.keep` | 97 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
 | `app/src/main/res/anim/startup_home_enter.xml` | 392 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/anim/startup_home_exit.xml` | 314 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/animator/home_clean_press.xml` | 1092 | XML | android:propertyName=scaleX；android:propertyName=scaleY |
@@ -316,6 +384,7 @@
 | `app/src/main/res/color/traffic_filter_text.xml` | 198 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/drawable/bg_ad_cta_button.xml` | 302 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/drawable/bg_native_ad_card.xml` | 333 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/drawable/cleanup_apk_risk_badge.xml` | 146 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/drawable/cleanup_badge.xml` | 150 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/drawable/cleanup_check_selector.xml` | 218 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/drawable/cleanup_confirm_surface.xml` | 151 | XML | 已解析 XML；无自定义类/反射属性入口 |
@@ -329,18 +398,35 @@
 | `app/src/main/res/drawable/ic_launcher_background.xml` | 108 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/drawable/ic_launcher_foreground.xml` | 310 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/drawable/junk_check_selector.xml` | 211 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/drawable/malware_card.xml` | 138 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/drawable/malware_count_badge.xml` | 172 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/drawable/malware_entry_background.xml` | 191 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/drawable/malware_group_bottom.xml` | 181 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/drawable/malware_group_top.xml` | 175 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/drawable/malware_risk_background.xml` | 138 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/drawable/malware_scan_progress.xml` | 823 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/drawable/notification_switch_track.xml` | 232 | XML | 已解析 XML；无自定义类/反射属性入口 |
-| `app/src/main/res/drawable/permission_icon_surface.xml` | 140 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/drawable/permission_sheet_surface.xml` | 201 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/drawable/push_badge.xml` | 140 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/drawable/quality_check_selector.xml` | 230 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/drawable/quality_option_background.xml` | 583 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/drawable/rating_drag_handle.xml` | 151 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/drawable/similar_group_bottom.xml` | 192 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/drawable/similar_group_top.xml` | 186 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/drawable/startup_loading_static.xml` | 523 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/drawable/task_ad_surface.xml` | 156 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/drawable/task_dialog_surface.xml` | 151 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/drawable/traffic_usage_progress.xml` | 434 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/drawable-hdpi/app_logo_rounded.webp` | 31038 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/app_logo_square.webp` | 26984 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-hdpi/battery_brightness.webp` | 2840 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-hdpi/battery_capacity.webp` | 3564 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-hdpi/battery_health_bad.webp` | 3984 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-hdpi/battery_health_good.webp` | 3822 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-hdpi/battery_inner_ring.webp` | 4468 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-hdpi/battery_temperature.webp` | 2012 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-hdpi/battery_type.webp` | 3646 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-hdpi/battery_voltage.webp` | 4330 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/cleanup_check_off.webp` | 502 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/cleanup_check_on.webp` | 728 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/cleanup_chevron_down.webp` | 350 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
@@ -377,12 +463,15 @@
 | `app/src/main/res/drawable-hdpi/ic_task_close.webp` | 358 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/ic_task_spinner.webp` | 4126 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/ic_tool_apps.webp` | 4144 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-hdpi/ic_tool_battery.webp` | 3708 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/ic_tool_compress.webp` | 4052 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/ic_tool_large_files.webp` | 3904 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/ic_tool_network.webp` | 4190 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/ic_tool_notifications.webp` | 3958 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/ic_tool_screenshots.webp` | 4396 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-hdpi/ic_tool_similar.webp` | 4052 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/ic_tool_unused_files.webp` | 3872 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-hdpi/ic_tool_videos.webp` | 3380 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/ic_traffic_back.webp` | 358 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/ic_traffic_mobile.webp` | 438 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/ic_traffic_wifi.webp` | 796 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
@@ -393,11 +482,24 @@
 | `app/src/main/res/drawable-hdpi/junk_next.webp` | 394 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/notification_switch_off.webp` | 1044 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/notification_switch_on.webp` | 1116 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-hdpi/permission_sheet_photos.webp` | 22072 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-hdpi/permission_sheet_shadow.webp` | 228 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-hdpi/permission_sheet_video.webp` | 16532 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/push_permission_bell.webp` | 18596 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/startup_background.webp` | 40614 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-hdpi/startup_logo.webp` | 9416 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-hdpi/video_collapse.webp` | 296 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-hdpi/video_play.webp` | 460 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/app_logo_rounded.webp` | 16694 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/app_logo_square.webp` | 14602 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-mdpi/battery_brightness.webp` | 1558 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-mdpi/battery_capacity.webp` | 1876 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-mdpi/battery_health_bad.webp` | 2184 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-mdpi/battery_health_good.webp` | 2100 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-mdpi/battery_inner_ring.webp` | 760 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-mdpi/battery_temperature.webp` | 1092 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-mdpi/battery_type.webp` | 1948 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-mdpi/battery_voltage.webp` | 2296 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/cleanup_check_off.webp` | 336 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/cleanup_check_on.webp` | 498 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/cleanup_chevron_down.webp` | 240 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
@@ -434,12 +536,15 @@
 | `app/src/main/res/drawable-mdpi/ic_task_close.webp` | 238 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/ic_task_spinner.webp` | 2240 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/ic_tool_apps.webp` | 2260 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-mdpi/ic_tool_battery.webp` | 2010 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/ic_tool_compress.webp` | 2210 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/ic_tool_large_files.webp` | 2198 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/ic_tool_network.webp` | 2352 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/ic_tool_notifications.webp` | 2212 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/ic_tool_screenshots.webp` | 2412 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-mdpi/ic_tool_similar.webp` | 2208 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/ic_tool_unused_files.webp` | 2204 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-mdpi/ic_tool_videos.webp` | 1886 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/ic_traffic_back.webp` | 198 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/ic_traffic_mobile.webp` | 294 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/ic_traffic_wifi.webp` | 406 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
@@ -450,13 +555,26 @@
 | `app/src/main/res/drawable-mdpi/junk_next.webp` | 272 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/notification_switch_off.webp` | 632 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/notification_switch_on.webp` | 668 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-mdpi/permission_sheet_photos.webp` | 12282 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-mdpi/permission_sheet_shadow.webp` | 186 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-mdpi/permission_sheet_video.webp` | 8928 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/push_permission_bell.webp` | 9624 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/startup_background.webp` | 24066 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-mdpi/startup_logo.webp` | 5182 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-mdpi/video_collapse.webp` | 230 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-mdpi/video_play.webp` | 326 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-nodpi/home_header_background.webp` | 32614 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-nodpi/home_hero_background.webp` | 38128 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/app_logo_rounded.webp` | 47118 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/app_logo_square.webp` | 42434 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xhdpi/battery_brightness.webp` | 4426 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xhdpi/battery_capacity.webp` | 5322 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xhdpi/battery_health_bad.webp` | 6210 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xhdpi/battery_health_good.webp` | 5840 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xhdpi/battery_inner_ring.webp` | 7328 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xhdpi/battery_temperature.webp` | 3160 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xhdpi/battery_type.webp` | 5498 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xhdpi/battery_voltage.webp` | 6386 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/cleanup_check_off.webp` | 688 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/cleanup_check_on.webp` | 986 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/cleanup_chevron_down.webp` | 412 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
@@ -493,12 +611,15 @@
 | `app/src/main/res/drawable-xhdpi/ic_task_close.webp` | 430 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/ic_task_spinner.webp` | 5866 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/ic_tool_apps.webp` | 6288 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xhdpi/ic_tool_battery.webp` | 5842 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/ic_tool_compress.webp` | 6208 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/ic_tool_large_files.webp` | 5852 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/ic_tool_network.webp` | 6440 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/ic_tool_notifications.webp` | 5928 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/ic_tool_screenshots.webp` | 6694 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xhdpi/ic_tool_similar.webp` | 5960 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/ic_tool_unused_files.webp` | 5892 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xhdpi/ic_tool_videos.webp` | 4924 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/ic_traffic_back.webp` | 412 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/ic_traffic_mobile.webp` | 522 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/ic_traffic_wifi.webp` | 1124 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
@@ -509,11 +630,24 @@
 | `app/src/main/res/drawable-xhdpi/junk_next.webp` | 510 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/notification_switch_off.webp` | 1368 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/notification_switch_on.webp` | 1444 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xhdpi/permission_sheet_photos.webp` | 34274 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xhdpi/permission_sheet_shadow.webp` | 284 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xhdpi/permission_sheet_video.webp` | 27234 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/push_permission_bell.webp` | 27906 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/startup_background.webp` | 61024 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xhdpi/startup_logo.webp` | 14486 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xhdpi/video_collapse.webp` | 418 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xhdpi/video_play.webp` | 690 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/app_logo_rounded.webp` | 91434 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/app_logo_square.webp` | 83440 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/battery_brightness.webp` | 7186 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/battery_capacity.webp` | 10060 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/battery_health_bad.webp` | 11424 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/battery_health_good.webp` | 10816 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/battery_inner_ring.webp` | 12288 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/battery_temperature.webp` | 4776 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/battery_type.webp` | 10368 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/battery_voltage.webp` | 11700 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/cleanup_check_off.webp` | 454 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/cleanup_check_on.webp` | 498 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/cleanup_chevron_down.webp` | 266 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
@@ -550,12 +684,15 @@
 | `app/src/main/res/drawable-xxhdpi/ic_task_close.webp` | 244 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/ic_task_spinner.webp` | 5458 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/ic_tool_apps.webp` | 10100 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/ic_tool_battery.webp` | 10480 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/ic_tool_compress.webp` | 9706 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/ic_tool_large_files.webp` | 9346 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/ic_tool_network.webp` | 10996 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/ic_tool_notifications.webp` | 9774 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/ic_tool_screenshots.webp` | 11034 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/ic_tool_similar.webp` | 11084 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/ic_tool_unused_files.webp` | 9382 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/ic_tool_videos.webp` | 9230 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/ic_traffic_back.webp` | 186 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/ic_traffic_mobile.webp` | 190 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/ic_traffic_wifi.webp` | 566 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
@@ -564,8 +701,25 @@
 | `app/src/main/res/drawable-xxhdpi/junk_file.webp` | 1626 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/junk_hero.webp` | 50078 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/junk_next.webp` | 762 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/malware_accessibility.webp` | 1578 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/malware_app.webp` | 1742 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/malware_counter_pua.webp` | 3430 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/malware_counter_risk.webp` | 2854 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/malware_counter_virus.webp` | 3966 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/malware_entry.webp` | 2986 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/malware_error.webp` | 130744 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/malware_result.webp` | 34306 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/malware_safe_heading.webp` | 708 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/malware_safe_icon.webp` | 1892 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/malware_scan_backdrop.webp` | 5242 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/malware_scan_rotor.webp` | 7078 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/malware_scan_shield.webp` | 2234 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/malware_usb.webp` | 976 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/notification_switch_off.webp` | 794 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/notification_switch_on.webp` | 740 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/permission_sheet_photos.webp` | 67876 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/permission_sheet_shadow.webp` | 380 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/permission_sheet_video.webp` | 56374 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/push_permission_bell.webp` | 53404 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/rating_hint.webp` | 678 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/rating_illustration.webp` | 17074 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
@@ -573,8 +727,18 @@
 | `app/src/main/res/drawable-xxhdpi/rating_star_filled.webp` | 1644 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/startup_background.webp` | 73042 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxhdpi/startup_logo.webp` | 26628 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/video_collapse.webp` | 574 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxhdpi/video_play.webp` | 970 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/app_logo_rounded.webp` | 136534 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/app_logo_square.webp` | 133192 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxxhdpi/battery_brightness.webp` | 10284 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxxhdpi/battery_capacity.webp` | 16490 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxxhdpi/battery_health_bad.webp` | 17860 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxxhdpi/battery_health_good.webp` | 17414 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxxhdpi/battery_inner_ring.webp` | 23370 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxxhdpi/battery_temperature.webp` | 7196 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxxhdpi/battery_type.webp` | 16898 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxxhdpi/battery_voltage.webp` | 18702 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/cleanup_check_off.webp` | 2180 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/cleanup_check_on.webp` | 3082 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/cleanup_chevron_down.webp` | 1082 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
@@ -611,12 +775,15 @@
 | `app/src/main/res/drawable-xxxhdpi/ic_task_close.webp` | 922 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/ic_task_spinner.webp` | 15994 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/ic_tool_apps.webp` | 17804 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxxhdpi/ic_tool_battery.webp` | 16672 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/ic_tool_compress.webp` | 16694 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/ic_tool_large_files.webp` | 16708 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/ic_tool_network.webp` | 19028 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/ic_tool_notifications.webp` | 16570 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/ic_tool_screenshots.webp` | 18784 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxxhdpi/ic_tool_similar.webp` | 16868 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/ic_tool_unused_files.webp` | 16514 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxxhdpi/ic_tool_videos.webp` | 14330 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/ic_traffic_back.webp` | 952 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/ic_traffic_mobile.webp` | 1070 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/ic_traffic_wifi.webp` | 2952 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
@@ -627,39 +794,56 @@
 | `app/src/main/res/drawable-xxxhdpi/junk_next.webp` | 306 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/notification_switch_off.webp` | 4082 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/notification_switch_on.webp` | 4642 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxxhdpi/permission_sheet_photos.webp` | 110994 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxxhdpi/permission_sheet_shadow.webp` | 454 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxxhdpi/permission_sheet_video.webp` | 87322 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/push_permission_bell.webp` | 84712 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/startup_background.webp` | 73042 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/drawable-xxxhdpi/startup_logo.webp` | 40222 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxxhdpi/video_collapse.webp` | 748 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
+| `app/src/main/res/drawable-xxxhdpi/video_play.webp` | 1260 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/font/home_roboto_black.ttf` | 46736 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/font/home_roboto_bold.ttf` | 46588 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/font/home_roboto_medium.ttf` | 46428 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/font/home_roboto_regular.ttf` | 46400 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `app/src/main/res/font/home_roboto_semibold.ttf` | 46576 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
-| `app/src/main/res/layout/dialog_app_permission.xml` | 3862 | XML | XML View com.google.android.material.button.MaterialButton；XML View com.google.android.material.card.MaterialCardView；XML View com.google.android.material.textview.MaterialTextView |
+| `app/src/main/res/layout/dialog_app_permission.xml` | 3715 | XML | XML View androidx.core.widget.NestedScrollView；XML View com.example.aicleanphonestorage.core.permissions.PermissionActionsLayout；XML View com.google.android.material.button.MaterialButton；XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/dialog_cleanup_confirm.xml` | 2236 | XML | XML View com.google.android.material.button.MaterialButton；XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/dialog_compression_quality.xml` | 3015 | XML | XML View androidx.appcompat.widget.AppCompatRadioButton；XML View com.google.android.material.button.MaterialButton；XML View com.google.android.material.card.MaterialCardView；XML View com.google.android.material.textview.MaterialTextView |
-| `app/src/main/res/layout/dialog_push_permission_guide.xml` | 2916 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.core.widget.NestedScrollView；XML View com.google.android.material.button.MaterialButton；XML View com.google.android.material.textview.MaterialTextView |
+| `app/src/main/res/layout/dialog_malware_consent.xml` | 3426 | XML | XML View com.google.android.material.button.MaterialButton |
 | `app/src/main/res/layout/dialog_rating_prompt.xml` | 5762 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View androidx.core.widget.NestedScrollView；XML View com.google.android.material.button.MaterialButton；XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/dialog_task_loading.xml` | 5038 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View com.example.aicleanphonestorage.core.ui.loading.LoadingDialogScrollView；XML View com.google.android.material.progressindicator.LinearProgressIndicator；XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/item_app_manager.xml` | 5095 | XML | XML View androidx.constraintlayout.widget.ConstraintLayout；XML View com.google.android.material.button.MaterialButton；XML View com.google.android.material.card.MaterialCardView；XML View com.google.android.material.imageview.ShapeableImageView；XML View com.google.android.material.textview.MaterialTextView |
-| `app/src/main/res/layout/item_cleanup_file.xml` | 2147 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View com.google.android.material.textview.MaterialTextView |
+| `app/src/main/res/layout/item_battery_info.xml` | 1350 | XML | XML View com.google.android.material.card.MaterialCardView；XML View com.google.android.material.textview.MaterialTextView |
+| `app/src/main/res/layout/item_cleanup_file.xml` | 2613 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/item_cleanup_filter.xml` | 821 | XML | XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/item_cleanup_photo.xml` | 4017 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View com.google.android.material.card.MaterialCardView；XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/item_home_hero.xml` | 7120 | XML | XML View androidx.constraintlayout.widget.Barrier；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View com.example.aicleanphonestorage.core.ui.motion.ShimmerPillButton；XML View com.google.android.material.card.MaterialCardView；XML View com.google.android.material.textview.MaterialTextView |
+| `app/src/main/res/layout/item_home_malware.xml` | 1996 | XML | XML View com.google.android.material.button.MaterialButton |
 | `app/src/main/res/layout/item_home_section_title.xml` | 409 | XML | XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/item_home_stats.xml` | 884 | XML | XML View com.google.android.material.card.MaterialCardView |
 | `app/src/main/res/layout/item_home_tool.xml` | 2977 | XML | XML View androidx.constraintlayout.widget.ConstraintLayout；XML View com.google.android.material.card.MaterialCardView；XML View com.google.android.material.textview.MaterialTextView |
-| `app/src/main/res/layout/item_junk_category.xml` | 3304 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View com.google.android.material.card.MaterialCardView；XML View com.google.android.material.textview.MaterialTextView |
+| `app/src/main/res/layout/item_junk_category.xml` | 3676 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View com.google.android.material.card.MaterialCardView；XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/item_junk_overview.xml` | 3097 | XML | XML View androidx.constraintlayout.widget.ConstraintLayout；XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/item_junk_section.xml` | 713 | XML | XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/item_language_option.xml` | 773 | XML | XML View androidx.appcompat.widget.AppCompatRadioButton |
+| `app/src/main/res/layout/item_malware_counter.xml` | 1446 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/layout/item_malware_footer.xml` | 2002 | XML | XML View com.google.android.material.button.MaterialButton |
+| `app/src/main/res/layout/item_malware_safe.xml` | 2451 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/layout/item_malware_status.xml` | 3571 | XML | XML View com.google.android.material.button.MaterialButton |
+| `app/src/main/res/layout/item_malware_summary.xml` | 841 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/layout/item_malware_threat.xml` | 1740 | XML | XML View com.google.android.material.button.MaterialButton |
 | `app/src/main/res/layout/item_notification_app.xml` | 2051 | XML | XML View androidx.appcompat.widget.SwitchCompat；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/item_notification_empty.xml` | 226 | XML | XML View com.example.aicleanphonestorage.core.ui.empty.EmptyStateView |
 | `app/src/main/res/layout/item_notification_header.xml` | 1093 | XML | XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/item_settings_entry.xml` | 2638 | XML | XML View androidx.constraintlayout.widget.ConstraintLayout；XML View com.google.android.material.textview.MaterialTextView |
+| `app/src/main/res/layout/item_similar_header.xml` | 1435 | XML | XML View com.google.android.material.textview.MaterialTextView |
+| `app/src/main/res/layout/item_similar_photo.xml` | 2822 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View com.google.android.material.card.MaterialCardView；XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/item_traffic_app.xml` | 2787 | XML | XML View androidx.constraintlayout.widget.ConstraintLayout；XML View com.google.android.material.button.MaterialButton；XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/item_traffic_empty.xml` | 226 | XML | XML View com.example.aicleanphonestorage.core.ui.empty.EmptyStateView |
 | `app/src/main/res/layout/item_traffic_header.xml` | 2468 | XML | XML View com.google.android.material.chip.Chip；XML View com.google.android.material.chip.ChipGroup；XML View com.google.android.material.textview.MaterialTextView |
+| `app/src/main/res/layout/item_video.xml` | 2666 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View com.google.android.material.card.MaterialCardView；XML View com.google.android.material.textview.MaterialTextView |
+| `app/src/main/res/layout/item_video_month.xml` | 1825 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View com.google.android.material.button.MaterialButton；XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/layout_ad_loading.xml` | 2589 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View com.example.aicleanphonestorage.app.ad.renderer.AdLoadingAnimationView；XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/layout_full_native_ad_admob.xml` | 5218 | XML | XML View androidx.appcompat.widget.AppCompatTextView；XML View androidx.cardview.widget.CardView；XML View com.google.android.libraries.ads.mobile.sdk.nativead.MediaView；XML View com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdView |
 | `app/src/main/res/layout/layout_full_native_ad_pangle.xml` | 3382 | XML | 已解析 XML；无自定义类/反射属性入口 |
@@ -672,10 +856,12 @@
 | `app/src/main/res/layout/notification_shortcuts_accessible.xml` | 5912 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/layout/notification_shortcuts_compact.xml` | 5912 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/layout/screen_app_manager.xml` | 5672 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.helper.widget.Flow；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View androidx.recyclerview.widget.RecyclerView；XML View com.example.aicleanphonestorage.core.ui.empty.EmptyStateView；XML View com.google.android.material.button.MaterialButton；XML View com.google.android.material.progressindicator.LinearProgressIndicator；XML View com.google.android.material.textview.MaterialTextView |
+| `app/src/main/res/layout/screen_battery_info.xml` | 3547 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View androidx.core.widget.NestedScrollView；XML View com.example.aicleanphonestorage.feature.battery.ui.BatteryGaugeView；XML View com.google.android.material.button.MaterialButton；XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/screen_completion.xml` | 8623 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View androidx.core.widget.NestedScrollView；XML View com.example.aicleanphonestorage.core.ui.completion.CompletionBurstView；XML View com.google.android.material.button.MaterialButton；XML View com.google.android.material.textview.MaterialTextView |
-| `app/src/main/res/layout/screen_file_cleanup.xml` | 8578 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View androidx.recyclerview.widget.RecyclerView；XML View com.example.aicleanphonestorage.core.ui.empty.EmptyStateView；XML View com.google.android.material.button.MaterialButton；XML View com.google.android.material.progressindicator.LinearProgressIndicator；XML View com.google.android.material.textview.MaterialTextView |
+| `app/src/main/res/layout/screen_file_cleanup.xml` | 9020 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View androidx.recyclerview.widget.RecyclerView；XML View com.example.aicleanphonestorage.core.ui.empty.EmptyStateView；XML View com.google.android.material.button.MaterialButton；XML View com.google.android.material.progressindicator.LinearProgressIndicator；XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/screen_home.xml` | 4240 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View androidx.recyclerview.widget.RecyclerView；XML View com.google.android.material.button.MaterialButton；XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/screen_junk_cleaning.xml` | 4164 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View androidx.recyclerview.widget.RecyclerView；XML View com.example.aicleanphonestorage.core.ui.empty.EmptyStateView；XML View com.google.android.material.button.MaterialButton；XML View com.google.android.material.progressindicator.LinearProgressIndicator；XML View com.google.android.material.textview.MaterialTextView |
+| `app/src/main/res/layout/screen_malware.xml` | 2272 | XML | XML View androidx.constraintlayout.widget.ConstraintLayout；XML View androidx.recyclerview.widget.RecyclerView |
 | `app/src/main/res/layout/screen_network_traffic.xml` | 4741 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View androidx.recyclerview.widget.RecyclerView；XML View com.google.android.material.button.MaterialButton；XML View com.google.android.material.progressindicator.LinearProgressIndicator；XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/screen_notification_cleaner.xml` | 4470 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View androidx.recyclerview.widget.RecyclerView；XML View com.google.android.material.button.MaterialButton；XML View com.google.android.material.progressindicator.LinearProgressIndicator；XML View com.google.android.material.textview.MaterialTextView |
 | `app/src/main/res/layout/screen_settings_shell.xml` | 3304 | XML | XML View androidx.appcompat.widget.AppCompatImageButton；XML View androidx.constraintlayout.widget.ConstraintLayout；XML View androidx.core.widget.NestedScrollView；XML View com.google.android.material.textview.MaterialTextView |
@@ -705,12 +891,16 @@
 | `app/src/main/res/raw/ad_loading_tiles.json` | 7292 | JSON | 已解析 JSON；配置 DTO 见审计正文，Firebase/Lottie 交由 SDK 规则 |
 | `app/src/main/res/values/app_manager_strings.xml` | 2285 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/app_manager_styles.xml` | 1349 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values/battery_dimens.xml` | 247 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values/battery_gauge_paths.xml` | 2641 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values/battery_strings.xml` | 1570 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/bugfix_strings.xml` | 794 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/cleanup_selection_strings.xml` | 170 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/cleanup_strings.xml` | 3887 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/completion_strings.xml` | 2215 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/compression_quality.xml` | 1408 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/compression_size_strings.xml` | 365 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values/dimens_malware.xml` | 195 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/empty_state_strings.xml` | 175 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/home_colors.xml` | 679 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/home_dimens.xml` | 686 | XML | 已解析 XML；无自定义类/反射属性入口 |
@@ -723,7 +913,8 @@
 | `app/src/main/res/values/loading_capacity_strings.xml` | 185 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/notification_strings.xml` | 1457 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/notification_styles.xml` | 786 | XML | 已解析 XML；无自定义类/反射属性入口 |
-| `app/src/main/res/values/permission_strings.xml` | 1922 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values/permission_sheet_styles.xml` | 1800 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values/permission_strings.xml` | 2013 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/push_guide_strings.xml` | 327 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/push_guide_styles.xml` | 934 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/push_strings.xml` | 871 | XML | 已解析 XML；无自定义类/反射属性入口 |
@@ -731,16 +922,21 @@
 | `app/src/main/res/values/rating_styles.xml` | 737 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/screenshot_summary_strings.xml` | 277 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/settings_attrs.xml` | 206 | XML | 已解析 XML；无自定义类/反射属性入口 |
-| `app/src/main/res/values/settings_endpoints.xml` | 356 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/settings_icons.xml` | 228 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/settings_strings.xml` | 1861 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values/similar_strings.xml` | 1105 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/startup_design.xml` | 1515 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/startup_strings.xml` | 158 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/strings.xml` | 1697 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values/strings_apk_risk.xml` | 155 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values/strings_malware.xml` | 3879 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values/strings_malware_entry.xml` | 1350 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/themes.xml` | 981 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/traffic_strings.xml` | 2866 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/traffic_styles.xml` | 1803 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values/unused_strings.xml` | 362 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values/video_strings.xml` | 1147 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ar/battery_strings.xml` | 1560 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ar/bugfix_strings.xml` | 886 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ar/cleanup_selection_strings.xml` | 97 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ar/compression_size_strings.xml` | 456 | XML | 已解析 XML；无自定义类/反射属性入口 |
@@ -748,18 +944,30 @@
 | `app/src/main/res/values-ar/push_strings.xml` | 1071 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ar/rating_strings.xml` | 422 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ar/screenshot_summary_strings.xml` | 622 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ar/similar_strings.xml` | 1326 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ar/startup_strings.xml` | 184 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ar/strings.xml` | 30480 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ar/strings_apk_risk.xml` | 187 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ar/strings_malware.xml` | 4717 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ar/strings_malware_entry.xml` | 1885 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ar/unused_strings.xml` | 446 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ar/video_strings.xml` | 1808 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-b+zh+Hans/battery_strings.xml` | 1281 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-b+zh+Hans/bugfix_strings.xml` | 718 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-b+zh+Hans/cleanup_selection_strings.xml` | 96 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-b+zh+Hans/compression_size_strings.xml` | 353 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-b+zh+Hans/junk_category_strings.xml` | 562 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-b+zh+Hans/rating_strings.xml` | 379 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-b+zh+Hans/screenshot_summary_strings.xml` | 219 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-b+zh+Hans/similar_strings.xml` | 1073 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-b+zh+Hans/startup_strings.xml` | 160 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-b+zh+Hans/strings.xml` | 21011 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-b+zh+Hans/strings_apk_risk.xml` | 176 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-b+zh+Hans/strings_malware.xml` | 3621 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-b+zh+Hans/strings_malware_entry.xml` | 1342 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-b+zh+Hans/unused_strings.xml` | 355 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-b+zh+Hans/video_strings.xml` | 1074 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-bn/battery_strings.xml` | 1943 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-bn/bugfix_strings.xml` | 960 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-bn/cleanup_selection_strings.xml` | 111 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-bn/compression_size_strings.xml` | 521 | XML | 已解析 XML；无自定义类/反射属性入口 |
@@ -767,9 +975,15 @@
 | `app/src/main/res/values-bn/push_strings.xml` | 1436 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-bn/rating_strings.xml` | 580 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-bn/screenshot_summary_strings.xml` | 367 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-bn/similar_strings.xml` | 1845 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-bn/startup_strings.xml` | 227 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-bn/strings.xml` | 37252 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-bn/strings_apk_risk.xml` | 198 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-bn/strings_malware.xml` | 6658 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-bn/strings_malware_entry.xml` | 2559 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-bn/unused_strings.xml` | 619 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-bn/video_strings.xml` | 1653 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-de/battery_strings.xml` | 1362 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-de/bugfix_strings.xml` | 751 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-de/cleanup_selection_strings.xml` | 99 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-de/compression_size_strings.xml` | 380 | XML | 已解析 XML；无自定义类/反射属性入口 |
@@ -777,9 +991,15 @@
 | `app/src/main/res/values-de/push_strings.xml` | 920 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-de/rating_strings.xml` | 390 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-de/screenshot_summary_strings.xml` | 290 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-de/similar_strings.xml` | 1148 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-de/startup_strings.xml` | 167 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-de/strings.xml` | 24751 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-de/strings_apk_risk.xml` | 156 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-de/strings_malware.xml` | 4147 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-de/strings_malware_entry.xml` | 1523 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-de/unused_strings.xml` | 366 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-de/video_strings.xml` | 1238 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-es/battery_strings.xml` | 1395 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-es/bugfix_strings.xml` | 749 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-es/cleanup_selection_strings.xml` | 96 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-es/compression_size_strings.xml` | 389 | XML | 已解析 XML；无自定义类/反射属性入口 |
@@ -787,9 +1007,15 @@
 | `app/src/main/res/values-es/push_strings.xml` | 898 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-es/rating_strings.xml` | 384 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-es/screenshot_summary_strings.xml` | 377 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-es/similar_strings.xml` | 1132 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-es/startup_strings.xml` | 161 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-es/strings.xml` | 25119 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-es/strings_apk_risk.xml` | 163 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-es/strings_malware.xml` | 3986 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-es/strings_malware_entry.xml` | 1578 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-es/unused_strings.xml` | 371 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-es/video_strings.xml` | 1344 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-fr/battery_strings.xml` | 1394 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-fr/bugfix_strings.xml` | 770 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-fr/cleanup_selection_strings.xml` | 97 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-fr/compression_size_strings.xml` | 395 | XML | 已解析 XML；无自定义类/反射属性入口 |
@@ -797,9 +1023,15 @@
 | `app/src/main/res/values-fr/push_strings.xml` | 928 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-fr/rating_strings.xml` | 381 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-fr/screenshot_summary_strings.xml` | 379 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-fr/similar_strings.xml` | 1228 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-fr/startup_strings.xml` | 170 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-fr/strings.xml` | 25885 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-fr/strings_apk_risk.xml` | 165 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-fr/strings_malware.xml` | 4336 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-fr/strings_malware_entry.xml` | 1650 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-fr/unused_strings.xml` | 400 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-fr/video_strings.xml` | 1371 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-hi/battery_strings.xml` | 1884 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-hi/bugfix_strings.xml` | 970 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-hi/cleanup_selection_strings.xml` | 124 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-hi/compression_size_strings.xml` | 541 | XML | 已解析 XML；无自定义类/反射属性入口 |
@@ -807,9 +1039,15 @@
 | `app/src/main/res/values-hi/push_strings.xml` | 1352 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-hi/rating_strings.xml` | 586 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-hi/screenshot_summary_strings.xml` | 358 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-hi/similar_strings.xml` | 1826 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-hi/startup_strings.xml` | 232 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-hi/strings.xml` | 36189 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-hi/strings_apk_risk.xml` | 189 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-hi/strings_malware.xml` | 6653 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-hi/strings_malware_entry.xml` | 2453 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-hi/unused_strings.xml` | 602 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-hi/video_strings.xml` | 1729 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-in/battery_strings.xml` | 1345 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-in/bugfix_strings.xml` | 747 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-in/cleanup_selection_strings.xml` | 94 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-in/compression_size_strings.xml` | 379 | XML | 已解析 XML；无自定义类/反射属性入口 |
@@ -817,9 +1055,15 @@
 | `app/src/main/res/values-in/push_strings.xml` | 904 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-in/rating_strings.xml` | 401 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-in/screenshot_summary_strings.xml` | 230 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-in/similar_strings.xml` | 1108 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-in/startup_strings.xml` | 157 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-in/strings.xml` | 22685 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-in/strings_apk_risk.xml` | 161 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-in/strings_malware.xml` | 3920 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-in/strings_malware_entry.xml` | 1452 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-in/unused_strings.xml` | 367 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-in/video_strings.xml` | 1110 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ja/battery_strings.xml` | 1443 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ja/bugfix_strings.xml` | 814 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ja/cleanup_selection_strings.xml` | 102 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ja/compression_size_strings.xml` | 398 | XML | 已解析 XML；无自定义类/反射属性入口 |
@@ -827,9 +1071,15 @@
 | `app/src/main/res/values-ja/push_strings.xml` | 1035 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ja/rating_strings.xml` | 429 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ja/screenshot_summary_strings.xml` | 277 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ja/similar_strings.xml` | 1222 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ja/startup_strings.xml` | 178 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ja/strings.xml` | 26196 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ja/strings_apk_risk.xml` | 182 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ja/strings_malware.xml` | 4917 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ja/strings_malware_entry.xml` | 1702 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ja/unused_strings.xml` | 437 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ja/video_strings.xml` | 1187 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ko/battery_strings.xml` | 1372 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ko/bugfix_strings.xml` | 751 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ko/cleanup_selection_strings.xml` | 99 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ko/compression_size_strings.xml` | 375 | XML | 已解析 XML；无自定义类/反射属性入口 |
@@ -837,10 +1087,16 @@
 | `app/src/main/res/values-ko/push_strings.xml` | 942 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ko/rating_strings.xml` | 401 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ko/screenshot_summary_strings.xml` | 229 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ko/similar_strings.xml` | 1197 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ko/startup_strings.xml` | 180 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ko/strings.xml` | 23961 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ko/strings_apk_risk.xml` | 168 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ko/strings_malware.xml` | 4330 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ko/strings_malware_entry.xml` | 1538 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ko/unused_strings.xml` | 390 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ko/video_strings.xml` | 1135 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-land/startup_dimensions.xml` | 176 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-pt/battery_strings.xml` | 1385 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-pt/bugfix_strings.xml` | 745 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-pt/cleanup_selection_strings.xml` | 96 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-pt/compression_size_strings.xml` | 387 | XML | 已解析 XML；无自定义类/反射属性入口 |
@@ -848,9 +1104,15 @@
 | `app/src/main/res/values-pt/push_strings.xml` | 878 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-pt/rating_strings.xml` | 383 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-pt/screenshot_summary_strings.xml` | 364 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-pt/similar_strings.xml` | 1130 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-pt/startup_strings.xml` | 167 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-pt/strings.xml` | 24837 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-pt/strings_apk_risk.xml` | 172 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-pt/strings_malware.xml` | 4034 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-pt/strings_malware_entry.xml` | 1575 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-pt/unused_strings.xml` | 381 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-pt/video_strings.xml` | 1333 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ru/battery_strings.xml` | 1709 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ru/bugfix_strings.xml` | 877 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ru/cleanup_selection_strings.xml` | 97 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ru/compression_size_strings.xml` | 434 | XML | 已解析 XML；无自定义类/反射属性入口 |
@@ -858,9 +1120,15 @@
 | `app/src/main/res/values-ru/push_strings.xml` | 1168 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ru/rating_strings.xml` | 476 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ru/screenshot_summary_strings.xml` | 453 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ru/similar_strings.xml` | 1502 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ru/startup_strings.xml` | 203 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ru/strings.xml` | 33260 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ru/strings_apk_risk.xml` | 191 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ru/strings_malware.xml` | 5705 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ru/strings_malware_entry.xml` | 2084 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ru/unused_strings.xml` | 482 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ru/video_strings.xml` | 1619 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-tr/battery_strings.xml` | 1315 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-tr/bugfix_strings.xml` | 753 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-tr/cleanup_selection_strings.xml` | 99 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-tr/compression_size_strings.xml` | 405 | XML | 已解析 XML；无自定义类/反射属性入口 |
@@ -868,9 +1136,15 @@
 | `app/src/main/res/values-tr/push_strings.xml` | 938 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-tr/rating_strings.xml` | 395 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-tr/screenshot_summary_strings.xml` | 307 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-tr/similar_strings.xml` | 1192 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-tr/startup_strings.xml` | 173 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-tr/strings.xml` | 24007 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-tr/strings_apk_risk.xml` | 169 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-tr/strings_malware.xml` | 4018 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-tr/strings_malware_entry.xml` | 1589 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-tr/unused_strings.xml` | 395 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-tr/video_strings.xml` | 1256 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ur/battery_strings.xml` | 1585 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ur/bugfix_strings.xml` | 848 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ur/cleanup_selection_strings.xml` | 101 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ur/compression_size_strings.xml` | 464 | XML | 已解析 XML；无自定义类/反射属性入口 |
@@ -878,10 +1152,16 @@
 | `app/src/main/res/values-ur/push_strings.xml` | 1155 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ur/rating_strings.xml` | 458 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ur/screenshot_summary_strings.xml` | 326 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ur/similar_strings.xml` | 1440 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ur/startup_strings.xml` | 198 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ur/strings.xml` | 29694 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ur/strings_apk_risk.xml` | 173 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ur/strings_malware.xml` | 5175 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ur/strings_malware_entry.xml` | 1954 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-ur/unused_strings.xml` | 481 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-ur/video_strings.xml` | 1457 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-v29/themes.xml` | 167 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-vi/battery_strings.xml` | 1398 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-vi/bugfix_strings.xml` | 801 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-vi/cleanup_selection_strings.xml` | 91 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-vi/compression_size_strings.xml` | 405 | XML | 已解析 XML；无自定义类/反射属性入口 |
@@ -889,21 +1169,26 @@
 | `app/src/main/res/values-vi/push_strings.xml` | 942 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-vi/rating_strings.xml` | 430 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-vi/screenshot_summary_strings.xml` | 245 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-vi/similar_strings.xml` | 1226 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-vi/startup_strings.xml` | 184 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-vi/strings.xml` | 25371 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-vi/strings_apk_risk.xml` | 171 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-vi/strings_malware.xml` | 4335 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-vi/strings_malware_entry.xml` | 1655 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-vi/unused_strings.xml` | 426 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/values-vi/video_strings.xml` | 1168 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-zh-rCN/junk_category_strings.xml` | 562 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-zh-rCN/push_strings.xml` | 846 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/values-zh-rCN/startup_strings.xml` | 160 | XML | 已解析 XML；无自定义类/反射属性入口 |
-| `app/src/main/res/xml/backup_rules.xml` | 483 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/xml/backup_rules.xml` | 536 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/xml/cleanup_file_paths.xml` | 120 | XML | 已解析 XML；无自定义类/反射属性入口 |
-| `app/src/main/res/xml/data_extraction_rules.xml` | 985 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `app/src/main/res/xml/data_extraction_rules.xml` | 1091 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/main/res/xml/locales_config.xml` | 628 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `app/src/test/java/com/example/aicleanphonestorage/app/ad/HomeExitAdStateTest.kt` | 2054 | 测试源码 | 框架恢复/工厂 L3,9,21,34,49 |
 | `app/src/test/java/com/example/aicleanphonestorage/app/ad/HotStartStateTest.kt` | 2096 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/test/java/com/example/aicleanphonestorage/app/ad/InterstitialActionStateTest.kt` | 2227 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/test/java/com/example/aicleanphonestorage/app/ad/InterstitialPlacementsTest.kt` | 1702 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/test/java/com/example/aicleanphonestorage/app/ad/NativeAdPlacementsTest.kt` | 2456 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/test/java/com/example/aicleanphonestorage/app/ad/InterstitialPlacementsTest.kt` | 2862 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/test/java/com/example/aicleanphonestorage/app/ad/NativeAdPlacementsTest.kt` | 2617 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/test/java/com/example/aicleanphonestorage/core/analytics/BusinessTelemetryTest.kt` | 7928 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/test/java/com/example/aicleanphonestorage/core/coroutines/TaskExecutorTest.kt` | 3543 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/test/java/com/example/aicleanphonestorage/core/data/apps/InstalledAppCountRepositoryTest.kt` | 3192 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
@@ -921,6 +1206,9 @@
 | `app/src/test/java/com/example/aicleanphonestorage/feature/home/HomeViewModelTest.kt` | 3974 | 测试源码 | 框架恢复/工厂 L8,41,42,46 |
 | `app/src/test/java/com/example/aicleanphonestorage/feature/home/ui/HomeContentTest.kt` | 4925 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/test/java/com/example/aicleanphonestorage/feature/junkcleaner/JunkRulesTest.kt` | 4171 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/test/java/com/example/aicleanphonestorage/feature/malware/MalwareEntryViewModelTest.kt` | 5859 | 测试源码 | 框架恢复/工厂 L3,8,31,55,72,84,86,88,104 |
+| `app/src/test/java/com/example/aicleanphonestorage/feature/malware/MalwareResultPresentationTest.kt` | 1409 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/test/java/com/example/aicleanphonestorage/feature/malware/MalwareViewModelTest.kt` | 3802 | 测试源码 | 框架恢复/工厂 L20,54,68 |
 | `app/src/test/java/com/example/aicleanphonestorage/feature/networktraffic/EntryLoadingProgressTest.kt` | 2181 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/test/java/com/example/aicleanphonestorage/feature/networktraffic/NetworkTrafficViewModelTest.kt` | 8915 | 测试源码 | 框架恢复/工厂 L3,27,36,57,70,76,85,141 |
 | `app/src/test/java/com/example/aicleanphonestorage/feature/networktraffic/TrafficAppVisibilityTest.kt` | 1184 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
@@ -929,26 +1217,33 @@
 | `app/src/test/java/com/example/aicleanphonestorage/feature/notifications/NotificationClearPolicyTest.kt` | 1396 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/test/java/com/example/aicleanphonestorage/feature/notifications/NotificationRemovalTrackerTest.kt` | 1369 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/test/java/com/example/aicleanphonestorage/feature/notifications/NotificationRulesStoreTest.kt` | 1745 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `app/src/test/java/com/example/aicleanphonestorage/feature/push/PushPermissionTelemetryTest.kt` | 3944 | 测试源码 | 框架恢复/工厂 L3,10 |
+| `app/src/test/java/com/example/aicleanphonestorage/feature/push/PushPermissionTelemetryTest.kt` | 5217 | 测试源码 | 框架恢复/工厂 L3,10,36 |
 | `app/src/test/java/com/example/aicleanphonestorage/feature/push/PushPermissionViewModelTest.kt` | 5543 | 测试源码 | 框架恢复/工厂 L3,10,22,34,35,44,52,67,68,74,83,89,95,111,120,127,128,130 |
 | `app/src/test/java/com/example/aicleanphonestorage/feature/rating/RatingPromptViewModelTest.kt` | 4415 | 测试源码 | 框架恢复/工厂 L3,19,20,29,42,60,65,75,78 |
+| `app/src/test/java/com/example/aicleanphonestorage/feature/similar/SimilarPolicyTest.kt` | 3038 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `app/src/test/java/com/example/aicleanphonestorage/feature/startup/StartupOfflineTest.kt` | 4786 | 测试源码 | 框架恢复/工厂 L3,14,16 |
 | `app/src/test/java/com/example/aicleanphonestorage/feature/startup/StartupViewModelTest.kt` | 13489 | 测试源码 | 框架恢复/工厂 L3,17,19,21,36,37,39,60,85,114,138,160,180,201,229,231,236,238,254,272,298 |
 | `app/src/test/java/com/example/aicleanphonestorage/feature/unused/UnusedRulesTest.kt` | 3244 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `app/src/test/java/com/example/aicleanphonestorage/feature/videos/VideoPolicyTest.kt` | 1988 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 
 ## notification
 
 | 文件 | 字节数 | 类型 | 检查项 |
 | --- | ---: | --- | --- |
-| `notification/build.gradle.kts` | 2502 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
-| `notification/consumer-rules.pro` | 3154 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
+| `notification/build.gradle.kts` | 3817 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
+| `notification/consumer-rules.pro` | 3288 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
 | `notification/src/main/AndroidManifest.xml` | 2737 | XML | Manifest .provider.Provider；Manifest .receiver.DeleteReceiver；Manifest .receiver.ResidentDismissReceiver；Manifest .service.CoreService；Manifest .service.MessageService；Manifest androidx.startup.InitializationProvider |
+| `notification/src/main/assets/pushContentD1Json.json` | 58415 | JSON | 已解析 JSON；配置 DTO 见审计正文，Firebase/Lottie 交由 SDK 规则 |
+| `notification/src/main/assets/pushContentD2Json.json` | 57053 | JSON | 已解析 JSON；配置 DTO 见审计正文，Firebase/Lottie 交由 SDK 规则 |
+| `notification/src/main/assets/pushContentD3Json.json` | 59673 | JSON | 已解析 JSON；配置 DTO 见审计正文，Firebase/Lottie 交由 SDK 规则 |
+| `notification/src/main/assets/pushContentD4Json.json` | 59948 | JSON | 已解析 JSON；配置 DTO 见审计正文，Firebase/Lottie 交由 SDK 规则 |
+| `notification/src/main/assets/pushContentD5Json.json` | 58768 | JSON | 已解析 JSON；配置 DTO 见审计正文，Firebase/Lottie 交由 SDK 规则 |
 | `notification/src/main/assets/pvvvush_config.json` | 743 | JSON | 已解析 JSON；配置 DTO 见审计正文，Firebase/Lottie 交由 SDK 规则 |
 | `notification/src/main/assets/pvvvvush_content_config.json` | 22687 | JSON | 已解析 JSON；配置 DTO 见审计正文，Firebase/Lottie 交由 SDK 规则 |
-| `notification/src/main/java/io/docview/push/NotificationDestination.kt` | 1040 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `notification/src/main/java/io/docview/push/NotificationHost.kt` | 1237 | 生产源码 | 资源/动画 L4,14 |
+| `notification/src/main/java/io/docview/push/NotificationDestination.kt` | 1248 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `notification/src/main/java/io/docview/push/NotificationHost.kt` | 1526 | 生产源码 | 资源/动画 L4,18 |
 | `notification/src/main/java/io/docview/push/NotificationPermissionAccess.kt` | 1232 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `notification/src/main/java/io/docview/push/NotificationRuntime.kt` | 3267 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `notification/src/main/java/io/docview/push/NotificationRuntime.kt` | 3572 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/main/java/io/docview/push/analytics/NotificationContent.kt` | 1055 | 生产源码 | 资源/动画 L3 |
 | `notification/src/main/java/io/docview/push/analytics/NotificationContentIntent.kt` | 1201 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/main/java/io/docview/push/analytics/NotificationVisibility.kt` | 1270 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
@@ -958,19 +1253,22 @@
 | `notification/src/main/java/io/docview/push/check/CheckCtrl.kt` | 14222 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/main/java/io/docview/push/config/Config.kt` | 2505 | 生产源码 | Gson 模型/转换 L3,9,11,13,15,17,19,21,23,25,27,35,37,43 |
 | `notification/src/main/java/io/docview/push/config/ConfigCtrl.kt` | 8940 | 生产源码 | Gson 模型/转换 L4 |
-| `notification/src/main/java/io/docview/push/config/Content.kt` | 2676 | 生产源码 | Gson 模型/转换 L3,8,9,10,11,12,13,39,40 |
-| `notification/src/main/java/io/docview/push/config/ContentCtrl.kt` | 4846 | 生产源码 | Gson 模型/转换 L5,7 |
+| `notification/src/main/java/io/docview/push/config/Content.kt` | 4505 | 生产源码 | Gson 模型/转换 L3,8,9,10,11,12,13,14,51,52,53,59,69,70 |
+| `notification/src/main/java/io/docview/push/config/ContentCtrl.kt` | 3290 | 生产源码 | 类名依赖 L32,42 |
+| `notification/src/main/java/io/docview/push/config/DayContentPool.kt` | 5619 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `notification/src/main/java/io/docview/push/config/DayContentStorage.kt` | 2072 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `notification/src/main/java/io/docview/push/config/PushContentLanguage.kt` | 1073 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/main/java/io/docview/push/controller/BgNotiInterceptController.kt` | 871 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/main/java/io/docview/push/controller/LandingCtrl.kt` | 3146 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/main/java/io/docview/push/controller/ResidentNotificationDismissal.kt` | 3074 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `notification/src/main/java/io/docview/push/controller/TokenUploadCtrl.kt` | 5023 | 生产源码 | 类名依赖 L55 |
+| `notification/src/main/java/io/docview/push/controller/TokenUploadCtrl.kt` | 5658 | 生产源码 | 类名依赖 L63 |
 | `notification/src/main/java/io/docview/push/controller/TriggerCtrl.kt` | 21113 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/main/java/io/docview/push/earthquake/Earthquake.kt` | 3513 | 生产源码 | Gson 模型/转换 L3,9,11,13,18,20,22,24,26,28,33,35,37,39,44,46,48,50,52,54,56,58,60,62,64,69,71,82,88,94,100,112,118,124,130,136,142 |
 | `notification/src/main/java/io/docview/push/earthquake/EarthquakeController.kt` | 22770 | 生产源码 | Gson 模型/转换 L3,80,263 |
 | `notification/src/main/java/io/docview/push/host/PushEnvironment.kt` | 1307 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/main/java/io/docview/push/host/PushLanguage.kt` | 1131 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/main/java/io/docview/push/host/PushPreferences.kt` | 2511 | 生产源码 | 反射/动态加载 L6 |
-| `notification/src/main/java/io/docview/push/host/PushRemoteConfig.kt` | 1572 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `notification/src/main/java/io/docview/push/host/PushRemoteConfig.kt` | 1603 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/main/java/io/docview/push/host/PushUserChannel.kt` | 1012 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/main/java/io/docview/push/provider/Provider.kt` | 1771 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/main/java/io/docview/push/receiver/DeleteReceiver.kt` | 719 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
@@ -984,7 +1282,7 @@
 | `notification/src/main/java/io/docview/push/timing/TimingCtrl.kt` | 11223 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/main/java/io/docview/push/utils/DataValidator.kt` | 1333 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/main/java/io/docview/push/utils/DateUtil.kt` | 1000 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `notification/src/main/java/io/docview/push/utils/Logger.kt` | 3977 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `notification/src/main/java/io/docview/push/utils/Logger.kt` | 3983 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/main/java/io/docview/push/utils/NotiLogger.kt` | 3981 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/main/java/io/docview/push/utils/ResetCtrl.kt` | 6071 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/main/java/io/docview/push/utils/SecurityHelper.kt` | 2735 | 生产源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
@@ -1024,9 +1322,10 @@
 | `notification/src/main/res/layout/layout_notification_earthquake_12.xml` | 2156 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `notification/src/main/res/layout/layout_notification_general.xml` | 3538 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `notification/src/main/res/layout/layout_notification_general_12.xml` | 3500 | XML | 已解析 XML；无自定义类/反射属性入口 |
-| `notification/src/main/res/layout/layout_notification_general_big.xml` | 3656 | XML | 已解析 XML；无自定义类/反射属性入口 |
-| `notification/src/main/res/layout/layout_notification_general_big_12.xml` | 3620 | XML | 已解析 XML；无自定义类/反射属性入口 |
-| `notification/src/main/res/layout-v33/layout_notification_general_big_12.xml` | 3337 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `notification/src/main/res/layout/layout_notification_general_big.xml` | 2995 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `notification/src/main/res/layout/layout_notification_general_big_12.xml` | 2959 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `notification/src/main/res/layout/view_notification_general_action.xml` | 1144 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `notification/src/main/res/layout-v33/layout_notification_general_big_12.xml` | 2673 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `notification/src/main/res/mipmap-xxhdpi/ic_home_duplicate.webp` | 4954 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `notification/src/main/res/mipmap-xxhdpi/ic_home_similar.webp` | 4944 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `notification/src/main/res/mipmap-xxhdpi/ic_home_speed.webp` | 5338 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
@@ -1041,17 +1340,20 @@
 | `notification/src/main/res/mipmap-xxhdpi/ic_noti_small_icon.webp` | 25382 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `notification/src/main/res/mipmap-xxhdpi/ic_noti_weather.webp` | 13140 | 二进制资源 | 按类型/大小核对；无 JVM 类或成员规则 |
 | `notification/src/main/res/values/colors.xml` | 424 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `notification/src/main/res/values/notification_content_dimens.xml` | 298 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `notification/src/main/res/values/strings.xml` | 283 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `notification/src/main/res/values/ta_public_config.xml` | 122 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `notification/src/main/res/values/themes.xml` | 815 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `notification/src/main/res/values-ja/strings.xml` | 64 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `notification/src/main/res/values-ko/strings.xml` | 64 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `notification/src/main/res/values-night/themes.xml` | 73 | XML | 已解析 XML；无自定义类/反射属性入口 |
+| `notification/src/main/res/values-v33/notification_content_dimens.xml` | 298 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `notification/src/main/res/values-zh/strings.xml` | 64 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `notification/src/main/res/values-zh-rTW/strings.xml` | 64 | XML | 已解析 XML；无自定义类/反射属性入口 |
 | `notification/src/test/java/io/docview/push/analytics/NotificationVisibilityStateTest.kt` | 2108 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/test/java/io/docview/push/config/ConfigProtocolTest.kt` | 2363 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
-| `notification/src/test/java/io/docview/push/config/ContentBusinessContractTest.kt` | 4171 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `notification/src/test/java/io/docview/push/config/ContentBusinessContractTest.kt` | 4463 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
+| `notification/src/test/java/io/docview/push/config/DayContentPoolTest.kt` | 7235 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/test/java/io/docview/push/controller/TokenUploadProtocolTest.kt` | 1940 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/test/java/io/docview/push/service/CoreServiceLifecycleTest.kt` | 5308 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
 | `notification/src/test/java/io/docview/push/timing/ScreenEventGateTest.kt` | 2142 | 测试源码 | 静态入口扫描无上述特殊边界；静态调用由 R8 追踪 |
@@ -1060,7 +1362,7 @@
 
 | 文件 | 字节数 | 类型 | 检查项 |
 | --- | ---: | --- | --- |
-| `metrics/build.gradle.kts` | 2551 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
+| `metrics/build.gradle.kts` | 2826 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
 | `metrics/consumer-rules.pro` | 1149 | 构建/配置 | 完整文本扫描；规则装配/静态配置见审计正文 |
 | `metrics/src/main/AndroidManifest.xml` | 680 | XML | Manifest .provider.MetricsModuleProvider |
 | `metrics/src/main/assets/firebase_revenue_config.json` | 104 | JSON | 已解析 JSON；配置 DTO 见审计正文，Firebase/Lottie 交由 SDK 规则 |

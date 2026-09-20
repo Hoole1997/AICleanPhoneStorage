@@ -3,6 +3,7 @@ import com.google.gson.JsonParser;
 import io.docview.push.config.ConfigKt;
 import io.docview.push.config.Content;
 import io.docview.push.config.ContentKt;
+import io.docview.push.config.DayContentPoolKt;
 import io.docview.push.earthquake.EarthquakeInfo;
 import io.docview.push.earthquake.EarthquakeResponse;
 import net.corekit.metrics.revenue.RevenueConfigItem;
@@ -23,6 +24,24 @@ public final class ModelProbe {
                 root.resolve("notification/src/main/assets/pvvvvush_content_config.json")));
         require(!contents.isEmpty() && !contents.get(0).getTitle().isEmpty(), "TypeToken content list");
         require(gson.toJsonTree(contents.get(0)).getAsJsonObject().has("actionType"), "content JSON key");
+        // 新日池必须验证 Map<String, ContentTranslation> 的泛型与三个译文字段经过 R8 后仍可读取。
+        int dailyCount = 0;
+        for (int day = 1; day <= 5; day++) {
+            var pool = DayContentPoolKt.parseDayContentPool(Files.readString(
+                    root.resolve("notification/src/main/assets/pushContentD" + day + "Json.json")), day);
+            require(pool.getContents().size() == (day == 1 ? 29 : 28), "daily pool count");
+            dailyCount += pool.getContents().size();
+            for (Content item : pool.getContents()) {
+                require(item.getTranslations().size() == 7, "translation map signature");
+                var japanese = item.getTranslations().get("ja-JP");
+                require(japanese != null && !japanese.getTitle().isEmpty() && !japanese.getDesc().isEmpty()
+                        && !japanese.getButtonText().isEmpty(), "nested translation fields");
+                var translatedJson = gson.toJsonTree(japanese).getAsJsonObject();
+                require(translatedJson.has("title") && translatedJson.has("desc")
+                        && translatedJson.has("buttonText"), "translation JSON keys");
+            }
+        }
+        require(dailyCount == 141, "all daily pool entries");
         for (String file : List.of("revenue_config.json", "firebase_revenue_config.json")) {
             RevenueConfigItem[] revenue = gson.fromJson(Files.readString(
                     root.resolve("metrics/src/main/assets/" + file)), RevenueConfigItem[].class);
@@ -44,7 +63,7 @@ public final class ModelProbe {
         var json = JsonParser.parseString(gson.toJson(info)).getAsJsonObject();
         require(json.size() == 10 && json.get("magnitude").getAsDouble() == 3.5, "earthquake serialization");
         require(json.get("shortMagType").getAsString().equals("ML"), "earthquake JSON key");
-        System.out.println("PASS: config, content TypeToken, both revenue arrays, nested earthquake models, JSON keys");
+        System.out.println("PASS: config, content TypeToken, 141 daily entries and nested translations, both revenue arrays, nested earthquake models, JSON keys");
     }
 
     private static void require(boolean condition, String contract) {

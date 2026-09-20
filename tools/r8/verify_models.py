@@ -49,7 +49,7 @@ def main():
     classes.mkdir(parents=True, exist_ok=True)
     # 只选真实模型及其纯 Kotlin 解析依赖，不把 Android/广告/通知服务带入 JVM 宿主。
     patterns = {
-        "notification": re.compile(r"io/docview/push/(NotificationDestination(?:\$.*)?|config/(Config|ConfigKt|NotificationConfig|Content(?:\$.*)?|ContentKt(?:\$.*)?)|earthquake/(EarthquakeResponse|Metadata|EarthquakeFeature|EarthquakeProperties|EarthquakeGeometry|EarthquakeInfo))\.class$"),
+        "notification": re.compile(r"io/docview/push/(NotificationDestination(?:\$.*)?|config/(Config|ConfigKt|NotificationConfig|Content(?:\$.*)?|ContentKt(?:\$.*)?|ContentTranslation|PushContentLanguage|DayContentPool(?:\$.*)?|DayContentPoolKt(?:\$.*)?|DayContentCatalog|DayContentRotation)|earthquake/(EarthquakeResponse|Metadata|EarthquakeFeature|EarthquakeProperties|EarthquakeGeometry|EarthquakeInfo))\.class$"),
         "metrics": re.compile(r"net/corekit/metrics/revenue/RevenueConfigItem\.class$"),
     }
     models = out / "models.jar"

@@ -1,5 +1,7 @@
 # 三模块 R8 审计与维护说明
 
+最新增量审计（2026-09-20，`64dff000` → `18216b7`）见 [新功能混淆核验](r8-incremental-2026-09-20.md)。新增 Trustlook 和推送翻译模型已覆盖；下文原始双渠道执行记录为历史结果，当前 google 渠道只允许在 GitHub Actions 构建。
+
 审计日期：2026-09-15。范围为 `settings.gradle.kts` 注册的 app、notification、metrics。
 
 ## 规则归属
@@ -106,10 +108,10 @@ Gson/Kotlin 是宿主外部库，不导入广告 SDK 或其宽泛规则，也不
 本机 2 GB Gradle 堆在一次批量执行 R8 和 Lint 时 GC thrashing，改用单 worker、临时 6 GB 构建堆分阶段运行；未修改仓库的 gradle.properties，也未改应用堆设置。
 
 ```sh
-./gradlew :app:assembleLocalRelease :app:assembleGoogleRelease \
+./gradlew :app:assembleLocalRelease \
   --max-workers=1 '-Dorg.gradle.jvmargs=-Xmx6g -Dfile.encoding=UTF-8'
-# 完成库的 local/google × debug/release assemble 后：
-python3 tools/r8/verify_outputs.py
+# 完成库的 local debug/release assemble 后（google 由 GitHub Actions 构建）：
+python3 tools/r8/verify_outputs.py --channels local
 ```
 
 产物校验读取两渠道最终 configuration/mapping、AAPT XML View 规则以及八个库 AAR 的 proguard.txt，防止规则文件存在却未接入构建。
