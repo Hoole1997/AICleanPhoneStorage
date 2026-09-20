@@ -1,0 +1,108 @@
+{
+  "file_key": "dVsTL6ggoDPXVPcEKg856G",
+  "assets": [
+    {
+      "resource": "ic_tool_battery",
+      "node": "6194:1737",
+      "source": "design/figma/battery/source/home_raw.png",
+      "source_sha256": "ecd508703466e2f67874dea424b1c1b22050c59c942ecca87b53647d17b06104",
+      "dp": [
+        32,
+        32
+      ]
+    },
+    {
+      "resource": "battery_brightness",
+      "node": "6192:1266",
+      "source": "design/figma/battery/source/brightness_raw.png",
+      "source_sha256": "bd71934ab3b12c8ccfd59fe127f8cea3f5fa356683305b23bca149786568e98e",
+      "dp": [
+        32,
+        32
+      ]
+    },
+    {
+      "resource": "battery_temperature",
+      "node": "6192:1273",
+      "source": "design/figma/battery/source/temperature_raw.png",
+      "source_sha256": "b6f92bc7200b94a6e1b6e69fe0109dbf4f90114a26b64c1f5310e4a7adef91b4",
+      "dp": [
+        32,
+        32
+      ]
+    },
+    {
+      "resource": "battery_voltage",
+      "node": "6192:1281",
+      "source": "design/figma/battery/source/voltage_raw.png",
+      "source_sha256": "2511ad4c83d9fdc8d365598e224eb54d6e03a8477bb2b7508d83aa8acf227086",
+      "dp": [
+        32,
+        32
+      ]
+    },
+    {
+      "resource": "battery_type",
+      "node": "6192:1287",
+      "source": "design/figma/battery/source/type_raw.png",
+      "source_sha256": "4456f43953ce39c57b8c7d4e46a06cf00000ea0e2decdfe4d18b79e705005179",
+      "dp": [
+        32,
+        32
+      ]
+    },
+    {
+      "resource": "battery_capacity",
+      "node": "6192:1294",
+      "source": "design/figma/battery/source/capacity_raw.png",
+      "source_sha256": "8a81e1bdc7a8d03536de7f0933341ffa1d693d333715287f3ad2364b05d76844",
+      "dp": [
+        32,
+        32
+      ]
+    },
+    {
+      "resource": "battery_health_good",
+      "node": "6192:1300",
+      "source": "design/figma/battery/source/health_good_raw.png",
+      "source_sha256": "7c54ac7c7c266e210774f277aad7b12132e946ba8891455880c8602929e69cbf",
+      "dp": [
+        32,
+        32
+      ]
+    },
+    {
+      "resource": "battery_health_bad",
+      "node": "6192:1382",
+      "source": "design/figma/battery/source/health_bad_raw.png",
+      "source_sha256": "63b79a627373fc83b51a3360a7754a004fcd541c95000d728e0079fb9230b4f6",
+      "dp": [
+        32,
+        32
+      ]
+    }
+  ],
+  "gauge": {
+    "outer": "6192:1255",
+    "inner": "6192:1257",
+    "body": "6192:1258",
+    "view_box": [
+      187,
+      187
+    ]
+  },
+  "image_fill_crops": {
+    "brightness": [
+      0.24324740679880866,
+      0.04939161784587653,
+      0.5135051864023826,
+      0.9013068949977467
+    ],
+    "temperature": [
+      0.4215686274509804,
+      0.1997907661812075,
+      0.1568627450980392,
+      0.27530765630592186
+    ]
+  }
+}

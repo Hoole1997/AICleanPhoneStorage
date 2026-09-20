@@ -30,6 +30,8 @@ data class LoadingUiState(
     val showAd: Boolean = true,
     val resultKey: String = TaskLoadingDialogFragment.RESULT_KEY,
     val bytes: Long? = null,
+    // 独立控制标签，允许入口使用无百分比的循环进度；默认保留已有入口行为。
+    val showPercentage: Boolean = true,
 )
 
 class TaskLoadingDialogFragment : DialogFragment() {
@@ -54,6 +56,7 @@ class TaskLoadingDialogFragment : DialogFragment() {
                 state.getBoolean("ad", true),
                 state.getString("result_key") ?: RESULT_KEY,
                 state.getLong("bytes", -1).takeIf { it >= 0 },
+                showPercentage = state.getBoolean("show_percentage", true),
             )
         isCancelable = model.cancellable
     }
@@ -117,6 +120,7 @@ class TaskLoadingDialogFragment : DialogFragment() {
             loadingMessage.text = state.message
             loadingClose.isVisible = state.cancellable
             loadingCapacity.isVisible = state.bytes != null
+            loadingPercentage.isVisible = state.showPercentage
             if (state.bytes != null) {
                 capacityRenderer?.render(state.bytes, state.percent ?: 0, animate = started)
             } else if (state.percent == null) {
@@ -218,6 +222,7 @@ class TaskLoadingDialogFragment : DialogFragment() {
                 putBoolean("ad", showAd)
                 putString("result_key", resultKey)
                 putLong("bytes", bytes ?: -1)
+                putBoolean("show_percentage", showPercentage)
             }
     }
 }

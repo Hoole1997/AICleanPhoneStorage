@@ -1,0 +1,6 @@
+<resources>
+    <dimen name="battery_gauge_size">187dp</dimen>
+    <dimen name="battery_gauge_text_top">129dp</dimen>
+    <dimen name="battery_card_gap_horizontal">13dp</dimen>
+    <dimen name="battery_card_gap_vertical">12dp</dimen>
+</resources>

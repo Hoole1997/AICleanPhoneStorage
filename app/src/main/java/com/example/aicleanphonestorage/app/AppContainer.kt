@@ -1,5 +1,7 @@
 package com.example.aicleanphonestorage.app
 
+import com.example.aicleanphonestorage.feature.battery.data.AndroidBatteryRepository
+import com.example.aicleanphonestorage.feature.battery.data.BatterySnapshot
 import android.content.Context
 import com.example.aicleanphonestorage.core.coroutines.AppDispatchers
 import com.example.aicleanphonestorage.core.coroutines.TaskExecutor
@@ -17,6 +19,12 @@ import com.example.aicleanphonestorage.feature.notifications.service.Notificatio
 /** 手动依赖注入的唯一组装入口。应用级对象禁止保存 Activity/View 或启动隐式后台任务。 */
 class AppContainer(context: Context) {
     private val applicationContext = context.applicationContext
+    internal val batteryRepository by lazy {
+        AndroidBatteryRepository(applicationContext, taskExecutor)
+    }
+    internal val batteryTransfer by lazy {
+        OneShotTransfer<BatterySnapshot>()
+    }
     internal val ratingPromptStore by lazy { com.example.aicleanphonestorage.feature.rating.PersistentRatingPromptStore(applicationContext) }
     internal val fileScanRepository by lazy {
         com.example.aicleanphonestorage.feature.filecleaner.data.FileScanRepository(

@@ -34,7 +34,7 @@ data class HomeStatistics(
 )
 
 /** 文案、原版图标集中定义，卡片渲染和网格测量共用，避免两份映射发生偏差。 */
-enum class HomeTool(@param:StringRes val titleRes: Int, @param:DrawableRes val iconRes: Int) {
+enum class HomeTool(@param:StringRes val titleRes: Int, @param:DrawableRes val iconRes: Int, @param:StringRes val descriptionRes: Int? = null) {
     Network(R.string.home_tool_network, R.drawable.ic_tool_network),
     Notifications(R.string.home_tool_notifications, R.drawable.ic_tool_notifications),
     Apps(R.string.home_tool_apps, R.drawable.ic_tool_apps),
@@ -44,6 +44,7 @@ enum class HomeTool(@param:StringRes val titleRes: Int, @param:DrawableRes val i
     Screenshots(R.string.home_tool_screenshots, R.drawable.ic_tool_screenshots),
     Videos(R.string.video_title, R.drawable.ic_tool_videos),
     Similar(R.string.junk_similar, R.drawable.ic_tool_similar),
+    Battery(R.string.battery_title, R.drawable.ic_tool_battery, R.string.battery_health),
 }
 
 data class HomeToolItem(
@@ -96,6 +97,7 @@ internal fun HomeOverview.toHomeContent(locale: Locale, cleaning: HomeCleaningSn
                         HomeTool.Screenshots -> tools.screenshots
                         HomeTool.Videos -> tools.videos
                         HomeTool.Similar -> tools.similar
+                        HomeTool.Battery -> null
                     }
                 HomeToolItem(
                     tool,

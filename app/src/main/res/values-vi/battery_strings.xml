@@ -1,0 +1,22 @@
+<resources>
+    <string name="battery_title">Thông tin pin</string>
+    <string name="battery_reading">Đang đọc thông tin pin…</string>
+    <string name="battery_read_failed">Không thể đọc thông tin pin. Vui lòng thử lại.</string>
+    <string name="battery_brightness">Độ sáng</string>
+    <string name="battery_temperature">Nhiệt độ</string>
+    <string name="battery_voltage">Điện áp</string>
+    <string name="battery_type">Loại pin</string>
+    <string name="battery_capacity">Dung lượng pin</string>
+    <string name="battery_health">Tình trạng pin</string>
+    <string name="battery_good">Tốt</string>
+    <string name="battery_bad">Kém</string>
+    <string name="battery_overheating">Quá nóng</string>
+    <string name="battery_overvoltage">Quá áp</string>
+    <string name="battery_cold">Lạnh</string>
+    <string name="battery_auto">Tự động</string>
+    <string name="battery_charging">Đang sạc</string>
+    <string name="battery_not_charging">Không sạc</string>
+    <string name="battery_level_description">Pin: %1$s, %2$s</string>
+    <string name="battery_capacity_description">Dung lượng còn lại: %1$s mAh. Dung lượng đầy: %2$s mAh. Dấu gạch cho biết thiết bị không cung cấp giá trị này.</string>
+    <string name="battery_power_connected">Đã kết nối nguồn điện</string>
+</resources>

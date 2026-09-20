@@ -1,0 +1,22 @@
+<resources>
+    <string name="battery_title">Pil bilgisi</string>
+    <string name="battery_reading">Pil bilgileri okunuyor…</string>
+    <string name="battery_read_failed">Pil bilgileri okunamadı. Tekrar deneyin.</string>
+    <string name="battery_brightness">Parlaklık</string>
+    <string name="battery_temperature">Sıcaklık</string>
+    <string name="battery_voltage">Voltaj</string>
+    <string name="battery_type">Pil türü</string>
+    <string name="battery_capacity">Pil kapasitesi</string>
+    <string name="battery_health">Pil sağlığı</string>
+    <string name="battery_good">İyi</string>
+    <string name="battery_bad">Kötü</string>
+    <string name="battery_overheating">Aşırı ısınma</string>
+    <string name="battery_overvoltage">Aşırı voltaj</string>
+    <string name="battery_cold">Soğuk</string>
+    <string name="battery_auto">Otomatik</string>
+    <string name="battery_charging">Şarj oluyor</string>
+    <string name="battery_not_charging">Şarj olmuyor</string>
+    <string name="battery_level_description">Pil: %1$s, %2$s</string>
+    <string name="battery_capacity_description">Kalan şarj: %1$s mAh. Tam kapasite: %2$s mAh. Tire, cihazın bu değeri sağlamadığını belirtir.</string>
+    <string name="battery_power_connected">Güce bağlı</string>
+</resources>

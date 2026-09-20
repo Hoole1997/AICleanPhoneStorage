@@ -1,0 +1,22 @@
+<resources>
+    <string name="battery_title">Akkuinfo</string>
+    <string name="battery_reading">Akkuinformationen werden gelesen…</string>
+    <string name="battery_read_failed">Akkuinformationen konnten nicht gelesen werden. Bitte erneut versuchen.</string>
+    <string name="battery_brightness">Helligkeit</string>
+    <string name="battery_temperature">Temperatur</string>
+    <string name="battery_voltage">Spannung</string>
+    <string name="battery_type">Akkutyp</string>
+    <string name="battery_capacity">Akkukapazität</string>
+    <string name="battery_health">Akkuzustand</string>
+    <string name="battery_good">Gut</string>
+    <string name="battery_bad">Schlecht</string>
+    <string name="battery_overheating">Überhitzt</string>
+    <string name="battery_overvoltage">Überspannung</string>
+    <string name="battery_cold">Kalt</string>
+    <string name="battery_auto">Auto</string>
+    <string name="battery_charging">Wird geladen</string>
+    <string name="battery_not_charging">Wird nicht geladen</string>
+    <string name="battery_level_description">Akku: %1$s, %2$s</string>
+    <string name="battery_capacity_description">Restladung: %1$s mAh. Volle Kapazität: %2$s mAh. Ein Strich bedeutet, dass das Gerät diesen Wert nicht bereitstellt.</string>
+    <string name="battery_power_connected">Mit Strom verbunden</string>
+</resources>

@@ -1,5 +1,6 @@
 package com.example.aicleanphonestorage.feature.home.ui
 
+import com.example.aicleanphonestorage.feature.battery.ui.BatteryEntryViewModel
 import com.example.aicleanphonestorage.core.permissions.PermissionCoordinator
 import com.example.aicleanphonestorage.feature.appmanager.ui.AppManagerEntryViewModel
 import com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature
@@ -14,6 +15,7 @@ internal class HomeEntryActions(
     private val notifications: NotificationCleanerViewModel,
     private val cleanup: CleanupEntryViewModel,
     private val apps: AppManagerEntryViewModel,
+    private val battery: BatteryEntryViewModel,
     private val openSettings: () -> Unit,
 ) : HomeUiActions {
     fun cancelPending() {
@@ -22,6 +24,7 @@ internal class HomeEntryActions(
         notifications.cancelEntry()
         cleanup.cancel()
         apps.cancel()
+        battery.cancel()
     }
 
     override fun onSettings() { cancelPending(); openSettings() }
@@ -38,6 +41,7 @@ internal class HomeEntryActions(
             HomeTool.Screenshots -> cleanup.begin(CleanupFeature.SCREENSHOTS)
             HomeTool.Videos -> cleanup.begin(CleanupFeature.VIDEOS)
             HomeTool.Similar -> cleanup.begin(CleanupFeature.SIMILAR_PHOTOS)
+            HomeTool.Battery -> battery.begin()
         }
     }
 }

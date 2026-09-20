@@ -1,0 +1,22 @@
+<resources>
+    <string name="battery_title">बैटरी की जानकारी</string>
+    <string name="battery_reading">बैटरी की जानकारी पढ़ी जा रही है…</string>
+    <string name="battery_read_failed">बैटरी की जानकारी नहीं पढ़ी जा सकी। फिर से कोशिश करें।</string>
+    <string name="battery_brightness">चमक</string>
+    <string name="battery_temperature">तापमान</string>
+    <string name="battery_voltage">वोल्टेज</string>
+    <string name="battery_type">बैटरी का प्रकार</string>
+    <string name="battery_capacity">बैटरी की क्षमता</string>
+    <string name="battery_health">बैटरी की स्थिति</string>
+    <string name="battery_good">अच्छी</string>
+    <string name="battery_bad">खराब</string>
+    <string name="battery_overheating">अधिक गर्म</string>
+    <string name="battery_overvoltage">अधिक वोल्टेज</string>
+    <string name="battery_cold">ठंडी</string>
+    <string name="battery_auto">स्वतः</string>
+    <string name="battery_charging">चार्ज हो रही है</string>
+    <string name="battery_not_charging">चार्ज नहीं हो रही</string>
+    <string name="battery_level_description">बैटरी: %1$s, %2$s</string>
+    <string name="battery_capacity_description">शेष चार्ज: %1$s mAh। पूरी क्षमता: %2$s mAh। डैश का मतलब है कि डिवाइस यह मान उपलब्ध नहीं कराता।</string>
+    <string name="battery_power_connected">बिजली से जुड़ा है</string>
+</resources>

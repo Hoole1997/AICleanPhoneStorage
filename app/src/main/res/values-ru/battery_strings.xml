@@ -1,0 +1,22 @@
+<resources>
+    <string name="battery_title">Информация о батарее</string>
+    <string name="battery_reading">Чтение информации о батарее…</string>
+    <string name="battery_read_failed">Не удалось прочитать информацию о батарее. Повторите попытку.</string>
+    <string name="battery_brightness">Яркость</string>
+    <string name="battery_temperature">Температура</string>
+    <string name="battery_voltage">Напряжение</string>
+    <string name="battery_type">Тип батареи</string>
+    <string name="battery_capacity">Ёмкость батареи</string>
+    <string name="battery_health">Состояние батареи</string>
+    <string name="battery_good">Хорошее</string>
+    <string name="battery_bad">Плохое</string>
+    <string name="battery_overheating">Перегрев</string>
+    <string name="battery_overvoltage">Перенапряжение</string>
+    <string name="battery_cold">Холодная</string>
+    <string name="battery_auto">Авто</string>
+    <string name="battery_charging">Заряжается</string>
+    <string name="battery_not_charging">Не заряжается</string>
+    <string name="battery_level_description">Батарея: %1$s, %2$s</string>
+    <string name="battery_capacity_description">Остаток заряда: %1$s мА·ч. Полная ёмкость: %2$s мА·ч. Тире означает, что устройство не предоставляет это значение.</string>
+    <string name="battery_power_connected">Подключено к питанию</string>
+</resources>

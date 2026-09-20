@@ -1,0 +1,22 @@
+<resources>
+    <string name="battery_title">Informações da bateria</string>
+    <string name="battery_reading">Lendo informações da bateria…</string>
+    <string name="battery_read_failed">Não foi possível ler as informações da bateria. Tente novamente.</string>
+    <string name="battery_brightness">Brilho</string>
+    <string name="battery_temperature">Temperatura</string>
+    <string name="battery_voltage">Tensão</string>
+    <string name="battery_type">Tipo de bateria</string>
+    <string name="battery_capacity">Capacidade da bateria</string>
+    <string name="battery_health">Saúde da bateria</string>
+    <string name="battery_good">Boa</string>
+    <string name="battery_bad">Ruim</string>
+    <string name="battery_overheating">Superaquecimento</string>
+    <string name="battery_overvoltage">Sobretensão</string>
+    <string name="battery_cold">Fria</string>
+    <string name="battery_auto">Auto</string>
+    <string name="battery_charging">Carregando</string>
+    <string name="battery_not_charging">Não carregando</string>
+    <string name="battery_level_description">Bateria: %1$s, %2$s</string>
+    <string name="battery_capacity_description">Carga restante: %1$s mAh. Capacidade total: %2$s mAh. Um traço indica que o dispositivo não fornece esse valor.</string>
+    <string name="battery_power_connected">Conectado à energia</string>
+</resources>

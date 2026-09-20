@@ -1,0 +1,22 @@
+<resources>
+    <string name="battery_title">电池信息</string>
+    <string name="battery_reading">正在读取电池信息…</string>
+    <string name="battery_read_failed">无法读取电池信息，请重试。</string>
+    <string name="battery_brightness">亮度</string>
+    <string name="battery_temperature">温度</string>
+    <string name="battery_voltage">电压</string>
+    <string name="battery_type">电池类型</string>
+    <string name="battery_capacity">电池容量</string>
+    <string name="battery_health">电池健康</string>
+    <string name="battery_good">良好</string>
+    <string name="battery_bad">异常</string>
+    <string name="battery_overheating">过热</string>
+    <string name="battery_overvoltage">电压过高</string>
+    <string name="battery_cold">过冷</string>
+    <string name="battery_auto">自动</string>
+    <string name="battery_charging">充电中</string>
+    <string name="battery_not_charging">未充电</string>
+    <string name="battery_level_description">电池：%1$s，%2$s</string>
+    <string name="battery_capacity_description">剩余电量：%1$s mAh。满电容量：%2$s mAh。横线表示设备未提供此数据。</string>
+    <string name="battery_power_connected">已连接电源</string>
+</resources>

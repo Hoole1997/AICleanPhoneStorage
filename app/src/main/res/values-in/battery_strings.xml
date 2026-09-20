@@ -1,0 +1,22 @@
+<resources>
+    <string name="battery_title">Info baterai</string>
+    <string name="battery_reading">Membaca informasi baterai…</string>
+    <string name="battery_read_failed">Tidak dapat membaca informasi baterai. Coba lagi.</string>
+    <string name="battery_brightness">Kecerahan</string>
+    <string name="battery_temperature">Suhu</string>
+    <string name="battery_voltage">Tegangan</string>
+    <string name="battery_type">Jenis baterai</string>
+    <string name="battery_capacity">Kapasitas baterai</string>
+    <string name="battery_health">Kesehatan baterai</string>
+    <string name="battery_good">Baik</string>
+    <string name="battery_bad">Buruk</string>
+    <string name="battery_overheating">Terlalu panas</string>
+    <string name="battery_overvoltage">Tegangan berlebih</string>
+    <string name="battery_cold">Dingin</string>
+    <string name="battery_auto">Otomatis</string>
+    <string name="battery_charging">Mengisi daya</string>
+    <string name="battery_not_charging">Tidak mengisi daya</string>
+    <string name="battery_level_description">Baterai: %1$s, %2$s</string>
+    <string name="battery_capacity_description">Sisa daya: %1$s mAh. Kapasitas penuh: %2$s mAh. Tanda pisah berarti perangkat tidak menyediakan nilai ini.</string>
+    <string name="battery_power_connected">Terhubung ke daya</string>
+</resources>

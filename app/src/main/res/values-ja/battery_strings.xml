@@ -1,0 +1,22 @@
+<resources>
+    <string name="battery_title">バッテリー情報</string>
+    <string name="battery_reading">バッテリー情報を読み取り中…</string>
+    <string name="battery_read_failed">バッテリー情報を読み取れませんでした。もう一度お試しください。</string>
+    <string name="battery_brightness">明るさ</string>
+    <string name="battery_temperature">温度</string>
+    <string name="battery_voltage">電圧</string>
+    <string name="battery_type">バッテリー種類</string>
+    <string name="battery_capacity">バッテリー容量</string>
+    <string name="battery_health">バッテリーの状態</string>
+    <string name="battery_good">良好</string>
+    <string name="battery_bad">異常</string>
+    <string name="battery_overheating">過熱</string>
+    <string name="battery_overvoltage">過電圧</string>
+    <string name="battery_cold">低温</string>
+    <string name="battery_auto">自動</string>
+    <string name="battery_charging">充電中</string>
+    <string name="battery_not_charging">充電していません</string>
+    <string name="battery_level_description">バッテリー：%1$s、%2$s</string>
+    <string name="battery_capacity_description">残量：%1$s mAh。満充電容量：%2$s mAh。横線は端末が値を提供していないことを示します。</string>
+    <string name="battery_power_connected">電源に接続中</string>
+</resources>

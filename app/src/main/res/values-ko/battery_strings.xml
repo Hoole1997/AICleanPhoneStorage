@@ -1,0 +1,22 @@
+<resources>
+    <string name="battery_title">배터리 정보</string>
+    <string name="battery_reading">배터리 정보 읽는 중…</string>
+    <string name="battery_read_failed">배터리 정보를 읽을 수 없습니다. 다시 시도하세요.</string>
+    <string name="battery_brightness">밝기</string>
+    <string name="battery_temperature">온도</string>
+    <string name="battery_voltage">전압</string>
+    <string name="battery_type">배터리 유형</string>
+    <string name="battery_capacity">배터리 용량</string>
+    <string name="battery_health">배터리 상태</string>
+    <string name="battery_good">좋음</string>
+    <string name="battery_bad">나쁨</string>
+    <string name="battery_overheating">과열</string>
+    <string name="battery_overvoltage">과전압</string>
+    <string name="battery_cold">저온</string>
+    <string name="battery_auto">자동</string>
+    <string name="battery_charging">충전 중</string>
+    <string name="battery_not_charging">충전 중 아님</string>
+    <string name="battery_level_description">배터리: %1$s, %2$s</string>
+    <string name="battery_capacity_description">남은 충전량: %1$s mAh. 완충 용량: %2$s mAh. 대시는 기기가 이 값을 제공하지 않음을 의미합니다.</string>
+    <string name="battery_power_connected">전원에 연결됨</string>
+</resources>

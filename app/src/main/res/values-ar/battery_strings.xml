@@ -1,0 +1,22 @@
+<resources>
+    <string name="battery_title">معلومات البطارية</string>
+    <string name="battery_reading">جارٍ قراءة معلومات البطارية…</string>
+    <string name="battery_read_failed">تعذرت قراءة معلومات البطارية. حاول مجددًا.</string>
+    <string name="battery_brightness">السطوع</string>
+    <string name="battery_temperature">درجة الحرارة</string>
+    <string name="battery_voltage">الجهد</string>
+    <string name="battery_type">نوع البطارية</string>
+    <string name="battery_capacity">سعة البطارية</string>
+    <string name="battery_health">حالة البطارية</string>
+    <string name="battery_good">جيدة</string>
+    <string name="battery_bad">سيئة</string>
+    <string name="battery_overheating">سخونة مفرطة</string>
+    <string name="battery_overvoltage">جهد زائد</string>
+    <string name="battery_cold">باردة</string>
+    <string name="battery_auto">تلقائي</string>
+    <string name="battery_charging">جارٍ الشحن</string>
+    <string name="battery_not_charging">لا يتم الشحن</string>
+    <string name="battery_level_description">البطارية: %1$s، %2$s</string>
+    <string name="battery_capacity_description">الشحنة المتبقية: %1$s mAh. السعة الكاملة: %2$s mAh. تعني الشرطة أن الجهاز لا يوفر هذه القيمة.</string>
+    <string name="battery_power_connected">متصل بالطاقة</string>
+</resources>

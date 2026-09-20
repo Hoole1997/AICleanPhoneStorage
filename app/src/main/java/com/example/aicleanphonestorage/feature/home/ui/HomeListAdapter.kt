@@ -187,7 +187,7 @@ private class ToolHolder(private val binding: ItemHomeToolBinding, private val a
     fun bind(content: HomeToolItem) = with(binding) {
         toolTitle.setText(content.tool.titleRes)
         toolIcon.setImageResource(content.tool.iconRes)
-        toolDetail.text = content.detail ?: when(val metric=content.metric){
+        toolDetail.text = content.detail ?: content.tool.descriptionRes?.let(root.context::getString) ?: when(val metric=content.metric){
             HomeToolMetric.Reading->root.context.getString(R.string.home_metric_reading)
             HomeToolMetric.NotScanned->root.context.getString(R.string.home_metric_scan_first)
             HomeToolMetric.AccessRequired->root.context.getString(R.string.home_metric_access)

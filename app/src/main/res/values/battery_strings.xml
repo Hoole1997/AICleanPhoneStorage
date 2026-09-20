@@ -1,0 +1,25 @@
+<resources>
+    <string name="battery_title">Battery Info</string>
+    <string name="battery_reading">Reading battery information…</string>
+    <string name="battery_read_failed">Unable to read battery information. Please try again.</string>
+    <string name="battery_brightness">Brightness</string>
+    <string name="battery_temperature">Temperature</string>
+    <string name="battery_voltage">Voltage</string>
+    <string name="battery_type">Battery Type</string>
+    <string name="battery_capacity">Battery Capacity</string>
+    <string name="battery_health">Battery Health</string>
+    <string name="battery_good">Good</string>
+    <string name="battery_bad">Bad</string>
+    <string name="battery_overheating">Overheating</string>
+    <string name="battery_overvoltage">Overvoltage</string>
+    <string name="battery_cold">Cold</string>
+    <string name="battery_auto">Auto</string>
+    <string name="battery_charging">Charging</string>
+    <string name="battery_not_charging">Not charging</string>
+    <string name="battery_level_description">Battery: %1$s, %2$s</string>
+    <string name="battery_capacity_description">Remaining charge: %1$s mAh. Full capacity: %2$s mAh. A dash means the device does not provide this value.</string>
+    <string name="battery_temperature_value" translatable="false">%1$s°C</string>
+    <string name="battery_voltage_value" translatable="false">%1$smV</string>
+    <string name="battery_capacity_suffix" translatable="false">/%1$smAh</string>
+    <string name="battery_power_connected">Connected to power</string>
+</resources>

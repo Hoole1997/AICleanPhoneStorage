@@ -1,5 +1,8 @@
 package com.example.aicleanphonestorage.app
 
+import com.example.aicleanphonestorage.feature.battery.ui.BatteryEntryViewModel
+import com.example.aicleanphonestorage.feature.battery.ui.BatteryEntryCoordinator
+import com.example.aicleanphonestorage.feature.battery.ui.BatteryEntryState
 import com.example.aicleanphonestorage.app.analytics.FeatureTelemetry
 import com.example.aicleanphonestorage.app.ad.HomeExitAdCoordinator
 
@@ -124,6 +127,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    private val batteryEntry: BatteryEntryViewModel by viewModels {
+        viewModelFactory {
+            initializer {
+                BatteryEntryViewModel((application as CleanApplication).container.batteryRepository)
+            }
+        }
+    }
+    private lateinit var batteryCoordinator: BatteryEntryCoordinator
     private lateinit var appManagerCoordinator: AppManagerEntryCoordinator
     private lateinit var cleanupCoordinator: CleanupEntryCoordinator
     private lateinit var notificationCoordinator: NotificationEntryCoordinator
@@ -183,8 +194,14 @@ class MainActivity : AppCompatActivity() {
                 (application as CleanApplication).container.appManagerTransfer,
             )
         observeEntryState(appManagerEntry.state, appManagerCoordinator::render)
+        batteryCoordinator = BatteryEntryCoordinator(
+            this,
+            batteryEntry,
+            (application as CleanApplication).container.batteryTransfer,
+        )
+        observeEntryState(batteryEntry.state, batteryCoordinator::render)
         homeActions = HomeEntryActions(
-            permissions, trafficEntry, notificationEntry, cleanupEntry, appManagerEntry,
+            permissions, trafficEntry, notificationEntry, cleanupEntry, appManagerEntry, batteryEntry,
             openSettings = {
                 startActivity(Intent(this, com.example.aicleanphonestorage.feature.settings.SettingsActivity::class.java)
                     .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP))
@@ -203,7 +220,7 @@ class MainActivity : AppCompatActivity() {
             override fun onToolSelected(tool: HomeTool) {
                 val entry = when (tool) {
                     HomeTool.Network -> "traffic"; HomeTool.Notifications -> "notify"; HomeTool.Apps -> "apps"
-                    HomeTool.Compress -> "photo"; HomeTool.LargeFiles -> "large"; HomeTool.UnusedFiles -> "unused"; HomeTool.Screenshots -> "screenshots"; HomeTool.Videos -> "video"; HomeTool.Similar -> "duplicate"
+                    HomeTool.Compress -> "photo"; HomeTool.LargeFiles -> "large"; HomeTool.UnusedFiles -> "unused"; HomeTool.Screenshots -> "screenshots"; HomeTool.Videos -> "video"; HomeTool.Similar -> "duplicate"; HomeTool.Battery -> "battery"
                 }
                 if (previewSelection == null) FeatureTelemetry.entry(app, entry)
                 homeActions.onToolSelected(tool)
@@ -247,6 +264,7 @@ class MainActivity : AppCompatActivity() {
             push.completed && push.ratingAllowed && !push.requesting && !push.guideVisible && !permissions.pending && previewSelection == null &&
                 cleanupEntry.state.value == CleanupEntryState.Idle &&
                 appManagerEntry.state.value == AppManagerEntryState.Idle &&
+                batteryEntry.state.value == BatteryEntryState.Idle &&
                 trafficEntry.state.value.status == com.example.aicleanphonestorage.feature.networktraffic.ui.TrafficStatus.Idle &&
                 notificationEntry.state.value.phase == com.example.aicleanphonestorage.feature.notifications.ui.NotificationPhase.Idle
         })
@@ -313,6 +331,7 @@ class MainActivity : AppCompatActivity() {
         notificationCoordinator.render(notificationEntry.state.value)
         cleanupCoordinator.render(cleanupEntry.state.value)
         appManagerCoordinator.render(appManagerEntry.state.value)
+        batteryCoordinator.render(batteryEntry.state.value)
         pushPermission.drain()
         if (this::rating.isInitialized) rating.drain()
     }
@@ -324,6 +343,7 @@ class MainActivity : AppCompatActivity() {
             notificationEntry.onBackground()
             cleanupEntry.onBackground()
             appManagerEntry.cancel()
+            batteryEntry.cancel()
         }
         super.onStop()
     }

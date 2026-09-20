@@ -1,0 +1,22 @@
+<resources>
+    <string name="battery_title">ব্যাটারির তথ্য</string>
+    <string name="battery_reading">ব্যাটারির তথ্য পড়া হচ্ছে…</string>
+    <string name="battery_read_failed">ব্যাটারির তথ্য পড়া যায়নি। আবার চেষ্টা করুন।</string>
+    <string name="battery_brightness">উজ্জ্বলতা</string>
+    <string name="battery_temperature">তাপমাত্রা</string>
+    <string name="battery_voltage">ভোল্টেজ</string>
+    <string name="battery_type">ব্যাটারির ধরন</string>
+    <string name="battery_capacity">ব্যাটারির ধারণক্ষমতা</string>
+    <string name="battery_health">ব্যাটারির অবস্থা</string>
+    <string name="battery_good">ভালো</string>
+    <string name="battery_bad">খারাপ</string>
+    <string name="battery_overheating">অতিরিক্ত গরম</string>
+    <string name="battery_overvoltage">অতিরিক্ত ভোল্টেজ</string>
+    <string name="battery_cold">ঠান্ডা</string>
+    <string name="battery_auto">স্বয়ংক্রিয়</string>
+    <string name="battery_charging">চার্জ হচ্ছে</string>
+    <string name="battery_not_charging">চার্জ হচ্ছে না</string>
+    <string name="battery_level_description">ব্যাটারি: %1$s, %2$s</string>
+    <string name="battery_capacity_description">অবশিষ্ট চার্জ: %1$s mAh। পূর্ণ ধারণক্ষমতা: %2$s mAh। ড্যাশের অর্থ ডিভাইস এই তথ্য দেয় না।</string>
+    <string name="battery_power_connected">বিদ্যুৎ সংযোগ রয়েছে</string>
+</resources>

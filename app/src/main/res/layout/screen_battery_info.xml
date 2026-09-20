@@ -1,0 +1,18 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/home_background">
+    <ImageView android:layout_width="0dp" android:layout_height="334dp" android:src="@drawable/home_header_background" android:scaleType="fitXY" android:importantForAccessibility="no" android:contentDescription="@null" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout android:id="@+id/battery_content" android:layout_width="0dp" android:layout_height="0dp" android:orientation="vertical" app:layout_constraintWidth_max="600dp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:gravity="center_vertical" android:paddingEnd="16dp">
+            <androidx.appcompat.widget.AppCompatImageButton android:id="@+id/battery_back" android:layout_width="48dp" android:layout_height="48dp" android:padding="12dp" android:src="@drawable/ic_traffic_back" android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="@string/traffic_back" />
+            <com.google.android.material.textview.MaterialTextView android:id="@+id/battery_title" style="@style/Widget.Home.Text.Bold" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/battery_title" android:textSize="18sp" android:textColor="@color/home_title" />
+        </LinearLayout>
+        <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="false" android:scrollbars="none">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="16dp" android:paddingBottom="24dp">
+                <com.example.aicleanphonestorage.feature.battery.ui.BatteryGaugeView android:id="@+id/battery_gauge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:layout_gravity="center_horizontal" />
+                <LinearLayout android:id="@+id/battery_cards" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:orientation="vertical" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+        <LinearLayout android:id="@+id/battery_footer" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingTop="36dp" android:paddingBottom="100dp" android:background="@drawable/cleanup_footer_fade">
+            <com.google.android.material.button.MaterialButton android:id="@+id/battery_done" style="@style/Widget.Traffic.Button" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="30dp" android:minHeight="48dp" android:text="@string/junk_got_it" android:textSize="16sp" android:insetTop="0dp" android:insetBottom="0dp" app:cornerRadius="100dp" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

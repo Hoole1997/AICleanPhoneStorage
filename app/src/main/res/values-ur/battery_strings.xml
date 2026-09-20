@@ -1,0 +1,22 @@
+<resources>
+    <string name="battery_title">بیٹری کی معلومات</string>
+    <string name="battery_reading">بیٹری کی معلومات پڑھی جا رہی ہیں…</string>
+    <string name="battery_read_failed">بیٹری کی معلومات نہیں پڑھی جا سکیں۔ دوبارہ کوشش کریں۔</string>
+    <string name="battery_brightness">چمک</string>
+    <string name="battery_temperature">درجہ حرارت</string>
+    <string name="battery_voltage">وولٹیج</string>
+    <string name="battery_type">بیٹری کی قسم</string>
+    <string name="battery_capacity">بیٹری کی گنجائش</string>
+    <string name="battery_health">بیٹری کی حالت</string>
+    <string name="battery_good">اچھی</string>
+    <string name="battery_bad">خراب</string>
+    <string name="battery_overheating">زیادہ گرم</string>
+    <string name="battery_overvoltage">زیادہ وولٹیج</string>
+    <string name="battery_cold">ٹھنڈی</string>
+    <string name="battery_auto">خودکار</string>
+    <string name="battery_charging">چارج ہو رہی ہے</string>
+    <string name="battery_not_charging">چارج نہیں ہو رہی</string>
+    <string name="battery_level_description">بیٹری: %1$s، %2$s</string>
+    <string name="battery_capacity_description">باقی چارج: %1$s mAh۔ مکمل گنجائش: %2$s mAh۔ ڈیش کا مطلب ہے کہ آلہ یہ قدر فراہم نہیں کرتا۔</string>
+    <string name="battery_power_connected">بجلی سے منسلک</string>
+</resources>
