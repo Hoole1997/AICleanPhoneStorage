@@ -1,0 +1,10 @@
+09-20 23:04:08.450  7722  7760 D BusinessMetrics: page_show {page=vedio, perm_granted=false}
+09-20 23:04:09.527  7722  7815 D BusinessMetrics: video_check {action=uncheck, selected_size=0.0}
+09-20 23:04:09.598  7722  7779 D BusinessMetrics: video_check {action=check, selected_size=28.8}
+09-20 23:04:09.909  7722  7779 D BusinessMetrics: video_clean_click {selected_size=28.8}
+09-20 23:04:10.559  7722  7815 D BusinessMetrics: page_leave {page=vedio, stay_duration=2.149}
+09-20 23:04:11.476  7722  7828 D BusinessMetrics: page_show {page=duplicatephoto, perm_granted=false}
+09-20 23:04:13.561  7722  7814 D BusinessMetrics: duplicatephoto_check {action=uncheck, selected_size=0.0}
+09-20 23:04:13.900  7722  7814 D BusinessMetrics: duplicatephoto_check {action=check, selected_size=0.010552}
+09-20 23:04:14.999  7722  7814 D BusinessMetrics: duplicatephoto_clean_click {selected_size=0.010552}
+09-20 23:04:16.320  7722  7779 D BusinessMetrics: page_leave {page=duplicatephoto, stay_duration=4.917}

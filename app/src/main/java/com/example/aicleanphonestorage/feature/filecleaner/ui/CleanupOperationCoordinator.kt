@@ -99,8 +99,10 @@ internal class CleanupOperationCoordinator(
                     if (positive && id != null) requestAction(ORIGINALS_AD, id)
                     else model.dismissOperation()
                 }
-                op is CleanupOperationState.Confirm && identity == "confirm:${op.id}" ->
+                op is CleanupOperationState.Confirm && identity == "confirm:${op.id}" -> {
+                    if (result.getBoolean("buttonClick")) model.reportConfirmation(op.id, positive)
                     if (positive) requestAction(CONFIRM_AD, op.id) else model.dismissOperation()
+                }
             }
         }
     }

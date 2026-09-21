@@ -1,0 +1,10 @@
+
+com.example.aicleanphonestorage.VideoCleanerDeviceTest:s_glBindAttribLocation: bind attrib 0 name position
+s_glBindAttribLocation: bind attrib 1 name localCoord
+.
+com.example.aicleanphonestorage.SimilarCleanerDeviceTest:.
+com.example.aicleanphonestorage.MalwareAdDeviceTest:.
+
+Time: 10.162
+
+OK (3 tests)

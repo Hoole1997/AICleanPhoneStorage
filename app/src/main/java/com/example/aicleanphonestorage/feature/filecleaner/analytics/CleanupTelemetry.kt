@@ -10,6 +10,8 @@ import com.example.aicleanphonestorage.feature.unused.data.*
 internal class CleanupTelemetry(private val sink: EventSink = BusinessTelemetry) {
     fun scan(feature: CleanupFeature, totals: SelectionTotals) {
         val event = when (feature) {
+            CleanupFeature.VIDEOS -> MetricEvent.VIDEO_SCAN_RESULT
+            CleanupFeature.SIMILAR_PHOTOS -> MetricEvent.DUPLICATEPHOTO_SCAN_RESULT
             CleanupFeature.SCREENSHOTS -> MetricEvent.SHOT_SCAN_RESULT
             CleanupFeature.PHOTO_COMPRESS -> MetricEvent.PHOTO_SCAN_RESULT
             CleanupFeature.LARGE_FILES -> MetricEvent.LARGE_SCAN_RESULT
@@ -47,7 +49,8 @@ internal class CleanupTelemetry(private val sink: EventSink = BusinessTelemetry)
                 params["group"] = group(JunkKind.from(bucket)) ?: return
                 MetricEvent.JUNK_DETAIL_CHECK
             }
-            CleanupFeature.VIDEOS, CleanupFeature.SIMILAR_PHOTOS -> return
+            CleanupFeature.VIDEOS -> MetricEvent.VIDEO_CHECK
+            CleanupFeature.SIMILAR_PHOTOS -> MetricEvent.DUPLICATEPHOTO_CHECK
             CleanupFeature.SCREENSHOTS -> MetricEvent.SHOT_CHECK
             CleanupFeature.PHOTO_COMPRESS -> MetricEvent.PHOTO_CHECK
             CleanupFeature.LARGE_FILES -> MetricEvent.LARGE_FILE_CHECK
@@ -63,7 +66,8 @@ internal class CleanupTelemetry(private val sink: EventSink = BusinessTelemetry)
     fun cleanClick(feature: CleanupFeature, totals: SelectionTotals) {
         val event = when (feature) {
             CleanupFeature.SMART_CLEAN -> MetricEvent.JUNK_CLEAN_CLICK
-            CleanupFeature.VIDEOS, CleanupFeature.SIMILAR_PHOTOS -> return
+            CleanupFeature.VIDEOS -> MetricEvent.VIDEO_CLEAN_CLICK
+            CleanupFeature.SIMILAR_PHOTOS -> MetricEvent.DUPLICATEPHOTO_CLEAN_CLICK
             CleanupFeature.SCREENSHOTS -> MetricEvent.SHOT_CLEAN_CLICK
             CleanupFeature.PHOTO_COMPRESS -> MetricEvent.PHOTO_COMPRESS_CLICK
             CleanupFeature.LARGE_FILES -> MetricEvent.LARGE_CLEAN_CLICK
@@ -74,6 +78,15 @@ internal class CleanupTelemetry(private val sink: EventSink = BusinessTelemetry)
         else mutableMapOf("selected_size" to mb(totals.selectedBytes) as Any)
         if (feature == CleanupFeature.SMART_CLEAN) params["button"] = if (totals.count == 0) "got_it" else "smart_clean"
         sink.send(event, params)
+    }
+    /** 使用冻结的操作快照，确认事件在点击时上报，不等待广告或删除完成。 */
+    fun confirmation(feature: CleanupFeature, accepted: Boolean, bytes: Long) {
+        val event = when (feature) {
+            CleanupFeature.VIDEOS -> if (accepted) MetricEvent.VIDEO_CONFIRM_CLEAN else MetricEvent.VIDEO_CANCEL_CLEAN
+            CleanupFeature.SIMILAR_PHOTOS -> if (accepted) MetricEvent.DUPLICATEPHOTO_CONFIRM_CLEAN else MetricEvent.DUPLICATEPHOTO_CANCEL_CLEAN
+            else -> return
+        }
+        sink.send(event, if (accepted) mapOf("selected_size" to mb(bytes)) else emptyMap())
     }
     fun filter(filter: CleanupFilter) {
         val type = when (filter.category) {
@@ -91,6 +104,8 @@ internal class CleanupTelemetry(private val sink: EventSink = BusinessTelemetry)
             return
         }
         val event = when (feature) {
+            CleanupFeature.VIDEOS -> MetricEvent.VIDEO_RESULT_SHOW
+            CleanupFeature.SIMILAR_PHOTOS -> MetricEvent.DUPLICATEPHOTO_RESULT_SHOW
             CleanupFeature.SMART_CLEAN -> MetricEvent.JUNK_RESULT_SHOW
             CleanupFeature.SCREENSHOTS -> MetricEvent.SHOT_RESULT_SHOW
             CleanupFeature.LARGE_FILES -> MetricEvent.LARGE_RESULT_SHOW

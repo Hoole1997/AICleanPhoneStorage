@@ -1,0 +1,205 @@
+{
+  "source": "https://pic6ktmsyi.feishu.cn/wiki/GvgKwIzPeiWUmVk0BQFc31dNnVh?sheet=8lRyXr",
+  "read_via": "Chrome 可见表格逐项核对",
+  "date": "2026-09-20",
+  "baseline": "64dff000",
+  "events": [
+    {
+      "sheet": "10-视频清理",
+      "event": "video_scan_result",
+      "parameters": {
+        "count": "number",
+        "total_size": "number (MB)"
+      },
+      "trigger": "真实扫描成功完成"
+    },
+    {
+      "sheet": "10-视频清理",
+      "event": "video_check",
+      "parameters": {
+        "action": [
+          "check",
+          "uncheck"
+        ],
+        "selected_size": "number (MB)"
+      },
+      "trigger": "用户单项/全选/分组选择完成后"
+    },
+    {
+      "sheet": "10-视频清理",
+      "event": "video_clean_click",
+      "parameters": {
+        "selected_size": "number (MB)"
+      },
+      "trigger": "有效 Clean 点击"
+    },
+    {
+      "sheet": "10-视频清理",
+      "event": "video_confirm_clean",
+      "parameters": {
+        "selected_size": "number (MB)"
+      },
+      "trigger": "应用内确认按钮点击，使用冻结操作快照"
+    },
+    {
+      "sheet": "10-视频清理",
+      "event": "video_cancel_clean",
+      "parameters": {},
+      "trigger": "应用内取消按钮点击"
+    },
+    {
+      "sheet": "10-视频清理",
+      "event": "video_result_show",
+      "parameters": {
+        "deleted_size": "number (MB)"
+      },
+      "trigger": "完成页首次展示，实际删除大小"
+    },
+    {
+      "sheet": "11-相同照片",
+      "event": "duplicatephoto_scan_result",
+      "parameters": {
+        "count": "number",
+        "total_size": "number (MB)"
+      },
+      "trigger": "真实扫描成功完成"
+    },
+    {
+      "sheet": "11-相同照片",
+      "event": "duplicatephoto_check",
+      "parameters": {
+        "action": [
+          "check",
+          "uncheck"
+        ],
+        "selected_size": "number (MB)"
+      },
+      "trigger": "用户单项/全选/分组选择完成后"
+    },
+    {
+      "sheet": "11-相同照片",
+      "event": "duplicatephoto_clean_click",
+      "parameters": {
+        "selected_size": "number (MB)"
+      },
+      "trigger": "有效 Clean 点击"
+    },
+    {
+      "sheet": "11-相同照片",
+      "event": "duplicatephoto_confirm_clean",
+      "parameters": {
+        "selected_size": "number (MB)"
+      },
+      "trigger": "应用内确认按钮点击，使用冻结操作快照"
+    },
+    {
+      "sheet": "11-相同照片",
+      "event": "duplicatephoto_cancel_clean",
+      "parameters": {},
+      "trigger": "应用内取消按钮点击"
+    },
+    {
+      "sheet": "11-相同照片",
+      "event": "duplicatephoto_result_show",
+      "parameters": {
+        "deleted_size": "number (MB)"
+      },
+      "trigger": "完成页首次展示，实际删除大小"
+    },
+    {
+      "sheet": "12-恶意软件",
+      "event": "virus_declare_show",
+      "parameters": {},
+      "trigger": "首页完整声明真实显示，同次声明重建不重复"
+    },
+    {
+      "sheet": "12-恶意软件",
+      "event": "virus_declare_click",
+      "parameters": {
+        "action": [
+          "reject",
+          "agree"
+        ]
+      },
+      "trigger": "声明 Reject/Agree 按钮点击"
+    },
+    {
+      "sheet": "12-恶意软件",
+      "event": "virus_scan_result",
+      "parameters": {
+        "result_type": [
+          "risk",
+          "safe",
+          "fail"
+        ]
+      },
+      "trigger": "每次扫描最终状态，失败上报 fail，取消不上报"
+    },
+    {
+      "sheet": "12-恶意软件",
+      "event": "virus_scan_back",
+      "parameters": {},
+      "trigger": "用户从扫描/失败页返回；结果未揭示仍算扫描页"
+    },
+    {
+      "sheet": "12-恶意软件",
+      "event": "virus_result_show",
+      "parameters": {
+        "result_type": [
+          "risk",
+          "safe"
+        ],
+        "risk_count": "number (risk only)"
+      },
+      "trigger": "广告完成且结果前台呈现，每次扫描去重"
+    },
+    {
+      "sheet": "12-恶意软件",
+      "event": "virus_risk_click",
+      "parameters": {
+        "risk_type": [
+          "system_setting",
+          "installed_app",
+          "apk",
+          "pua",
+          "unknown"
+        ],
+        "action": [
+          "solve",
+          "settings",
+          "clean",
+          "rescan"
+        ]
+      },
+      "trigger": "有效风险项处理按钮点击"
+    },
+    {
+      "sheet": "12-恶意软件",
+      "event": "virus_scan_again",
+      "parameters": {},
+      "trigger": "结果页 Scan Again 点击，未知项重扫仅记录 risk_click"
+    },
+    {
+      "sheet": "13-电池信息",
+      "event": "BatteryInfo_scan_result",
+      "parameters": {},
+      "trigger": "入口真实读取成功并形成结果；取消/失败不报"
+    },
+    {
+      "sheet": "13-电池信息",
+      "event": "BatteryInfo_result_show",
+      "parameters": {},
+      "trigger": "电池结果页真实进入，与 page_show 同步"
+    }
+  ],
+  "business_page_mapping": {
+    "video": "vedio",
+    "video_result": "vedion_result",
+    "duplicate": "duplicatephoto",
+    "duplicate_result": "duplicatephoto_result",
+    "malware": "MalwareScan",
+    "malware_result": "MalwareScan_result",
+    "battery": "BatteryInfo"
+  },
+  "confirmed_business_exception": "用户确认已安装风险应用保留系统卸载确认流程，按 action=settings 上报。"
+}

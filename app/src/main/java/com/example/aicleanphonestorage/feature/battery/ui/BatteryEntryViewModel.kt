@@ -23,6 +23,7 @@ internal sealed interface BatteryEntryState {
 internal class BatteryEntryViewModel(
     private val repository: BatteryRepository,
     private val loader: TimedEntryLoader = TimedEntryLoader(),
+    private val telemetry: com.example.aicleanphonestorage.core.analytics.EventSink = com.example.aicleanphonestorage.core.analytics.BusinessTelemetry,
 ) : ViewModel() {
     private val current = MutableStateFlow<BatteryEntryState>(BatteryEntryState.Idle)
     val state = current.asStateFlow()
@@ -50,8 +51,10 @@ internal class BatteryEntryViewModel(
                         repository.read().also { report(TaskProgress("BATTERY", 1, 1)) }
                     }
                 ensureActive()
-                if ((current.value as? BatteryEntryState.Loading)?.id == id)
+                if ((current.value as? BatteryEntryState.Loading)?.id == id) {
                     current.value = BatteryEntryState.Ready(snapshot)
+                    telemetry.send(com.example.aicleanphonestorage.core.analytics.MetricEvent.BATTERYINFO_SCAN_RESULT, emptyMap())
+                }
             } catch (error: CancellationException) {
                 throw error
             } catch (_: Exception) {

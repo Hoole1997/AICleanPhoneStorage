@@ -25,6 +25,8 @@ internal object FeatureTelemetry {
         try {
             when {
                 feature != null -> (app.container.fileScanRepository.resolveAccess(feature).request == AccessRequest.NONE).toString()
+                page == "malware" -> app.container.permissionAccess.granted(
+                    if (android.os.Build.VERSION.SDK_INT >= 30) PermissionKind.ALL_FILES else PermissionKind.READ_FILES).toString()
                 page == "traffic" -> app.container.permissionAccess.granted(PermissionKind.USAGE).toString()
                 page == "notify" -> app.container.permissionAccess.granted(PermissionKind.NOTIFICATIONS).toString()
                 else -> "none"
@@ -33,7 +35,7 @@ internal object FeatureTelemetry {
         catch (_: SecurityException) { "false" }
     }
     fun entry(app: CleanApplication, entry: String) = BusinessTelemetry.withPermission(
-        MetricEvent.FEATURE_ENTRY_CLICK, mapOf("entry" to entry), permission(app, entry))
+        MetricEvent.FEATURE_ENTRY_CLICK, mapOf("entry" to BusinessPageNames.wire(entry)), permission(app, entry))
 
     fun homeState(snapshot: HomeCleaningSnapshot): Map<String, Any> = buildMap {
         put("state", if (snapshot.dirty) "dirty" else "cleaned")

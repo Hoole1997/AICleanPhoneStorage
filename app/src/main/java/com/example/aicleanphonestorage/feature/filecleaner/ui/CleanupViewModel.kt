@@ -156,6 +156,9 @@ internal class CleanupViewModel(
             repository.selectAll(it, current.value.filter.copy(bucket = bucket), selected)
             if (it.feature == CleanupFeature.UNUSED_FILES)
                 telemetry.selection(it.feature, bucket, selected, repository.totals(it, current.value.filter.copy(bucket = bucket)))
+            else if (it.feature == CleanupFeature.VIDEOS || it.feature == CleanupFeature.SIMILAR_PHOTOS)
+                // 分组操作上报整个页面的已选大小，与底部 Clean 按钮保持一致。
+                reportSelection(selected)
         }
     }
 
@@ -294,6 +297,17 @@ internal class CleanupViewModel(
         saved.remove<Long>(OP)
         current.update { it.copy(operation = CleanupOperationState.Idle) }
         refreshTotals()
+    }
+
+    private var reportedConfirmation: Long? = null
+
+    fun reportConfirmation(id: Long, accepted: Boolean) {
+        val value = current.value
+        val op = value.operation as? CleanupOperationState.Confirm ?: return
+        val feature = value.handle?.feature ?: return
+        if (op.id != id || reportedConfirmation == id) return
+        reportedConfirmation = id
+        telemetry.confirmation(feature, accepted, op.bytes)
     }
 
     fun confirm(id: Long) {

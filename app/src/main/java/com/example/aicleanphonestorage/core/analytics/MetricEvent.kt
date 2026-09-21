@@ -1,7 +1,28 @@
 package com.example.aicleanphonestorage.core.analytics
 
-/** 飞书 9 张工作表的事件名；未实现业务不通过虚构调用补齐。 */
+/** 飞书业务工作表的事件名；未实现业务不通过虚构调用补齐。 */
 internal enum class MetricEvent(val wireName: String) {
+    VIDEO_SCAN_RESULT("video_scan_result"),
+    VIDEO_CHECK("video_check"),
+    VIDEO_CLEAN_CLICK("video_clean_click"),
+    VIDEO_CONFIRM_CLEAN("video_confirm_clean"),
+    VIDEO_CANCEL_CLEAN("video_cancel_clean"),
+    VIDEO_RESULT_SHOW("video_result_show"),
+    DUPLICATEPHOTO_SCAN_RESULT("duplicatephoto_scan_result"),
+    DUPLICATEPHOTO_CHECK("duplicatephoto_check"),
+    DUPLICATEPHOTO_CLEAN_CLICK("duplicatephoto_clean_click"),
+    DUPLICATEPHOTO_CONFIRM_CLEAN("duplicatephoto_confirm_clean"),
+    DUPLICATEPHOTO_CANCEL_CLEAN("duplicatephoto_cancel_clean"),
+    DUPLICATEPHOTO_RESULT_SHOW("duplicatephoto_result_show"),
+    VIRUS_DECLARE_SHOW("virus_declare_show"),
+    VIRUS_DECLARE_CLICK("virus_declare_click"),
+    VIRUS_SCAN_RESULT("virus_scan_result"),
+    VIRUS_SCAN_BACK("virus_scan_back"),
+    VIRUS_RESULT_SHOW("virus_result_show"),
+    VIRUS_RISK_CLICK("virus_risk_click"),
+    VIRUS_SCAN_AGAIN("virus_scan_again"),
+    BATTERYINFO_SCAN_RESULT("BatteryInfo_scan_result"),
+    BATTERYINFO_RESULT_SHOW("BatteryInfo_result_show"),
     APP_LAUNCH("app_launch"),
     PAGE_SHOW("page_show"),
     PAGE_LEAVE("page_leave"),

@@ -6,7 +6,8 @@ import androidx.lifecycle.*
 
 /** 仅持有页面标识和时间；旋转复用 ViewModel，不把页面重建误算为一次新访问。 */
 internal class PageVisitState : ViewModel() {
-    private var page: String? = null
+    var page: String? = null
+        private set
     private var since = 0L
     private val contentEvents = mutableSetOf<String>()
     fun enter(value: String, now: Long): Boolean {
@@ -27,21 +28,37 @@ internal class PageVisitState : ViewModel() {
 
 internal object PageTelemetry {
     fun attach(activity: AppCompatActivity, page: String, permission: suspend () -> String = { "none" }) {
+        attachDynamic(activity, { page }, permission)
+    }
+
+    /** 同一 Activity 的扫描/结果是不同逻辑页面；仅在前台真实切换时配对 leave/show。 */
+    fun attachDynamic(
+        activity: AppCompatActivity,
+        page: () -> String,
+        permission: suspend () -> String = { "none" },
+    ): () -> Unit {
         val state = ViewModelProvider(activity)[PageVisitState::class.java]
-        activity.lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onResume(owner: LifecycleOwner) {
-                // ActivityResult 可能在 STARTED 时直接转发到首页，不能把短暂露出的父页计成新访问。
-                if (activity.isFinishing || activity.isDestroyed) return
-                if (state.enter(page, SystemClock.elapsedRealtime())) {
-                    BusinessTelemetry.withPermission(MetricEvent.PAGE_SHOW, mapOf("page" to page), permission)
-                    val event = when (page) {
-                        "traffic" -> MetricEvent.TRAFFIC_PAGE_SHOW
-                        "notify" -> MetricEvent.NOTIFY_PAGE_SHOW
-                        else -> null
-                    }
-                    if (event != null) BusinessTelemetry.withPermission(event, emptyMap(), permission)
+        val refresh: () -> Unit = refresh@{
+            if (activity.isFinishing || activity.isDestroyed ||
+                !activity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) return@refresh
+            val value = BusinessPageNames.wire(page())
+            val now = SystemClock.elapsedRealtime()
+            if (state.page != null && state.page != value)
+                state.leave(now)?.let { BusinessTelemetry.emit(MetricEvent.PAGE_LEAVE, it) }
+            if (state.enter(value, now)) {
+                BusinessTelemetry.withPermission(MetricEvent.PAGE_SHOW, mapOf("page" to value), permission)
+                val event = when (value) {
+                    "traffic" -> MetricEvent.TRAFFIC_PAGE_SHOW
+                    "notify" -> MetricEvent.NOTIFY_PAGE_SHOW
+                    "BatteryInfo" -> MetricEvent.BATTERYINFO_RESULT_SHOW
+                    else -> null
                 }
+                if (event == MetricEvent.BATTERYINFO_RESULT_SHOW) BusinessTelemetry.emit(event)
+                else if (event != null) BusinessTelemetry.withPermission(event, emptyMap(), permission)
             }
+        }
+        activity.lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onResume(owner: LifecycleOwner) = refresh()
             override fun onStop(owner: LifecycleOwner) {
                 if (!activity.isChangingConfigurations)
                     state.leave(SystemClock.elapsedRealtime(), temporarilyCovered =
@@ -49,6 +66,7 @@ internal object PageTelemetry {
                         ?.let { BusinessTelemetry.emit(MetricEvent.PAGE_LEAVE, it) }
             }
         })
+        return refresh
     }
 }
 

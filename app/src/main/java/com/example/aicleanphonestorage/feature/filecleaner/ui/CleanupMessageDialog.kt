@@ -68,16 +68,17 @@ class CleanupMessageDialog : DialogFragment() {
     }
 
     override fun onCancel(dialog: DialogInterface) {
-        result("negative")
+        result("negative", buttonClick = false)
         super.onCancel(dialog)
     }
 
-    private fun result(action: String) =
+    private fun result(action: String, buttonClick: Boolean = true) =
         parentFragmentManager.setFragmentResult(
             RESULT,
             Bundle().apply {
                 putString("identity", identity)
                 putString("action", action)
+                putBoolean("buttonClick", buttonClick)
             },
         )
 
