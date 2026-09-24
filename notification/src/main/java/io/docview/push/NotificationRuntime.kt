@@ -86,7 +86,7 @@ class NotificationRuntime(context: Context, host: NotificationHost) {
             ready.await()
             TriggerCtrl.triggerResidentNotification()
             // 授权回调也走这里，保证首次前台因无通知权限跳过后可以补建服务。
-            io.docview.push.service.KeepAliveServiceManager.startKeepAliveService(app)
+            io.docview.push.service.KeepAliveServiceManager.startKeepAliveService(app, from = "resident_refresh")
         }
     }
 

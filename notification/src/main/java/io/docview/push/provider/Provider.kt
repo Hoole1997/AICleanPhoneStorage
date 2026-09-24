@@ -20,6 +20,11 @@ import io.docview.push.utils.Logger
  */
 class Provider : ContentProvider() {
 
+    companion object {
+        const val METHOD_START_KEEP_ALIVE_SERVICE = "startKeepAliveService"
+        const val EXTRA_FROM = "from"
+    }
+
     override fun onCreate(): Boolean {
         val app = context?.applicationContext as? io.docview.push.NotificationRuntimeOwner ?: return false
         app.notificationRuntime.initialize()
@@ -58,8 +63,12 @@ class Provider : ContentProvider() {
     }
 
     override fun call(method: String, arg: String?, extras: Bundle?): Bundle? {
-        context?.let {
-            CoreService.startService(it)
+        if (method == METHOD_START_KEEP_ALIVE_SERVICE) {
+            // 只有明确的内部命令才能启动服务，避免其他 Provider 调用产生副作用。
+            val from = extras?.getString(EXTRA_FROM)?.trim()?.take(32)?.takeIf { it.isNotEmpty() }
+                ?: "unknown"
+            context?.let { CoreService.startService(it, providerFrom = from) }
+            return Bundle()
         }
         return super.call(method, arg, extras)
     }

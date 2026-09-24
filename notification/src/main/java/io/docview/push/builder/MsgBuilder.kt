@@ -148,7 +148,7 @@ fun markRedPointClicked(context: Context) {
             .putString("last_click_date", today)
             .apply()
 
-        KeepAliveServiceManager.startKeepAliveService(context)
+        KeepAliveServiceManager.startKeepAliveService(context, from = "red_point_click")
     } catch (e: Exception) {
         // 忽略异常
     }

@@ -46,6 +46,7 @@ class CoreService : Service() {
         private const val ACTION_START_SERVICE = CoreServiceCommand.ACTION_START
         private const val ACTION_UPDATE_NOTIFICATION = CoreServiceCommand.ACTION_UPDATE
         private const val EXTRA_INTERVAL_SECONDS = "interval_seconds"
+        private const val EXTRA_PROVIDER_FROM = "provider_from"
         /**
          * 设置默认间隔时间
          * @param seconds 间隔时间（秒）
@@ -59,21 +60,28 @@ class CoreService : Service() {
          * 启动保活服务
          * @param context 上下文
          * @param intervalSeconds 间隔时间（秒），默认使用持久化存储的值
+         * @param providerFrom 经 Provider 发起时的短来源标签，直接启动时为空
          */
-        fun startService(context: Context, intervalSeconds: Long = defaultIntervalSeconds) {
+        fun startService(
+            context: Context,
+            intervalSeconds: Long = defaultIntervalSeconds,
+            providerFrom: String? = null,
+        ) {
             if (!io.docview.push.host.PushEnvironment.host.backgroundServiceEnabled) {
                 TriggerCtrl.ensureResidentNotificationExists()
                 return
             }
-            // 主动启动只允许应用可见时执行；系统 sticky 恢复走 onStartCommand(null)，不走此入口。
-            if (!androidx.lifecycle.ProcessLifecycleOwner.get().lifecycle.currentState
-                    .isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) {
-                Logger.d("屏幕监听服务启动延后：等待应用回到前台")
-                return
-            }
+            // 显式启动与系统 sticky 恢复分开归因；系统后台启动限制仍由平台检查。
+//            if (!androidx.lifecycle.ProcessLifecycleOwner.get().lifecycle.currentState
+//                    .isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) {
+//                Logger.d("屏幕监听服务启动延后：等待应用回到前台")
+//                return
+//            }
             val intent = Intent(context, CoreService::class.java).apply {
                 action = ACTION_START_SERVICE
                 putExtra(EXTRA_INTERVAL_SECONDS, intervalSeconds)
+                // 只传固定、短来源标签；成功归因要等 Service 真正晋升并完成初始化后上报。
+                providerFrom?.let { putExtra(EXTRA_PROVIDER_FROM, it) }
             }
 
             try {
@@ -129,6 +137,8 @@ class CoreService : Service() {
     private var runtimeReady = false
     private var screenRegistration: AutoCloseable? = null
     private var initialization: Job? = null
+    private data class StartAttribution(val via: String, val from: String)
+    private var startAttribution = StartAttribution("direct", "direct")
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val session = CoreServiceLifecycle(
         promote = {
@@ -166,8 +176,18 @@ class CoreService : Service() {
                 session.stop()
                 return START_NOT_STICKY
             }
-            val running = when (CoreServiceCommand.from(intent == null, intent?.action)) {
+            val command = CoreServiceCommand.from(intent == null, intent?.action)
+            val running = when (command) {
                 CoreServiceCommand.START, CoreServiceCommand.RESTORE -> {
+                    if (!session.running) {
+                        startAttribution = when (command) {
+                            CoreServiceCommand.RESTORE -> StartAttribution("system", "sticky_restore")
+                            else -> intent?.getStringExtra(EXTRA_PROVIDER_FROM)
+                                ?.takeIf { it.isNotBlank() }
+                                ?.let { StartAttribution("provider", it) }
+                                ?: StartAttribution("direct", "direct")
+                        }
+                    }
                     requestedIntervalSeconds = if (intent?.hasExtra(EXTRA_INTERVAL_SECONDS) == true)
                         intent.getLongExtra(EXTRA_INTERVAL_SECONDS, DEFAULT_INTERVAL_SECONDS) else null
                     if (runtimeReady) intervalSeconds = effectiveInterval()
@@ -222,6 +242,7 @@ class CoreService : Service() {
 
     private fun restoreWork() {
         isRunning = true
+        val attribution = startAttribution
         initialization = serviceScope.launch {
             try {
                 (application as NotificationRuntimeOwner).notificationRuntime.awaitReady()
@@ -233,7 +254,9 @@ class CoreService : Service() {
                 intervalSeconds = effectiveInterval()
                 if (!session.refresh()) return@launch
                 screenRegistration = TimingCtrl.getInstance().registerServiceScreenReceiver(this@CoreService)
-                PushEventReporter.reportData("Notific_Pull", mapOf("topic" to "permanent"))
+                // 刷新通知和注册监听都成功后才记为拉活成功，避免把 Provider 请求当成成功启动。
+                PushEventReporter.reportData("Notific_Pull", mapOf(
+                    "topic" to "permanent", "via" to attribution.via, "from" to attribution.from))
                 if (PushEnvironment.host.periodicPushEnabled) startKeepAliveTask()
             } catch (cancelled: CancellationException) { throw cancelled }
             catch (error: Exception) { session.fail(error) }

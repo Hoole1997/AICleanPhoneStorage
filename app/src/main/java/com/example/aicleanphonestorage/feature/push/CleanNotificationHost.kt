@@ -59,6 +59,9 @@ internal class CleanNotificationHost(
     // 用户选择双层屏幕事件监听；不启用 periodicPushEnabled 的旧定时推送。
     override val backgroundServiceEnabled = true
 
+    override val periodicPushEnabled: Boolean
+        get() = true
+
     override suspend fun awaitContentLanguage() = awaitLanguage()
 
     override val contentLanguageTag: String

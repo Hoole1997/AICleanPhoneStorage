@@ -202,7 +202,7 @@ class TimingCtrl private constructor() : DefaultLifecycleObserver {
         Logger.d("应用切到前台")
         TriggerCtrl.stopRepeatNotification()
         Utils.getApp().let {
-            KeepAliveServiceManager.startKeepAliveService(it)
+            KeepAliveServiceManager.startKeepAliveService(it, from = "app_foreground")
         }
 
     }
@@ -222,7 +222,7 @@ class TimingCtrl private constructor() : DefaultLifecycleObserver {
         if (!accepted) return
         when (event) {
             ScreenEvent.OFF -> TriggerCtrl.stopRepeatNotification()
-            ScreenEvent.ON -> context?.let { KeepAliveServiceManager.startKeepAliveService(it) }
+            ScreenEvent.ON -> context?.let { KeepAliveServiceManager.startKeepAliveService(it, from = "screen_on") }
             ScreenEvent.UNLOCK -> handleUnlock()
         }
     }

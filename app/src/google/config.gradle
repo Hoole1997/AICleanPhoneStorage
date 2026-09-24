@@ -1,7 +1,7 @@
 // Google 渠道占位：填写正式广告和统计配置后再启用；不使用 local 测试 ID。
 ext.googleAdConfig = [
     // AdMob配置
-    admob: [applicationId: "", // 测试应用ID，请替换为实际的AdMob应用ID
+    admob: [applicationId: "ca-app-pub-2109701347647380~1392414153", // 测试应用ID，请替换为实际的AdMob应用ID
              adUnitIds    : [banner      : "",        // 横幅广告测试ID
                              interstitial: "", // 插页广告测试ID
                              splash      : "",       // 开屏广告测试ID
