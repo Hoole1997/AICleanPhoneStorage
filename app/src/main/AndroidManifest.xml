@@ -42,7 +42,7 @@
         <activity android:name=".feature.malware.ui.MalwareScanActivity" android:screenOrientation="portrait" android:exported="false" />
         <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="${ADMOB_APPLICATION_ID}" />
         <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/ic_home_clean" />
-        <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="general_silent_notification" />
+        <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="general_notification_v2" />
         <activity android:name=".feature.battery.ui.BatteryInfoActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".feature.settings.SettingsActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".feature.settings.LanguageSettingsActivity" android:screenOrientation="portrait" android:exported="false" />

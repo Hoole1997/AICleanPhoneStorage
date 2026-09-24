@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 2,
+  "configVersion": "example-v1",
+  "pool": "D4",
+  "defaultLanguage": "en",
+  "contents": [
+    {
+      "id": "d4_unused_001",
+      "title": "Review older downloads",
+      "desc": "Check older documents and archives before choosing what to remove.",
+      "buttonText": "Review",
+      "iconType": 4,
+      "actionType": 4,
+      "translations": {
+        "zh-Hans": {
+          "title": "检查较早下载的文件",
+          "desc": "查看较早下载的文档和压缩包，再选择需要删除的内容。",
+          "buttonText": "去查看"
+        }
+      }
+    }
+  ]
+}

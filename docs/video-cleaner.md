@@ -13,7 +13,7 @@
 - 新扫描默认全选有效候选；单项、分组和全局选择同步。折叠不改变选择，操作快照包括已选但当前未加载/被折叠的条目。顶部 Cancel 表示取消全选，与 Figma 已选状态一致。
 - 点击中央播放按钮通过 ACTION_VIEW 临时只读授权交给设备播放器；无可用播放器/权限失效时沿用错误提示。
 - 复用应用内删除确认、空态和完成页。Android 11+ 视频操作在再次确认所有文件访问后直接使用 ContentResolver.delete；没有该权限或 OEM Provider 拒绝直接删除时，才退回系统删除确认。其他模块的系统确认规则不变。完成计数使用真正成功删除的视频数，单位为 Video/Videos。系统取消且没有已删除项时返回列表保留选择。
-- Continue 重新查询媒体库后返回列表/空态；返回首页沿用 back_home_video。广告位 native_scanning、native_feature_video、native_result_video 接入现有协调器；填充仍由现有 SDK/远程配置决定。
+- Continue 与结果页返回键均结束视频清理流程并返回首页，关闭原视频列表页；返回首页沿用 back_home_video。广告位 native_scanning、native_feature_video、native_result_video 接入现有协调器；填充仍由现有 SDK/远程配置决定。
 
 ## 结构与资源
 
@@ -49,3 +49,5 @@ Android 媒体访问与删除依据：[Android 官方共享媒体文档](https:/
 权限说明最终文案：视频入口即使申请 ALL_FILES，也显示 “Allow access to your videos”、指定 Video Cleaner 说明，以及 Not now / Allow。PermissionPurpose 只控制说明和图标，PermissionKind 仍为 ALL_FILES，点击 Allow 继续打开系统所有文件访问设置。其他入口默认文案不变。已通过 local 编译、Lint 及公共弹框测量回归，复核普通/双倍字号截图。
 
 选中/取消选中按钮闪烁修复：CleanupActionRenderer 不再用临时 editing 状态决定 isEnabled（避免写入开始变灰、写入结束变蓝），统一由有效选择和操作状态决定外观；editing 仅拦截点击。取消最后一项仍正常置灰，执行操作时仍禁用，prepare 继续等待总量查询并验证选择。local 编译与 Lint、共享按钮各 CleanupFeature 状态回归及视频页设备回归共 4 项通过，复核页面截图。
+
+2026-09-21 二次进入修复：首页退出广告与扫描完成共用 Activity 级插屏队列。扫描已 Ready 但队列占用时保留结果，在队列释放且首页 RESUMED 时续接原扫描的广告及跳转；不重新扫描、不轮询、不增加广告请求。取消后的结果不会重放，重复 SDK 回调仍只导航一次。

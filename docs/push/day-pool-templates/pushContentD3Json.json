@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 2,
+  "configVersion": "example-v1",
+  "pool": "D3",
+  "defaultLanguage": "en",
+  "contents": [
+    {
+      "id": "d3_photos_001",
+      "title": "Make smaller photo copies",
+      "desc": "Compress selected photos and decide whether to keep the originals.",
+      "buttonText": "Compress",
+      "iconType": 3,
+      "actionType": 3,
+      "translations": {
+        "zh-Hans": {
+          "title": "压缩照片副本",
+          "desc": "压缩选中的照片，并自行决定是否保留原图。",
+          "buttonText": "去压缩"
+        }
+      }
+    }
+  ]
+}

@@ -3,18 +3,18 @@ package io.docview.push.host
 import io.docview.push.BuildConfig
 import java.util.concurrent.CopyOnWriteArraySet
 
-/** 安装分发 flavor 与用户归因渠道是两件事；在归因 SDK 未接入前使用渠道文件声明的默认值。 */
+/** 宿主同步 SDK 真实归因；渠道文件默认值仅供配置回退，不能作为启用买量分池的依据。 */
 internal object PushUserChannel {
     enum class UserChannelType(val value: String) { PAID("paid"), NATURAL("natural") }
     interface ChannelChangeListener { fun onChannelChanged(oldChannel: UserChannelType, newChannel: UserChannelType) }
     private val listeners = CopyOnWriteArraySet<ChannelChangeListener>()
-    @Volatile private var channel = if (BuildConfig.USER_CHANNEL == "paid") UserChannelType.PAID else UserChannelType.NATURAL
-    fun getCurrentChannel() = channel
+    private val audience = PushAudienceState(if (BuildConfig.USER_CHANNEL == "paid") UserChannelType.PAID else UserChannelType.NATURAL)
+    fun isConfirmedPaidUser() = audience.confirmedPaid
+    fun getCurrentChannel() = audience.channel
     fun addChannelChangeListener(listener: ChannelChangeListener) { listeners.add(listener) }
     fun setChannel(value: UserChannelType) {
-        val old = channel
+        val old = audience.confirm(value)
         if (old == value) return
-        channel = value
         listeners.forEach { it.onChannelChanged(old, value) }
     }
 }

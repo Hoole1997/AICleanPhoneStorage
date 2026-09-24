@@ -61,7 +61,7 @@
 | 09-未使用文件与通知栏 | `unused_check` | 部分接入 | [CleanupViewModel.kt](../../app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupViewModel.kt)：现有勾选 action/selected_size 已接，缺分组数据时不传 group。 |
 | 09-未使用文件与通知栏 | `unused_clean_click` | 已接入 | [CleanupViewModel.kt](../../app/src/main/java/com/example/aicleanphonestorage/feature/filecleaner/ui/CleanupViewModel.kt)：现有触发时机和参数已接入。 |
 | 09-未使用文件与通知栏 | `unused_result_show` | 已接入 | [CompletionActivity.kt](../../app/src/main/java/com/example/aicleanphonestorage/core/ui/completion/CompletionActivity.kt)：现有触发时机和参数已接入。 |
-| 09-未使用文件与通知栏 | `notifbar_entry_click` | 部分接入 | [ResidentClickTelemetry.kt](../../app/src/main/java/com/example/aicleanphonestorage/feature/push/ResidentClickTelemetry.kt)：现有 Clean/Photos 可记录，缺 App/Accelerate 入口与 app_badge_count；Photos 当前跳压缩，尚未改为文档的截图。 |
+| 09-未使用文件与通知栏 | `notifbar_entry_click` | 已接入 | [ResidentClickTelemetry.kt](../../app/src/main/java/com/example/aicleanphonestorage/feature/push/ResidentClickTelemetry.kt)：Clean/App/Photos/Accelerate 入口携带共享应用数量数值快照 `app_badge_count`，Photos 跳截图；旧通知或数量尚未就绪时不伪填 0。 |
 
 ## 需要补充的业务/口径
 

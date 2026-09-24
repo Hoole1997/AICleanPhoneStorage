@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 2,
+  "configVersion": "example-v1",
+  "pool": "D2",
+  "defaultLanguage": "en",
+  "contents": [
+    {
+      "id": "d2_large_001",
+      "title": "Review large files",
+      "desc": "Find large files and choose what you no longer need.",
+      "buttonText": "Review",
+      "iconType": 1001,
+      "actionType": 1001,
+      "translations": {
+        "zh-Hans": {
+          "title": "查看占用空间的大文件",
+          "desc": "查找大文件，选择不再需要的内容。",
+          "buttonText": "去查看"
+        }
+      }
+    }
+  ]
+}

@@ -21,17 +21,18 @@ class NotificationRuntime(context: Context, host: NotificationHost) {
     private val app = context.applicationContext
     private val started = AtomicBoolean(false)
     private val ready = CompletableDeferred<Unit>()
+    // 捕获首次进程启动所在自然日，避免 IO 排队跨午夜后误记为次日；不使用安装时间。
+    private val firstObservedEpochDay = java.time.LocalDate.now().toEpochDay()
     init { PushEnvironment.install(app, host) }
 
     fun initialize() {
         if (started.getAndSet(true)) return
-        // 捕获首次进程启动所在自然日，避免 IO 排队跨午夜后误记为次日；不使用安装时间。
-        val firstObservedEpochDay = java.time.LocalDate.now().toEpochDay()
         io.docview.push.analytics.NotificationVisibility.install(app as Application)
         Utils.init(app)
         PushEnvironment.scope.launch {
             try {
                 PushPreferences.initialize(app)
+                ContentController.recordFirstLaunch(app, firstObservedEpochDay)
                 ResetCtrl.getInstance().initialize(app)
                 ConfigCtrl.initialize(app)
                 PushEnvironment.host.awaitContentLanguage()
@@ -60,6 +61,23 @@ class NotificationRuntime(context: Context, host: NotificationHost) {
         io.docview.push.host.PushUserChannel.setChannel(if (paid)
             io.docview.push.host.PushUserChannel.UserChannelType.PAID
             else io.docview.push.host.PushUserChannel.UserChannelType.NATURAL)
+        initialize()
+        PushEnvironment.scope.launch {
+            try {
+                ready.await()
+                if (io.docview.push.host.PushUserChannel.isConfirmedPaidUser()) {
+                    // 归因可能晚于通知模块初始化；确认买量后再加载分池，不依赖重启或下一次冷启动。
+                    ContentController.initialize(app, firstObservedEpochDay)
+                } else withContext(Dispatchers.Main.immediate) {
+                    if (!io.docview.push.host.PushUserChannel.isConfirmedPaidUser()) {
+                        TriggerCtrl.cancelDayPoolNotification()
+                    }
+                }
+            } catch (cancelled: CancellationException) { throw cancelled }
+            catch (error: Exception) {
+                android.util.Log.w("CleanPush", "Unable to update day-pool eligibility", error)
+            }
+        }
     }
 
     fun refreshResident() {

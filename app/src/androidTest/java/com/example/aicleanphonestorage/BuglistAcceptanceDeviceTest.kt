@@ -169,7 +169,7 @@ class BuglistAcceptanceDeviceTest {
             val host = CleanNotificationHost(context, cleaning)
             for (paid in listOf(false, true)) for (compact in listOf(false, true)) {
                 cleaning.setPaidUser(paid)
-                val view = host.residentViews(compact, themed(), "112").apply(themed(), null)
+                val view = host.residentViews(compact, themed(), 112).apply(themed(), null)
                 assertEquals(if (paid) View.VISIBLE else View.GONE, view.findViewById<View>(R.id.shortcut_unused).visibility)
                 assertEquals("App", view.findViewById<TextView>(R.id.shortcut_network_label).text.toString())
                 assertEquals("Photos", view.findViewById<TextView>(R.id.shortcut_photos_label).text.toString())

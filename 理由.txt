@@ -1,0 +1,11 @@
+FOREGROUND_SERVICE_SPECIAL_USE:
+
+The foreground service maintains a visible notification with direct shortcuts to storage cleanup, photo compression, and network usage tools. Users can access these features directly from the notification while the app is in the background. The service also handles screen lock and unlock events for cleaning reminders without periodic polling.
+
+MANAGE_EXTERNAL_STORAGE:
+
+Used to scan shared storage for junk candidates and large files. Users review the results, select files, and confirm deletion.
+
+READ_MEDIA_IMAGES:
+
+Used to discover and display photos and screenshots so users can review, compress, or delete selected images.

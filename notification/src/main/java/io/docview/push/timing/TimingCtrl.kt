@@ -245,6 +245,8 @@ class TimingCtrl private constructor() : DefaultLifecycleObserver {
     }
 
     private fun triggerOnWorker(type: CheckCtrl.NotificationType) {
+        // 分池仅属于已确认的买量用户；自然/未确认渠道不进入频次检查、取池及普通推送流程。
+        if (!io.docview.push.host.PushUserChannel.isConfirmedPaidUser()) return
         val description = when (type) {
             CheckCtrl.NotificationType.UNLOCK -> "解锁通知"
             CheckCtrl.NotificationType.BACKGROUND -> "后台通知"

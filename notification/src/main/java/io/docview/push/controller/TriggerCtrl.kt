@@ -42,8 +42,10 @@ import io.docview.push.host.PushEventReporter
 @SuppressLint("StaticFieldLeak", "MissingPermission")
 object TriggerCtrl {
 
+    private const val DAY_POOL_NOTIFICATION = "notification.day_pool"
+
     const val CHANNEL_ID_RESIDENT = "resident_notification"
-    const val CHANNEL_ID_GENERAL = "general_notification"
+    const val CHANNEL_ID_GENERAL = GeneralNotificationChannels.ALERTING
     const val CHANNEL_ID_GENERAL_SILENT = "general_silent_notification"
     const val CHANNEL_NAME_RESIDENT = "recovery_resident"
     const val CHANNEL_NAME_GENERAL = "recovery_single"
@@ -81,15 +83,12 @@ object TriggerCtrl {
             enableVibration(false)
         }
 
-        // 普通通知通道
-        val generalChannel = NotificationChannel(
-            CHANNEL_ID_GENERAL, io.docview.push.host.PushEnvironment.host.pushChannelName, NotificationManager.IMPORTANCE_HIGH
-        ).apply {
-            description = "for general notification"
-            setShowBadge(true)
-            enableLights(false)
-            enableVibration(false)
-        }
+        // Android 不允许修改既有通道的提醒行为，旧版关闭震动的默认通道迁移到新版本。
+        // 已存在的新通道直接复用，后续用户对声音/震动的设置始终由系统保留。
+        val manager = context.getSystemService(NotificationManager::class.java)
+        val generalChannel = manager.getNotificationChannel(CHANNEL_ID_GENERAL)
+            ?: GeneralNotificationChannels.alerting(io.docview.push.host.PushEnvironment.host.pushChannelName,
+                manager.getNotificationChannel(GeneralNotificationChannels.LEGACY))
 
         // 静音通知通道
         val silentChannel = NotificationChannel(
@@ -124,7 +123,8 @@ object TriggerCtrl {
         notificationType: String,
         modelBuilder: suspend (Context) -> GeneralNotificationData,
         notificationBuilder: (GeneralNotificationData) -> Notification,
-        onNotificationSent: ((GeneralNotificationData, Notification) -> Unit)? = null
+        onNotificationSent: ((GeneralNotificationData, Notification) -> Unit)? = null,
+        paidOnly: Boolean = false,
     ) {
         val context = context ?: return
         val notificationManager = notificationManager ?: return
@@ -132,6 +132,8 @@ object TriggerCtrl {
         // 使用全局协程异步构建通知
         notificationScope.launch {
             try {
+                // 再查一次实时归因快照，直接调用/已排队任务不能绕过 TimingCtrl 的准入。
+                if (paidOnly && !io.docview.push.host.PushUserChannel.isConfirmedPaidUser()) return@launch
                 // 在 IO 线程中构建通知数据
                 val notificationData = withContext(Dispatchers.IO) {
                     modelBuilder(context)
@@ -139,11 +141,15 @@ object TriggerCtrl {
 
                 // 在 IO 线程中构建通知对象
                 val notification = withContext(Dispatchers.IO) {
-                    notificationBuilder(notificationData)
+                    notificationBuilder(notificationData).also {
+                        if (paidOnly) it.extras.putBoolean(DAY_POOL_NOTIFICATION, true)
+                    }
                 }
 
                 // 切换到主线程执行 notify
                 withContext(Dispatchers.Main) {
+                    // 构建与发布之间也可能转为自然用户；常驻通知不受此限制。
+                    if (paidOnly && !io.docview.push.host.PushUserChannel.isConfirmedPaidUser()) return@withContext
                     if (!io.docview.push.NotificationPermissionAccess.isGranted(context,
                             if (Build.VERSION.SDK_INT >= 26) notification.channelId else null)) return@withContext
                     try {
@@ -220,6 +226,10 @@ object TriggerCtrl {
         // 创建重复任务
         repeatRunnable = object : Runnable {
             override fun run() {
+                if (!io.docview.push.host.PushUserChannel.isConfirmedPaidUser()) {
+                    stopRepeatNotification()
+                    return
+                }
                 val maxCount = getRepeatLoopCount()
 
                 if (repeatCount < maxCount) {
@@ -289,9 +299,11 @@ object TriggerCtrl {
     fun triggerGeneralNotification(
         type: CheckCtrl.NotificationType, onNotificationSent: (() -> Unit)? = null
     ) {
+        if (!io.docview.push.host.PushUserChannel.isConfirmedPaidUser()) return
         if (context?.canSendNotification() == true) {
             triggerNotification(
                 notificationType = "常规通知",
+                paidOnly = true,
                 modelBuilder = { context -> GeneralModelManager().getModel(context, type) },
                 notificationBuilder = { data -> general(data) },
                 onNotificationSent = { notificationData, notification ->
@@ -338,7 +350,7 @@ object TriggerCtrl {
 
     /**
      * 构建通知对象，可指定是否使用静音通道
-     * 使用 BigContentView 作为主要显示，通过 PRIORITY_HIGH 强制展开
+     * 首条允许系统提醒，后续更新只更新内容；展开状态由系统和用户决定
      * @param model 通知数据
      * @param useSilent 是否使用静音通道
      */
@@ -378,7 +390,7 @@ object TriggerCtrl {
                 .setStyle(NotificationCompat.DecoratedCustomViewStyle())
                 .setCustomContentView(model.contentView)
                 .setCustomBigContentView(model.bigContentView)
-                .setCustomHeadsUpContentView(model.bigContentView)
+                .setCustomHeadsUpContentView(model.contentView)
         } else {
             // Android 13 以下使用原始策略
             NotificationCompat.Builder(context!!, channelId)
@@ -387,7 +399,8 @@ object TriggerCtrl {
                 .setSmallIcon(io.docview.push.host.PushEnvironment.host.smallIcon)
                 .setAutoCancel(true)
                 .setGroup("push_" + System.currentTimeMillis())
-                .setContentText(model.contentTitle)
+                .setContentTitle(model.contentTitle)
+                .setContentText(model.contentContent)
                 .setContentIntent(model.contentIntent)
                 .setDeleteIntent(deletePendingIntent)
                 .setCustomContentView(model.contentView)
@@ -402,18 +415,30 @@ object TriggerCtrl {
 
         Logger.d("构建通知，使用${if (useSilent) "静音" else "普通"}通道: $channelId，${if (useBigLayout) "大布局(Android 13+)" else "原始策略"}")
 
+        // 同 ID 卡片仍显示时，不重复响铃/震动；被用户清除后下一条可以再次提醒。
+        builder.setOnlyAlertOnce(true)
+            .setSilent(useSilent)
+            .setDefaults(if (useSilent) 0 else Notification.DEFAULT_SOUND or Notification.DEFAULT_VIBRATE)
         return builder.build()
     }
 
     private fun general(model: GeneralNotificationData): Notification {
         // 首次通知总是使用普通通道（有声音）
-        return buildGeneralNotification(model, useSilent = true)
+        return buildGeneralNotification(model, useSilent = false)
     }
 
-    /**
-     * 取消通知
-     * @param notificationId 通知ID
-     */
+    /** 自然用户仅撤回分池卡片，保留常驻入口和其他通知类型。 */
+    fun cancelDayPoolNotification() {
+        stopRepeatNotification()
+        val id = type2notificationId.getValue(NotificationType.GENERAL)
+        val active = notificationManager?.activeNotifications?.firstOrNull { it.id == id } ?: return
+        // GENERAL 与可选地震功能共享历史槽位；只删除已标记的分池通知。
+        // 当前清理 App 未启用地震功能时，同时清除升级前未标记的普通分池卡片。
+        if (active.notification.extras.getBoolean(DAY_POOL_NOTIFICATION) ||
+            !io.docview.push.host.PushEnvironment.host.earthquakeEnabled) notificationManager?.cancel(id)
+    }
+
+    /** 取消指定通知及其重复任务。 */
     fun cancelNotification(notificationId: Int) {
         // 停止重复通知
         stopRepeatNotification()

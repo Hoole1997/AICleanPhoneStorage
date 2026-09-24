@@ -8,6 +8,8 @@ import com.example.aicleanphonestorage.core.analytics.MetricEvent
 internal object ResidentClickTelemetry {
     const val ENTRY = "metrics.resident.entry"
     const val BADGE = "metrics.resident.clean_badge"
+    const val APP_BADGE_COUNT = "metrics.resident.app_badge_count"
+
     fun consume(intent: Intent) {
         take(intent)?.let { BusinessTelemetry.emit(MetricEvent.NOTIFBAR_ENTRY_CLICK, it) }
     }
@@ -15,9 +17,14 @@ internal object ResidentClickTelemetry {
     fun take(intent: Intent): Map<String, Any>? {
         val entry = intent.getStringExtra(ENTRY)
         val badge = intent.getStringExtra(BADGE)
-        intent.removeExtra(ENTRY); intent.removeExtra(BADGE)
+        val appBadgeCount = intent.getIntExtra(APP_BADGE_COUNT, -1).takeIf { it >= 0 }
+        intent.removeExtra(ENTRY); intent.removeExtra(BADGE); intent.removeExtra(APP_BADGE_COUNT)
         if (entry !in setOf("clean", "app", "photos", "accelerate") || badge !in setOf("shown", "hidden", "none")) return null
-        // 当前通知没有 App 数量角标，因此不填虚构的 app_badge_count=0；业务缺口记录在覆盖报告。
-        return mapOf("entry" to requireNotNull(entry), "clean_badge" to requireNotNull(badge))
+        // 旧通知或共享快照尚未就绪时保留点击事件，但不把未知数量伪装成 0。
+        return buildMap {
+            put("entry", requireNotNull(entry))
+            put("clean_badge", requireNotNull(badge))
+            appBadgeCount?.let { put("app_badge_count", it) }
+        }
     }
 }

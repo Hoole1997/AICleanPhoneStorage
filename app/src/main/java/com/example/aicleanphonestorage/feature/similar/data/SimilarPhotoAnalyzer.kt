@@ -26,7 +26,7 @@ internal class SimilarPhotoAnalyzer(context: Context, private val index: Similar
                 after = file.id
                 try {
                     val signature =
-                        reader.read(file) ?: throw IOException("Unsupported or damaged image")
+                        reader.read(file, stableSampling = true) ?: throw IOException("Unsupported or damaged image")
                     index.signature(file, signature)
                     if (index.hasSameMetadata(scan, file))
                         index.hash(file.id, content.fingerprint(file))
@@ -65,17 +65,17 @@ internal class SimilarPhotoAnalyzer(context: Context, private val index: Similar
                 currentCoroutineContext().ensureActive()
                 after = file.id
                 val signature = index.signature(file.id) ?: continue
-                var reference = 0L
+                var reference = file.id
                 var comparisons = 0
                 var matched = false
                 while (comparisons < SimilarPolicy.MAX_COMPARISONS) {
                     val candidates = index.references(scan, file, signature, reference)
                     if (candidates.isEmpty()) break
-                    for ((candidate, metrics) in candidates) {
+                    for ((candidate, metrics) in candidates.take(SimilarPolicy.MAX_COMPARISONS - comparisons)) {
                         currentCoroutineContext().ensureActive()
                         reference = candidate.id
                         comparisons++
-                        if (signature.similar(metrics)) {
+                        if (SimilarPolicy.matches(signature, metrics)) {
                             index.join(candidate, file, signature)
                             matched = true
                             break

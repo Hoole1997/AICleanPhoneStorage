@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 2,
+  "configVersion": "example-v1",
+  "pool": "D5",
+  "defaultLanguage": "en",
+  "contents": [
+    {
+      "id": "d5_apps_001",
+      "title": "Review installed apps",
+      "desc": "Open App Manager to review your installed applications.",
+      "buttonText": "Open",
+      "iconType": 1003,
+      "actionType": 1003,
+      "translations": {
+        "zh-Hans": {
+          "title": "查看已安装的应用",
+          "desc": "打开应用管理，查看手机中已安装的应用。",
+          "buttonText": "打开"
+        }
+      }
+    }
+  ]
+}

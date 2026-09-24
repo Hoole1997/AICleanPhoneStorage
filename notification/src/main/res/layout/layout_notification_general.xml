@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!-- 折叠态恢复标题；正文保留一行，为原有右侧按钮预留空间。 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -46,23 +47,25 @@
 
         <TextView
             android:id="@+id/tvTitle"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:textStyle="bold"
+            android:includeFontPadding="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:ellipsize="end"
             android:lines="1"
             android:textColor="#333333"
-            android:textSize="14sp"
-            android:visibility="gone"
+            android:textSize="@dimen/notification_compact_title_size"
             tools:text="Storage summary readyStorage summary readyStorage summary readyStorage summary ready" />
 
         <TextView
             android:id="@+id/tvDesc"
+            android:includeFontPadding="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:lines="2"
+            android:lines="1"
             android:textColor="#666666"
-            android:textSize="12sp"
+            android:textSize="@dimen/notification_compact_description_size"
             tools:text="Storage summary readyStorage summary readyStorage summary readyStorage summary ready" />
     </LinearLayout>
 
@@ -84,6 +87,11 @@
 
         <TextView
             android:id="@+id/tvAction"
+            android:textSize="@dimen/notification_general_action_text_size"
+            android:includeFontPadding="false"
+            android:maxWidth="96dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

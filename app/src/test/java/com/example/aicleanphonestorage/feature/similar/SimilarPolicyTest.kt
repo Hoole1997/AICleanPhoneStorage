@@ -69,6 +69,42 @@ class SimilarPolicyTest {
         }
     }
 
+    @Test fun widerRecallDoesNotLosePairsWithDifferencesInEveryHashBand() {
+        val original = 0x123456789abcdefL
+        val changed = original xor (1L shl 1) xor (1L shl 14) xor (1L shl 27) xor (1L shl 40) xor (1L shl 53)
+        assertTrue(SimilarPolicy.bands(original).indices.none { SimilarPolicy.bands(original)[it] == SimilarPolicy.bands(changed)[it] })
+        val random = java.util.Random(29)
+        repeat(500) {
+            val hash = random.nextLong()
+            val flips = mutableSetOf<Int>()
+            while (flips.size < SimilarPolicy.MAX_HASH_DISTANCE) flips += random.nextInt(64)
+            val nearby = flips.fold(hash) { value, bit -> value xor (1L shl bit) }
+            val bands = SimilarPolicy.bands(nearby)
+            assertTrue(SimilarPolicy.probes(hash).indices.any { bands[it] in SimilarPolicy.probes(hash)[it] })
+        }
+    }
+
+    @Test fun exposureChangesRemainCandidatesButHashCollisionsAndDifferentColorsDoNot() {
+        fun image(reverseY: Boolean = false, exposure: Int = 0) = IntArray(4096) { i ->
+            30 + i % 64 + (if (reverseY) 63 - i / 64 else i / 64) + exposure
+        }
+        fun signature(values: IntArray) = com.example.aicleanphonestorage.core.media.PhotoMetrics
+            .signature(values, 64, 64, 1600, 1200, stableSampling = true)
+            .let { it.copy(red=it.mean, green=it.mean, blue=it.mean) }
+        val original = signature(image())
+        val brighter = signature(image(exposure=30))
+        assertFalse(original.similar(brighter)) // 旧算法固定亮度差16，漏掉同一画面的调亮版本。
+        assertTrue(SimilarPolicy.matches(original, brighter))
+        val unrelated = signature(image(reverseY=true))
+        assertEquals(original.hash, unrelated.hash)
+        assertFalse(SimilarPolicy.matches(original, unrelated))
+        assertFalse(SimilarPolicy.matches(original, original.copy(red=original.red+70)))
+        assertFalse(SimilarPolicy.matches(original, original.copy(ratio=1.0)))
+        val blank = signature(IntArray(4096) { 100 })
+        assertFalse(SimilarPolicy.matches(blank, blank))
+        assertTrue(SimilarPolicy.matches(original, original.copy(ratio=original.ratio*0.96)))
+    }
+
     @Test
     fun similarConfirmationUsesTheNewRequirementSlot() {
         assertEquals("clean_confirm_duplicate", InterstitialPlacements.clean(CleanupFeature.SIMILAR_PHOTOS))

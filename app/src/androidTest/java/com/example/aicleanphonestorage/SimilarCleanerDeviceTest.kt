@@ -159,6 +159,119 @@ class SimilarCleanerDeviceTest {
             }
         }
 
+    @Test fun exposureAndOldCopiesAreGroupedWithoutWeakeningOriginalProtection() = runBlocking<Unit> {
+        val dir = root()
+        var handle: ScanHandle? = null
+        var mediaHandle: ScanHandle? = null
+        val created = mutableListOf<Uri>()
+        try {
+            val original = picture(dir, "original.jpg")
+            val bitmap = android.graphics.BitmapFactory.decodeFile(original.path)
+            val values = IntArray(bitmap.width * bitmap.height)
+            bitmap.getPixels(values, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
+            for (i in values.indices) values[i] = Color.rgb(
+                (Color.red(values[i]) + 30).coerceAtMost(255),
+                (Color.green(values[i]) + 30).coerceAtMost(255),
+                (Color.blue(values[i]) + 30).coerceAtMost(255))
+            val edited = Bitmap.createBitmap(values, bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+            val crop = Bitmap.createBitmap(edited, 8, 6, 384, 288)
+            val resized = Bitmap.createScaledBitmap(crop, 240, 180, true)
+            val copy = File(dir, "saved-later.jpg")
+            try { copy.outputStream().use { resized.compress(Bitmap.CompressFormat.JPEG, 60, it) } }
+            finally { resized.recycle(); crop.recycle(); edited.recycle(); bitmap.recycle() }
+            copy.setLastModified(original.lastModified() + 45L * 86_400_000)
+            handle = scan(listOf(file(original, dir), file(copy, dir).copy(width=240,height=180)))
+            val rows = index.page(handle, CleanupFilter(), 0, 20)
+            assertEquals(2, rows.size)
+            assertEquals(1, rows.map { it.groupKey }.distinct().size)
+            assertTrue(rows.first().groupKey.startsWith("similar:"))
+            assertEquals(1, rows.count { it.retained })
+            assertEquals(1, index.totals(handle, CleanupFilter()).selectedCount)
+            assertTrue(original.exists()); assertTrue(copy.exists())
+            if (android.os.Build.VERSION.SDK_INT >= 29) {
+                // 在同一设备上复核真实 MediaStore URI；只发布/移除本测试创建的两张图片。
+                val media = listOf(original,copy).map { image ->
+                    val resolver = context.contentResolver
+                    val uri = requireNotNull(resolver.insert(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        android.content.ContentValues().apply {
+                            put("_display_name", "similar-visual-${System.nanoTime()}.jpg")
+                            put("mime_type", "image/jpeg")
+                            put("relative_path", "Pictures/SimilarCleanerTests")
+                            put("datetaken", image.lastModified())
+                            put("is_pending", 1)
+                        }))
+                    created += uri
+                    resolver.openOutputStream(uri)!!.use { output -> image.inputStream().use { it.copyTo(output) } }
+                    resolver.update(uri, android.content.ContentValues().apply { put("is_pending", 0) }, null, null)
+                    resolver.query(uri,arrayOf("_display_name","_size","date_modified","datetaken"),null,null,null)!!.use { c ->
+                        assertTrue(c.moveToFirst())
+                        ScannedFile(uri=uri.toString(), name=c.getString(0), mime="image/jpeg", size=c.getLong(1),
+                            modifiedMillis=c.getLong(2)*1000, takenMillis=c.getLong(3), category=FileCategory.PHOTOS,
+                            backend=FileBackend.MEDIA, scope="external")
+                    }
+                }
+                assertTrue(media.all { SimilarPolicy.candidate(it,"Pictures/SimilarCleanerTests/") })
+                mediaHandle = scan(media)
+                val mediaRows = index.page(mediaHandle, CleanupFilter(),0,10)
+                assertEquals(2,mediaRows.size)
+                assertEquals(1,mediaRows.map { it.groupKey }.distinct().size)
+                assertEquals(1,mediaRows.count { it.retained })
+            }
+        } finally {
+            handle?.let { index.discard(it.id) }; mediaHandle?.let { index.discard(it.id) }
+            created.forEach { context.contentResolver.delete(it,null,null) }
+            dir.deleteRecursively()
+        }
+    }
+
+    @Test fun indexRecallIgnoresDateAndSizeAndUsesAllHashProbes() {
+        val scan = index.start(CleanupFeature.SIMILAR_PHOTOS)
+        try {
+            val a = ScannedFile(uri="content://similar-fixture/a", name="a.jpg", mime="image/jpeg", size=100_000,
+                modifiedMillis=1_000, category=FileCategory.PHOTOS, backend=FileBackend.MEDIA, scope="test")
+            val b = a.copy(uri="content://similar-fixture/b", name="b.jpg", size=1_000,
+                modifiedMillis=1_000 + 100L*86_400_000)
+            index.insert(scan, listOf(a,b))
+            val files = repo.similar.candidates(scan, 0)
+            val hash = 0x123456789abcdefL
+            val changed = hash xor (1L shl 1) xor (1L shl 14) xor (1L shl 27) xor (1L shl 40) xor (1L shl 53)
+            val signature = PhotoSignature(hash, 1.33, 100, 30.0, 20.0, 10000,
+                layout=ByteArray(64) { (40+it*2).toByte() })
+            repo.similar.signature(files[0], signature)
+            repo.similar.signature(files[1], signature.copy(hash=changed))
+            val references = repo.similar.references(scan, files[1], signature.copy(hash=changed), files[1].id)
+            assertEquals(listOf(files[0].id), references.map { it.first.id })
+            assertTrue(SimilarPolicy.matches(signature.copy(hash=changed), references.single().second))
+            assertTrue(repo.similar.references(scan, files[1], signature.copy(hash=changed), files[0].id).isEmpty())
+        } finally { index.discard(scan) }
+    }
+
+    @Test fun visualFeatureMigrationPreservesExistingSelectionsAndOldSignatures() {
+        for (version in listOf(6, 8)) {
+            val db = android.database.sqlite.SQLiteDatabase.create(null)
+            try {
+                db.execSQL("CREATE TABLE files(id INTEGER PRIMARY KEY,selected INTEGER,retained INTEGER)")
+                db.execSQL("INSERT INTO files VALUES(1,0,1)")
+                if (version == 8) {
+                    db.execSQL("CREATE TABLE similar_signatures(file INTEGER PRIMARY KEY,hash INTEGER)")
+                    db.execSQL("INSERT INTO similar_signatures VALUES(1,42)")
+                }
+                ScanIndex(context).use { it.onUpgrade(db, version, 9) }
+                db.rawQuery("SELECT selected,retained FROM files WHERE id=1",null).use {
+                    assertTrue(it.moveToFirst()); assertEquals(0,it.getInt(0)); assertEquals(1,it.getInt(1))
+                }
+                db.rawQuery("PRAGMA table_info(similar_signatures)",null).use {
+                    var found = false
+                    while (it.moveToNext()) if(it.getString(it.getColumnIndexOrThrow("name"))=="layout") found=true
+                    assertTrue(found)
+                }
+                if(version==8) db.rawQuery("SELECT hash,layout FROM similar_signatures WHERE file=1",null).use {
+                    assertTrue(it.moveToFirst()); assertEquals(42L,it.getLong(0)); assertTrue(it.isNull(1))
+                }
+            } finally { db.close() }
+        }
+    }
+
     @Test
     fun largeGroupPagesDoNotLoadAllMembersAndUnavailableOriginalBlocksSnapshot() =
         runBlocking<Unit> {
@@ -390,12 +503,11 @@ class SimilarCleanerDeviceTest {
                                 it.supportFragmentManager.findFragmentByTag(
                                     CleanupMessageDialog.TAG
                                 )!!
-                            assertTrue(
-                                dialog
-                                    .requireArguments()
-                                    .toString()
-                                    .contains("The selected photos will be deleted")
-                            )
+                            val op = model(it).state.value.operation as CleanupOperationState.Confirm
+                            assertEquals(it.getString(R.string.similar_confirmation,
+                                java.text.NumberFormat.getIntegerInstance().format(op.count),
+                                android.text.format.Formatter.formatFileSize(it, op.bytes)),
+                                dialog.requireArguments().getString("message"))
                             model(it).dismissOperation()
                             assertEquals(6, model(it).state.value.totals.selectedCount)
                         }

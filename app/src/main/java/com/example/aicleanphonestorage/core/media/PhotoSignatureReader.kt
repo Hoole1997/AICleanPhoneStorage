@@ -14,7 +14,7 @@ import kotlinx.coroutines.ensureActive
 internal class PhotoSignatureReader(context: Context) {
     private val content = FileContentAccess(context)
 
-    suspend fun read(file: ScannedFile): PhotoSignature? {
+    suspend fun read(file: ScannedFile, stableSampling: Boolean = false): PhotoSignature? {
         if (
             file.mime !in setOf("image/jpeg", "image/png", "image/webp", "image/heic", "image/heif")
         )
@@ -105,6 +105,7 @@ internal class PhotoSignatureReader(context: Context) {
                     64,
                     if (rotated) bounds.outHeight else bounds.outWidth,
                     if (rotated) bounds.outWidth else bounds.outHeight,
+                    stableSampling = stableSampling,
                 )
                 .copy(red = red, green = green, blue = blue)
         } finally {

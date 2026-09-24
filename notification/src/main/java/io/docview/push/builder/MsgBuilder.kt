@@ -230,6 +230,7 @@ class GeneralModelManager() {
             .setViewVisibility(R.id.tvCount, android.view.View.GONE)
             .setTextViewText(R.id.tvTitle, title)
             .setTextViewText(R.id.tvDesc, content)
+            .setViewVisible(R.id.tvDesc, compactDescriptionFits(context, title, content))
             .setTextViewText(R.id.tvAction, data.buttonText)
             .setOnClickPendingIntent(R.id.tvAction, pendingIntent)
             .build()
@@ -256,6 +257,27 @@ class GeneralModelManager() {
             contentView = contentView,
             bigContentView = bigContentView
         )
+    }
+
+    /** 48dp 是系统硬限制：字体较高时优先保留标题和右侧按钮，完整正文仍在展开态显示。 */
+    private fun compactDescriptionFits(context: Context, title: String, description: String): Boolean {
+        fun height(text: String, size: Int, bold: Boolean = false): Int {
+            val paint = android.text.TextPaint().apply {
+                textSize = context.resources.getDimension(size)
+                textLocale = context.resources.configuration.locales[0]
+                // 与通知标题的粗体同步，按实际字体度量保留折叠态的高度保护。
+                typeface = if (bold) android.graphics.Typeface.DEFAULT_BOLD else android.graphics.Typeface.DEFAULT
+            }
+            return android.text.StaticLayout.Builder.obtain(text, 0, text.length, paint,
+                context.resources.displayMetrics.widthPixels.coerceAtLeast(1))
+                .setMaxLines(1).setIncludePad(false)
+                .apply { if (Build.VERSION.SDK_INT >= 28) setUseLineSpacingFromFallbacks(true) }
+                .build().height
+        }
+        val budget = if (Build.VERSION.SDK_INT >= 31) 48 else 64
+        return height(title, R.dimen.notification_compact_title_size, bold = true) +
+            height(description, R.dimen.notification_compact_description_size) <=
+            budget * context.resources.displayMetrics.density
     }
 
     private fun getIcon(data: Content): Int = io.docview.push.host.PushEnvironment.host.contentIcon(data.iconDestination)

@@ -22,17 +22,24 @@ internal object NotificationNavigation {
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
-    fun residentPendingIntent(context: Context, destination: NotificationDestination, entry: String, badge: String, content: NotificationContent = NotificationContent("", "")): PendingIntent =
+    fun residentPendingIntent(context: Context, destination: NotificationDestination, entry: String, badge: String, appBadgeCount: Int?, content: NotificationContent = NotificationContent("", "")): PendingIntent =
         PendingIntent.getActivity(context, 6100 + destination.contentType,
-            Intent(context, StartupActivity::class.java)
-                .setAction("${context.packageName}.resident.$entry.$badge")
-                .putExtra(EXTRA_DESTINATION, destination.key)
-                .putExtra(NotificationLaunchTelemetry.ORIGIN, "resident")
-                .apply { NotificationContentIntent.write(this, content) }
-                .putExtra(ResidentClickTelemetry.ENTRY, entry)
-                .putExtra(ResidentClickTelemetry.BADGE, badge)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP),
+            residentIntent(context, destination, entry, badge, appBadgeCount, content),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
+    /** 展示快照只传递白名单标量，供冷启动和热启动统一消费。 */
+    internal fun residentIntent(context: Context, destination: NotificationDestination, entry: String,
+        badge: String, appBadgeCount: Int?, content: NotificationContent): Intent =
+        Intent(context, StartupActivity::class.java)
+            // 数量参与身份，避免旧通知的 PendingIntent 被新快照覆盖。
+            .setAction("${context.packageName}.resident.$entry.$badge.${appBadgeCount ?: "unknown"}")
+            .putExtra(EXTRA_DESTINATION, destination.key)
+            .putExtra(NotificationLaunchTelemetry.ORIGIN, "resident")
+            .apply { NotificationContentIntent.write(this, content) }
+            .putExtra(ResidentClickTelemetry.ENTRY, entry)
+            .putExtra(ResidentClickTelemetry.BADGE, badge)
+            .apply { appBadgeCount?.let { putExtra(ResidentClickTelemetry.APP_BADGE_COUNT, it) } }
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
     fun read(intent: Intent): NotificationDestination? = when {
         intent.hasExtra(EXTRA_DESTINATION) -> NotificationDestination.fromKey(intent.getStringExtra(EXTRA_DESTINATION))

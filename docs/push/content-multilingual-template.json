@@ -1,0 +1,27 @@
+[
+  {
+    "id": "local_001_clean",
+    "title": "Junk scan is ready",
+    "desc": "Scan accessible junk files and review what you want to clean.",
+    "buttonText": "Clean",
+    "iconType": 1,
+    "actionType": 1,
+    "translations": {
+      "zh-Hans": {
+        "title": "检查可清理的垃圾文件",
+        "desc": "扫描可访问的垃圾文件，查看并选择需要清理的内容。",
+        "buttonText": "去清理"
+      },
+      "pt-BR": {
+        "title": "Verifique arquivos desnecessários",
+        "desc": "Analise arquivos acessíveis e escolha o que deseja limpar.",
+        "buttonText": "Limpar"
+      },
+      "es": {
+        "title": "Revisa los archivos innecesarios",
+        "desc": "Analiza los archivos accesibles y elige qué deseas limpiar.",
+        "buttonText": "Limpiar"
+      }
+    }
+  }
+]

@@ -54,6 +54,7 @@ internal class SimilarPhotoIndex(val index: ScanIndex) {
                 put("red", value.red)
                 put("green", value.green)
                 put("blue", value.blue)
+                put("layout", value.layout)
                 put("capture", SimilarPolicy.time(file))
                 SimilarPolicy.bands(value.hash).forEachIndexed { i, band -> put("b$i", band) }
             },
@@ -78,6 +79,7 @@ internal class SimilarPhotoIndex(val index: ScanIndex) {
             l("red").toInt(),
             l("green").toInt(),
             l("blue").toInt(),
+            c.getBlob(c.getColumnIndexOrThrow("layout")),
         )
     }
 
@@ -124,27 +126,22 @@ internal class SimilarPhotoIndex(val index: ScanIndex) {
         signature: PhotoSignature,
         after: Long,
     ): List<Pair<ScannedFile, PhotoSignature>> {
-        val b = SimilarPolicy.bands(signature.hash)
-        // 五个哈希分段至少一个相同才能在汉明距离 <=4 内；索引先过滤，再做颜色/比例/亮度检查。
-        val args =
-            arrayOf(
-                scan.toString(),
-                after.toString(),
-                file.id.toString(),
-                (SimilarPolicy.time(file) - 7L * 86_400_000).toString(),
-                (SimilarPolicy.time(file) + 7L * 86_400_000).toString(),
-                (file.size / 8).toString(),
-                (file.size.coerceAtMost(Long.MAX_VALUE / 8) * 8).toString(),
-                *b.map { it.toString() }.toTypedArray(),
-            )
+        val probes = SimilarPolicy.probes(signature.hash)
+        val bandFilter = probes.indices.joinToString(" OR ") { i -> "s.b$i IN (${probes[i].joinToString { "?" }})" }
+        // 日期和体积不是视觉证据：旧照片副本/聊天压缩版仍应参与比较。
+        // 按最近入库的参考图进行 keyset 分页，每页40条、每图最多512次比较。
+        val args = arrayOf(scan.toString(), minOf(after, file.id).toString(),
+            (signature.ratio * (1 - SimilarPolicy.MAX_RATIO_CHANGE)).toString(),
+            (signature.ratio / (1 - SimilarPolicy.MAX_RATIO_CHANGE)).toString(),
+            (signature.mean - SimilarPolicy.MAX_EXPOSURE_CHANGE).toString(),
+            (signature.mean + SimilarPolicy.MAX_EXPOSURE_CHANGE).toString(),
+            *probes.flatMap { it.toList() }.map { it.toString() }.toTypedArray())
         return db.rawQuery(
-                """SELECT f.*,s.hash,s.ratio,s.mean,s.contrast,s.sharpness,s.pixels,s.red,s.green,s.blue
-            FROM similar_signatures s JOIN files f ON f.id=s.file WHERE s.scan=? AND s.file>? AND s.file<? AND s.anchor=1
-            AND s.capture BETWEEN ? AND ? AND f.size BETWEEN ? AND ? AND f.available=1
-            AND (s.b0=? OR s.b1=? OR s.b2=? OR s.b3=? OR s.b4=?) ORDER BY s.file LIMIT 40""",
-                args,
-            )
-            .use { c -> buildList { while (c.moveToNext()) add(index.row(c) to metrics(c)) } }
+            """SELECT f.*,s.hash,s.ratio,s.mean,s.contrast,s.sharpness,s.pixels,s.red,s.green,s.blue,s.layout
+            FROM similar_signatures s JOIN files f ON f.id=s.file WHERE s.scan=? AND s.file<? AND s.anchor=1
+            AND s.ratio BETWEEN ? AND ? AND s.mean BETWEEN ? AND ? AND f.available=1
+            AND ($bandFilter) ORDER BY s.file DESC LIMIT 40""", args,
+        ).use { c -> buildList { while (c.moveToNext()) add(index.row(c) to metrics(c)) } }
     }
 
     fun join(reference: ScannedFile, file: ScannedFile, signature: PhotoSignature) {
@@ -249,7 +246,7 @@ internal class SimilarPhotoIndex(val index: ScanIndex) {
         fun create(db: SQLiteDatabase) {
             db.execSQL(
                 """CREATE TABLE similar_signatures(file INTEGER PRIMARY KEY,scan INTEGER NOT NULL,hash INTEGER,ratio REAL,mean INTEGER,
-                contrast REAL,sharpness REAL,pixels INTEGER,red INTEGER,green INTEGER,blue INTEGER,capture INTEGER,
+                contrast REAL,sharpness REAL,pixels INTEGER,red INTEGER,green INTEGER,blue INTEGER,capture INTEGER,layout BLOB,
                 b0 INTEGER,b1 INTEGER,b2 INTEGER,b3 INTEGER,b4 INTEGER,anchor INTEGER NOT NULL DEFAULT 1, position INTEGER NOT NULL DEFAULT 0)"""
             )
             for (i in 0..4) db.execSQL(

@@ -50,10 +50,7 @@ internal class CleanupOperationCoordinator(
                         model.refreshSimilar()
                         return@registerForActivityResult
                     }
-                    if (source == CleanupFeature.VIDEOS && action == CompletionContract.CONTINUE) {
-                        model.refreshVideos()
-                        return@registerForActivityResult
-                    }
+                    // 视频结果的 Continue 与返回键都结束当前流程，复用首页出口清理返回栈。
                     activity.startActivity(
                         HomeExitAdContract.intent(activity,
                             InterstitialPlacements.exit(source))

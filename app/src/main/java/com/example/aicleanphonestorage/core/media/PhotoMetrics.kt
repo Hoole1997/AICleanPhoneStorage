@@ -11,6 +11,7 @@ internal data class PhotoSignature(
     val red: Int = 0,
     val green: Int = 0,
     val blue: Int = 0,
+    val layout: ByteArray? = null,
 ) {
     fun similar(other: PhotoSignature) =
         contrast >= 12 &&
@@ -33,14 +34,19 @@ internal object PhotoMetrics {
         height: Int,
         originalWidth: Int,
         originalHeight: Int,
+        stableSampling: Boolean = false,
     ): PhotoSignature {
         require(width >= 9 && height >= 8 && gray.size == width * height)
+        // 独立相似照片入口使用区域均值，避免单点采样被压缩噪声/轻微位移翻转。
+        // 旧垃圾照片分析保持原算法；64 字节结构特征只用于独立入口的二次验证。
+        val sampled = if (stableSampling) averageGrid(gray, width, height, 9, 8) else null
         var hash = 0L
         for (y in 0..7) for (x in 0..7) {
             val row = y * (height - 1) / 7
             val left = x * (width - 1) / 8
             val right = (x + 1) * (width - 1) / 8
-            if (gray[row * width + left] > gray[row * width + right])
+            if (if (sampled != null) sampled[y * 9 + x] > sampled[y * 9 + x + 1]
+                else gray[row * width + left] > gray[row * width + right])
                 hash = hash or (1L shl (y * 8 + x))
         }
         val mean = gray.average()
@@ -63,6 +69,18 @@ internal object PhotoMetrics {
             kotlin.math.sqrt(contrast / gray.size),
             if (n > 0) (lap2 / n - (lap / n) * (lap / n)).coerceAtLeast(0.0) else 0.0,
             originalWidth.toLong() * originalHeight,
+            layout = if (stableSampling) averageGrid(gray, width, height, 8, 8).map { it.toByte() }.toByteArray() else null,
         )
     }
+    private fun averageGrid(gray: IntArray, width: Int, height: Int, columns: Int, rows: Int): IntArray =
+        IntArray(columns * rows) { cell ->
+            val x0 = (cell % columns) * width / columns
+            val x1 = (cell % columns + 1) * width / columns
+            val y0 = (cell / columns) * height / rows
+            val y1 = (cell / columns + 1) * height / rows
+            var total = 0
+            for (y in y0 until y1) for (x in x0 until x1) total += gray[y * width + x]
+            total / ((x1 - x0) * (y1 - y0))
+        }
+
 }

@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.update
 
 /** 仅缓存元数据/选择状态的临时索引。所有方法由Repository在I/O线程调用，不存文件内容或Bitmap。 */
 internal class ScanIndex(context: Context) :
-    SQLiteOpenHelper(context.applicationContext, "cleanup_index.db", null, 8) {
+    SQLiteOpenHelper(context.applicationContext, "cleanup_index.db", null, 9) {
     private val revision = kotlinx.coroutines.flow.MutableStateFlow(0L)
     val changes: kotlinx.coroutines.flow.StateFlow<Long> = revision
     private val sources = Collections.newSetFromMap(WeakHashMap<PagingSource<*, *>, Boolean>())
@@ -45,6 +45,8 @@ internal class ScanIndex(context: Context) :
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        // 仅添加固定大小的视觉特征，不丢弃已有选择、Original 或操作记录。
+        if (oldVersion in 7..8) db.execSQL("ALTER TABLE similar_signatures ADD COLUMN layout BLOB")
         if (oldVersion < 8) {
             db.execSQL("ALTER TABLE files ADD COLUMN risk_level TEXT NOT NULL DEFAULT ''")
             db.execSQL("ALTER TABLE files ADD COLUMN risk_family TEXT NOT NULL DEFAULT ''")

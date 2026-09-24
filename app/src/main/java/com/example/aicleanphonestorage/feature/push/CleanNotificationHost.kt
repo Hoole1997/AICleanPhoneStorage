@@ -95,22 +95,22 @@ internal class CleanNotificationHost(
 
     override fun residentContent(): NotificationContent {
         val context = localized()
-        return residentFrame(context, installedCount(context)).content
+        return residentFrame(context, appCount()).content
     }
 
     /** 只格式化共享快照，通知构建（包括主线程 FGS 晋升）不再独立查询 PackageManager。 */
-    private fun installedCount(context: Context): String? = appCount()?.let { count ->
+    private fun installedCount(context: Context, count: Int?): String? = count?.let { value ->
         java.text.NumberFormat.getIntegerInstance(context.resources.configuration.locales[0]).apply {
             isGroupingUsed = false
-        }.format(count)
+        }.format(value)
     }
 
     override fun residentViews(compact: Boolean): RemoteViews {
         val context = localized()
-        return residentViews(compact, context, installedCount(context))
+        return residentViews(compact, context, appCount())
     }
 
-    internal fun residentViews(compact: Boolean, context: Context, installedApps: String? = installedCount(context)): RemoteViews {
+    internal fun residentViews(compact: Boolean, context: Context, installedApps: Int? = appCount()): RemoteViews {
         val largeText = context.resources.configuration.fontScale > 1.3f
         val layout = if (compact && largeText) R.layout.notification_shortcuts_accessible
             else if (compact) R.layout.notification_shortcuts_compact else R.layout.notification_shortcuts
@@ -125,12 +125,12 @@ internal class CleanNotificationHost(
             views.setTextViewText(item.text, label)
             views.setContentDescription(item.root, listOfNotNull(label, item.badge).joinToString(", "))
             val badgeState = when {
-                cleaning?.state?.value?.paidUser != true -> "none"
+                !paid -> "none"
                 clean != null -> "shown"
                 else -> "hidden"
             }
             views.setOnClickPendingIntent(item.root,
-                NotificationNavigation.residentPendingIntent(app, item.destination, item.entry, badgeState, frame.content))
+                NotificationNavigation.residentPendingIntent(app, item.destination, item.entry, badgeState, frame.appBadgeCount, frame.content))
             views.setTextViewText(item.badgeView, item.badge.orEmpty())
             views.setViewVisibility(item.badgeView, if (item.badge == null || (compact && largeText)) View.GONE else View.VISIBLE)
         }
@@ -139,13 +139,15 @@ internal class CleanNotificationHost(
     }
 
     /** 同一可见项模型同时生成 RemoteViews 与埋点文案；自然用户仍隐藏第四个入口。 */
-    private fun residentFrame(context: Context, installedApps: String?): ResidentFrame {
+    private fun residentFrame(context: Context, installedApps: Int?): ResidentFrame {
+        // 数字与本地化文案共用一次快照；点击时不重新枚举应用，也不解析本地化数字。
+        val count = installedApps?.takeIf { it >= 0 }
         val snapshot = cleaning?.check()
         val paid = snapshot?.paidUser == true
         val clean = (snapshot?.cleanBadge(context.resources.configuration.locales[0]) ?: badges.clean).takeIf { paid }
         val items = listOf(
             Item(R.id.shortcut_clean, R.id.shortcut_clean_label, R.id.shortcut_clean_badge, R.string.push_clean, NotificationDestination.CLEAN, clean, "clean"),
-            Item(R.id.shortcut_network, R.id.shortcut_network_label, R.id.shortcut_network_badge, R.string.push_apps, NotificationDestination.APP_MANAGER, installedApps.takeIf { paid }, "app"),
+            Item(R.id.shortcut_network, R.id.shortcut_network_label, R.id.shortcut_network_badge, R.string.push_apps, NotificationDestination.APP_MANAGER, installedCount(context, count).takeIf { paid }, "app"),
             Item(R.id.shortcut_photos, R.id.shortcut_photos_label, R.id.shortcut_photos_badge, R.string.push_photos, NotificationDestination.SCREENSHOTS, null, "photos"),
             Item(R.id.shortcut_unused, R.id.shortcut_unused_label, R.id.shortcut_unused_badge, R.string.push_accelerate, NotificationDestination.APP_MANAGER, null, "accelerate"),
         )
@@ -153,10 +155,10 @@ internal class CleanNotificationHost(
         val text = visible.joinToString(" / ") { item ->
             listOfNotNull(context.getString(item.label), item.badge).joinToString(" ")
         }
-        return ResidentFrame(paid, items, NotificationContent(context.getString(R.string.app_name), text).bounded())
+        return ResidentFrame(paid, items, count, NotificationContent(context.getString(R.string.app_name), text).bounded())
     }
 
-    private data class ResidentFrame(val paid: Boolean, val items: List<Item>, val content: NotificationContent)
+    private data class ResidentFrame(val paid: Boolean, val items: List<Item>, val appBadgeCount: Int?, val content: NotificationContent)
 
     private data class Item(val root: Int, val text: Int, val badgeView: Int, val label: Int,
         val destination: NotificationDestination, val badge: String?, val entry: String)

@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 2,
+  "configVersion": "example-v1",
+  "pool": "D1",
+  "defaultLanguage": "en",
+  "contents": [
+    {
+      "id": "d1_clean_001",
+      "title": "Check your storage",
+      "desc": "Scan accessible junk files and choose what to clean.",
+      "buttonText": "Clean",
+      "iconType": 1,
+      "actionType": 1,
+      "translations": {
+        "zh-Hans": {
+          "title": "检查手机存储空间",
+          "desc": "扫描可访问的垃圾文件，选择需要清理的内容。",
+          "buttonText": "去清理"
+        }
+      }
+    }
+  ]
+}

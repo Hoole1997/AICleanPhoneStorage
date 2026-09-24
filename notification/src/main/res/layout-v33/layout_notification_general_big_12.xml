@@ -42,25 +42,33 @@
                 android:textSize="9sp" />
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/tvDesc"
+        <!-- 标题与正文共用可伸缩列，避免原来的 0dp/gone 标题丢失。 -->
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="6dp"
             android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="#333333"
-            android:textSize="13sp"
-            tools:text="Discover popular short videos curated for you." />
-
-        <!-- 隐藏的标题，用于兼容代码设置 -->
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone" />
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tvTitle"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#333333"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/tvDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="#333333"
+                android:textSize="13sp"
+                tools:text="Discover popular short videos curated for you." />
+        </LinearLayout>
     </LinearLayout>
 
     <include

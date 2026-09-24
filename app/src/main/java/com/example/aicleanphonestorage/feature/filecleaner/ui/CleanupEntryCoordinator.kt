@@ -7,6 +7,9 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.core.permissions.*
 import com.example.aicleanphonestorage.core.ui.loading.*
@@ -17,8 +20,8 @@ internal class CleanupEntryCoordinator(
     private val activity: AppCompatActivity,
     private val model: CleanupEntryViewModel,
     private val permissions: PermissionCoordinator,
+    private val ads: InterstitialActions = InterstitialActions(activity),
 ) {
-    private val ads = InterstitialActions(activity)
 
     init {
         CleanupFeature.entries.forEach { feature ->
@@ -52,12 +55,21 @@ internal class CleanupEntryCoordinator(
                 model.begin(failed.feature)
             else model.cancel()
         }
+        // Ready 可能在首页退出广告占用期间到达；等待队列释放后主动续接，不能只等扫描状态再次变化。
+        // 观察只在页面 RESUMED 时运行，后台不跳页；恢复时重放当前占用状态，不轮询或额外请求广告。
+        activity.lifecycleScope.launch {
+            activity.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                ads.busyChanges.collect { busy ->
+                    if (!busy && model.state.value is CleanupEntryState.Ready) render(model.state.value)
+                }
+            }
+        }
     }
 
     fun render(state: CleanupEntryState) {
         val manager = activity.supportFragmentManager
         if (
-            manager.isStateSaved ||
+            activity.isFinishing || activity.isDestroyed || manager.isStateSaved ||
                 !activity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
         )
             return

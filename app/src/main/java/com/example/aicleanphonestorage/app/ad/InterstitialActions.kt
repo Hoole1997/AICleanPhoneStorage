@@ -7,6 +7,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 /** 使用用户提供的 AdExt；广告关闭/失败都只标记就绪，页面恢复后才执行当前 Activity 的业务回调。 */
 internal class InterstitialActions(
@@ -22,6 +24,8 @@ internal class InterstitialActions(
     private val state = ViewModelProvider(activity)[InterstitialActionState::class.java]
     private val handlers = mutableMapOf<String, (Long) -> Unit>()
     val busy: Boolean get() = state.pending.value != null
+    // 同一 Activity 的其他协调器也会占用队列；入口需要收到释放事件才能续接已完成的扫描。
+    val busyChanges = state.pending.map { it != null }.distinctUntilChanged()
 
     init {
         activity.lifecycle.addObserver(object : DefaultLifecycleObserver {
