@@ -13,7 +13,10 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
-    <!-- 病毒扫描需要包含没有桌面入口的已安装应用，保留 SDK 的 QUERY_ALL_PACKAGES。 -->
+    <!-- 显式移除第三方 SDK 的全量包查询权限；已安装应用遵循系统包可见性规则。
+         Lint 检查源清单时不识别 remove，仅在此移除节点忽略误报，成品不包含此权限。 -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:node="remove" tools:ignore="QueryAllPackagesPermission" />
     <queries>
         <intent>
             <action android:name="android.intent.action.MAIN" />
