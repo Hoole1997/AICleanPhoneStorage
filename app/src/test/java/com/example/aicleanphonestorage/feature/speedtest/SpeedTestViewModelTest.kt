@@ -109,7 +109,7 @@ class SpeedTestViewModelTest {
         vm.start()
         vm.revealResult(vm.generation)
         assertTrue(vm.state.value is SpeedTestUiState.Done)
-        failNext = SpeedTestException.Reason.Failed
+        failNext = SpeedTestException.Reason.ServerError
         vm.start()
         assertTrue(vm.state.value is SpeedTestUiState.Failed)
         assertFalse("previous result restored", vm.dismissFailure())

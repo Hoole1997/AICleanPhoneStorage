@@ -18,4 +18,9 @@
     <string name="speed_test_network_cellular">মোবাইল নেটওয়ার্ক</string>
     <string name="speed_test_network_other">নেটওয়ার্ক</string>
     <string name="speed_test_node">নোড %1$s</string>
+    <string name="speed_test_error_weak">নেটওয়ার্ক খুব দুর্বল, টেস্ট সম্পন্ন করা যায়নি।</string>
+    <string name="speed_test_error_timeout">স্পিড টেস্টের সময় শেষ হয়ে গেছে। আবার চেষ্টা করুন।</string>
+    <string name="speed_test_error_network_changed">নেটওয়ার্ক পরিবর্তিত হয়েছে। আবার চেষ্টা করুন।</string>
+    <string name="speed_test_error_restricted">নেটওয়ার্ক অ্যাক্সেস সীমিত।</string>
+    <string name="speed_test_error_network_info">নেটওয়ার্কের তথ্য অ্যাক্সেস করা যাচ্ছে না।</string>
 </resources>

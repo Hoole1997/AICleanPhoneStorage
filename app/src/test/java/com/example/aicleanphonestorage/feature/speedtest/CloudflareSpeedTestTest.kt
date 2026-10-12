@@ -1,13 +1,20 @@
 package com.example.aicleanphonestorage.feature.speedtest
 
 import com.example.aicleanphonestorage.feature.speedtest.data.CloudflareSpeedTest
+import com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestConnectivity
+import com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestConnectivityState
 import com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestEvent
 import com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestException
 import com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestLimits
 import com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestPhase
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import okhttp3.mockwebserver.Dispatcher
@@ -28,7 +35,8 @@ class CloudflareSpeedTestTest {
     private val downloaded = AtomicLong()
     private val uploaded = AtomicLong()
     private var downloadDelayMs = 0L
-    private var failDownloads = false
+    private var downloadStatus = 200
+    private var bytesPerPeriod = 16_000L
     private val limits = SpeedTestLimits(
         downloadBytes = 400_000,
         uploadBytes = 200_000,
@@ -51,11 +59,11 @@ class CloudflareSpeedTestTest {
                     path.startsWith("/cdn-cgi/trace") ->
                         MockResponse().setHeader("cf-ray", "8f2c1a-HKG").setBody("fl=1\ncolo=HKG\nloc=HK\n")
                     path.startsWith("/__down") -> {
-                        if (failDownloads) return MockResponse().setResponseCode(500)
+                        if (downloadStatus != 200) return MockResponse().setResponseCode(downloadStatus)
                         val bytes = request.requestUrl!!.queryParameter("bytes")!!.toLong()
                         downloaded.addAndGet(bytes)
                         MockResponse().setBody(Buffer().write(ByteArray(bytes.toInt())))
-                            .apply { if (downloadDelayMs > 0) throttleBody(16_000, downloadDelayMs, TimeUnit.MILLISECONDS) }
+                            .apply { if (downloadDelayMs > 0) throttleBody(bytesPerPeriod, downloadDelayMs, TimeUnit.MILLISECONDS) }
                     }
                     path.startsWith("/__up") -> {
                         uploaded.addAndGet(request.bodySize)
@@ -69,8 +77,25 @@ class CloudflareSpeedTestTest {
 
     @After fun tearDown() = server.shutdown()
 
-    private fun repository(online: Boolean = true, limits: SpeedTestLimits = this.limits) =
-        CloudflareSpeedTest({ online }, limits, server.url("/").toString().trimEnd('/'))
+    /** 可控的系统网络状态；[switches] 发射即模拟默认网络切换。 */
+    private class FakeConnectivity(var state: SpeedTestConnectivityState = SpeedTestConnectivityState.Online(1)) : SpeedTestConnectivity {
+        val switches = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+        override fun connectivity() = state
+        override fun switchedFrom(networkId: Long): Flow<Unit> = switches
+    }
+
+    private val connectivity = FakeConnectivity()
+
+    private fun repository(limits: SpeedTestLimits = this.limits) =
+        CloudflareSpeedTest(connectivity, limits, server.url("/").toString().trimEnd('/'))
+
+    private suspend fun failure(limits: SpeedTestLimits = this.limits): SpeedTestException.Reason = try {
+        withTimeout(20_000) { repository(limits).run().toList() }
+        fail("expected failure")
+        error("unreachable")
+    } catch (error: SpeedTestException) {
+        error.reason
+    }
 
     @Test fun `completes with node ray id and every metric within byte budgets`() = runBlocking {
         val events = withTimeout(20_000) { repository().run().toList() }
@@ -103,23 +128,41 @@ class CloudflareSpeedTestTest {
         assertTrue("requested ${downloaded.get()} bytes", downloaded.get() < 1_000_000)
     }
 
-    @Test fun `offline device fails fast without any request`() = runBlocking {
-        try {
-            repository(online = false).run().toList()
-            fail("expected failure")
-        } catch (error: SpeedTestException) {
-            assertEquals(SpeedTestException.Reason.NoInternet, error.reason)
-        }
+    @Test fun `device network state fails fast without any request`() = runBlocking {
+        connectivity.state = SpeedTestConnectivityState.Offline
+        assertEquals(SpeedTestException.Reason.NoInternet, failure())
+        connectivity.state = SpeedTestConnectivityState.CaptivePortal
+        assertEquals(SpeedTestException.Reason.Restricted, failure())
+        connectivity.state = SpeedTestConnectivityState.Unavailable
+        assertEquals(SpeedTestException.Reason.NetworkInfoUnavailable, failure())
         assertEquals(0, server.requestCount)
     }
 
-    @Test fun `server errors map to a generic failure`() = runBlocking {
-        failDownloads = true
-        try {
-            withTimeout(20_000) { repository().run().toList() }
-            fail("expected failure")
-        } catch (error: SpeedTestException) {
-            assertEquals(SpeedTestException.Reason.Failed, error.reason)
+    @Test fun `server errors and blocked access map to their own messages`() = runBlocking {
+        downloadStatus = 500
+        assertEquals(SpeedTestException.Reason.ServerError, failure())
+        downloadStatus = 403
+        assertEquals(SpeedTestException.Reason.Restricted, failure())
+    }
+
+    @Test fun `default network switch aborts the test`() = runBlocking {
+        downloadDelayMs = 200
+        val reason = coroutineScope {
+            launch { delay(300); connectivity.switches.emit(Unit) }
+            failure(limits.copy(downloadBytes = 4_000_000))
         }
+        assertEquals(SpeedTestException.Reason.NetworkChanged, reason)
+    }
+
+    @Test fun `too little data within the phase is a weak network`() = runBlocking {
+        downloadDelayMs = 400
+        bytesPerPeriod = 1_000 // 4 路各约 2.5KB/s，800ms 内远低于最低 64KB
+        assertEquals(SpeedTestException.Reason.WeakNetwork,
+            failure(limits.copy(phaseNanos = TimeUnit.MILLISECONDS.toNanos(800), downloadBytes = 4_000_000, minTransferBytes = 64_000)))
+    }
+
+    @Test fun `exceeding the total limit is a timeout`() = runBlocking {
+        downloadDelayMs = 200
+        assertEquals(SpeedTestException.Reason.Timeout, failure(limits.copy(downloadBytes = 4_000_000, totalMillis = 600)))
     }
 }

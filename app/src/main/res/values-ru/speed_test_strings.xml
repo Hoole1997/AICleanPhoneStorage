@@ -18,4 +18,9 @@
     <string name="speed_test_network_cellular">Мобильная сеть</string>
     <string name="speed_test_network_other">Сеть</string>
     <string name="speed_test_node">Узел %1$s</string>
+    <string name="speed_test_error_weak">Сеть слишком слабая, чтобы завершить тест.</string>
+    <string name="speed_test_error_timeout">Время теста скорости истекло. Повторите попытку.</string>
+    <string name="speed_test_error_network_changed">Сеть изменилась. Повторите попытку.</string>
+    <string name="speed_test_error_restricted">Доступ к сети ограничен.</string>
+    <string name="speed_test_error_network_info">Не удалось получить сведения о сети.</string>
 </resources>

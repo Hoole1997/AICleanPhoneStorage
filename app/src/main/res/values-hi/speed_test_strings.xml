@@ -18,4 +18,9 @@
     <string name="speed_test_network_cellular">मोबाइल नेटवर्क</string>
     <string name="speed_test_network_other">नेटवर्क</string>
     <string name="speed_test_node">नोड %1$s</string>
+    <string name="speed_test_error_weak">नेटवर्क बहुत कमज़ोर है, टेस्ट पूरा नहीं हो सका।</string>
+    <string name="speed_test_error_timeout">स्पीड टेस्ट का समय समाप्त हो गया। कृपया फिर से कोशिश करें।</string>
+    <string name="speed_test_error_network_changed">नेटवर्क बदल गया। कृपया फिर से कोशिश करें।</string>
+    <string name="speed_test_error_restricted">नेटवर्क एक्सेस प्रतिबंधित है।</string>
+    <string name="speed_test_error_network_info">नेटवर्क की जानकारी एक्सेस नहीं की जा सकी।</string>
 </resources>

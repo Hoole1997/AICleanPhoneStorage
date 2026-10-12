@@ -7,7 +7,19 @@ Figma `dVsTL6ggoDPXVPcEKg856G`：首页入口 [6562:1177](https://www.figma.com/
 首页 SpeedTest 卡片（红点角标，受统一开关 `home_badge_switch` 控制）→ 直接打开 `SpeedTestActivity`（无首页授权/加载步骤，打开即计为当日已进入）→ 页面进入前台自动测速 → 结果页 Test Again 可重测。
 
 - 测速中离开前台立即取消全部连接，回到前台重新完整测一次，不在后台消耗流量与电量。
-- 失败弹框：无网络显示 “No internet connection.”，其他错误（服务端错误、超时等）显示通用失败文案。Retry 重测；Cancel 有上一次成功结果则回到结果，否则关闭页面。
+- 失败弹框（用户 2026-10-12 指定文案）：Retry 重测；Cancel 有上一次成功结果则回到结果，否则关闭页面（返回首页）。
+
+| 异常类型 | 判定 | 文案 |
+| --- | --- | --- |
+| 无网络（默认） | 开始时无可用网络、出错时已离线，以及无法归类的连接错误（DNS 失败、连接被拒/重置等） | No internet connection. |
+| 网络过弱 | 网络可用，但某个传输阶段在时限内传输量低于 64KB，或无法得出速度 | Network is too weak to complete the test. |
+| 测速超时 | 建连/读写 `SocketTimeoutException`，或整次测速超过 60 秒总时限 | Speed test timed out. Please try again. |
+| 网络切换 | 测速期间系统默认网络切换（`registerDefaultNetworkCallback`，仅测速期间注册），或出错时网络句柄已变化 | Network changed. Please try again. |
+| 网络受限 | 系统检测到强制门户（需登录 Wi-Fi）、HTTP 401/403/407/451、TLS 握手/证书校验失败 | Network access is restricted. |
+| 网络信息失败 | 无法读取系统网络状态（ConnectivityManager 不可用或拒绝访问） | Unable to access network information. |
+| 服务器异常 | HTTP 5xx、429 及其他非预期响应、协议错误 | Speed test failed. Please try again. |
+
+判定顺序：先看出错时的系统网络状态（离线 → 切换 → 强制门户 → 不可读），再看异常类型；规则集中在 `SpeedTestFailureClassifier`。
 - 部分阶段成功不作为结果展示，失败不冒充结果。
 
 ## 测速中页面（在稿件基础上补充）

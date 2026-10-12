@@ -1,7 +1,6 @@
 package com.example.aicleanphonestorage.feature.speedtest.data
 
 import java.io.IOException
-import java.net.UnknownHostException
 import java.util.Collections
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
@@ -18,8 +17,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import okhttp3.Call
 import okhttp3.ConnectionPool
 import okhttp3.MediaType.Companion.toMediaType
@@ -44,6 +45,10 @@ internal data class SpeedTestLimits(
     val latencyBudgetNanos: Long = TimeUnit.SECONDS.toNanos(4),
     val probeIntervalMillis: Long = 300,
     val sampleIntervalMillis: Long = 100,
+    /** 阶段结束时传输量低于此值视为网络过弱，数据不足以给出可靠速度。 */
+    val minTransferBytes: Long = 64_000,
+    /** 整次测速总时限（正常约 25 秒、最坏约 45 秒）；超过按超时处理。 */
+    val totalMillis: Long = 60_000,
 )
 
 /**
@@ -61,7 +66,7 @@ internal data class SpeedTestLimits(
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class CloudflareSpeedTest(
-    private val hasInternet: () -> Boolean,
+    private val connectivity: SpeedTestConnectivity,
     private val limits: SpeedTestLimits = SpeedTestLimits(),
     private val baseUrl: String = BASE_URL,
     // 下载 4 流 + 探测 1 个阻塞调用，再留余量给进度采样；不占用应用共享 IO 任务许可。
@@ -73,17 +78,30 @@ internal class CloudflareSpeedTest(
     private val client by lazy(clientFactory)
 
     override fun run(): Flow<SpeedTestEvent> = channelFlow {
-        if (!hasInternet()) throw SpeedTestException(SpeedTestException.Reason.NoInternet)
+        val network = when (val state = connectivity.connectivity()) {
+            SpeedTestConnectivityState.Offline -> throw SpeedTestException(SpeedTestException.Reason.NoInternet)
+            SpeedTestConnectivityState.CaptivePortal -> throw SpeedTestException(SpeedTestException.Reason.Restricted)
+            SpeedTestConnectivityState.Unavailable -> throw SpeedTestException(SpeedTestException.Reason.NetworkInfoUnavailable)
+            is SpeedTestConnectivityState.Online -> state.networkId
+        }
         try {
-            measure(client)
+            val finished = withTimeoutOrNull(limits.totalMillis) {
+                coroutineScope {
+                    // 默认网络一旦切换，混合两个网络的数据没有意义，立即中止整次测速。
+                    val watcher = launch {
+                        connectivity.switchedFrom(network).first()
+                        throw SpeedTestException(SpeedTestException.Reason.NetworkChanged)
+                    }
+                    try { measure(client) } finally { watcher.cancel() }
+                }
+            }
+            if (finished == null) throw SpeedTestException(SpeedTestException.Reason.Timeout)
         } catch (cancelled: CancellationException) {
             throw cancelled
+        } catch (error: SpeedTestException) {
+            throw error
         } catch (error: IOException) {
-            val offline = error is UnknownHostException || !hasInternet()
-            throw SpeedTestException(
-                if (offline) SpeedTestException.Reason.NoInternet else SpeedTestException.Reason.Failed,
-                error,
-            )
+            throw SpeedTestException(SpeedTestFailureClassifier.classify(error, network, connectivity.connectivity()), error)
         } finally {
             // 测速结束不保留空闲连接与线程，避免页面关闭后仍占用套接字。
             client.connectionPool.evictAll()
@@ -117,7 +135,7 @@ internal class CloudflareSpeedTest(
         }
         metrics = metrics.copy(uploadBytesPerSecond = upload.rate, uploadJitterMs = upload.jitter)
         if (metrics.downloadBytesPerSecond == null || metrics.uploadBytesPerSecond == null)
-            throw SpeedTestException(SpeedTestException.Reason.Failed)
+            throw SpeedTestException(SpeedTestException.Reason.WeakNetwork)
         send(SpeedTestEvent.Completed(SpeedTestResult(metrics, server, trace.rayId)))
     }
 
@@ -175,6 +193,8 @@ internal class CloudflareSpeedTest(
             report(SpeedTestMath.liveRate(samples, LIVE_WINDOW_NANOS), fraction.coerceIn(0f, 1f))
         }
         prober.cancel()
+        // 时限内连可靠计算的最低数据量都没有传完：网络可用但过弱，不给出失真的速度。
+        if (moved.get() < minOf(limits.minTransferBytes, budget)) throw SpeedTestException(SpeedTestException.Reason.WeakNetwork)
         samples += TransferSample(clock() - start, moved.get())
         PhaseResult(
             SpeedTestMath.sustainedRate(samples, WARMUP_FRACTION, MAX_WARMUP_NANOS),
@@ -295,5 +315,5 @@ private suspend fun <T> Call.executeCancellable(block: (Response) -> T): T = cor
 }
 
 private fun Response.requireSuccess() {
-    if (!isSuccessful) throw IOException("HTTP $code")
+    if (!isSuccessful) throw SpeedTestHttpException(code)
 }

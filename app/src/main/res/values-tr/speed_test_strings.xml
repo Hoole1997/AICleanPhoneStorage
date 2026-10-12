@@ -18,4 +18,9 @@
     <string name="speed_test_network_cellular">Mobil ağ</string>
     <string name="speed_test_network_other">Ağ</string>
     <string name="speed_test_node">Düğüm %1$s</string>
+    <string name="speed_test_error_weak">Ağ, testi tamamlamak için çok zayıf.</string>
+    <string name="speed_test_error_timeout">Hız testi zaman aşımına uğradı. Lütfen tekrar deneyin.</string>
+    <string name="speed_test_error_network_changed">Ağ değişti. Lütfen tekrar deneyin.</string>
+    <string name="speed_test_error_restricted">Ağ erişimi kısıtlı.</string>
+    <string name="speed_test_error_network_info">Ağ bilgilerine erişilemiyor.</string>
 </resources>

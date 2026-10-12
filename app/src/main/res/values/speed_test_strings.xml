@@ -19,4 +19,9 @@
     <string name="speed_test_network_cellular">Mobile network</string>
     <string name="speed_test_network_other">Network</string>
     <string name="speed_test_node">Node %1$s</string>
+    <string name="speed_test_error_weak">Network is too weak to complete the test.</string>
+    <string name="speed_test_error_timeout">Speed test timed out. Please try again.</string>
+    <string name="speed_test_error_network_changed">Network changed. Please try again.</string>
+    <string name="speed_test_error_restricted">Network access is restricted.</string>
+    <string name="speed_test_error_network_info">Unable to access network information.</string>
 </resources>

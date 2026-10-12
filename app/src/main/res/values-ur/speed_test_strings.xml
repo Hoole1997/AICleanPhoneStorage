@@ -18,4 +18,9 @@
     <string name="speed_test_network_cellular">موبائل نیٹ ورک</string>
     <string name="speed_test_network_other">نیٹ ورک</string>
     <string name="speed_test_node">نوڈ %1$s</string>
+    <string name="speed_test_error_weak">نیٹ ورک بہت کمزور ہے، ٹیسٹ مکمل نہیں ہو سکا۔</string>
+    <string name="speed_test_error_timeout">اسپیڈ ٹیسٹ کا وقت ختم ہو گیا۔ براہ کرم دوبارہ کوشش کریں۔</string>
+    <string name="speed_test_error_network_changed">نیٹ ورک تبدیل ہو گیا۔ براہ کرم دوبارہ کوشش کریں۔</string>
+    <string name="speed_test_error_restricted">نیٹ ورک تک رسائی محدود ہے۔</string>
+    <string name="speed_test_error_network_info">نیٹ ورک کی معلومات تک رسائی ممکن نہیں۔</string>
 </resources>

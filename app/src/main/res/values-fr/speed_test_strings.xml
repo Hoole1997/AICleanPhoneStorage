@@ -18,4 +18,9 @@
     <string name="speed_test_network_cellular">Réseau mobile</string>
     <string name="speed_test_network_other">Réseau</string>
     <string name="speed_test_node">Nœud %1$s</string>
+    <string name="speed_test_error_weak">Le réseau est trop faible pour terminer le test.</string>
+    <string name="speed_test_error_timeout">Le test de vitesse a expiré. Réessayez.</string>
+    <string name="speed_test_error_network_changed">Le réseau a changé. Réessayez.</string>
+    <string name="speed_test_error_restricted">L\'accès au réseau est restreint.</string>
+    <string name="speed_test_error_network_info">Impossible d\'accéder aux informations réseau.</string>
 </resources>

@@ -18,4 +18,9 @@
     <string name="speed_test_network_cellular">Rede móvel</string>
     <string name="speed_test_network_other">Rede</string>
     <string name="speed_test_node">Nó %1$s</string>
+    <string name="speed_test_error_weak">A rede está fraca demais para concluir o teste.</string>
+    <string name="speed_test_error_timeout">O teste de velocidade expirou. Tente novamente.</string>
+    <string name="speed_test_error_network_changed">A rede mudou. Tente novamente.</string>
+    <string name="speed_test_error_restricted">O acesso à rede está restrito.</string>
+    <string name="speed_test_error_network_info">Não foi possível acessar as informações da rede.</string>
 </resources>

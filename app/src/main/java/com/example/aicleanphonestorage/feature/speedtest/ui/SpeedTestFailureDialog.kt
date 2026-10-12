@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.LinearLayout
+import androidx.annotation.StringRes
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import com.example.aicleanphonestorage.R
@@ -23,9 +24,7 @@ class SpeedTestFailureDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val binding = DialogSpeedTestFailedBinding.inflate(layoutInflater)
-        binding.failedMessage.setText(
-            if (reason == SpeedTestException.Reason.NoInternet) R.string.speed_test_no_internet else R.string.speed_test_failed
-        )
+        binding.failedMessage.setText(messageRes(reason))
         binding.failedCancel.setOnClickListener { result(CANCEL); dismiss() }
         binding.failedRetry.setOnClickListener { result(RETRY); dismiss() }
         stackLongActions(binding)
@@ -76,6 +75,18 @@ class SpeedTestFailureDialog : DialogFragment() {
         const val RETRY = "retry"
         const val CANCEL = "cancel"
         private const val REASON = "reason"
+
+        /** 失败原因与文案一一对应（用户 2026-10-12 指定）。 */
+        @StringRes
+        fun messageRes(reason: SpeedTestException.Reason): Int = when (reason) {
+            SpeedTestException.Reason.NoInternet -> R.string.speed_test_no_internet
+            SpeedTestException.Reason.WeakNetwork -> R.string.speed_test_error_weak
+            SpeedTestException.Reason.Timeout -> R.string.speed_test_error_timeout
+            SpeedTestException.Reason.NetworkChanged -> R.string.speed_test_error_network_changed
+            SpeedTestException.Reason.Restricted -> R.string.speed_test_error_restricted
+            SpeedTestException.Reason.NetworkInfoUnavailable -> R.string.speed_test_error_network_info
+            SpeedTestException.Reason.ServerError -> R.string.speed_test_failed
+        }
 
         fun create(reason: SpeedTestException.Reason) =
             SpeedTestFailureDialog().apply { arguments = Bundle().apply { putString(REASON, reason.name) } }

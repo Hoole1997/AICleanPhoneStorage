@@ -18,4 +18,9 @@
     <string name="speed_test_network_cellular">Jaringan seluler</string>
     <string name="speed_test_network_other">Jaringan</string>
     <string name="speed_test_node">Node %1$s</string>
+    <string name="speed_test_error_weak">Jaringan terlalu lemah untuk menyelesaikan tes.</string>
+    <string name="speed_test_error_timeout">Waktu tes kecepatan habis. Silakan coba lagi.</string>
+    <string name="speed_test_error_network_changed">Jaringan berubah. Silakan coba lagi.</string>
+    <string name="speed_test_error_restricted">Akses jaringan dibatasi.</string>
+    <string name="speed_test_error_network_info">Tidak dapat mengakses informasi jaringan.</string>
 </resources>

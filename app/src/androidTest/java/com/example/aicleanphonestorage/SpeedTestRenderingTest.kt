@@ -13,6 +13,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.aicleanphonestorage.databinding.DialogSpeedTestFailedBinding
 import com.example.aicleanphonestorage.databinding.ScreenSpeedTestBinding
+import com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestException
 import com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestMetrics
 import com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestNetwork
 import com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestNetworkType
@@ -20,6 +21,7 @@ import com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestPhase
 import com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestProgress
 import com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestResult
 import com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestServer
+import com.example.aicleanphonestorage.feature.speedtest.ui.SpeedTestFailureDialog
 import com.example.aicleanphonestorage.feature.speedtest.ui.SpeedTestRenderer
 import com.example.aicleanphonestorage.feature.speedtest.ui.SpeedTestUiState
 import java.io.File
@@ -49,7 +51,7 @@ class SpeedTestRenderingTest {
             val suffix = "${locale.language}_$scale"
             screen("testing_$suffix", testing, locale, scale)
             screen("result_$suffix", done, locale, scale)
-            dialog("failed_$suffix", locale, scale)
+            SpeedTestException.Reason.entries.forEach { reason -> dialog("failed_${reason.name}_$suffix", reason, locale, scale) }
         }
     }
 
@@ -103,14 +105,17 @@ class SpeedTestRenderingTest {
         }
     }
 
-    private fun dialog(name: String, locale: Locale, fontScale: Float) {
+    private fun dialog(name: String, reason: SpeedTestException.Reason, locale: Locale, fontScale: Float) {
         capture(name, locale, fontScale, 315, 420, transparent = true) { context ->
             DialogSpeedTestFailedBinding.inflate(LayoutInflater.from(context)).apply {
-                failedMessage.setText(R.string.speed_test_no_internet)
+                failedMessage.setText(SpeedTestFailureDialog.messageRes(reason))
             }.root
         }.also { root ->
             val retry = root.findViewById<TextView>(R.id.failed_retry)
             assertTrue("$name retry must fit", retry.layout.getEllipsisCount(0) == 0)
+            val message = root.findViewById<TextView>(R.id.failed_message)
+            assertEquals("$name message must not be truncated", 0, (0 until message.layout.lineCount).sumOf { message.layout.getEllipsisCount(it) })
+            assertTrue("$name message must fit its height", message.height >= message.layout.height)
         }
     }
 

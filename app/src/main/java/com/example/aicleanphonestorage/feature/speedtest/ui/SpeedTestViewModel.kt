@@ -89,7 +89,7 @@ class SpeedTestViewModel(
                         }
                     }
                 }
-                if (!completed) throw SpeedTestException(SpeedTestException.Reason.Failed)
+                if (!completed) throw SpeedTestException(SpeedTestException.Reason.ServerError)
             } catch (error: SpeedTestException) {
                 current.value = SpeedTestUiState.Failed(error.reason, lastDone, network)
             }

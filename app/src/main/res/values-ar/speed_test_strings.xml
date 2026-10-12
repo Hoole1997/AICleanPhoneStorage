@@ -18,4 +18,9 @@
     <string name="speed_test_network_cellular">شبكة الجوال</string>
     <string name="speed_test_network_other">الشبكة</string>
     <string name="speed_test_node">العقدة %1$s</string>
+    <string name="speed_test_error_weak">الشبكة ضعيفة جدًا لإكمال الاختبار.</string>
+    <string name="speed_test_error_timeout">انتهت مهلة اختبار السرعة. يُرجى المحاولة مرة أخرى.</string>
+    <string name="speed_test_error_network_changed">تغيّرت الشبكة. يُرجى المحاولة مرة أخرى.</string>
+    <string name="speed_test_error_restricted">الوصول إلى الشبكة مقيّد.</string>
+    <string name="speed_test_error_network_info">تعذّر الوصول إلى معلومات الشبكة.</string>
 </resources>

@@ -18,4 +18,9 @@
     <string name="speed_test_network_cellular">Mạng di động</string>
     <string name="speed_test_network_other">Mạng</string>
     <string name="speed_test_node">Nút %1$s</string>
+    <string name="speed_test_error_weak">Mạng quá yếu để hoàn tất kiểm tra.</string>
+    <string name="speed_test_error_timeout">Kiểm tra tốc độ đã hết thời gian. Vui lòng thử lại.</string>
+    <string name="speed_test_error_network_changed">Mạng đã thay đổi. Vui lòng thử lại.</string>
+    <string name="speed_test_error_restricted">Quyền truy cập mạng bị hạn chế.</string>
+    <string name="speed_test_error_network_info">Không thể truy cập thông tin mạng.</string>
 </resources>

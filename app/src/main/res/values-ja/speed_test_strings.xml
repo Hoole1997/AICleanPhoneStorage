@@ -18,4 +18,9 @@
     <string name="speed_test_network_cellular">モバイルネットワーク</string>
     <string name="speed_test_network_other">ネットワーク</string>
     <string name="speed_test_node">ノード %1$s</string>
+    <string name="speed_test_error_weak">ネットワークが弱すぎるため、テストを完了できません。</string>
+    <string name="speed_test_error_timeout">速度テストがタイムアウトしました。もう一度お試しください。</string>
+    <string name="speed_test_error_network_changed">ネットワークが切り替わりました。もう一度お試しください。</string>
+    <string name="speed_test_error_restricted">ネットワークへのアクセスが制限されています。</string>
+    <string name="speed_test_error_network_info">ネットワーク情報にアクセスできません。</string>
 </resources>
