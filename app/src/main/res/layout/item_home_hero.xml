@@ -67,5 +67,12 @@
             app:iconGravity="textStart" app:layout_constraintTop_toBottomOf="@id/hero_content_bottom"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+        <!-- 角标只做绘制偏移，不改变按钮测量、点击区域和大字号下的自然增高。 -->
+        <ImageView android:id="@+id/clean_badge" android:layout_width="@dimen/home_badge_large_size"
+            android:layout_height="@dimen/home_badge_large_size" android:src="@drawable/ic_home_badge_alert_large"
+            android:translationY="@dimen/home_badge_button_lift" android:visibility="gone"
+            android:contentDescription="@null" android:importantForAccessibility="no"
+            app:layout_constraintTop_toTopOf="@id/clean_button" app:layout_constraintEnd_toEndOf="@id/clean_button"
+            tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

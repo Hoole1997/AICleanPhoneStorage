@@ -1,5 +1,6 @@
 package com.example.aicleanphonestorage.feature.home.ui
 
+import com.example.aicleanphonestorage.core.ui.motion.ShimmerPillButton
 import com.example.aicleanphonestorage.feature.home.ui.motion.HomeHeroMotion
 import com.example.aicleanphonestorage.feature.home.data.HomeToolMetric
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.FrameLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -49,7 +51,7 @@ internal class HomeListAdapter(
         is HomeRow.Hero -> HERO
         is HomeRow.Statistics -> STATS
         HomeRow.NativeAd -> NATIVE
-        HomeRow.Malware -> MALWARE
+        is HomeRow.Malware -> MALWARE
         HomeRow.Section -> SECTION
         is HomeRow.Tool -> TOOL
     }
@@ -74,7 +76,7 @@ internal class HomeListAdapter(
             is HomeRow.Hero -> (holder as HeroHolder).bind(row.content)
             is HomeRow.Statistics -> (holder as StatisticsHolder).bind(row.content)
             HomeRow.NativeAd -> (holder as NativeHolder).bind(requireNotNull(nativeContainer))
-            HomeRow.Malware -> (holder as MalwareHomeHolder).bind()
+            is HomeRow.Malware -> (holder as MalwareHomeHolder).bind(row.badge)
             HomeRow.Section -> Unit
             is HomeRow.Tool -> (holder as ToolHolder).bind(row.content)
         }
@@ -114,6 +116,13 @@ private class HeroHolder(
     actions: HomeUiActions,
 ) : RecyclerView.ViewHolder(binding.root) {
     val motion=HomeHeroMotion(binding)
+    private var alertTone: Boolean? = null
+    private val alertShimmer = intArrayOf(
+        itemView.context.getColor(R.color.home_alert_shimmer_start),
+        itemView.context.getColor(R.color.home_alert_shimmer_soft),
+        itemView.context.getColor(R.color.home_alert_shimmer_highlight),
+        itemView.context.getColor(R.color.home_alert_red),
+    )
     init {
         binding.cleanButton.setOnClickListener { actions.onSmartClean() }
         if (expanded) {
@@ -152,6 +161,17 @@ private class HeroHolder(
             else context.getString(R.string.home_used_percentage, percentage)
         // determinate ProgressBar，赋值不启动无限动画；文字提供 TalkBack 可读的百分比。
         usageProgress.progress = ((content.progressFraction ?: 0f).coerceIn(0f, 1f) * usageProgress.max).toInt()
+        cleanBadge.isVisible = content.badge
+        applyCleanTone(content.badge)
+    }
+
+    /** 角标显示时按 Figma 6562:1177 将文字、原版图标与边框流光统一切为红色；隐藏后恢复蓝色。 */
+    private fun applyCleanTone(alert: Boolean) = with(binding.cleanButton) {
+        if (alertTone == alert) return@with
+        alertTone = alert
+        setTextColor(context.getColor(if (alert) R.color.home_alert_red else R.color.home_blue))
+        setIconResource(if (alert) R.drawable.ic_home_clean_alert else R.drawable.ic_home_clean)
+        setShimmerColors(if (alert) alertShimmer else ShimmerPillButton.DEFAULT_COLORS)
     }
 }
 
@@ -195,6 +215,8 @@ private class ToolHolder(private val binding: ItemHomeToolBinding, private val a
     fun bind(content: HomeToolItem) = with(binding) {
         toolTitle.setText(content.tool.titleRes)
         toolIcon.setImageResource(content.tool.iconRes)
+        if (content.badge) toolBadge.setImageResource(content.tool.badgeStyle.iconRes)
+        toolBadge.isVisible = content.badge
         toolDetail.text = content.detail ?: content.tool.descriptionRes?.let(root.context::getString) ?: when(val metric=content.metric){
             HomeToolMetric.Reading->root.context.getString(R.string.home_metric_reading)
             HomeToolMetric.NotScanned->root.context.getString(R.string.home_metric_scan_first)

@@ -1,5 +1,6 @@
 package com.example.aicleanphonestorage.feature.home.ui
 
+import com.example.aicleanphonestorage.feature.home.data.HomeBadge
 import com.example.aicleanphonestorage.feature.home.data.HomeCleaningSnapshot
 import com.example.aicleanphonestorage.feature.home.data.HomeOverview
 import com.example.aicleanphonestorage.feature.home.data.HomeToolMetric
@@ -104,5 +105,26 @@ class HomeContentTest {
                 .single { it.tool == HomeTool.Apps }
         assertEquals(HomeToolMetric.AppCount(85), app.metric)
         assertNull(app.detail)
+    }
+
+    @Test
+    fun `badges map to hero malware and tool rows with design styles`() {
+        val none = HomeOverview().toHomeContent(Locale.US)
+        assertFalse(none.hero.badge)
+        assertFalse(none.malwareBadge)
+        assertTrue(none.tools.none { it.badge })
+        assertEquals(HomeRow.Malware(false), none.rows().single { it is HomeRow.Malware })
+
+        val visible = setOf(HomeBadge.SmartClean, HomeBadge.MalwareScan, HomeBadge.Videos, HomeBadge.BatteryInfo)
+        val content = HomeOverview().toHomeContent(Locale.US, badges = visible)
+        assertTrue(content.hero.badge)
+        assertEquals(HomeRow.Malware(true), content.rows().single { it is HomeRow.Malware })
+        assertEquals(setOf(HomeTool.Videos, HomeTool.Battery), content.tools.filter { it.badge }.map { it.tool }.toSet())
+        // 每个入口一个独立角标；Figma 中仅通知与电池使用感叹号，其余工具卡片为红点。
+        assertEquals(HomeTool.entries.size, HomeTool.entries.map { it.badge }.toSet().size)
+        assertEquals(
+            setOf(HomeTool.Notifications, HomeTool.Battery),
+            HomeTool.entries.filter { it.badgeStyle == HomeBadgeStyle.Alert }.toSet(),
+        )
     }
 }

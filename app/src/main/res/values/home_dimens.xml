@@ -12,4 +12,13 @@
     <dimen name="home_tool_icon_size">32dp</dimen>
     <dimen name="home_tool_card_padding">12dp</dimen>
     <dimen name="home_tool_title_size">14sp</dimen>
+    <!-- 入口角标（Figma 6562:1177）：工具卡片/扫描按钮 20dp，Smart Clean 按钮 24dp。 -->
+    <dimen name="home_badge_size">20dp</dimen>
+    <dimen name="home_badge_large_size">24dp</dimen>
+    <!-- 工具卡片角标距卡片顶部与尾部各 10dp。 -->
+    <dimen name="home_badge_card_inset">10dp</dimen>
+    <!-- 按钮角标右缘与按钮可见右缘对齐，顶部高出按钮可见顶部 10dp。 -->
+    <dimen name="home_badge_button_lift">-10dp</dimen>
+    <!-- Scan 按钮保留 48dp 点击区并上下内缩 8dp：角标相对按钮 View 顶部为 8dp - 10dp。 -->
+    <dimen name="home_badge_malware_offset">-2dp</dimen>
 </resources>

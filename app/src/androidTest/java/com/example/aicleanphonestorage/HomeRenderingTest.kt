@@ -70,9 +70,12 @@ class HomeRenderingTest {
             assertTrue("Capacity text must fit its measured height", value.height >= value.layout.height)
             assertEquals("Capacity and unit must share a baseline", value.top + value.baseline, unit.top + unit.baseline)
             // 覆盖整组工具而非仅比较相邻两卡，防止第一行变高后与后续工具失去统一排布。
-            val cards = (3 until 10).map { position ->
-                requireNotNull(binding.homeList.findViewHolderForAdapterPosition(position)).itemView
-            }
+            // 按行类型取已布局的工具卡，不依赖 Malware/广告等通栏行的固定位置。
+            val adapter = requireNotNull(binding.homeList.adapter)
+            val cards = (0 until adapter.itemCount)
+                .filter { adapter.getItemViewType(it) == com.example.aicleanphonestorage.feature.home.ui.HomeListAdapter.TOOL }
+                .mapNotNull { position -> binding.homeList.findViewHolderForAdapterPosition(position)?.itemView }
+            assertTrue("$name must lay out at least two tool cards", cards.size >= 2)
             val firstTitle = cards.first().findViewById<TextView>(R.id.tool_title)
             val firstDetail = cards.first().findViewById<TextView>(R.id.tool_detail)
             cards.forEach { card ->

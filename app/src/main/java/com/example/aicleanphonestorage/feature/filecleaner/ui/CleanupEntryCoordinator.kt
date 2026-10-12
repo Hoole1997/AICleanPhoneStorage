@@ -21,6 +21,8 @@ internal class CleanupEntryCoordinator(
     private val model: CleanupEntryViewModel,
     private val permissions: PermissionCoordinator,
     private val ads: InterstitialActions = InterstitialActions(activity),
+    // 功能页真正打开后回调（首页据此隐藏当日入口角标）；授权拒绝、取消或失败均不回调。
+    private val onOpened: (CleanupFeature) -> Unit = {},
 ) {
 
     init {
@@ -143,6 +145,7 @@ internal class CleanupEntryCoordinator(
                 .putExtra(FileCleanupActivity.EXTRA_SCAN, token)
                 .putExtra(FileCleanupActivity.EXTRA_FEATURE, feature.name)
         )
+        onOpened(feature)
     }
 
     private fun toast() =

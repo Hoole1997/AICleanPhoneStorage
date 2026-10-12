@@ -19,6 +19,8 @@ internal class NetworkTrafficEntryCoordinator(
     private val viewModel: NetworkTrafficViewModel,
     private val transfer: TrafficSnapshotTransfer,
     private val permissions: PermissionCoordinator,
+    // 功能页真正打开后回调（首页据此隐藏当日入口角标）；授权拒绝、取消或失败均不回调。
+    private val onOpened: () -> Unit = {},
 ) {
     private val ads = InterstitialActions(activity)
 
@@ -27,6 +29,7 @@ internal class NetworkTrafficEntryCoordinator(
         ads.register(InterstitialPlacements.NETWORK_SCAN) { token ->
             activity.startActivity(Intent(activity, NetworkTrafficActivity::class.java)
                 .putExtra(NetworkTrafficActivity.EXTRA_SNAPSHOT_TOKEN, token))
+            onOpened()
         }
         permissions.register(
             ROUTE,

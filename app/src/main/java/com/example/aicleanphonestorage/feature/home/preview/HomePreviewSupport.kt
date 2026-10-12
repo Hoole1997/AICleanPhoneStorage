@@ -50,10 +50,13 @@ object HomePreviewSupport {
                         usedPercent = 31,
                         // 稿件条长为 54/140，与标注的 31% 不一致；仅预览按原图，真实数据使用实际占比。
                         progressFraction = 54f / 140f,
+                        badge = true,
                     ),
                 statistics =
                     HomeStatistics(download = "637B/S", available = "87.7GB", used = "31%"),
-                tools = HomeTool.entries.map { HomeToolItem(it, "12.5GB") },
+                // 角标按 Figma 6562:1177 全部显示，仅用于视觉核对，不读写真实角标记录。
+                tools = HomeTool.entries.map { HomeToolItem(it, "12.5GB", badge = true) },
+                malwareBadge = true,
             )
 
     fun attach(anchor: View, onSelection: (String?) -> Unit) {

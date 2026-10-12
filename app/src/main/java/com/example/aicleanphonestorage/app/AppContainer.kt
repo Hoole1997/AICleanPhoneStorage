@@ -6,6 +6,7 @@ import android.content.Context
 import com.example.aicleanphonestorage.core.coroutines.AppDispatchers
 import com.example.aicleanphonestorage.core.coroutines.TaskExecutor
 import com.example.aicleanphonestorage.core.data.OneShotTransfer
+import com.example.aicleanphonestorage.feature.home.data.HomeBadgeRepository
 import com.example.aicleanphonestorage.feature.home.data.HomeOverviewRepository
 import com.example.aicleanphonestorage.feature.networktraffic.data.AndroidNetworkTrafficRepository
 import com.example.aicleanphonestorage.feature.networktraffic.data.NetworkTrafficRepository
@@ -15,6 +16,9 @@ import com.example.aicleanphonestorage.feature.notifications.data.NotificationAp
 import com.example.aicleanphonestorage.feature.notifications.data.NotificationCatalog
 import com.example.aicleanphonestorage.feature.notifications.data.NotificationRulesStore
 import com.example.aicleanphonestorage.feature.notifications.service.NotificationListenerConnection
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
 /** 手动依赖注入的唯一组装入口。应用级对象禁止保存 Activity/View 或启动隐式后台任务。 */
 class AppContainer(context: Context) {
@@ -101,6 +105,10 @@ class AppContainer(context: Context) {
             notificationRules,
             installedAppCount,
         )
+    }
+    // 写入作用域与进程同寿命，只承载“当日已进入”的单次短写入，不运行常驻任务。
+    val homeBadges: HomeBadgeRepository by lazy {
+        HomeBadgeRepository(applicationContext, CoroutineScope(SupervisorJob() + Dispatchers.IO))
     }
     val networkTrafficRepository: NetworkTrafficRepository by lazy {
         AndroidNetworkTrafficRepository(applicationContext, taskExecutor)

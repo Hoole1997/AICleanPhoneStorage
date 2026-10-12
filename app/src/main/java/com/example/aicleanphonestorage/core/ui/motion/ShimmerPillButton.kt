@@ -10,6 +10,7 @@ import android.graphics.PathMeasure
 import android.graphics.RectF
 import android.graphics.Shader
 import android.util.AttributeSet
+import androidx.annotation.ColorInt
 import com.google.android.material.button.MaterialButton
 import kotlin.math.atan2
 import kotlin.math.hypot
@@ -37,16 +38,8 @@ constructor(
     private val matrix = Matrix()
     private val head = FloatArray(2)
     private val tail = FloatArray(2)
-    private val gradient =
-        LinearGradient(
-            0f,
-            0f,
-            1f,
-            0f,
-            intArrayOf(0x002878F5, 0x604CAEFF, 0xFF65CFFF.toInt(), 0xFF2878F5.toInt()),
-            floatArrayOf(0f, 0.35f, 0.78f, 1f),
-            Shader.TileMode.CLAMP,
-        )
+    private var shimmerColors = DEFAULT_COLORS
+    private var gradient = gradient(shimmerColors)
     private var progress: Float? = null
     private var perimeter = 0f
     private var trailLength = 0f
@@ -58,6 +51,21 @@ constructor(
         progress = next
         invalidate()
     }
+
+    /**
+     * 光带色标（尾部透明 → 柔光 → 高光 → 头部主色，4 个颜色）。业务状态切换时调用；
+     * 只在颜色变化时重建一次 Shader，绘制循环中不分配对象。
+     */
+    fun setShimmerColors(@ColorInt colors: IntArray) {
+        require(colors.size == POSITIONS.size)
+        if (colors.contentEquals(shimmerColors)) return
+        shimmerColors = colors.copyOf()
+        gradient = gradient(shimmerColors)
+        if (progress != null) invalidate()
+    }
+
+    private fun gradient(colors: IntArray) =
+        LinearGradient(0f, 0f, 1f, 0f, colors, POSITIONS, Shader.TileMode.CLAMP)
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -119,5 +127,11 @@ constructor(
     override fun onDetachedFromWindow() {
         setShimmerProgress(null)
         super.onDetachedFromWindow()
+    }
+
+    companion object {
+        /** 默认蓝色光带，与首页按钮原设计一致。 */
+        val DEFAULT_COLORS = intArrayOf(0x002878F5, 0x604CAEFF, 0xFF65CFFF.toInt(), 0xFF2878F5.toInt())
+        private val POSITIONS = floatArrayOf(0f, 0.35f, 0.78f, 1f)
     }
 }

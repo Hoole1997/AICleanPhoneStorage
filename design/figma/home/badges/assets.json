@@ -1,0 +1,54 @@
+[
+  {
+    "resource": "ic_home_badge_alert_large",
+    "fileKey": "dVsTL6ggoDPXVPcEKg856G",
+    "frame": "6562:1177",
+    "node": "6562:1434",
+    "usage": "Smart Clean Now button",
+    "dp": [24, 24],
+    "svg": "design/figma/home/badges/source/ic_home_badge_alert_large.svg",
+    "svgSha256": "f067df8bad9ab8ef058d0a779512db59929694ffea43a0d2f07dcb10fd24937d",
+    "source": "design/figma/home/badges/source/ic_home_badge_alert_large@4x.png",
+    "sourceScale": 4,
+    "sha256": "6af7494cb48e2858dc16f19ecddc95f9a44941fd5305f5abf61ffaf7eab5a636"
+  },
+  {
+    "resource": "ic_home_badge_alert",
+    "fileKey": "dVsTL6ggoDPXVPcEKg856G",
+    "frame": "6562:1177",
+    "node": "6562:1437",
+    "usage": "Malware Scan button, Clear Notifications, Battery Info",
+    "dp": [20, 20],
+    "svg": "design/figma/home/badges/source/ic_home_badge_alert.svg",
+    "svgSha256": "03435cf16a2cee12bf9d5d6ae23e71f8b4400037e2a47d3ea8067510e1382958",
+    "source": "design/figma/home/badges/source/ic_home_badge_alert@4x.png",
+    "sourceScale": 4,
+    "sha256": "cce2b633330b350b034d4a8a630a60b4d00445bcdf1f177f119cf60029bba3c5"
+  },
+  {
+    "resource": "ic_home_badge_dot",
+    "fileKey": "dVsTL6ggoDPXVPcEKg856G",
+    "frame": "6562:1177",
+    "node": "6562:1440",
+    "usage": "Other Manual Clean tool cards",
+    "dp": [20, 20],
+    "svg": "design/figma/home/badges/source/ic_home_badge_dot.svg",
+    "svgSha256": "6d1d121d21c4ded75b7e665a8b42f1d2f785b470972b47b10c6400a90ca9a87e",
+    "source": "design/figma/home/badges/source/ic_home_badge_dot@4x.png",
+    "sourceScale": 4,
+    "sha256": "33484d9791177c9e16eb7c332a66b95abf78e4038d5d5be86f06dd65e6047865"
+  },
+  {
+    "resource": "ic_home_clean_alert",
+    "fileKey": "dVsTL6ggoDPXVPcEKg856G",
+    "frame": "6562:1177",
+    "node": "6562:1230",
+    "usage": "Smart Clean Now icon while its badge is shown",
+    "dp": [22, 22],
+    "svg": "design/figma/home/badges/source/ic_home_clean_alert.svg",
+    "svgSha256": "f9adfc374c9d860d7a27b64bde50a55309469af0687135a5330463d893e05f11",
+    "source": "design/figma/home/badges/source/ic_home_clean_alert@4x.png",
+    "sourceScale": 4,
+    "sha256": "a79c7fca48e7def1d332b547f576f280995cfb5b056596ea4a4d226750cc0664"
+  }
+]

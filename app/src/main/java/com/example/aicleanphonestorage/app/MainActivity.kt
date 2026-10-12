@@ -27,6 +27,7 @@ import com.example.aicleanphonestorage.R
 import com.example.aicleanphonestorage.databinding.ScreenHomeBinding
 import com.example.aicleanphonestorage.feature.appmanager.ui.*
 import com.example.aicleanphonestorage.feature.filecleaner.ui.*
+import com.example.aicleanphonestorage.feature.home.data.HomeBadge
 import com.example.aicleanphonestorage.feature.home.preview.HomePreviewSupport
 import com.example.aicleanphonestorage.core.analytics.*
 import com.example.aicleanphonestorage.feature.home.ui.HomeUiActions
@@ -54,7 +55,8 @@ class MainActivity : AppCompatActivity() {
         viewModelFactory {
             initializer {
                 HomeViewModel((application as CleanApplication).container.homeOverviewRepository,
-                    (application as CleanApplication).homeCleaning.state)
+                    (application as CleanApplication).homeCleaning.state,
+                    (application as CleanApplication).container.homeBadges)
             }
         }
     }
@@ -188,6 +190,7 @@ class MainActivity : AppCompatActivity() {
                 trafficEntry,
                 (application as CleanApplication).container.trafficSnapshotTransfer,
                 permissions,
+                onOpened = { homeViewModel.onFeatureEntered(HomeBadge.NetworkTraffic) },
             )
         notificationCoordinator =
             NotificationEntryCoordinator(
@@ -195,23 +198,28 @@ class MainActivity : AppCompatActivity() {
                 notificationEntry,
                 (application as CleanApplication).container.notificationCatalogTransfer,
                 permissions,
+                onOpened = { homeViewModel.onFeatureEntered(HomeBadge.ClearNotifications) },
             )
-        cleanupCoordinator = CleanupEntryCoordinator(this, cleanupEntry, permissions)
+        cleanupCoordinator = CleanupEntryCoordinator(this, cleanupEntry, permissions,
+            onOpened = { feature -> homeViewModel.onFeatureEntered(HomeBadge.of(feature)) })
         observeEntryState(cleanupEntry.state, cleanupCoordinator::render)
         appManagerCoordinator =
             AppManagerEntryCoordinator(
                 this,
                 appManagerEntry,
                 (application as CleanApplication).container.appManagerTransfer,
+                onOpened = { homeViewModel.onFeatureEntered(HomeBadge.AppManager) },
             )
         observeEntryState(appManagerEntry.state, appManagerCoordinator::render)
         batteryCoordinator = BatteryEntryCoordinator(
             this,
             batteryEntry,
             (application as CleanApplication).container.batteryTransfer,
+            onOpened = { homeViewModel.onFeatureEntered(HomeBadge.BatteryInfo) },
         )
         observeEntryState(batteryEntry.state, batteryCoordinator::render)
-        malwareEntry = com.example.aicleanphonestorage.feature.malware.ui.MalwareEntryCoordinator(this, malwareEntryModel, permissions)
+        malwareEntry = com.example.aicleanphonestorage.feature.malware.ui.MalwareEntryCoordinator(this, malwareEntryModel, permissions,
+            onOpened = { homeViewModel.onFeatureEntered(HomeBadge.MalwareScan) })
         observeEntryState(malwareEntryModel.state, malwareEntry::render)
         homeActions = HomeEntryActions(
             permissions, trafficEntry, notificationEntry, cleanupEntry, appManagerEntry, batteryEntry, malwareEntry,
@@ -326,6 +334,8 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         if (redirectedToStartup) return
         (application as CleanApplication).homeCleaning.check()
+        // 每次回到首页按设备本地日期判断是否跨过 0 点；前台跨天无需重启也会恢复全部角标。
+        homeViewModel.refreshBadges()
         renderer.setResumed(true)
         trackHomeState()
         pushPermission.onResume()

@@ -13,6 +13,8 @@ internal class BatteryEntryCoordinator(
     private val activity: AppCompatActivity,
     private val model: BatteryEntryViewModel,
     private val transfer: OneShotTransfer<BatterySnapshot>,
+    // 功能页真正打开后回调（首页据此隐藏当日入口角标）；授权拒绝、取消或失败均不回调。
+    private val onOpened: () -> Unit = {},
 ) {
     init {
         activity.supportFragmentManager.setFragmentResultListener(CANCEL, activity) { _, result ->
@@ -49,6 +51,7 @@ internal class BatteryEntryCoordinator(
                         Intent(activity, BatteryInfoActivity::class.java)
                             .putExtra(BatteryInfoActivity.EXTRA_SNAPSHOT, transfer.put(it))
                     )
+                    onOpened()
                 }
             BatteryEntryState.Failed -> {
                 model.cancel()

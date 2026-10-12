@@ -18,6 +18,8 @@ internal class NotificationEntryCoordinator(
     private val viewModel: NotificationCleanerViewModel,
     private val transfer: OneShotTransfer<NotificationCatalog>,
     private val permissions: PermissionCoordinator,
+    // 功能页真正打开后回调（首页据此隐藏当日入口角标）；授权拒绝、取消或失败均不回调。
+    private val onOpened: () -> Unit = {},
 ) {
     private val ads = InterstitialActions(activity)
 
@@ -26,6 +28,7 @@ internal class NotificationEntryCoordinator(
         ads.register(InterstitialPlacements.NOTIFICATIONS_SCAN) { token ->
             activity.startActivity(Intent(activity, NotificationCleanerActivity::class.java)
                 .putExtra(NotificationCleanerActivity.EXTRA_CATALOG, token))
+            onOpened()
         }
         permissions.register(ROUTE, before = { viewModel.awaitAccess() }) { result ->
             if (result.granted) viewModel.onForeground() else viewModel.cancelEntry()

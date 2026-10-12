@@ -28,4 +28,10 @@
             android:contentDescription="@null" android:importantForAccessibility="no"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- 入口角标叠在卡片右上角，不参与内容约束；仅为装饰，整卡仍是唯一点击目标。 -->
+    <ImageView android:id="@+id/tool_badge" android:layout_width="@dimen/home_badge_size"
+        android:layout_height="@dimen/home_badge_size" android:layout_gravity="top|end"
+        android:layout_marginTop="@dimen/home_badge_card_inset" android:layout_marginEnd="@dimen/home_badge_card_inset"
+        android:visibility="gone" android:contentDescription="@null" android:importantForAccessibility="no"
+        tools:src="@drawable/ic_home_badge_dot" tools:visibility="visible" />
 </com.google.android.material.card.MaterialCardView>

@@ -6,7 +6,7 @@ internal sealed interface HomeRow {
     data class Hero(val content: HeroContent) : HomeRow { override val key = "hero" }
     data class Statistics(val content: HomeStatistics) : HomeRow { override val key = "statistics" }
     data object NativeAd : HomeRow { override val key = "native_home" }
-    data object Malware : HomeRow { override val key = "malware" }
+    data class Malware(val badge: Boolean = false) : HomeRow { override val key = "malware" }
     data object Section : HomeRow { override val key = "section" }
     data class Tool(val content: HomeToolItem) : HomeRow { override val key = content.tool.name }
 }
@@ -15,7 +15,7 @@ internal fun HomeContent.rows(includeNativeAd: Boolean = false): List<HomeRow> =
     add(HomeRow.Hero(hero))
     add(HomeRow.Statistics(statistics))
     if (includeNativeAd) add(HomeRow.NativeAd)
-    add(HomeRow.Malware)
+    add(HomeRow.Malware(malwareBadge))
     add(HomeRow.Section)
     tools.forEach { add(HomeRow.Tool(it)) }
 }

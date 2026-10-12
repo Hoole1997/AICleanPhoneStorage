@@ -11,4 +11,9 @@
     <color name="home_progress_track">#4AFFFFFF</color>
     <color name="home_arrow_background">#F2F6FD</color>
     <color name="home_ripple">#202878F5</color>
+    <!-- Smart Clean 显示角标时（Figma 6562:1232）文字/图标为红色，边框流光同色系：透明主色 → 柔和 → 高光 → 主色。 -->
+    <color name="home_alert_red">#F55D46</color>
+    <color name="home_alert_shimmer_start">#00F55D46</color>
+    <color name="home_alert_shimmer_soft">#60FF8A73</color>
+    <color name="home_alert_shimmer_highlight">#FFFFB3A3</color>
 </resources>
