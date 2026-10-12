@@ -1,0 +1,20 @@
+# 真机 adb 输出摘录。系统环形日志后来覆盖了早期记录，这些行从本次已采集的工具输出保留。
+# OPPO CPH2723 / Android 16 / localDebug；客户端调用日志，不代表服务端接收。
+10-12 16:01:32.368 19251 21243 D BusinessMetrics: feature_entry_click {entry=speedtest, home_badge=no, perm_granted=none}
+10-12 16:01:32.448 19251 21193 D BusinessMetrics: page_show {page=speedtestScan, perm_granted=none}
+10-12 16:01:49.505 19251 21164 D BusinessMetrics: speed_scan_result {}
+10-12 16:01:49.512 19251 21164 D BusinessMetrics: speed_result_show {}
+10-12 16:01:49.512 19251 21164 D BusinessMetrics: page_leave {page=speedtestScan, stay_duration=17.065}
+10-12 16:01:49.513 19251 21164 D BusinessMetrics: page_show {page=speedtest_result, perm_granted=none}
+10-12 16:02:17.310 19251 21164 D BusinessMetrics: TestAgain_click {}
+10-12 16:02:17.312 19251 21239 D BusinessMetrics: page_leave {page=speedtest_result, stay_duration=27.8}
+10-12 16:02:17.312 19251 21239 D BusinessMetrics: page_show {page=speedtestScan, perm_granted=none}
+10-12 16:02:17.340 19251 21248 D BusinessMetrics: speed_scan_back {}
+10-12 16:02:35.412 19251 21232 D BusinessMetrics: feature_entry_click {entry=speedtest, home_badge=no, perm_granted=none}
+10-12 16:02:35.495 19251 21232 D BusinessMetrics: page_show {page=speedtestScan, perm_granted=none}
+10-12 16:02:35.620 19251 21241 D BusinessMetrics: speed_scan_fail {reason=network_restricted}
+10-12 16:02:50.324 19251 21232 D BusinessMetrics: speed_scan_fail {reason=network_restricted, action=retry}
+10-12 16:02:50.359 19251 21196 D BusinessMetrics: speed_scan_fail {reason=network_restricted}
+10-12 16:03:06.215 19251 21196 D BusinessMetrics: speed_scan_fail {reason=network_restricted, action=cancel}
+10-12 16:03:06.264 19251 21248 D BusinessMetrics: page_show {page=home, perm_granted=none}
+10-12 16:03:30.974 19251 21196 D BusinessMetrics: feature_entry_click {entry=traffic, home_badge=yes, perm_granted=false}

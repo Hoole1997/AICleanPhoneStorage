@@ -23,6 +23,12 @@ internal enum class MetricEvent(val wireName: String) {
     VIRUS_SCAN_AGAIN("virus_scan_again"),
     BATTERYINFO_SCAN_RESULT("BatteryInfo_scan_result"),
     BATTERYINFO_RESULT_SHOW("BatteryInfo_result_show"),
+    SPEED_SCAN_RESULT("speed_scan_result"),
+    SPEED_SCAN_BACK("speed_scan_back"),
+    SPEED_RESULT_SHOW("speed_result_show"),
+    // 飞书协议保留大小写；内部命名仍使用统一枚举风格。
+    TEST_AGAIN_CLICK("TestAgain_click"),
+    SPEED_SCAN_FAIL("speed_scan_fail"),
     APP_LAUNCH("app_launch"),
     PAGE_SHOW("page_show"),
     PAGE_LEAVE("page_leave"),

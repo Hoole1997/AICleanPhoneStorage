@@ -1,5 +1,7 @@
 # 飞书业务埋点覆盖报告
 
+> 本报告保留 2026-09-11 的历史核对口径。2026-10-12 黄色新增项及当前接入见 [新增埋点清单](telemetry-2026-10-12.md)，之前的功能增量见 [v1.0.1 验证](../verification/telemetry-v1.0.1/README.md)。
+
 依据：[AI Clean & Phone Storage 埋点方案](https://pic6ktmsyi.feishu.cn/wiki/GvgKwIzPeiWUmVk0BQFc31dNnVh?sheet=0pRVXK)，2026-09-11 通过 Chrome 导出读取全部 9 张工作表。逐字段快照见 [event-spec.json](event-spec.json)。没有修改飞书文档。
 
 ## 覆盖结论

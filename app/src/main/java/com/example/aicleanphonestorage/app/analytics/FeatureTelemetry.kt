@@ -34,8 +34,15 @@ internal object FeatureTelemetry {
         } catch (cancelled: CancellationException) { throw cancelled }
         catch (_: SecurityException) { "false" }
     }
-    fun entry(app: CleanApplication, entry: String) = BusinessTelemetry.withPermission(
-        MetricEvent.FEATURE_ENTRY_CLICK, mapOf("entry" to BusinessPageNames.wire(entry)), permission(app, entry))
+    fun entry(app: CleanApplication, entry: String, homeBadgeVisible: Boolean) = BusinessTelemetry.withPermission(
+        MetricEvent.FEATURE_ENTRY_CLICK, entryParameters(entry, homeBadgeVisible), permission(app, entry))
+
+    /** 首页角标在 UI 点击时采集；这里只转换飞书 sheet01 E54:I55 的 yes/no，不能等异步权限采集后读取 UI。 */
+    fun entryParameters(entry: String, homeBadgeVisible: Boolean): Map<String, Any> = mapOf(
+        // 测速入口协议是 speedtest，测速页面协议是 speedtestScan；二者不能共用页面名称转换。
+        "entry" to if (entry == "speedtest") "speedtest" else BusinessPageNames.wire(entry),
+        "home_badge" to if (homeBadgeVisible) "yes" else "no",
+    )
 
     fun homeState(snapshot: HomeCleaningSnapshot): Map<String, Any> = buildMap {
         put("state", if (snapshot.dirty) "dirty" else "cleaned")

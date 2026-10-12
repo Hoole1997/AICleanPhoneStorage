@@ -113,7 +113,7 @@ private object RowDiff : DiffUtil.ItemCallback<HomeRow>() {
 private class HeroHolder(
     private val binding: ItemHomeHeroBinding,
     expanded: Boolean,
-    actions: HomeUiActions,
+    private val actions: HomeUiActions,
 ) : RecyclerView.ViewHolder(binding.root) {
     val motion=HomeHeroMotion(binding)
     private var alertTone: Boolean? = null
@@ -124,7 +124,6 @@ private class HeroHolder(
         itemView.context.getColor(R.color.home_alert_red),
     )
     init {
-        binding.cleanButton.setOnClickListener { actions.onSmartClean() }
         if (expanded) {
             // 大字体或窄屏时采用自然增高的上下布局，保留原插画，不强行缩小文字或裁切数值。
             ConstraintSet().apply {
@@ -162,6 +161,8 @@ private class HeroHolder(
         // determinate ProgressBar，赋值不启动无限动画；文字提供 TalkBack 可读的百分比。
         usageProgress.progress = ((content.progressFraction ?: 0f).coerceIn(0f, 1f) * usageProgress.max).toInt()
         cleanBadge.isVisible = content.badge
+        // 与这一帧实际显示的角标一起绑定；点击不能读取可能已领先于 RecyclerView Diff 的 ViewModel 状态。
+        cleanButton.setOnClickListener { actions.onSmartClean(content.badge) }
         applyCleanTone(content.badge)
     }
 
@@ -227,7 +228,7 @@ private class ToolHolder(private val binding: ItemHomeToolBinding, private val a
         }
         // 整张卡片是点击目标，18dp 的箭头只是装饰，避免不合规的小触摸区域。
         root.contentDescription = "${toolTitle.text}, ${toolDetail.text}"
-        root.setOnClickListener { actions.onToolSelected(content.tool) }
+        root.setOnClickListener { actions.onToolSelected(content.tool, content.badge) }
     }
 }
 

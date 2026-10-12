@@ -19,8 +19,23 @@ import com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestException
  * FragmentManager 负责重建恢复。返回键等同 Cancel。
  */
 class SpeedTestFailureDialog : DialogFragment() {
-    private val reason: SpeedTestException.Reason
-        get() = SpeedTestException.Reason.valueOf(requireArguments().getString(REASON).orEmpty())
+    private val reason: SpeedTestException.Reason?
+        get() = reasonFrom(requireArguments())
+    private var actionDelivered = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // 配置重建后仍保留已处理状态，快速重复点击/取消不能第二次发送 FragmentResult。
+        actionDelivered = savedInstanceState?.getBoolean(ACTION_DELIVERED) ?: false
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean(ACTION_DELIVERED, actionDelivered)
+        super.onSaveInstanceState(outState)
+    }
+
+    fun belongsTo(expectedReason: SpeedTestException.Reason?, expectedGeneration: Long): Boolean =
+        reason == expectedReason && requireArguments().getLong(GENERATION, -1L) == expectedGeneration
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val binding = DialogSpeedTestFailedBinding.inflate(layoutInflater)
@@ -65,8 +80,16 @@ class SpeedTestFailureDialog : DialogFragment() {
         binding.failedGap.layoutParams.height = (8 * resources.displayMetrics.density).toInt()
     }
 
-    private fun result(action: String) =
-        parentFragmentManager.setFragmentResult(RESULT, Bundle().apply { putString(ACTION, action) })
+    private fun result(action: String) {
+        if (actionDelivered) return
+        actionDelivered = true
+        // 仅传协议原因和轻量代次，不复制参数 Bundle；原因取原弹框，避免下一轮失败覆盖。
+        parentFragmentManager.setFragmentResult(RESULT, Bundle().apply {
+            putString(ACTION, action)
+            putString(REASON, reason?.name)
+            putLong(GENERATION, requireArguments().getLong(GENERATION, -1L))
+        })
+    }
 
     companion object {
         const val TAG = "speed_test.failure"
@@ -74,11 +97,16 @@ class SpeedTestFailureDialog : DialogFragment() {
         const val ACTION = "action"
         const val RETRY = "retry"
         const val CANCEL = "cancel"
+        const val GENERATION = "generation"
         private const val REASON = "reason"
+        private const val ACTION_DELIVERED = "action_delivered"
+
+        fun reasonFrom(result: Bundle): SpeedTestException.Reason? =
+            SpeedTestException.Reason.entries.firstOrNull { it.name == result.getString(REASON) }
 
         /** 失败原因与文案一一对应（用户 2026-10-12 指定）。 */
         @StringRes
-        fun messageRes(reason: SpeedTestException.Reason): Int = when (reason) {
+        fun messageRes(reason: SpeedTestException.Reason?): Int = when (reason) {
             SpeedTestException.Reason.NoInternet -> R.string.speed_test_no_internet
             SpeedTestException.Reason.WeakNetwork -> R.string.speed_test_error_weak
             SpeedTestException.Reason.Timeout -> R.string.speed_test_error_timeout
@@ -86,9 +114,13 @@ class SpeedTestFailureDialog : DialogFragment() {
             SpeedTestException.Reason.Restricted -> R.string.speed_test_error_restricted
             SpeedTestException.Reason.NetworkInfoUnavailable -> R.string.speed_test_error_network_info
             SpeedTestException.Reason.ServerError -> R.string.speed_test_failed
+            null -> R.string.speed_test_no_internet
         }
 
-        fun create(reason: SpeedTestException.Reason) =
-            SpeedTestFailureDialog().apply { arguments = Bundle().apply { putString(REASON, reason.name) } }
+        fun create(reason: SpeedTestException.Reason?, generation: Long) =
+            SpeedTestFailureDialog().apply { arguments = Bundle().apply {
+                putString(REASON, reason?.name)
+                putLong(GENERATION, generation)
+            } }
     }
 }

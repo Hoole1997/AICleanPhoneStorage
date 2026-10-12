@@ -7,7 +7,7 @@ Figma `dVsTL6ggoDPXVPcEKg856G`：首页入口 [6562:1177](https://www.figma.com/
 首页 SpeedTest 卡片（红点角标，受统一开关 `home_badge_switch` 控制）→ 直接打开 `SpeedTestActivity`（无首页授权/加载步骤，打开即计为当日已进入）→ 页面进入前台自动测速 → 结果页 Test Again 可重测。
 
 - 测速中离开前台立即取消全部连接，回到前台重新完整测一次，不在后台消耗流量与电量。
-- 失败弹框（用户 2026-10-12 指定文案）：Retry 重测；Cancel 有上一次成功结果则回到结果，否则关闭页面（返回首页）。
+- 失败弹框（用户 2026-10-12 指定文案）：Retry 重测；Cancel 按最新埋点文档关闭弹窗并返回首页。
 
 | 异常类型 | 判定 | 文案 |
 | --- | --- | --- |
@@ -46,7 +46,7 @@ Figma `dVsTL6ggoDPXVPcEKg856G`：首页入口 [6562:1177](https://www.figma.com/
 
 ## 埋点
 
-首页入口 `speedtest`；页面 `speedtest`（测速中）/ `speedtest_result`（结果）。飞书协议表暂无测网速命名，如需特殊拼写在 `BusinessPageNames` 中映射。
+首页入口 `speedtest`，携带点击时实际显示的 `home_badge=yes/no`；页面 `speedtestScan`（测速中）/ `speedtest_result`（结果）。测速完成、扫描返回、结果曝光、Test Again 及失败弹窗埋点见 [2026-10-12 新增埋点](metrics/telemetry-2026-10-12.md)。
 
 ## 验证
 

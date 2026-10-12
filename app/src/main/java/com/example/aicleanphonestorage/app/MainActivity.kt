@@ -236,23 +236,23 @@ class MainActivity : AppCompatActivity() {
         val nativeHome = layoutInflater.inflate(R.layout.view_native_ad_slot, binding.homeContent, false) as android.view.ViewGroup
         val app = application as CleanApplication
         val trackedActions = object : HomeUiActions by homeActions {
-            override fun onMalwareScan() {
-                if (previewSelection == null) FeatureTelemetry.entry(app, "malware")
+            override fun onMalwareScan(homeBadgeVisible: Boolean) {
+                if (previewSelection == null) FeatureTelemetry.entry(app, "malware", homeBadgeVisible)
                 homeActions.onMalwareScan()
             }
-            override fun onSmartClean() {
+            override fun onSmartClean(homeBadgeVisible: Boolean) {
                 if (previewSelection == null) {
                     BusinessTelemetry.emit(MetricEvent.CLEAN_NOW_CLICK, mapOf("state" to if (app.homeCleaning.state.value.dirty) "dirty" else "cleaned"))
-                    FeatureTelemetry.entry(app, "junk")
+                    FeatureTelemetry.entry(app, "junk", homeBadgeVisible)
                 }
                 homeActions.onSmartClean()
             }
-            override fun onToolSelected(tool: HomeTool) {
+            override fun onToolSelected(tool: HomeTool, homeBadgeVisible: Boolean) {
                 val entry = when (tool) {
                     HomeTool.Network -> "traffic"; HomeTool.Notifications -> "notify"; HomeTool.Apps -> "apps"
                     HomeTool.Compress -> "photo"; HomeTool.LargeFiles -> "large"; HomeTool.UnusedFiles -> "unused"; HomeTool.Screenshots -> "screenshots"; HomeTool.Videos -> "video"; HomeTool.Similar -> "duplicate"; HomeTool.Battery -> "battery"; HomeTool.SpeedTest -> "speedtest"
                 }
-                if (previewSelection == null) FeatureTelemetry.entry(app, entry)
+                if (previewSelection == null) FeatureTelemetry.entry(app, entry, homeBadgeVisible)
                 homeActions.onToolSelected(tool)
             }
         }

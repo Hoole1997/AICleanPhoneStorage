@@ -20,6 +20,7 @@ import com.example.aicleanphonestorage.app.ad.InterstitialActions
 import com.example.aicleanphonestorage.app.ad.InterstitialPlacements
 import com.example.aicleanphonestorage.core.analytics.PageTelemetry
 import com.example.aicleanphonestorage.databinding.ScreenSpeedTestBinding
+import com.example.aicleanphonestorage.feature.speedtest.analytics.SpeedTestFailureAction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -65,22 +66,30 @@ class SpeedTestActivity : AppCompatActivity() {
         ads.register(InterstitialPlacements.SPEED_TEST_SCAN, model::revealResult)
         // 顶部返回、系统返回与失败弹框关闭页面都回首页，由首页恢复并绘制后请求 back_home_speedtest；
         // 扫描完成插屏进行中不重复离开，避免两个插屏叠加。
-        val exit = FeatureExitCoordinator(this, { InterstitialPlacements.SPEED_TEST_EXIT }, isBusy = { ads.busy })
+        val exit = FeatureExitCoordinator(this, { InterstitialPlacements.SPEED_TEST_EXIT }, isBusy = { ads.busy },
+            onExit = model::scanBackRequested)
         binding.speedBack.setOnClickListener { exit.exit() }
-        binding.speedAgain.setOnClickListener { model.start() }
+        binding.speedAgain.setOnClickListener { model.testAgain() }
         supportFragmentManager.setFragmentResultListener(SpeedTestFailureDialog.RESULT, this) { _, result ->
-            if (result.getString(SpeedTestFailureDialog.ACTION) == SpeedTestFailureDialog.RETRY) model.start()
-            else if (model.dismissFailure()) exit.exit()
+            val action = when (result.getString(SpeedTestFailureDialog.ACTION)) {
+                SpeedTestFailureDialog.RETRY -> SpeedTestFailureAction.Retry
+                SpeedTestFailureDialog.CANCEL -> SpeedTestFailureAction.Cancel
+                else -> return@setFragmentResultListener
+            }
+            if (model.failureAction(result.getLong(SpeedTestFailureDialog.GENERATION, -1L),
+                    SpeedTestFailureDialog.reasonFrom(result), action)) exit.exit()
         }
         val renderer = SpeedTestRenderer(binding)
         val refreshPage = PageTelemetry.attachDynamic(this, {
-            if ((model.state.value as? SpeedTestUiState.Done)?.revealed == true) "speedtest_result" else "speedtest"
+            if ((model.state.value as? SpeedTestUiState.Done)?.revealed == true) "speedtest_result" else "speedtestScan"
         })
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            // 结果/失败曝光与真正可见的前台渲染绑定，插屏覆盖或后台不能提前计数。
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 model.state.collect { state ->
                     val footerVisible = binding.speedFooter.isVisible
                     renderer.render(state)
+                    model.resultVisible()
                     if (footerVisible != binding.speedFooter.isVisible) ViewCompat.requestApplyInsets(binding.root)
                     showFailure(state)
                     requestScanAd()
@@ -117,11 +126,17 @@ class SpeedTestActivity : AppCompatActivity() {
     }
 
     private fun showFailure(state: SpeedTestUiState) {
+        if (!lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) return
         val manager = supportFragmentManager
         if (manager.isStateSaved) return
         val existing = manager.findFragmentByTag(SpeedTestFailureDialog.TAG) as? SpeedTestFailureDialog
         if (state is SpeedTestUiState.Failed) {
-            if (existing == null) SpeedTestFailureDialog.create(state.reason).showNow(manager, SpeedTestFailureDialog.TAG)
+            val dialog = if (existing?.belongsTo(state.reason, model.generation) == true) existing else {
+                // 快速重测失败时可能尚未处理旧弹框 dismiss；只保留当前代次的原因/操作。
+                existing?.dismissNow()
+                SpeedTestFailureDialog.create(state.reason, model.generation).also { it.showNow(manager, SpeedTestFailureDialog.TAG) }
+            }
+            if (dialog.dialog?.isShowing == true) model.failureVisible(model.generation, state.reason)
         } else existing?.dismiss()
     }
 }

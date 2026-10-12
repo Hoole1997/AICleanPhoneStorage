@@ -25,7 +25,8 @@ class IncrementalTelemetryTest {
         mapOf("video" to "vedio", "video_result" to "vedion_result",
             "duplicate" to "duplicatephoto", "duplicate_result" to "duplicatephoto_result",
             "malware" to "MalwareScan", "malware_result" to "MalwareScan_result",
-            "battery" to "BatteryInfo", "junk" to "junk").forEach { (key, value) ->
+            "battery" to "BatteryInfo", "speedtest" to "speedtestScan",
+            "speedtest_result" to "speedtest_result", "junk" to "junk").forEach { (key, value) ->
             assertEquals(value, BusinessPageNames.wire(key))
         }
         assertEquals("video", CleanupTelemetry.page(CleanupFeature.VIDEOS))

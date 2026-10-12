@@ -10,6 +10,7 @@ internal object BusinessPageNames {
         "malware" -> "MalwareScan"
         "malware_result" -> "MalwareScan_result"
         "battery" -> "BatteryInfo"
+        "speedtest" -> "speedtestScan"
         else -> page
     }
 }
