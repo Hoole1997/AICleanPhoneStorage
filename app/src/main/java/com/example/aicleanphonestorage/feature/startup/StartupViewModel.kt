@@ -22,16 +22,18 @@ internal data class StartupEntry(
 internal data class StartupState(
     val prepared: Boolean = false,
     val permissionCompleted: Boolean = false,
+    /** 只表示启动页的 consent 挂起调用已结束，不表示 allowed，也不保存用户授权凭据。 */
+    val consentCompleted: Boolean = false,
     val adCompleted: Boolean = false,
     val minimumStayComplete: Boolean = false,
     val consumed: Boolean = false,
     val offlineTimeout: Long? = null,
 ) {
     val ready: Boolean
-        get() = prepared && permissionCompleted && adCompleted && minimumStayComplete
+        get() = prepared && permissionCompleted && consentCompleted && adCompleted && minimumStayComplete
 }
 
-/** 权限结束且启动页可见后才开始广告阶段；最短停留从广告请求开始计算，不包含系统授权页耗时。 */
+/** 权限及 consent 调用结束且启动页可见后才开始广告阶段；最短停留从广告请求开始计算。 */
 internal class StartupViewModel(
     private val saved: SavedStateHandle,
     private val clock: () -> Long = { android.os.SystemClock.elapsedRealtime() },
@@ -87,6 +89,7 @@ internal class StartupViewModel(
                 StartupState(
                     prepared = current.value.prepared,
                     permissionCompleted = current.value.permissionCompleted,
+                    consentCompleted = current.value.consentCompleted,
                 )
         }
     }
@@ -103,10 +106,15 @@ internal class StartupViewModel(
         if (!cleared) current.value = current.value.copy(permissionCompleted = true)
     }
 
+    fun consentFinished() {
+        if (!cleared) current.value = current.value.copy(consentCompleted = true)
+    }
+
     fun canRequestAd() =
         !cleared &&
             current.value.prepared &&
             current.value.permissionCompleted &&
+            current.value.consentCompleted &&
             !current.value.consumed &&
             !current.value.adCompleted &&
             current.value.offlineTimeout == null &&

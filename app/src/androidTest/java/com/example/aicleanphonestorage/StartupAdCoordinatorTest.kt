@@ -204,6 +204,60 @@ class StartupAdCoordinatorTest {
         }
     }
 
+    @Test
+    fun splashRequestWaitsForConsentReturnAndDoesNotRepeatOnDuplicateCompletion() {
+        ActivityScenario.launch(AboutActivity::class.java).use { scenario ->
+            lateinit var host: Host
+            lateinit var complete: (Boolean) -> Unit
+            var requests = 0
+            scenario.onActivity { activity ->
+                host = bind(activity, consentComplete = false) { position, callback ->
+                    assertEquals("splash", position)
+                    assertTrue(host.model.state.value.consentCompleted)
+                    requests++
+                    complete = callback
+                }
+                host.model.accept(StartupEntry(NotificationDestination.NETWORK))
+            }
+            androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+            scenario.onActivity { activity ->
+                host.ads.windowFocusChanged(activity.hasWindowFocus())
+                assertTrue(host.model.state.value.prepared)
+                assertTrue(host.model.state.value.permissionCompleted)
+                assertFalse(host.model.state.value.consentCompleted)
+                assertEquals(0, requests)
+            }
+            // 等待真实首帧和调度周期，确认可见启动页也不会在同意调用返回前请求开屏。
+            SystemClock.sleep(200)
+            scenario.onActivity {
+                assertEquals(0, requests)
+                assertNull(host.model.consume())
+                host.model.accept(StartupEntry(NotificationDestination.SCREENSHOTS))
+                host.model.consentFinished()
+            }
+            waitUntil {
+                scenario.onActivity { host.ads.windowFocusChanged(it.hasWindowFocus()) }
+                requests == 1
+            }
+            scenario.onActivity {
+                host.model.consentFinished()
+                assertNull(host.model.beginAd())
+                complete(false)
+                complete(true)
+            }
+            waitUntil {
+                var ready = false
+                scenario.onActivity { ready = host.model.state.value.ready }
+                ready
+            }
+            scenario.onActivity {
+                assertEquals(1, requests)
+                assertEquals(NotificationDestination.SCREENSHOTS, host.model.consume()?.destination)
+                assertNull(host.model.consume())
+            }
+        }
+    }
+
     private data class Host(
         val model: StartupViewModel,
         val ads: StartupAdCoordinator,
@@ -213,6 +267,7 @@ class StartupAdCoordinatorTest {
     private fun bind(
         activity: AppCompatActivity,
         permissionsComplete: Boolean = true,
+        consentComplete: Boolean = true,
         network: kotlinx.coroutines.flow.Flow<StartupNetworkState> = kotlinx.coroutines.flow.MutableStateFlow(StartupNetworkState.ONLINE),
         cancel: () -> Unit = {},
         onRequestLoaded: ((Boolean) -> Unit) -> Unit = {},
@@ -224,7 +279,10 @@ class StartupAdCoordinatorTest {
                 viewModelFactory {
                     initializer {
                         StartupViewModel(SavedStateHandle()) {}
-                            .also { if (permissionsComplete) it.permissionFinished() }
+                            .also {
+                                if (permissionsComplete) it.permissionFinished()
+                                if (consentComplete) it.consentFinished()
+                            }
                     }
                 },
             )[StartupViewModel::class.java]

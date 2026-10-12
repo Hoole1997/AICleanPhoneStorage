@@ -1,0 +1,3 @@
+10-12 17:53:47.990 13301 13301 D CleanAds: Startup consent: started
+10-12 17:53:47.996 13301 13301 D CleanAds: Startup consent: completed
+10-12 17:53:48.022 13301 13301 D CleanAds: Startup splash: requested id=1

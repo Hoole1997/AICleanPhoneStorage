@@ -11,6 +11,73 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class StartupViewModelTest {
     @Test
+    fun consentInvocationMustFinishBeforeRequestAndKeepsNotificationArrivingWhileSuspended() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        try {
+            val vm = StartupViewModel(SavedStateHandle(), clock = { testScheduler.currentTime }) {}
+            vm.accept(StartupEntry(NotificationDestination.NETWORK))
+            vm.permissionFinished()
+            runCurrent()
+            // 语言、通知权限已结束以及长时间等待都不能越过尚未返回的挂起调用。
+            advanceTimeBy(30_000)
+            runCurrent()
+            assertTrue(vm.state.value.prepared)
+            assertTrue(vm.state.value.permissionCompleted)
+            assertFalse(vm.canRequestAd())
+            assertNull(vm.beginAd())
+            assertNull(vm.consume())
+
+            vm.accept(StartupEntry(NotificationDestination.LARGE_FILES))
+            vm.consentFinished()
+            val request = requireNotNull(vm.beginAd())
+            vm.consentFinished() // SDK 重复结束通知不能创建第二次广告或提前结束当前请求。
+            assertNull(vm.beginAd())
+            assertFalse(vm.state.value.ready)
+            vm.adFinished(request)
+            advanceTimeBy(2_999)
+            runCurrent()
+            assertNull(vm.consume())
+            advanceTimeBy(1)
+            runCurrent()
+            assertEquals(NotificationDestination.LARGE_FILES, vm.consume()?.destination)
+            assertNull(vm.consume())
+
+            // 同一个保留的 ViewModel 接收下一次入口时保留已结束的调用，不再次阻塞广告。
+            vm.accept(StartupEntry(NotificationDestination.CLEAN))
+            assertTrue(vm.state.value.consentCompleted)
+            assertNotNull(vm.beginAd())
+        } finally {
+            Dispatchers.resetMain()
+        }
+    }
+
+    @Test
+    fun freshProcessRestoreKeepsPendingRouteButRequiresNewConsentInvocation() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        try {
+            val saved = SavedStateHandle()
+            val original = StartupViewModel(saved, clock = { testScheduler.currentTime }) {}
+            original.accept(StartupEntry(NotificationDestination.SCREENSHOTS))
+            original.permissionFinished()
+            original.consentFinished()
+            runCurrent()
+            assertNotNull(original.beginAd())
+
+            val copy = SavedStateHandle(saved.keys().associateWith { saved.get<Any?>(it) })
+            val restored = StartupViewModel(copy, clock = { testScheduler.currentTime }) {}
+            restored.permissionFinished()
+            runCurrent()
+            assertEquals(NotificationDestination.SCREENSHOTS, restored.entry().destination)
+            assertFalse(restored.state.value.consentCompleted)
+            assertNull(restored.beginAd())
+            restored.consentFinished()
+            assertNotNull(restored.beginAd())
+        } finally {
+            Dispatchers.resetMain()
+        }
+    }
+
+    @Test
     fun notificationSnapshotSurvivesRecreationAndIsReplacedByNextEntry() = runTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         try {
@@ -39,6 +106,7 @@ class StartupViewModelTest {
             val restored = StartupViewModel(SavedStateHandle(saved.keys().associateWith { saved.get<Any?>(it) }), clock = { testScheduler.currentTime }) {}
             assertTrue(restored.entry().hotStart)
             restored.permissionFinished()
+            restored.consentFinished()
             runCurrent()
             val request = requireNotNull(restored.beginAd())
             restored.adFinished(request)
@@ -58,7 +126,7 @@ class StartupViewModelTest {
         try {
             val vm =
                 StartupViewModel(SavedStateHandle(), clock = { testScheduler.currentTime }) {}
-                    .also { it.permissionFinished() }
+                    .also { it.permissionFinished(); it.consentFinished() }
             vm.accept(StartupEntry(NotificationDestination.NETWORK))
             runCurrent()
             val request = requireNotNull(vm.beginAd())
@@ -83,7 +151,7 @@ class StartupViewModelTest {
         try {
             val vm =
                 StartupViewModel(SavedStateHandle(), clock = { testScheduler.currentTime }) {}
-                    .also { it.permissionFinished() }
+                    .also { it.permissionFinished(); it.consentFinished() }
             vm.accept(StartupEntry(NotificationDestination.HOME))
             runCurrent()
             val request = requireNotNull(vm.beginAd())
@@ -112,7 +180,7 @@ class StartupViewModelTest {
         try {
             val vm =
                 StartupViewModel(SavedStateHandle(), clock = { testScheduler.currentTime }) {}
-                    .also { it.permissionFinished() }
+                    .also { it.permissionFinished(); it.consentFinished() }
             vm.accept(StartupEntry(NotificationDestination.CLEAN))
             runCurrent()
             val request = requireNotNull(vm.beginAd())
@@ -136,7 +204,7 @@ class StartupViewModelTest {
         try {
             val vm =
                 StartupViewModel(SavedStateHandle(), clock = { testScheduler.currentTime }) {}
-                    .also { it.permissionFinished() }
+                    .also { it.permissionFinished(); it.consentFinished() }
             val store = ViewModelStore().apply { put("startup", vm) }
             runCurrent()
             vm.adFinished(requireNotNull(vm.beginAd()))
@@ -160,7 +228,7 @@ class StartupViewModelTest {
                 StartupViewModel(SavedStateHandle(), clock = { testScheduler.currentTime }) {
                         preparation.await()
                     }
-                    .also { it.permissionFinished() }
+                    .also { it.permissionFinished(); it.consentFinished() }
             runCurrent()
             assertNull(vm.beginAd())
             preparation.complete(Unit)
@@ -180,7 +248,7 @@ class StartupViewModelTest {
                 StartupViewModel(SavedStateHandle(), clock = { testScheduler.currentTime }) {
                         throw java.io.IOException()
                     }
-                    .also { it.permissionFinished() }
+                    .also { it.permissionFinished(); it.consentFinished() }
             runCurrent()
             assertFalse(vm.state.value.ready)
             vm.adFinished(requireNotNull(vm.beginAd()))
@@ -199,7 +267,7 @@ class StartupViewModelTest {
         try {
             val vm =
                 StartupViewModel(SavedStateHandle(), clock = { testScheduler.currentTime }) {}
-                    .also { it.permissionFinished() }
+                    .also { it.permissionFinished(); it.consentFinished() }
             vm.accept(StartupEntry(NotificationDestination.PHOTOS))
             runCurrent()
             val request = requireNotNull(vm.beginAd())
@@ -229,14 +297,14 @@ class StartupViewModelTest {
             val saved = SavedStateHandle()
             val first =
                 StartupViewModel(saved, clock = { testScheduler.currentTime }) {}
-                    .also { it.permissionFinished() }
+                    .also { it.permissionFinished(); it.consentFinished() }
             first.accept(StartupEntry(NotificationDestination.UNUSED_FILES))
             runCurrent()
             first.beginAd()
             val copy = SavedStateHandle(saved.keys().associateWith { saved.get<Any?>(it) })
             val restored =
                 StartupViewModel(copy, clock = { testScheduler.currentTime }) {}
-                    .also { it.permissionFinished() }
+                    .also { it.permissionFinished(); it.consentFinished() }
             runCurrent()
             assertEquals(NotificationDestination.UNUSED_FILES, restored.entry().destination)
             assertFalse(restored.state.value.ready)
@@ -252,7 +320,7 @@ class StartupViewModelTest {
         try {
             val vm =
                 StartupViewModel(SavedStateHandle(), clock = { testScheduler.currentTime }) {}
-                    .also { it.permissionFinished() }
+                    .also { it.permissionFinished(); it.consentFinished() }
             val store = ViewModelStore().apply { put("startup", vm) }
             runCurrent()
             val request = requireNotNull(vm.beginAd())
@@ -270,6 +338,7 @@ class StartupViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         try {
             val vm = StartupViewModel(SavedStateHandle(), clock = { testScheduler.currentTime }) {}
+            vm.consentFinished()
             vm.accept(StartupEntry(NotificationDestination.NETWORK))
             runCurrent()
             advanceTimeBy(10_000)
@@ -296,6 +365,7 @@ class StartupViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         try {
             val vm = StartupViewModel(SavedStateHandle(), clock = { testScheduler.currentTime }) {}
+            vm.consentFinished()
             vm.accept(StartupEntry(NotificationDestination.NETWORK))
             runCurrent()
             // 模拟多次拒绝和系统设置页内停留；此时广告尚未请求。

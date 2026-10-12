@@ -9,6 +9,9 @@ import com.android.common.bill.BillConfig.gam
 import com.android.common.bill.BillConfig.gamFullScreenNativeRenderer
 import com.android.common.bill.BillConfig.gamNativeRenderer
 import com.android.common.bill.BillConfig.googleMobileAds
+import com.android.common.bill.BillConfig.max
+import com.android.common.bill.BillConfig.maxFullScreenNativeRenderer
+import com.android.common.bill.BillConfig.maxNativeRenderer
 import com.android.common.bill.BillConfig.pangle
 import com.android.common.bill.BillConfig.pangleFullScreenNativeRenderer
 import com.android.common.bill.BillConfig.pangleNativeRenderer
@@ -16,6 +19,7 @@ import com.android.common.bill.BillConfig.topon
 import com.android.common.bill.BillConfig.toponFullScreenNativeRenderer
 import com.android.common.bill.BillConfig.toponNativeRenderer
 import com.android.common.bill.ui.NativeAdStyle
+import com.android.common.bill.ui.max.MaxNativeAdStyle
 import com.android.common.bill.ui.pangle.PangleNativeAdStyle
 import com.android.common.bill.ui.topon.ToponNativeAdStyle
 import com.example.aicleanphonestorage.BuildConfig
@@ -25,6 +29,8 @@ import com.example.aicleanphonestorage.app.ad.renderer.DefaultAdmobFullScreenNat
 import com.example.aicleanphonestorage.app.ad.renderer.DefaultAdmobNativeAdRenderer
 import com.example.aicleanphonestorage.app.ad.renderer.DefaultGamFullScreenNativeAdRenderer
 import com.example.aicleanphonestorage.app.ad.renderer.DefaultGamNativeAdRenderer
+import com.example.aicleanphonestorage.app.ad.renderer.DefaultMaxFullScreenNativeAdRenderer
+import com.example.aicleanphonestorage.app.ad.renderer.DefaultMaxNativeAdRenderer
 import com.example.aicleanphonestorage.app.ad.renderer.DefaultPangleFullScreenNativeAdRenderer
 import com.example.aicleanphonestorage.app.ad.renderer.DefaultPangleNativeAdRenderer
 import com.example.aicleanphonestorage.app.ad.renderer.DefaultToponFullScreenNativeAdRenderer
@@ -87,6 +93,21 @@ internal object AdConfiguration {
             146
         ),
     )
+        max = BillConfig.MaxConfig(
+            sdkKey = BuildConfig.MAX_SDK_KEY,
+            splashId = BuildConfig.MAX_SPLASH_ID,
+            interstitialId = BuildConfig.MAX_INTERSTITIAL_ID,
+            rewardedId = BuildConfig.MAX_REWARDED_ID,
+            nativeId = BuildConfig.MAX_NATIVE_ID,
+            fullNativeId = BuildConfig.MAX_FULL_NATIVE_ID,
+            bannerId = BuildConfig.MAX_BANNER_ID,
+            nativeStyleStandard = MaxNativeAdStyle(
+                R.layout.layout_native_ad_max,
+            ),
+            nativeStyleLarge = MaxNativeAdStyle(
+                R.layout.layout_native_ad_max_large
+            )
+        )
     admobNativeRenderer = DefaultAdmobNativeAdRenderer()
     admobFullScreenNativeRenderer = DefaultAdmobFullScreenNativeAdRenderer()
     gamNativeRenderer = DefaultGamNativeAdRenderer()
@@ -95,6 +116,9 @@ internal object AdConfiguration {
     pangleFullScreenNativeRenderer = DefaultPangleFullScreenNativeAdRenderer()
     toponNativeRenderer = DefaultToponNativeAdRenderer()
     toponFullScreenNativeRenderer = DefaultToponFullScreenNativeAdRenderer()
+    // MAX 由 style 选择普通/大卡资源，全屏原生使用独立媒体布局；资源不跨广告平台混用。
+    maxNativeRenderer = DefaultMaxNativeAdRenderer()
+    maxFullScreenNativeRenderer = DefaultMaxFullScreenNativeAdRenderer()
     adLoadingDialogRenderer = DefaultAdLoadingDialogRenderer()
     }
 

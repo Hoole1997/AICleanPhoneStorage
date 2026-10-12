@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <!-- 来源：Remax_Browser/layout_max_full_screen_native_ads.xml。SDK 宿主负责系统 inset 与关闭按钮。 -->
+    <!-- 广告归属标签独立于右侧隐私选项；不注册为 MAX 点击资产，正文从标签下方自然排布。 -->
+    <com.android.common.bill.ui.view.AdLabelView
+        android:id="@+id/tv_ad_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/task_ad_label"
+        android:importantForAccessibility="yes"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 顶部内容区域 -->
+    <LinearLayout
+        android:id="@+id/content_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:paddingEnd="40dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_ad_label">
+
+        <!-- 应用图标 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:id="@+id/iv_ad_icon"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:contentDescription="@null"
+                android:importantForAccessibility="no"
+                android:scaleType="centerCrop"
+                tools:src="@android:drawable/ic_menu_gallery" />
+        </androidx.cardview.widget.CardView>
+
+        <!-- 标题和描述 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_ad_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="广告标题" />
+
+            <TextView
+                android:id="@+id/tv_ad_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:textColor="#CCCCCC"
+                android:textSize="14sp"
+                tools:text="广告描述内容" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- 媒体只使用正文与 CTA 之间的剩余空间；标签/大字使正文增高时不以固定比例覆盖资产。 -->
+    <FrameLayout
+        android:id="@+id/fl_media_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_ad_cta"
+        app:layout_constraintTop_toBottomOf="@id/content_top" />
+
+    <!-- 广告选项容器(隐私图标) -->
+    <FrameLayout
+        android:id="@+id/fl_ad_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 底部CTA按钮 -->
+    <Button
+        android:id="@+id/btn_ad_cta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/bg_ad_cta_button"
+        android:gravity="center"
+        android:minWidth="0dp"
+        android:minHeight="50dp"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="INSTALL" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

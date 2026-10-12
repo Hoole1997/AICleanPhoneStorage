@@ -13,7 +13,7 @@ import com.example.aicleanphonestorage.app.ad.loadSplash
 import com.example.aicleanphonestorage.app.ad.HotStartAdLog
 import kotlinx.coroutines.launch
 
-/** 等启动页可见、语言准备完成后调用用户提供的 loadSplash；SDK 管理加载、展示和失败规则。 */
+/** 等启动页可见、语言/权限准备及 consent 调用结束后请求 loadSplash；SDK 管理广告结果。 */
 internal class StartupAdCoordinator(
     private val activity: AppCompatActivity,
     private val root: View,
@@ -36,6 +36,7 @@ internal class StartupAdCoordinator(
         scheduled = false
         if (canShow()) {
             val id = model.beginAd() ?: return@Runnable
+            android.util.Log.d("CleanAds", "Startup splash: requested id=$id")
             // 回调只捕获 ViewModel 和请求编号，旋转后的新 Activity 可续接，彻底退出后忽略迟到回调。
             val state = model
             val hot = state.entry().hotStart

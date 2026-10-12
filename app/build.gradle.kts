@@ -123,11 +123,11 @@ dependencies {
     implementation(files("libs/cloudscan_sdk_5.0.18.20250821.aar"))
     implementation("com.google.android.play:review:2.0.2")
     implementation(libs.lottie)
+
     implementation("com.github.toukaremax:core:1.0.15")
-    implementation("com.github.toukaremax:bill:1.0.52") {
-        // 保留 Unity Mediation 9.2.0，排除旧 IronSource 坐标，避免同包类冲突。
-        exclude(group = "com.ironsource.sdk", module = "mediationsdk")
-    }
+    implementation("com.github.toukaremax:bill:support_risk_1.0.10")
+    implementation("com.github.toukaremax:ad-risk:1.0.8")
+
     implementation(platform(libs.firebase.bom))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-config")

@@ -18,6 +18,7 @@ class StartupOfflineTest {
         try {
             vm.accept(StartupEntry(NotificationDestination.SCREENSHOTS))
             vm.permissionFinished()
+            vm.consentFinished()
             vm.visibilityChanged(true)
             runCurrent()
             block(vm)

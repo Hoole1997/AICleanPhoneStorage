@@ -5,7 +5,8 @@
 - 独立 `StartupActivity` 为唯一 Launcher；AndroidX SplashScreen 1.2.0 衔接系统启动画面；系统 SplashScreen 图标直接使用与 Manifest 相同的 `@mipmap/ic_launcher`。
 - 常驻通知 PendingIntent 指向启动页；notification 模块使用系统 Launcher 解析，因此普通通知自动进入启动页，无需修改模块逻辑。
 - 旧版本仍指向 MainActivity 的通知也会先转启动页。启动页只传递白名单目标，结束后进入首页，再由首页执行既有权限和业务跳转。
-- `StartupAdCoordinator` 在语言恢复完成、启动页 RESUMED 且取得焦点、绘制首帧后调用 `AdExt.loadSplash(positionName = "splash")`。联网时由 SDK 控制加载、展示及失败，`call` 回调后放行：广告请求不足 3 秒时等待剩余时间。按用户 2026-09-15 要求，仅启动页增加连续断网 3 秒的等待上限，其他广告加载、扫描、清理和压缩流程不变。
+- `StartupAdCoordinator` 在语言恢复、通知权限及 Google consent 调用完成，且启动页 RESUMED、取得焦点并绘制首帧后调用 `AdExt.loadSplash(positionName = "splash")`。联网时由 SDK 控制加载、展示及失败，`call` 回调后放行：广告请求不足 3 秒时等待剩余时间。按用户 2026-09-15 要求，仅启动页增加连续断网 3 秒的等待上限，其他广告加载、扫描、清理和压缩流程不变。
+- 2026-10-12：启动页在 `lifecycleScope` 调用 `GoogleMobileAdsConsentManager.getInstance(applicationContext)`、挂起的 `gatherConsent(this@StartupActivity)`。只等待调用结束，不读取或判断 Boolean 返回值；`consentCompleted` 仅是本次流程完成标记，不是用户已同意。SDK 异常结束记录日志后继续原流程；销毁/取消不放行迟到回调。完成标志留在 ViewModel 防止配置重建重复调用，进程重建重新调用，不写入 SavedState 或自行持久化授权。失焦可能来自 SDK 弹层，不在 repeatOnLifecycle 内反复调用。
 - `StartupNetworkMonitor` 使用默认网络回调，只有系统确认无可用互联网（含未验证网络或网络被阻止）时视为离线；查询失败为未知，不误判断网。只在启动页 RESUMED 时监听，离开即注销。联网恢复或页面退后台取消离线计时；返回后按新的网络状态重新计时。系统权限流程保持正常完成，不被网络超时跳过。
 - 离线超时先失效请求编号，取消本页开屏请求协程并关闭其 SDK loading，再允许消费原定路由。迟到回调忽略。SDK 已报告广告加载成功时停止离线计时，已加载/展示的广告正常结束。应用级 SDK 初始化不受影响。
 - 底部使用 Material 原生循环进度条，不填充 0–100、不显示虚构百分比；后台、广告覆盖或失去焦点时停止动画。关闭系统动画/省电/触控探索时保留静态加载段和 Loading 文案。

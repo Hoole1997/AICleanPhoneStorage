@@ -134,7 +134,9 @@ class HotStartAdDeviceTest {
                     startups++
                     activity.lifecycleScope.launch {
                         val model = ViewModelProvider(activity)[StartupViewModel::class.java]
-                        model.state.first { it.prepared && it.permissionCompleted }
+                        // 此用例只验证热启动交接；模拟同意流程已返回，避免触发真实 UMP 窗口。
+                        model.consentFinished()
+                        model.state.first { it.prepared && it.permissionCompleted && it.consentCompleted }
                         val id = model.beginAd()
                         if (id == null) injectionFailure = "Expected fake request before first draw"
                         else { requests++; callback = { model.adFinished(id) } }
