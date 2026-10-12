@@ -4,7 +4,7 @@ Figma `dVsTL6ggoDPXVPcEKg856G`：首页入口 [6562:1177](https://www.figma.com/
 
 ## 流程
 
-首页 SpeedTest 卡片（红点角标，远程字段 `speed_test`）→ 直接打开 `SpeedTestActivity`（无首页授权/加载步骤，打开即计为当日已进入）→ 页面进入前台自动测速 → 结果页 Test Again 可重测。
+首页 SpeedTest 卡片（红点角标，受统一开关 `home_badge_switch` 控制）→ 直接打开 `SpeedTestActivity`（无首页授权/加载步骤，打开即计为当日已进入）→ 页面进入前台自动测速 → 结果页 Test Again 可重测。
 
 - 测速中离开前台立即取消全部连接，回到前台重新完整测一次，不在后台消耗流量与电量。
 - 失败弹框：无网络显示 “No internet connection.”，其他错误（服务端错误、超时等）显示通用失败文案。Retry 重测；Cancel 有上一次成功结果则回到结果，否则关闭页面。

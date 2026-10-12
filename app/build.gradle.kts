@@ -157,7 +157,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.org.json)
     testImplementation(libs.mockwebserver)
     androidTestImplementation(platform(libs.firebase.bom))
     androidTestImplementation(libs.firebase.messaging)

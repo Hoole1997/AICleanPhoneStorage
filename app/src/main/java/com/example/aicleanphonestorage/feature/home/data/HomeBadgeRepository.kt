@@ -28,27 +28,39 @@ import net.corekit.core.utils.ConfigRemoteManager
 
 private val Context.homeBadgeDataStore by preferencesDataStore("home_badges")
 
-/** 远程默认开关来源；生产实现只经 ConfigRemoteManager 读取，测试注入假实现。 */
+/** 远程统一开关来源；生产实现只经 ConfigRemoteManager 读取，测试注入假实现。 */
 interface HomeBadgeRemoteSource {
     /** 本进程 Remote Config 是否已拉取并激活成功。 */
     fun ready(): Boolean
 
-    /** 读取 `home_badge_switch` 原始 JSON；可能挂起等待初始化（库内上限 30s），失败返回 null。 */
-    suspend fun read(): String?
+    /** 读取统一开关；可能挂起等待初始化（库内上限 30s）。未下发、未就绪或读取失败返回 null，按默认值处理。 */
+    suspend fun enabled(): Boolean?
 }
 
+/**
+ * Remote Config `home_badge_switch`：Boolean，通过 ConfigRemoteManager.getBoolean 读取，默认 true。
+ *
+ * 注意：参数未在后台下发时，ConfigRemoteManager.getBoolean 返回 Firebase 静态默认值 false
+ * （默认参数只在异常时生效），会把“未配置”误判为关闭。因此先用同一管理类的 getString
+ * 判断是否已下发（未下发为空串），已下发才用 getBoolean 取值。
+ */
 object FirebaseHomeBadgeRemoteSource : HomeBadgeRemoteSource {
+    const val REMOTE_KEY = "home_badge_switch"
+    const val DEFAULT_ENABLED = true
+
     override fun ready(): Boolean = ConfigRemoteManager.isInitialized()
 
-    override suspend fun read(): String? =
+    override suspend fun enabled(): Boolean? =
         // 首次 getValue 可能同步读取 Remote Config 磁盘缓存，必须离开主线程。
         withContext(Dispatchers.IO) {
             try {
-                ConfigRemoteManager.getString(HomeBadgeSwitch.REMOTE_KEY, "")
+                // 未初始化超时时 getString 实际返回 null，按可空接收。
+                val raw: String? = ConfigRemoteManager.getString(REMOTE_KEY, "")
+                if (raw.isNullOrEmpty()) null else ConfigRemoteManager.getBoolean(REMOTE_KEY, DEFAULT_ENABLED)
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (error: Exception) {
-                Log.w(TAG, "Remote badge switch unavailable; using local defaults", error)
+                Log.w(TAG, "Remote badge switch unavailable; using default", error)
                 null
             }
         }
@@ -57,7 +69,7 @@ object FirebaseHomeBadgeRemoteSource : HomeBadgeRemoteSource {
 }
 
 /**
- * 首页入口角标状态 = 远程默认开关 - 当日已真正进入的功能。
+ * 首页入口角标状态 = 远程统一开关（默认开启）且当日未真正进入该功能。
  *
  * - 日期使用设备本地时区的 epochDay；不设定时器，由首页 onResume 调用 [refreshDay]，
  *   跨过 0 点后旧记录自然失效，全部角标恢复到远程/本地默认值。
@@ -103,8 +115,8 @@ class HomeBadgeRepository internal constructor(
     }
 
     fun observeVisible(): Flow<Set<HomeBadge>> =
-        combine(day, recent, storedVisits(), remoteDisabled()) { date, memory, stored, disabled ->
-            visibleHomeBadges(date, disabled, memory, stored)
+        combine(day, recent, storedVisits(), remoteEnabled()) { date, memory, stored, enabled ->
+            visibleHomeBadges(date, enabled, memory, stored)
         }.distinctUntilChanged()
 
     private fun storedVisits(): Flow<HomeBadgeVisits> =
@@ -117,13 +129,13 @@ class HomeBadgeRepository internal constructor(
                 )
             }
 
-    private fun remoteDisabled(): Flow<Set<HomeBadge>> = flow {
-        // 已就绪时直接读取（毫秒级），避免先按本地策略显示再被远程关闭造成闪烁；
-        // 未就绪（首装弱网/拉取失败）先按本地策略全部显示，就绪后再以远程值覆盖。
+    private fun remoteEnabled(): Flow<Boolean> = flow {
+        // 已就绪时直接读取（毫秒级），避免先按默认值显示再被远程关闭造成闪烁；
+        // 未就绪（首装弱网/拉取失败）先按默认值显示，就绪后再以远程值覆盖。
         val ready = remote.ready()
-        if (!ready) emit(emptySet())
-        val raw = remote.read()
-        if (raw != null) emit(HomeBadgeSwitch.disabled(raw)) else if (ready) emit(emptySet())
+        if (!ready) emit(FirebaseHomeBadgeRemoteSource.DEFAULT_ENABLED)
+        val value = remote.enabled()
+        if (value != null) emit(value) else if (ready) emit(FirebaseHomeBadgeRemoteSource.DEFAULT_ENABLED)
     }
 
     private companion object {

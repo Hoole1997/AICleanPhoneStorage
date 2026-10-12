@@ -5,9 +5,11 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature
 import com.example.aicleanphonestorage.feature.home.data.HomeBadge
+import com.example.aicleanphonestorage.feature.home.data.FirebaseHomeBadgeRemoteSource
 import com.example.aicleanphonestorage.feature.home.data.HomeBadgeRemoteSource
+import com.example.aicleanphonestorage.feature.home.data.HomeBadgeVisits
+import com.example.aicleanphonestorage.feature.home.data.visibleHomeBadges
 import com.example.aicleanphonestorage.feature.home.data.HomeBadgeRepository
-import com.example.aicleanphonestorage.feature.home.data.HomeBadgeSwitch
 import java.io.File
 import java.nio.file.Files
 import kotlinx.coroutines.CompletableDeferred
@@ -23,6 +25,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -34,13 +37,10 @@ class HomeBadgeTest {
         folder.deleteRecursively()
     }
 
-    private class FakeRemote(private val ready: Boolean = true, private val json: String? = "") : HomeBadgeRemoteSource {
-        val gate = CompletableDeferred(Unit)
+    /** [value] 为 null 表示参数未下发/读取失败，按默认值 true 处理。 */
+    private class FakeRemote(private val ready: Boolean = true, private val value: Boolean? = null) : HomeBadgeRemoteSource {
         override fun ready() = ready
-        override suspend fun read(): String? {
-            gate.await()
-            return json
-        }
+        override suspend fun enabled(): Boolean? = value
     }
 
     /** 一个实例代表一次进程生命周期；同一文件上先 [kill] 再新建，模拟杀进程后重新进入。 */
@@ -63,17 +63,14 @@ class HomeBadgeTest {
     }
 
     @Test
-    fun `missing invalid or non-boolean remote fields fall back to showing`() {
-        assertEquals(emptySet<HomeBadge>(), HomeBadgeSwitch.disabled(null))
-        assertEquals(emptySet<HomeBadge>(), HomeBadgeSwitch.disabled(""))
-        assertEquals(emptySet<HomeBadge>(), HomeBadgeSwitch.disabled("not json"))
-        assertEquals(emptySet<HomeBadge>(), HomeBadgeSwitch.disabled("[false]"))
-        assertEquals(emptySet<HomeBadge>(), HomeBadgeSwitch.disabled("""{"videos":0,"smart_clean":null}"""))
-        assertEquals(emptySet<HomeBadge>(), HomeBadgeSwitch.disabled("{\"videos\":false" + " ".repeat(5000) + "}"))
-        assertEquals(
-            setOf(HomeBadge.Videos, HomeBadge.MalwareScan, HomeBadge.SpeedTest),
-            HomeBadgeSwitch.disabled("""{"videos":false,"malware_scan":"false","smart_clean":true,"speed_test":false,"unknown":false}"""),
-        )
+    fun `unified switch defaults to showing and false hides every badge`() {
+        val entered = HomeBadgeVisits(5, setOf(HomeBadge.Videos))
+        assertEquals(all - HomeBadge.Videos, visibleHomeBadges(5, true, entered))
+        assertEquals(emptySet<HomeBadge>(), visibleHomeBadges(5, false, entered))
+        // 跨天后记录失效，开关开启时全部恢复。
+        assertEquals(all, visibleHomeBadges(6, true, entered))
+        assertEquals("home_badge_switch", FirebaseHomeBadgeRemoteSource.REMOTE_KEY)
+        assertTrue(FirebaseHomeBadgeRemoteSource.DEFAULT_ENABLED)
     }
 
     @Test
@@ -126,23 +123,20 @@ class HomeBadgeTest {
     }
 
     @Test
-    fun `remote switch hides defaults and entered state still applies`() = runTest(UnconfinedTestDispatcher()) {
-        val remote = FakeRemote(json = """{"network_traffic":false,"videos":false}""")
-        val repo = AppProcess(backgroundScope, remote) { 1L }.badges
-        assertEquals(all - HomeBadge.NetworkTraffic - HomeBadge.Videos, repo.observeVisible().first())
-        repo.markEntered(HomeBadge.SimilarPhotos)
-        assertEquals(
-            all - HomeBadge.NetworkTraffic - HomeBadge.Videos - HomeBadge.SimilarPhotos,
-            repo.observeVisible().first(),
-        )
+    fun `remote switch off hides all badges and on keeps the entered rule`() = runTest(UnconfinedTestDispatcher()) {
+        val off = AppProcess(backgroundScope, FakeRemote(value = false), "off.preferences_pb") { 1L }.badges
+        assertEquals(emptySet<HomeBadge>(), off.observeVisible().first())
+        val on = AppProcess(backgroundScope, FakeRemote(value = true), "on.preferences_pb") { 1L }.badges
+        on.markEntered(HomeBadge.SimilarPhotos)
+        assertEquals(all - HomeBadge.SimilarPhotos, on.observeVisible().first())
     }
 
     @Test
     fun `remote not ready shows local defaults first then applies remote value`() = runTest(UnconfinedTestDispatcher()) {
-        val remote = FakeRemote(ready = false, json = """{"smart_clean":false}""")
+        val remote = FakeRemote(ready = false, value = false)
         val pending = CompletableDeferred<Unit>()
         val gated = object : HomeBadgeRemoteSource by remote {
-            override suspend fun read(): String? { pending.await(); return remote.read() }
+            override suspend fun enabled(): Boolean? { pending.await(); return remote.enabled() }
         }
         val repo = AppProcess(backgroundScope, gated) { 1L }.badges
         val states = mutableListOf<Set<HomeBadge>>()
@@ -150,14 +144,14 @@ class HomeBadgeTest {
         assertEquals(listOf(all), states)
         pending.complete(Unit)
         job.join()
-        assertEquals(listOf(all, all - HomeBadge.SmartClean), states)
+        assertEquals(listOf(all, emptySet()), states)
     }
 
     @Test
     fun `remote initialization failure keeps local defaults`() = runTest(UnconfinedTestDispatcher()) {
-        val unavailable = AppProcess(backgroundScope, FakeRemote(ready = false, json = null), "a.preferences_pb") { 1L }
+        val unavailable = AppProcess(backgroundScope, FakeRemote(ready = false, value = null), "a.preferences_pb") { 1L }
         assertEquals(all, unavailable.badges.observeVisible().first())
-        val failedRead = AppProcess(backgroundScope, FakeRemote(ready = true, json = null), "b.preferences_pb") { 1L }
+        val failedRead = AppProcess(backgroundScope, FakeRemote(ready = true, value = null), "b.preferences_pb") { 1L }
         assertEquals(all, failedRead.badges.observeVisible().first())
     }
 }
