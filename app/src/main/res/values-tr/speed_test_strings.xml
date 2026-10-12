@@ -1,0 +1,21 @@
+<resources>
+    <string name="home_tool_speed_test">Hız Testi</string>
+    <string name="speed_test_subtitle">Hızlı mı, yavaş mı?</string>
+    <string name="speed_test_title">Hız Testi</string>
+    <string name="speed_test_download">İndirme</string>
+    <string name="speed_test_upload">Yükleme</string>
+    <string name="speed_test_ping">Ping</string>
+    <string name="speed_test_download_jitter">İndirme Jitter</string>
+    <string name="speed_test_upload_jitter">Yükleme Jitter</string>
+    <string name="speed_test_again">Tekrar test et</string>
+    <string name="speed_test_id">Test kimliği %1$s</string>
+    <string name="speed_test_no_internet">İnternet bağlantısı yok.</string>
+    <string name="speed_test_failed">Hız testi başarısız oldu. Lütfen tekrar deneyin.</string>
+    <string name="speed_test_phase_connecting">Sunucuya bağlanılıyor…</string>
+    <string name="speed_test_phase_latency">Ping ölçülüyor…</string>
+    <string name="speed_test_phase_download">İndirme hızı test ediliyor…</string>
+    <string name="speed_test_phase_upload">Yükleme hızı test ediliyor…</string>
+    <string name="speed_test_network_cellular">Mobil ağ</string>
+    <string name="speed_test_network_other">Ağ</string>
+    <string name="speed_test_node">Düğüm %1$s</string>
+</resources>

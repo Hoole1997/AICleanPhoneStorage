@@ -1,0 +1,7 @@
+<resources>
+    <!-- 单位与品牌名在各语言保持一致，不参与翻译。 -->
+    <string name="speed_test_unit_speed" translatable="false">KB/s</string>
+    <string name="speed_test_unit_ms" translatable="false">ms</string>
+    <string name="speed_test_network_wifi" translatable="false">Wi-Fi</string>
+    <string name="speed_test_network_ethernet" translatable="false">Ethernet</string>
+</resources>

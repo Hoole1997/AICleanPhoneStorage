@@ -1,0 +1,21 @@
+<resources>
+    <string name="home_tool_speed_test">Test de velocidad</string>
+    <string name="speed_test_subtitle">¿Rápida o lenta?</string>
+    <string name="speed_test_title">Test de velocidad</string>
+    <string name="speed_test_download">Descarga</string>
+    <string name="speed_test_upload">Subida</string>
+    <string name="speed_test_ping">Ping</string>
+    <string name="speed_test_download_jitter">Jitter de descarga</string>
+    <string name="speed_test_upload_jitter">Jitter de subida</string>
+    <string name="speed_test_again">Volver a probar</string>
+    <string name="speed_test_id">ID de prueba %1$s</string>
+    <string name="speed_test_no_internet">Sin conexión a internet.</string>
+    <string name="speed_test_failed">La prueba de velocidad falló. Inténtalo de nuevo.</string>
+    <string name="speed_test_phase_connecting">Conectando con el servidor…</string>
+    <string name="speed_test_phase_latency">Midiendo el ping…</string>
+    <string name="speed_test_phase_download">Probando la velocidad de descarga…</string>
+    <string name="speed_test_phase_upload">Probando la velocidad de subida…</string>
+    <string name="speed_test_network_cellular">Red móvil</string>
+    <string name="speed_test_network_other">Red</string>
+    <string name="speed_test_node">Nodo %1$s</string>
+</resources>

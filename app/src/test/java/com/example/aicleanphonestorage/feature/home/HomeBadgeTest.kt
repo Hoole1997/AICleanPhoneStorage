@@ -71,8 +71,8 @@ class HomeBadgeTest {
         assertEquals(emptySet<HomeBadge>(), HomeBadgeSwitch.disabled("""{"videos":0,"smart_clean":null}"""))
         assertEquals(emptySet<HomeBadge>(), HomeBadgeSwitch.disabled("{\"videos\":false" + " ".repeat(5000) + "}"))
         assertEquals(
-            setOf(HomeBadge.Videos, HomeBadge.MalwareScan),
-            HomeBadgeSwitch.disabled("""{"videos":false,"malware_scan":"false","smart_clean":true,"unknown":false}"""),
+            setOf(HomeBadge.Videos, HomeBadge.MalwareScan, HomeBadge.SpeedTest),
+            HomeBadgeSwitch.disabled("""{"videos":false,"malware_scan":"false","smart_clean":true,"speed_test":false,"unknown":false}"""),
         )
     }
 

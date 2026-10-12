@@ -1,0 +1,21 @@
+<resources>
+    <string name="home_tool_speed_test">속도 테스트</string>
+    <string name="speed_test_subtitle">빠를까, 느릴까?</string>
+    <string name="speed_test_title">속도 테스트</string>
+    <string name="speed_test_download">다운로드</string>
+    <string name="speed_test_upload">업로드</string>
+    <string name="speed_test_ping">핑</string>
+    <string name="speed_test_download_jitter">다운로드 지터</string>
+    <string name="speed_test_upload_jitter">업로드 지터</string>
+    <string name="speed_test_again">다시 테스트</string>
+    <string name="speed_test_id">테스트 ID %1$s</string>
+    <string name="speed_test_no_internet">인터넷에 연결되어 있지 않습니다.</string>
+    <string name="speed_test_failed">속도 테스트에 실패했습니다. 다시 시도해 주세요.</string>
+    <string name="speed_test_phase_connecting">서버에 연결하는 중…</string>
+    <string name="speed_test_phase_latency">핑을 측정하는 중…</string>
+    <string name="speed_test_phase_download">다운로드 속도를 테스트하는 중…</string>
+    <string name="speed_test_phase_upload">업로드 속도를 테스트하는 중…</string>
+    <string name="speed_test_network_cellular">모바일 네트워크</string>
+    <string name="speed_test_network_other">네트워크</string>
+    <string name="speed_test_node">노드 %1$s</string>
+</resources>

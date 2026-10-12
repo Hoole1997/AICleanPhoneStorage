@@ -55,7 +55,8 @@ object HomePreviewSupport {
                 statistics =
                     HomeStatistics(download = "637B/S", available = "87.7GB", used = "31%"),
                 // 角标按 Figma 6562:1177 全部显示，仅用于视觉核对，不读写真实角标记录。
-                tools = HomeTool.entries.map { HomeToolItem(it, "12.5GB", badge = true) },
+                // 有固定描述的入口（Battery Health / Fast or slow?）与稿件一致显示描述，其余显示示例容量。
+                tools = HomeTool.entries.map { HomeToolItem(it, if (it.descriptionRes == null) "12.5GB" else null, badge = true) },
                 malwareBadge = true,
             )
 

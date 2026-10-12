@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Figma 6554:832 / 6554:840：图标 + 标签、数值、单位纵向居中，间距 6dp；文字自然测量高度。
+     两列等高，标签换行时数值与单位仍底部对齐。 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical"
+    android:gravity="center_horizontal" android:focusable="true" android:paddingHorizontal="8dp">
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical">
+        <ImageView android:id="@+id/header_icon" android:layout_width="16dp" android:layout_height="16dp"
+            android:src="@drawable/ic_speed_download" android:importantForAccessibility="no" android:contentDescription="@null" />
+        <com.google.android.material.textview.MaterialTextView android:id="@+id/header_label" style="@style/Widget.Home.Text.Medium"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="6dp"
+            android:textSize="14sp" android:textColor="@color/speed_header_label" android:maxLines="2" android:gravity="center"
+            tools:text="Download" />
+    </LinearLayout>
+    <Space android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
+    <com.google.android.material.textview.MaterialTextView android:id="@+id/header_value" style="@style/Widget.Home.Text.Bold"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp"
+        android:textSize="18sp" android:textColor="@color/home_surface" android:maxLines="1" tools:text="10,554" />
+    <com.google.android.material.textview.MaterialTextView android:id="@+id/header_unit" style="@style/Widget.Home.Text"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp"
+        android:textSize="11sp" android:textColor="@color/speed_header_unit" android:text="@string/speed_test_unit_speed" />
+</LinearLayout>

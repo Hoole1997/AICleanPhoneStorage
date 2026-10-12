@@ -1,0 +1,22 @@
+<resources>
+    <!-- 测网速（Figma 6554:757 / 6554:793 / 6565:1676）与首页入口文案；全部 16 种语言完整翻译。 -->
+    <string name="home_tool_speed_test">SpeedTest</string>
+    <string name="speed_test_subtitle">Fast or slow?</string>
+    <string name="speed_test_title">Speed Test</string>
+    <string name="speed_test_download">Download</string>
+    <string name="speed_test_upload">Upload</string>
+    <string name="speed_test_ping">Ping</string>
+    <string name="speed_test_download_jitter">Download Jitter</string>
+    <string name="speed_test_upload_jitter">Upload Jitter</string>
+    <string name="speed_test_again">Test Again</string>
+    <string name="speed_test_id">Test ID %1$s</string>
+    <string name="speed_test_no_internet">No internet connection.</string>
+    <string name="speed_test_failed">Speed test failed. Please try again.</string>
+    <string name="speed_test_phase_connecting">Connecting to server…</string>
+    <string name="speed_test_phase_latency">Measuring ping…</string>
+    <string name="speed_test_phase_download">Testing download speed…</string>
+    <string name="speed_test_phase_upload">Testing upload speed…</string>
+    <string name="speed_test_network_cellular">Mobile network</string>
+    <string name="speed_test_network_other">Network</string>
+    <string name="speed_test_node">Node %1$s</string>
+</resources>

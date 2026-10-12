@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Figma 6565:1676 异常弹框：315dp 白色卡片（圆角 16、上内边距 65），原版盾牌插画 110×90 悬浮于卡片上方 53dp，
+  投影紧贴插画下方；Cancel/Retry 各 42dp 可见高度，外加 3dp 透明内缩保证 48dp 触控区。
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="53dp"
+        android:orientation="vertical" android:gravity="center_horizontal" android:paddingTop="65dp" android:paddingBottom="21dp"
+        android:paddingHorizontal="16dp" android:background="@drawable/cleanup_confirm_surface">
+        <com.google.android.material.textview.MaterialTextView android:id="@+id/failed_message" style="@style/Widget.Home.Text"
+            android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingHorizontal="26dp"
+            android:gravity="center" android:textSize="18sp" android:textColor="@color/speed_metric_value"
+            tools:text="No internet connection." />
+        <LinearLayout android:id="@+id/failed_actions" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="21dp" android:gravity="center_vertical">
+            <com.google.android.material.button.MaterialButton android:id="@+id/failed_cancel" style="@style/Widget.Traffic.Button"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:minWidth="0dp"
+                android:minHeight="48dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:insetTop="3dp"
+                android:insetBottom="3dp" android:text="@string/cleanup_cancel" android:textColor="@color/speed_metric_label"
+                android:textSize="16sp" app:cornerRadius="100dp" app:backgroundTint="@color/speed_cancel_surface" />
+            <Space android:id="@+id/failed_gap" android:layout_width="13dp" android:layout_height="13dp" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/failed_retry" style="@style/Widget.Traffic.Button"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:minWidth="0dp"
+                android:minHeight="48dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:insetTop="3dp"
+                android:insetBottom="3dp" android:text="@string/traffic_retry" android:textSize="16sp" app:cornerRadius="100dp"
+                app:backgroundTint="@color/speed_action" />
+        </LinearLayout>
+    </LinearLayout>
+    <ImageView android:layout_width="110dp" android:layout_height="90dp" android:layout_gravity="top|center_horizontal"
+        android:src="@drawable/speed_test_failed_shield" android:scaleType="fitCenter"
+        android:importantForAccessibility="no" android:contentDescription="@null" />
+    <ImageView android:layout_width="63dp" android:layout_height="8dp" android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="91dp" android:src="@drawable/speed_test_failed_shadow"
+        android:importantForAccessibility="no" android:contentDescription="@null" />
+</FrameLayout>

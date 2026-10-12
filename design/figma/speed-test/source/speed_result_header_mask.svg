@@ -1,0 +1,36 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="343" height="94" viewBox="0 0 343 94" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Mask group">
+<mask id="mask0_0_23" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="343" height="94">
+<path id="Rectangle 34625326" d="M0 12C0 5.37258 5.37258 0 12 0H331C337.627 0 343 5.37258 343 12V94H0V12Z" fill="url(#paint0_linear_0_23)"/>
+</mask>
+<g mask="url(#mask0_0_23)">
+<g id="Ellipse 2354" filter="url(#filter0_f_0_23)">
+<circle cx="321.5" cy="17.5" r="52.5" fill="#79ABF3" fill-opacity="0.21"/>
+</g>
+<g id="Group 1171275177">
+<mask id="mask1_0_23" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="343" height="94">
+<path id="Rectangle 34625327" d="M0 12C0 5.37258 5.37258 0 12 0H331C337.627 0 343 5.37258 343 12V94H0V12Z" fill="url(#paint1_linear_0_23)"/>
+</mask>
+<g mask="url(#mask1_0_23)">
+<path id="Vector 62" d="M73.5 69.5C50 60 9.16666 55.1667 -15.5 54.5L-25.5 135.5L107.5 115.5H358L368 14.5C359.5 20.3333 325.6 37.9 258 61.5C173.5 91 91.9026 76.9394 73.5 69.5Z" fill="white" fill-opacity="0.12"/>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<filter id="filter0_f_0_23" x="209" y="-95" width="225" height="225" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="30" result="effect1_foregroundBlur_0_23"/>
+</filter>
+<linearGradient id="paint0_linear_0_23" x1="0" y1="47" x2="343" y2="47" gradientUnits="userSpaceOnUse">
+<stop stop-color="#5091F3"/>
+<stop offset="1" stop-color="#4089F3"/>
+</linearGradient>
+<linearGradient id="paint1_linear_0_23" x1="23" y1="47" x2="338" y2="47" gradientUnits="userSpaceOnUse">
+<stop stop-color="#5091F3" stop-opacity="0"/>
+<stop offset="0.480769" stop-color="#488DF3"/>
+<stop offset="1" stop-color="#4089F3" stop-opacity="0"/>
+</linearGradient>
+</defs>
+</svg>

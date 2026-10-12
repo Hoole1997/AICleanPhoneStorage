@@ -1,0 +1,5 @@
+<!-- 指标卡片下半部：白底，仅底部 12dp 圆角，与上方渐变头部拼成一张卡片。 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/home_surface" />
+    <corners android:bottomLeftRadius="12dp" android:bottomRightRadius="12dp" />
+</shape>

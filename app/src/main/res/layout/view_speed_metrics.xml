@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Figma 6554:822：渐变头部（下载/上传）+ 白色底部（Ping/下载抖动/上传抖动），测速中与结果页共用。 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+    <!-- 背景随内容高度拉伸：大字号时头部自然增高，不裁切数值。 -->
+    <LinearLayout android:id="@+id/metrics_header" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:minHeight="94dp" android:background="@drawable/speed_result_header" android:gravity="center_vertical"
+        android:paddingTop="16dp" android:paddingBottom="16dp" android:baselineAligned="false">
+        <include android:id="@+id/metrics_download" layout="@layout/item_speed_header_value"
+            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" />
+        <View android:layout_width="1dp" android:layout_height="52dp" android:background="@color/speed_header_divider" />
+        <include android:id="@+id/metrics_upload" layout="@layout/item_speed_header_value"
+            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingVertical="12dp"
+        android:background="@drawable/speed_metrics_bottom" android:baselineAligned="false">
+        <include android:id="@+id/metrics_ping" layout="@layout/item_speed_metric" />
+        <include android:id="@+id/metrics_download_jitter" layout="@layout/item_speed_metric" />
+        <include android:id="@+id/metrics_upload_jitter" layout="@layout/item_speed_metric" />
+    </LinearLayout>
+</LinearLayout>

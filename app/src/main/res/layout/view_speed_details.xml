@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Figma 6554:878：本机网络 | 测速节点，下方 Test ID；上下 16dp 内边距、行间距 18dp。 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"
+    android:paddingVertical="16dp" android:background="@drawable/speed_card_surface">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:baselineAligned="false">
+        <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:paddingHorizontal="8dp">
+            <include android:id="@+id/details_network" layout="@layout/item_speed_detail" />
+        </FrameLayout>
+        <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:paddingHorizontal="8dp">
+            <include android:id="@+id/details_server" layout="@layout/item_speed_detail" />
+        </FrameLayout>
+    </LinearLayout>
+    <com.google.android.material.textview.MaterialTextView android:id="@+id/details_test_id" style="@style/Widget.Home.Text"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="18dp"
+        android:paddingHorizontal="16dp" android:gravity="center" android:textSize="13sp"
+        android:textColor="@color/speed_metric_label" android:textIsSelectable="true" tools:text="Test ID 11806072160" />
+</LinearLayout>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Figma 6554:880：30dp 图标，间距 10dp，标题 14sp/副标题 12sp，行距 8dp。 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center"
+    android:gravity="center_vertical" android:focusable="true">
+    <ImageView android:id="@+id/detail_icon" android:layout_width="30dp" android:layout_height="30dp"
+        android:importantForAccessibility="no" android:contentDescription="@null" tools:src="@drawable/ic_speed_network" />
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="10dp"
+        android:orientation="vertical">
+        <com.google.android.material.textview.MaterialTextView android:id="@+id/detail_title" style="@style/Widget.Home.Text.Medium"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="14sp"
+            android:textColor="@color/speed_metric_value" android:maxLines="2" android:ellipsize="end" tools:text="NETVIGATOR" />
+        <com.google.android.material.textview.MaterialTextView android:id="@+id/detail_subtitle" style="@style/Widget.Home.Text"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp"
+            android:textSize="12sp" android:textColor="@color/speed_detail_subtitle" android:maxLines="1" android:ellipsize="end"
+            tools:text="SM-G986N" />
+    </LinearLayout>
+</LinearLayout>

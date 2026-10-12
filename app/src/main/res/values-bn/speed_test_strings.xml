@@ -1,0 +1,21 @@
+<resources>
+    <string name="home_tool_speed_test">স্পিড টেস্ট</string>
+    <string name="speed_test_subtitle">দ্রুত নাকি ধীর?</string>
+    <string name="speed_test_title">স্পিড টেস্ট</string>
+    <string name="speed_test_download">ডাউনলোড</string>
+    <string name="speed_test_upload">আপলোড</string>
+    <string name="speed_test_ping">পিং</string>
+    <string name="speed_test_download_jitter">ডাউনলোড জিটার</string>
+    <string name="speed_test_upload_jitter">আপলোড জিটার</string>
+    <string name="speed_test_again">আবার টেস্ট করুন</string>
+    <string name="speed_test_id">টেস্ট আইডি %1$s</string>
+    <string name="speed_test_no_internet">ইন্টারনেট সংযোগ নেই।</string>
+    <string name="speed_test_failed">স্পিড টেস্ট ব্যর্থ হয়েছে। আবার চেষ্টা করুন।</string>
+    <string name="speed_test_phase_connecting">সার্ভারের সাথে সংযোগ করা হচ্ছে…</string>
+    <string name="speed_test_phase_latency">পিং পরিমাপ করা হচ্ছে…</string>
+    <string name="speed_test_phase_download">ডাউনলোড স্পিড টেস্ট করা হচ্ছে…</string>
+    <string name="speed_test_phase_upload">আপলোড স্পিড টেস্ট করা হচ্ছে…</string>
+    <string name="speed_test_network_cellular">মোবাইল নেটওয়ার্ক</string>
+    <string name="speed_test_network_other">নেটওয়ার্ক</string>
+    <string name="speed_test_node">নোড %1$s</string>
+</resources>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Figma 6554:757（测速中）与 6554:793（结果）共用一个页面：测速中显示真实进度环、百分比与阶段，
+  并在下方实时填充与结果页相同的指标卡与节点卡；完成后隐藏进度区，只保留结果与 Test Again。
+-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/home_background">
+    <ImageView android:layout_width="0dp" android:layout_height="334dp" android:src="@drawable/home_header_background"
+        android:scaleType="fitXY" android:importantForAccessibility="no" android:contentDescription="@null"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout android:id="@+id/speed_content" android:layout_width="0dp" android:layout_height="0dp" android:orientation="vertical"
+        app:layout_constraintWidth_max="600dp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp"
+            android:gravity="center_vertical" android:paddingEnd="16dp">
+            <androidx.appcompat.widget.AppCompatImageButton android:id="@+id/speed_back" android:layout_width="48dp"
+                android:layout_height="48dp" android:padding="12dp" android:src="@drawable/ic_traffic_back"
+                android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="@string/traffic_back" />
+            <com.google.android.material.textview.MaterialTextView android:id="@+id/speed_title" style="@style/Widget.Home.Text.Bold"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:text="@string/speed_test_title" android:textSize="18sp" android:textColor="@color/home_title" />
+        </LinearLayout>
+        <androidx.core.widget.NestedScrollView android:id="@+id/speed_scroll" android:layout_width="match_parent" android:layout_height="0dp"
+            android:layout_weight="1" android:scrollbars="none">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"
+                android:paddingHorizontal="16dp" android:paddingBottom="24dp">
+                <LinearLayout android:id="@+id/speed_testing" android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:gravity="center_horizontal">
+                    <!-- 环形外框 188dp、中心原版 Wi-Fi 插画 100dp，距标题栏 72dp（与稿件一致）。 -->
+                    <FrameLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="72dp">
+                        <com.example.aicleanphonestorage.feature.speedtest.ui.SpeedTestRingView android:id="@+id/speed_ring"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content" android:importantForAccessibility="no" />
+                        <ImageView android:layout_width="100dp" android:layout_height="100dp" android:layout_gravity="center"
+                            android:src="@drawable/speed_test_wifi" android:importantForAccessibility="no" android:contentDescription="@null" />
+                    </FrameLayout>
+                    <com.google.android.material.textview.MaterialTextView android:id="@+id/speed_percent" style="@style/Widget.Home.Text.Bold"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="20dp"
+                        android:textSize="24sp" android:textColor="@color/home_title" android:accessibilityLiveRegion="none" tools:text="45%" />
+                    <com.google.android.material.textview.MaterialTextView android:id="@+id/speed_phase" style="@style/Widget.Home.Text.Medium"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp"
+                        android:gravity="center" android:textSize="14sp" android:textColor="@color/speed_phase_text"
+                        android:accessibilityLiveRegion="polite" tools:text="Testing download speed…" />
+                </LinearLayout>
+                <include android:id="@+id/speed_metrics" layout="@layout/view_speed_metrics"
+                    android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" />
+                <include android:id="@+id/speed_details" layout="@layout/view_speed_details"
+                    android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+        <!-- 底部渐隐 + Test Again（Figma 6554:895）；底部留白含系统导航安全区。 -->
+        <LinearLayout android:id="@+id/speed_footer" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:paddingTop="36dp" android:paddingBottom="100dp"
+            android:background="@drawable/cleanup_footer_fade" android:visibility="gone" tools:visibility="visible">
+            <com.google.android.material.button.MaterialButton android:id="@+id/speed_again" style="@style/Widget.Traffic.Button"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="30dp"
+                android:minHeight="48dp" android:text="@string/speed_test_again" android:textSize="16sp" android:insetTop="0dp"
+                android:insetBottom="0dp" app:cornerRadius="100dp" app:backgroundTint="@color/speed_action" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

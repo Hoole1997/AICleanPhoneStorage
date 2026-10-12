@@ -61,6 +61,7 @@ enum class HomeTool(
     Videos(R.string.video_title, R.drawable.ic_tool_videos, HomeBadge.Videos),
     Similar(R.string.junk_similar, R.drawable.ic_tool_similar, HomeBadge.SimilarPhotos),
     Battery(R.string.battery_title, R.drawable.ic_tool_battery, HomeBadge.BatteryInfo, HomeBadgeStyle.Alert, R.string.battery_health),
+    SpeedTest(R.string.home_tool_speed_test, R.drawable.ic_tool_speed_test, HomeBadge.SpeedTest, descriptionRes = R.string.speed_test_subtitle),
 }
 
 data class HomeToolItem(
@@ -119,7 +120,7 @@ internal fun HomeOverview.toHomeContent(
                         HomeTool.Screenshots -> tools.screenshots
                         HomeTool.Videos -> tools.videos
                         HomeTool.Similar -> tools.similar
-                        HomeTool.Battery -> null
+                        HomeTool.Battery, HomeTool.SpeedTest -> null
                     }
                 HomeToolItem(
                     tool,

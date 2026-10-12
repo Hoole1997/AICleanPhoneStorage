@@ -1,0 +1,21 @@
+<resources>
+    <string name="home_tool_speed_test">اختبار السرعة</string>
+    <string name="speed_test_subtitle">سريع أم بطيء؟</string>
+    <string name="speed_test_title">اختبار السرعة</string>
+    <string name="speed_test_download">التنزيل</string>
+    <string name="speed_test_upload">الرفع</string>
+    <string name="speed_test_ping">زمن الاستجابة</string>
+    <string name="speed_test_download_jitter">تذبذب التنزيل</string>
+    <string name="speed_test_upload_jitter">تذبذب الرفع</string>
+    <string name="speed_test_again">إعادة الاختبار</string>
+    <string name="speed_test_id">معرّف الاختبار %1$s</string>
+    <string name="speed_test_no_internet">لا يوجد اتصال بالإنترنت.</string>
+    <string name="speed_test_failed">فشل اختبار السرعة. يُرجى المحاولة مرة أخرى.</string>
+    <string name="speed_test_phase_connecting">جارٍ الاتصال بالخادم…</string>
+    <string name="speed_test_phase_latency">جارٍ قياس زمن الاستجابة…</string>
+    <string name="speed_test_phase_download">جارٍ اختبار سرعة التنزيل…</string>
+    <string name="speed_test_phase_upload">جارٍ اختبار سرعة الرفع…</string>
+    <string name="speed_test_network_cellular">شبكة الجوال</string>
+    <string name="speed_test_network_other">الشبكة</string>
+    <string name="speed_test_node">العقدة %1$s</string>
+</resources>

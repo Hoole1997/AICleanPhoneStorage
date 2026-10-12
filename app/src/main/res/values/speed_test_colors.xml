@@ -1,0 +1,16 @@
+<resources>
+    <!-- Figma 6554:757 / 6554:793 / 6565:1676 测网速页面颜色。 -->
+    <color name="speed_ring_track">#E3EDFF</color>
+    <color name="speed_ring_inner">#F1F6FF</color>
+    <color name="speed_ring_arc_start">#B9D3FF</color>
+    <color name="speed_ring_arc_end">#0D60F1</color>
+    <color name="speed_phase_text">#7D899F</color>
+    <color name="speed_header_label">#DCEBF8</color>
+    <color name="speed_header_unit">#BED6FB</color>
+    <color name="speed_header_divider">#3677E6</color>
+    <color name="speed_metric_label">#666666</color>
+    <color name="speed_metric_value">#333333</color>
+    <color name="speed_detail_subtitle">#999999</color>
+    <color name="speed_action">#0D60F1</color>
+    <color name="speed_cancel_surface">#F3F3F3</color>
+</resources>

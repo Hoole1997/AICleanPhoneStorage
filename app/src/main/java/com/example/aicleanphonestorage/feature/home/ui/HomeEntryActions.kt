@@ -18,6 +18,8 @@ internal class HomeEntryActions(
     private val battery: BatteryEntryViewModel,
     private val malware: com.example.aicleanphonestorage.feature.malware.ui.MalwareEntryCoordinator,
     private val openSettings: () -> Unit,
+    // 测网速没有首页加载/授权步骤，直接打开功能页即视为真正进入。
+    private val openSpeedTest: () -> Unit,
 ) : HomeUiActions {
     fun cancelPending() {
         malware.cancel()
@@ -49,6 +51,7 @@ internal class HomeEntryActions(
             HomeTool.Videos -> cleanup.begin(CleanupFeature.VIDEOS)
             HomeTool.Similar -> cleanup.begin(CleanupFeature.SIMILAR_PHOTOS)
             HomeTool.Battery -> battery.begin()
+            HomeTool.SpeedTest -> openSpeedTest()
         }
     }
 }

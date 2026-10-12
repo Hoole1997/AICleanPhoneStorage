@@ -1,0 +1,21 @@
+<resources>
+    <string name="home_tool_speed_test">Kiểm tra tốc độ</string>
+    <string name="speed_test_subtitle">Nhanh hay chậm?</string>
+    <string name="speed_test_title">Kiểm tra tốc độ</string>
+    <string name="speed_test_download">Tải xuống</string>
+    <string name="speed_test_upload">Tải lên</string>
+    <string name="speed_test_ping">Ping</string>
+    <string name="speed_test_download_jitter">Jitter tải xuống</string>
+    <string name="speed_test_upload_jitter">Jitter tải lên</string>
+    <string name="speed_test_again">Kiểm tra lại</string>
+    <string name="speed_test_id">ID kiểm tra %1$s</string>
+    <string name="speed_test_no_internet">Không có kết nối internet.</string>
+    <string name="speed_test_failed">Kiểm tra tốc độ thất bại. Vui lòng thử lại.</string>
+    <string name="speed_test_phase_connecting">Đang kết nối máy chủ…</string>
+    <string name="speed_test_phase_latency">Đang đo ping…</string>
+    <string name="speed_test_phase_download">Đang kiểm tra tốc độ tải xuống…</string>
+    <string name="speed_test_phase_upload">Đang kiểm tra tốc độ tải lên…</string>
+    <string name="speed_test_network_cellular">Mạng di động</string>
+    <string name="speed_test_network_other">Mạng</string>
+    <string name="speed_test_node">Nút %1$s</string>
+</resources>

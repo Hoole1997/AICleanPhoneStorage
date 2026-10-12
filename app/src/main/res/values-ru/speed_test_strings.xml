@@ -1,0 +1,21 @@
+<resources>
+    <string name="home_tool_speed_test">Тест скорости</string>
+    <string name="speed_test_subtitle">Быстро или медленно?</string>
+    <string name="speed_test_title">Тест скорости</string>
+    <string name="speed_test_download">Скачивание</string>
+    <string name="speed_test_upload">Отправка</string>
+    <string name="speed_test_ping">Пинг</string>
+    <string name="speed_test_download_jitter">Джиттер скачивания</string>
+    <string name="speed_test_upload_jitter">Джиттер отправки</string>
+    <string name="speed_test_again">Повторить тест</string>
+    <string name="speed_test_id">ID теста %1$s</string>
+    <string name="speed_test_no_internet">Нет подключения к интернету.</string>
+    <string name="speed_test_failed">Не удалось выполнить тест скорости. Повторите попытку.</string>
+    <string name="speed_test_phase_connecting">Подключение к серверу…</string>
+    <string name="speed_test_phase_latency">Измерение пинга…</string>
+    <string name="speed_test_phase_download">Проверка скорости скачивания…</string>
+    <string name="speed_test_phase_upload">Проверка скорости отправки…</string>
+    <string name="speed_test_network_cellular">Мобильная сеть</string>
+    <string name="speed_test_network_other">Сеть</string>
+    <string name="speed_test_node">Узел %1$s</string>
+</resources>

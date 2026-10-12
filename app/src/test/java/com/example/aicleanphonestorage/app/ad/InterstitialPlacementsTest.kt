@@ -24,18 +24,22 @@ class InterstitialPlacementsTest {
         assertEquals(setOf(
             "back_home_duplicate", "back_home_video", "back_home_junk", "back_home_screenshots", "back_home_photo", "back_home_large",
             "back_home_unused", "back_home_notify", "back_home_apps", "back_home_network", "back_home_malware",
+            "back_home_speedtest",
         ), InterstitialPlacements.homeExits)
     }
 
-    @Test fun successfulScanSlotsMatchAllElevenDocumentKeys() {
+    @Test fun successfulScanSlotsMatchAllTwelveDocumentKeys() {
         val fileSlots = CleanupFeature.entries.map(InterstitialPlacements::scan)
         val slots = fileSlots + listOf(InterstitialPlacements.NOTIFICATIONS_SCAN,
             InterstitialPlacements.APPS_SCAN, InterstitialPlacements.NETWORK_SCAN,
-            InterstitialPlacements.MALWARE_SCAN)
-        assertEquals(11, slots.size)
+            InterstitialPlacements.MALWARE_SCAN, InterstitialPlacements.SPEED_TEST_SCAN)
+        assertEquals(12, slots.size)
         assertEquals(setOf("scan_complete_junk", "scan_complete_screenshots", "scan_complete_photo",
             "scan_complete_large", "scan_complete_unused", "scan_complete_notify", "scan_complete_apps",
-            "scan_complete_network", "scan_complete_video", "scan_complete_duplicate", "scan_complete_virus"), slots.toSet())
+            "scan_complete_network", "scan_complete_video", "scan_complete_duplicate", "scan_complete_virus",
+            "scan_complete_speedtest"), slots.toSet())
+        // 测网速的 Slot 开关 Key 与 position name 相同（用户 2026-10-12 指定）。
+        assertEquals("back_home_speedtest", InterstitialPlacements.SPEED_TEST_EXIT)
         // 文档刻意使用不同后缀：病毒返回位是 malware，扫描完成位是 virus。
         assertEquals("back_home_malware", InterstitialPlacements.MALWARE_EXIT)
     }

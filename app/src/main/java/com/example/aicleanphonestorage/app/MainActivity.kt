@@ -227,6 +227,11 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, com.example.aicleanphonestorage.feature.settings.SettingsActivity::class.java)
                     .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP))
             },
+            openSpeedTest = {
+                startActivity(Intent(this, com.example.aicleanphonestorage.feature.speedtest.ui.SpeedTestActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP))
+                homeViewModel.onFeatureEntered(HomeBadge.SpeedTest)
+            },
         )
         val nativeHome = layoutInflater.inflate(R.layout.view_native_ad_slot, binding.homeContent, false) as android.view.ViewGroup
         val app = application as CleanApplication
@@ -245,7 +250,7 @@ class MainActivity : AppCompatActivity() {
             override fun onToolSelected(tool: HomeTool) {
                 val entry = when (tool) {
                     HomeTool.Network -> "traffic"; HomeTool.Notifications -> "notify"; HomeTool.Apps -> "apps"
-                    HomeTool.Compress -> "photo"; HomeTool.LargeFiles -> "large"; HomeTool.UnusedFiles -> "unused"; HomeTool.Screenshots -> "screenshots"; HomeTool.Videos -> "video"; HomeTool.Similar -> "duplicate"; HomeTool.Battery -> "battery"
+                    HomeTool.Compress -> "photo"; HomeTool.LargeFiles -> "large"; HomeTool.UnusedFiles -> "unused"; HomeTool.Screenshots -> "screenshots"; HomeTool.Videos -> "video"; HomeTool.Similar -> "duplicate"; HomeTool.Battery -> "battery"; HomeTool.SpeedTest -> "speedtest"
                 }
                 if (previewSelection == null) FeatureTelemetry.entry(app, entry)
                 homeActions.onToolSelected(tool)

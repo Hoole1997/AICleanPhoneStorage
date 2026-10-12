@@ -1,0 +1,21 @@
+<resources>
+    <string name="home_tool_speed_test">スピードテスト</string>
+    <string name="speed_test_subtitle">速い？遅い？</string>
+    <string name="speed_test_title">スピードテスト</string>
+    <string name="speed_test_download">ダウンロード</string>
+    <string name="speed_test_upload">アップロード</string>
+    <string name="speed_test_ping">Ping</string>
+    <string name="speed_test_download_jitter">下りジッター</string>
+    <string name="speed_test_upload_jitter">上りジッター</string>
+    <string name="speed_test_again">もう一度テスト</string>
+    <string name="speed_test_id">テスト ID %1$s</string>
+    <string name="speed_test_no_internet">インターネットに接続されていません。</string>
+    <string name="speed_test_failed">速度テストに失敗しました。もう一度お試しください。</string>
+    <string name="speed_test_phase_connecting">サーバーに接続しています…</string>
+    <string name="speed_test_phase_latency">Pingを測定しています…</string>
+    <string name="speed_test_phase_download">ダウンロード速度をテストしています…</string>
+    <string name="speed_test_phase_upload">アップロード速度をテストしています…</string>
+    <string name="speed_test_network_cellular">モバイルネットワーク</string>
+    <string name="speed_test_network_other">ネットワーク</string>
+    <string name="speed_test_node">ノード %1$s</string>
+</resources>

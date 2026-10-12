@@ -14,9 +14,12 @@ internal object InterstitialPlacements {
     const val NETWORK_EXIT = "back_home_network"
     // 流量页目前没有确认操作，仅保留总表 Key，不配置或请求此广告位。
     const val NETWORK_CONFIRM = "clean_confirm_network"
+    // 测网速（用户 2026-10-12 指定）：Slot 开关 Key 与 position name 相同。
+    const val SPEED_TEST_EXIT = "back_home_speedtest"
+    const val SPEED_TEST_SCAN = "scan_complete_speedtest"
 
     val homeExits: Set<String> = CleanupFeature.entries.mapNotNull(::exit).toSet() +
-        setOf(NOTIFICATIONS_EXIT, APPS_EXIT, NETWORK_EXIT, MALWARE_EXIT)
+        setOf(NOTIFICATIONS_EXIT, APPS_EXIT, NETWORK_EXIT, MALWARE_EXIT, SPEED_TEST_EXIT)
 
     fun clean(feature: CleanupFeature?): String? = suffix(feature)?.let { "clean_confirm_$it" }
 

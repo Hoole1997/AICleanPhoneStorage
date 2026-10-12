@@ -20,7 +20,8 @@ enum class HomeBadge(val key: String) {
     Screenshots("screenshots"),
     Videos("videos"),
     SimilarPhotos("similar_photos"),
-    BatteryInfo("battery_info");
+    BatteryInfo("battery_info"),
+    SpeedTest("speed_test");
 
     companion object {
         fun fromKey(key: String): HomeBadge? = entries.firstOrNull { it.key == key }

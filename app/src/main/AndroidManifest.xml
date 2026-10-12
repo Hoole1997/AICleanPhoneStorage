@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 测网速直接访问网络；此前由通知模块合并，这里显式声明功能依赖。 -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <!-- 使用情况访问是系统设置中的特殊访问权，不能用普通运行时权限对话框申请。 -->
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />
     <!-- 旧系统移动网络查询按需读取 subscriberId；Android 10+ 直接查询全部移动网络。 -->
@@ -47,6 +49,7 @@
         <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/ic_home_clean" />
         <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="general_notification_v2" />
         <activity android:name=".feature.battery.ui.BatteryInfoActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".feature.speedtest.ui.SpeedTestActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".feature.settings.SettingsActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".feature.settings.LanguageSettingsActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".feature.settings.FeedbackActivity" android:screenOrientation="portrait" android:exported="false" />

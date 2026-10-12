@@ -11,11 +11,11 @@ Figma：`dVsTL6ggoDPXVPcEKg856G`，帧 [6562:1177](https://www.figma.com/design/
 | Smart Clean Now | 感叹号 24dp | `ic_home_badge_alert_large`（6562:1434） | 右缘对齐按钮，顶部高出按钮 10dp |
 | Malware Scan | 感叹号 20dp | `ic_home_badge_alert`（6562:1437） | 右缘对齐 Scan 胶囊，顶部高出胶囊可见顶部 10dp |
 | Clear Notifications、Battery Info | 感叹号 20dp | `ic_home_badge_alert` | 距卡片顶部、尾部各 10dp |
-| 其余工具卡片 | 红点（不显示数字） | `ic_home_badge_dot`（6562:1440） | 同上 |
+| 其余工具卡片（含 SpeedTest） | 红点（不显示数字） | `ic_home_badge_dot`（6562:1440） | 同上 |
 
 Smart Clean 角标显示时，按钮文字、图标（原版红色 `ic_home_clean_alert`，6562:1230）与边框流光统一切为红色 `#F55D46`；角标隐藏后恢复蓝色。流光 Shader 只在颜色变化时重建，绘制循环不分配对象。
 
-设计稿中的 SpeedTest 入口当前应用未提供，不新增功能。角标为装饰性 ImageView，不改变按钮/卡片的测量、点击区域和无障碍朗读。应用未开启全局 RTL，仅 Malware 入口在 RTL 语言下手动镜像，此时角标随按钮移到外侧左上角。
+角标为装饰性 ImageView，不改变按钮/卡片的测量、点击区域和无障碍朗读。应用未开启全局 RTL，仅 Malware 入口在 RTL 语言下手动镜像，此时角标随按钮移到外侧左上角。
 
 ## 显示规则
 
@@ -38,7 +38,8 @@ Smart Clean 角标显示时，按钮文字、图标（原版红色 `ic_home_clea
   "screenshots": true,
   "videos": true,
   "similar_photos": true,
-  "battery_info": true
+  "battery_info": true,
+  "speed_test": true
 }
 ```
 

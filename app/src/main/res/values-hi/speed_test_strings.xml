@@ -1,0 +1,21 @@
+<resources>
+    <string name="home_tool_speed_test">स्पीड टेस्ट</string>
+    <string name="speed_test_subtitle">तेज़ या धीमा?</string>
+    <string name="speed_test_title">स्पीड टेस्ट</string>
+    <string name="speed_test_download">डाउनलोड</string>
+    <string name="speed_test_upload">अपलोड</string>
+    <string name="speed_test_ping">पिंग</string>
+    <string name="speed_test_download_jitter">डाउनलोड जिटर</string>
+    <string name="speed_test_upload_jitter">अपलोड जिटर</string>
+    <string name="speed_test_again">फिर से टेस्ट करें</string>
+    <string name="speed_test_id">टेस्ट ID %1$s</string>
+    <string name="speed_test_no_internet">इंटरनेट कनेक्शन नहीं है।</string>
+    <string name="speed_test_failed">स्पीड टेस्ट विफल रहा। कृपया फिर से कोशिश करें।</string>
+    <string name="speed_test_phase_connecting">सर्वर से कनेक्ट हो रहा है…</string>
+    <string name="speed_test_phase_latency">पिंग मापा जा रहा है…</string>
+    <string name="speed_test_phase_download">डाउनलोड स्पीड टेस्ट हो रही है…</string>
+    <string name="speed_test_phase_upload">अपलोड स्पीड टेस्ट हो रही है…</string>
+    <string name="speed_test_network_cellular">मोबाइल नेटवर्क</string>
+    <string name="speed_test_network_other">नेटवर्क</string>
+    <string name="speed_test_node">नोड %1$s</string>
+</resources>

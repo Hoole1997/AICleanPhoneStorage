@@ -53,10 +53,13 @@
 | 视频 | `back_home_video` | `scan_complete_video` | `clean_confirm_video` | `native_feature_video` | `native_result_video` |
 | 相似照片 | `back_home_duplicate` | `scan_complete_duplicate` | `clean_confirm_duplicate` | `native_feature_duplicate` | `native_result_duplicate` |
 | 病毒扫描 | `back_home_malware` | `scan_complete_virus` | 无独立位 | `native_feature_virus` | `native_result_virus` |
+| 测网速（2026-10-12 新增） | `back_home_speedtest` | `scan_complete_speedtest` | 无 | 无 | 无 |
 
 视频和相似照片 Loading 底部继续共用 `native_scanning`。病毒扫描的返回位后缀为 **malware**，扫描完成/原生位后缀为 **virus**，严格保留文档命名。
 
-其他扫描成功位：`scan_complete_junk`、`scan_complete_screenshots`、`scan_complete_photo`、`scan_complete_large`、`scan_complete_unused`、`scan_complete_notify`、`scan_complete_apps`、`scan_complete_network`。连同上表共 11 个扫描完成插屏。
+其他扫描成功位：`scan_complete_junk`、`scan_complete_screenshots`、`scan_complete_photo`、`scan_complete_large`、`scan_complete_unused`、`scan_complete_notify`、`scan_complete_apps`、`scan_complete_network`。连同上表共 12 个扫描完成插屏。
+
+- 测网速两个插屏的 Slot 开关 Key 与 position name 相同。测速成功（下载、上传均测得）后先保持 100% 测速画面请求 `scan_complete_speedtest`，以测速代次等待回调（关闭/无填充/失败均算完成），回调后才展示结果页；Test Again 每次成功各请求一次，失败、无网、离开前台取消的测速不请求。顶部返回、系统返回、失败弹框“取消”关闭页面时均携带 `back_home_speedtest` 回首页，由首页恢复、获焦并绘制后请求；扫描完成插屏进行中忽略返回，避免两个插屏叠加。
 
 - 首页各入口在真实扫描成功后消费结果，再通过 `InterstitialActions` 请求广告；广告关闭、无填充或失败均继续导航。只传索引/一次性摘要令牌，广告状态不持有 Activity 或数据列表。
 - 失败、取消、权限不足的入口不会到达成功出口；成功但没有数据仍请求广告。已有页面内排序、筛选、清理后列表刷新不算新的首页扫描入口。
@@ -68,7 +71,7 @@
 ## 插屏来源与状态恢复
 
 - `InterstitialPlacements.clean()` 集中映射 7 个清理功能，`exit()` 集中映射同一功能的全部首页出口。通知清理两种出口统一使用 `back_home_notify`；应用管理、流量保留返回广告，不接入功能内插屏。
-- `HomeExitAdContract` 仅接受 11 个 `back_home_*`。首页恢复、获得焦点并绘制后才请求；同一 token 先消费后展示，避免回调、旋转和重复 Intent 重放。
+- `HomeExitAdContract` 仅接受 12 个 `back_home_*`（含测网速）。首页恢复、获得焦点并绘制后才请求；同一 token 先消费后展示，避免回调、旋转和重复 Intent 重放。
 - 来源缺失时不再生成 `file_cleanup_*` 兜底 Key：正常继续业务/返回首页，跳过无法归属的广告。恢复旧版本待展示状态时，旧 Key 会被过滤；不会再向 SDK 发送历史 Key。
 - `StartupAdCoordinator` 使用 `splash`。冷启动/通知仍先处理推送权限；热启动须通过 APP_OPEN 总控且任一平台限频，广告回调后仅关闭启动页返回原 Activity。详见 [热启动说明](hot-start.md)。
 

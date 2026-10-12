@@ -139,6 +139,8 @@ dependencies {
     implementation(project(":notification"))
     implementation(project(":metrics"))
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+    // 测网速直接使用 OkHttp（通知模块已引入同版本，不增加包体）；取消与超时控制比 HttpURLConnection 更可靠。
+    implementation(libs.okhttp)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.paging.runtime)
@@ -156,6 +158,7 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.org.json)
+    testImplementation(libs.mockwebserver)
     androidTestImplementation(platform(libs.firebase.bom))
     androidTestImplementation(libs.firebase.messaging)
     androidTestImplementation(libs.androidx.espresso.core)

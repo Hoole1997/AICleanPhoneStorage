@@ -1,0 +1,21 @@
+<resources>
+    <string name="home_tool_speed_test">网速测试</string>
+    <string name="speed_test_subtitle">网速快还是慢？</string>
+    <string name="speed_test_title">网速测试</string>
+    <string name="speed_test_download">下载</string>
+    <string name="speed_test_upload">上传</string>
+    <string name="speed_test_ping">延迟</string>
+    <string name="speed_test_download_jitter">下载抖动</string>
+    <string name="speed_test_upload_jitter">上传抖动</string>
+    <string name="speed_test_again">重新测试</string>
+    <string name="speed_test_id">测试 ID %1$s</string>
+    <string name="speed_test_no_internet">无网络连接。</string>
+    <string name="speed_test_failed">测速失败，请重试。</string>
+    <string name="speed_test_phase_connecting">正在连接服务器…</string>
+    <string name="speed_test_phase_latency">正在测量延迟…</string>
+    <string name="speed_test_phase_download">正在测试下载速度…</string>
+    <string name="speed_test_phase_upload">正在测试上传速度…</string>
+    <string name="speed_test_network_cellular">移动网络</string>
+    <string name="speed_test_network_other">网络</string>
+    <string name="speed_test_node">节点 %1$s</string>
+</resources>

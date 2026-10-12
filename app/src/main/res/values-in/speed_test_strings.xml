@@ -1,0 +1,21 @@
+<resources>
+    <string name="home_tool_speed_test">Tes Kecepatan</string>
+    <string name="speed_test_subtitle">Cepat atau lambat?</string>
+    <string name="speed_test_title">Tes Kecepatan</string>
+    <string name="speed_test_download">Unduh</string>
+    <string name="speed_test_upload">Unggah</string>
+    <string name="speed_test_ping">Ping</string>
+    <string name="speed_test_download_jitter">Jitter unduh</string>
+    <string name="speed_test_upload_jitter">Jitter unggah</string>
+    <string name="speed_test_again">Tes lagi</string>
+    <string name="speed_test_id">ID tes %1$s</string>
+    <string name="speed_test_no_internet">Tidak ada koneksi internet.</string>
+    <string name="speed_test_failed">Tes kecepatan gagal. Silakan coba lagi.</string>
+    <string name="speed_test_phase_connecting">Menghubungkan ke server…</string>
+    <string name="speed_test_phase_latency">Mengukur ping…</string>
+    <string name="speed_test_phase_download">Menguji kecepatan unduh…</string>
+    <string name="speed_test_phase_upload">Menguji kecepatan unggah…</string>
+    <string name="speed_test_network_cellular">Jaringan seluler</string>
+    <string name="speed_test_network_other">Jaringan</string>
+    <string name="speed_test_node">Node %1$s</string>
+</resources>

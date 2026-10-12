@@ -1,0 +1,21 @@
+<resources>
+    <string name="home_tool_speed_test">اسپیڈ ٹیسٹ</string>
+    <string name="speed_test_subtitle">تیز یا سست؟</string>
+    <string name="speed_test_title">اسپیڈ ٹیسٹ</string>
+    <string name="speed_test_download">ڈاؤن لوڈ</string>
+    <string name="speed_test_upload">اپ لوڈ</string>
+    <string name="speed_test_ping">پنگ</string>
+    <string name="speed_test_download_jitter">ڈاؤن لوڈ جٹر</string>
+    <string name="speed_test_upload_jitter">اپ لوڈ جٹر</string>
+    <string name="speed_test_again">دوبارہ ٹیسٹ کریں</string>
+    <string name="speed_test_id">ٹیسٹ ID %1$s</string>
+    <string name="speed_test_no_internet">انٹرنیٹ کنکشن نہیں ہے۔</string>
+    <string name="speed_test_failed">اسپیڈ ٹیسٹ ناکام ہو گیا۔ براہ کرم دوبارہ کوشش کریں۔</string>
+    <string name="speed_test_phase_connecting">سرور سے منسلک ہو رہا ہے…</string>
+    <string name="speed_test_phase_latency">پنگ کی پیمائش ہو رہی ہے…</string>
+    <string name="speed_test_phase_download">ڈاؤن لوڈ اسپیڈ ٹیسٹ ہو رہی ہے…</string>
+    <string name="speed_test_phase_upload">اپ لوڈ اسپیڈ ٹیسٹ ہو رہی ہے…</string>
+    <string name="speed_test_network_cellular">موبائل نیٹ ورک</string>
+    <string name="speed_test_network_other">نیٹ ورک</string>
+    <string name="speed_test_node">نوڈ %1$s</string>
+</resources>
