@@ -124,7 +124,7 @@ dependencies {
     implementation("com.google.android.play:review:2.0.2")
     implementation(libs.lottie)
     implementation("com.github.toukaremax:core:1.0.15")
-    implementation("com.github.toukaremax:bill:1.0.51") {
+    implementation("com.github.toukaremax:bill:1.0.52") {
         // 保留 Unity Mediation 9.2.0，排除旧 IronSource 坐标，避免同包类冲突。
         exclude(group = "com.ironsource.sdk", module = "mediationsdk")
     }

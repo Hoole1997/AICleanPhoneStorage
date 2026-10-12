@@ -1,13 +1,13 @@
 {
   "premium_tier": {
-    "max_notification_limit": 999,
+    "max_notification_limit": 9999,
     "screen_unlock_delay": "10",
     "background_trigger_delay": "10",
     "repeat_notification_enabled": 1,
     "repeat_cycle_count": 8,
     "fresh_install_grace_period": 0,
     "quiet_hours_start": "02:00",
-    "quiet_hours_end": "08:00",
+    "quiet_hours_end": "02:01",
     "push_feature_enabled": 1,
     "service_heartbeat_interval": 15
   },
