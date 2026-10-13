@@ -31,8 +31,27 @@ internal object AdSdkInitializer {
         }
         current.value = AdInitializationState.INITIALIZING
         Log.i(TAG, "SDK initialization: STARTED (${BuildConfig.FLAVOR}/${BuildConfig.BUILD_TYPE})")
+        val telemetryReady = kotlinx.coroutines.CompletableDeferred<Boolean>()
+        scope.launch {
+            var ready = false
+            try {
+                AdAnalytics.initialize(application)
+                ready = AdAnalytics.isThinkingDataReady()
+                Log.i(TAG, "Analytics initialization: READY")
+            } catch (error: CancellationException) {
+                throw error
+            } catch (_: Exception) {
+                Log.w(TAG, "Analytics initialization unavailable")
+            } finally {
+                telemetryReady.complete(ready)
+            }
+        }
+        com.example.aicleanphonestorage.app.risk.DeviceRiskRuntime.initialize(application, telemetryReady)
         scope.launch {
             try {
+                // 先注册统计再初始化广告，避免早期 SDK 事件丢失；统计挂起最多等 5 秒后放行。
+                // 此等待不改变启动页原有通知权限、consent 的执行顺序和 allowed 处理方式。
+                kotlinx.coroutines.withTimeoutOrNull(5_000L) { telemetryReady.await() }
                 ChannelUserController.setDefaultChannel(BuildConfig.DEFAULT_USER_CHANNEL)
                 if (FirebaseApp.getApps(application).isNotEmpty()) ConfigRemoteManager.initialize()
                 Log.i(TAG, "SDK initialization: invoking AppOpenBiddingInitializer")
@@ -54,18 +73,6 @@ internal object AdSdkInitializer {
             } catch (error: Exception) {
                 current.value = AdInitializationState.FAILED
                 Log.e(TAG, "SDK initialization: FAILED", error)
-            }
-        }
-        // 统计初始化独立运行，ThinkingData 的 I/O 或失败不能阻止广告 SDK 入口执行。
-        scope.launch {
-            try {
-                Log.i(TAG, "Analytics initialization: STARTED")
-                AdAnalytics.initialize(application)
-                Log.i(TAG, "Analytics initialization: READY")
-            } catch (error: CancellationException) {
-                throw error
-            } catch (error: Exception) {
-                Log.e(TAG, "Analytics initialization: FAILED", error)
             }
         }
     }

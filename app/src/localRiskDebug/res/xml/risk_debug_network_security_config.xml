@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+    <!-- 不扩大到子域名或其他服务；测试地址变化时必须显式更新此白名单。 -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">test-happysave.movieapi.novhop.com</domain>
+    </domain-config>
+</network-security-config>

@@ -94,7 +94,8 @@ class ThinkingReporter : ReporterData {
             // 上报到数数SDK
             TDAnalytics.track(eventName, jsonObject)
 
-            MetricsLogger.d("数数SDK数据上报: $eventName, JSON: ${jsonObject}")
+            // 事件可能包含风控设备标识或 SDK 错误正文；诊断仅记录名称/数量，不复制 payload。
+            MetricsLogger.d("数数SDK数据上报: $eventName, 属性数: ${data.size}")
 
         } catch (e: Exception) {
             MetricsLogger.e("数数SDK数据上报失败", e)

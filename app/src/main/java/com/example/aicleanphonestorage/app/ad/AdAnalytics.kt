@@ -11,6 +11,9 @@ internal object AdAnalytics {
         com.example.aicleanphonestorage.core.analytics.BusinessTelemetry.start()
     }
 
+    // 只在 initialize 返回后读取；那时模块已注册 Reporter 和公共参数，不另建数数实例。
+    fun isThinkingDataReady() = net.corekit.metrics.data.ThinkingReporter.checkInitialized()
+
     fun report(name: String, properties: Map<String, Any?>) {
         if (!ReportDataManager.isInitialized()) return
         ReportDataManager.reportData(name, properties.entries.take(25).mapNotNull { (key, value) ->

@@ -8,6 +8,8 @@ import com.android.common.bill.ads.AdResult
 import com.android.common.bill.ads.ext.AdShowExt
 import com.android.common.bill.ui.NativeAdStyleType
 import com.example.aicleanphonestorage.core.lifecycle.ForegroundTransitionGuard
+import com.example.aicleanphonestorage.app.risk.DeviceRiskRuntime
+import androidx.lifecycle.Lifecycle
 import kotlin.coroutines.coroutineContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ensureActive
@@ -26,6 +28,14 @@ fun FragmentActivity.loadNative(
         try {
             android.util.Log.d("CleanAds", "Native request: slot=$positionName")
             if (!condition.invoke() || !isAdSlotEnabled(positionName)) {
+                container.visibility = View.GONE
+                call.invoke(false)
+                return@launch
+            }
+
+            DeviceRiskRuntime.awaitInitialDecision()
+            coroutineContext.ensureActive()
+            if (!condition.invoke() || !isAdSlotEnabled(positionName) || !canRequestAfterRiskWait()) {
                 container.visibility = View.GONE
                 call.invoke(false)
                 return@launch
@@ -71,6 +81,13 @@ fun FragmentActivity.loadInterstitial(
                 return@launch
             }
 
+            DeviceRiskRuntime.awaitInitialDecision()
+            coroutineContext.ensureActive()
+            if (!condition.invoke() || !isAdSlotEnabled(positionName) || !canRequestAfterRiskWait()) {
+                call.invoke(false)
+                return@launch
+            }
+
             when (AdShowExt.showInterstitialAd(this@loadInterstitial, position = positionName)) {
                 is AdResult.Success -> call.invoke(true)
                 is AdResult.Failure -> call.invoke(false)
@@ -96,6 +113,13 @@ fun FragmentActivity.loadSplash(
                 return@launch
             }
 
+            DeviceRiskRuntime.awaitInitialDecision()
+            coroutineContext.ensureActive()
+            if (!condition.invoke() || !isAdSlotEnabled(positionName) || !canRequestAfterRiskWait()) {
+                call.invoke(false)
+                return@launch
+            }
+
             val requestContext = coroutineContext
             when (AdShowExt.showAppOpenAd(this@loadSplash, onLoaded = {
                 requestContext.ensureActive()
@@ -114,6 +138,10 @@ fun FragmentActivity.loadSplash(
             transition.close()
         }
 }
+
+/** 有期限的应用级检测等待结束后，页面可能已离开前台；此时不启动旧页面的广告。 */
+private fun FragmentActivity.canRequestAfterRiskWait() =
+    !isFinishing && !isDestroyed && hasWindowFocus() && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
 
 internal fun isAdSlotEnabled(positionName: String): Boolean {
     // 测试阶段刻意放行所有广告位；线上参数尚未配置。Slot Key 清单见 docs/ads/slots.md。

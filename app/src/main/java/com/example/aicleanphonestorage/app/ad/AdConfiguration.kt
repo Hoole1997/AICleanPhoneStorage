@@ -39,6 +39,8 @@ import com.example.aicleanphonestorage.app.ad.renderer.DefaultToponNativeAdRende
 /** 本地配置与渲染器由 SDK 初始化回调安装；云端广告 ID 的获取及覆盖由 SDK 负责。 */
 internal object AdConfiguration {
     fun install() {
+    // SDK 联调包没有 Firebase：使用已有本地测试 ID，避免为在线 ID 额外等待初始化。
+    if (BuildConfig.BUILD_TYPE == "riskDebug") BillConfig.skipRuntimeAdIdConfig = true
     googleMobileAds = BillConfig.GoogleMobileAdsConfig(
         applicationId = BuildConfig.ADMOB_APPLICATION_ID
     )

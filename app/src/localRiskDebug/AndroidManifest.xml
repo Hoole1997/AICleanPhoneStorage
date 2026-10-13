@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 仅联调 variant 允许指定测试域名的 HTTP；main/普通 local/google 仍禁止明文。 -->
+    <application android:networkSecurityConfig="@xml/risk_debug_network_security_config" />
+</manifest>

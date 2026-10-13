@@ -1,0 +1,34 @@
+# 仅合入真实 SDK 的构建：Google 和 localRiskDebug；普通 local 不使用。
+# SDK 加固内部 DEX/JNI 的依赖引用无法由 R8 静态追踪。
+# 规则针对本次 SDK 包和明确的外部运行时依赖，不用 dontwarn 掩盖缺失依赖。
+
+# 产品专属接口、provider 和结果模型由 native/反射访问，保留真实映射与 Gson 字段名。
+-keep class com.ai.clean.phone.storage.junk.cleaner.dckx.** { *; }
+-keep class com.ai.clean.phone.storage.junk.cleaner.logic.** { *; }
+-keep class com.ai.clean.phone.storage.junk.cleaner.ccefecb.** { *; }
+-keep class com.jiagu.sdk.** { *; }
+-keep class com.xmsupport.base.components.** { *; }
+-keepattributes Signature,InnerClasses,EnclosingMethod,*Annotation*
+# 两包内嵌同名 RUNTIME 注解；构建副本只去掉 XM 的重复定义，保留 Collect 的单一定义。
+-keep @interface com.android.tools.r8.annotations.LambdaMethod { *; }
+
+# 官方 Collect consumer 契约保留 Kotlin/Kotlinx：加固内部 DEX 会动态加载这些类。
+-keep class kotlin.** { *; }
+-keep interface kotlin.** { *; }
+-keep class kotlinx.** { *; }
+-keep interface kotlinx.** { *; }
+
+# 取代 AAR 中过宽的 com.google.** 规则，只保留 SDK 实际使用的 API/runtime 包。
+-keep class com.google.android.play.core.integrity.** { *; }
+-keep interface com.google.android.play.core.integrity.** { *; }
+-keep class com.google.android.gms.tasks.** { *; }
+-keep interface com.google.android.gms.tasks.** { *; }
+-keep class com.google.gson.** { *; }
+-keep interface com.google.gson.** { *; }
+-keep class androidx.localbroadcastmanager.** { *; }
+
+# XM 官方 consumer 指定 OkHttp；其 native 网络代码还会调用 Okio。
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-keep class okio.** { *; }
+-keep interface okio.** { *; }

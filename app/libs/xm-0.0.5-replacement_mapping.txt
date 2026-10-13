@@ -1,0 +1,12 @@
+# 字符串替换记录
+# 新包名: com.ai.clean.phone.storage.junk.cleaner.ccefecb
+# 旧包名: 无
+# 匹配大小写: true
+# 格式: 原始字符串=MD5(原始字符串+新包名)(已去数字)
+RiskDetectionUtils=aeacefbcddb
+initRiskDetection=eadddaedeaaebbdce
+refreshRiskDetection=fdbfceeededfd
+clearCacheRiskDetection=eddfbffdcceeceb
+setEventCallbackRiskDetection=ebfcebaefcbabbf
+setDebugEnabledRiskDetection=afbbcecfa
+getResultRiskDetection=becebfbdedbf

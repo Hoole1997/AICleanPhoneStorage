@@ -48,6 +48,15 @@ android {
             }
         }
     }
+    buildTypes {
+        create("riskDebug") {
+            initWith(getByName("debug"))
+            matchingFallbacks += "debug"
+            // APK 联调包未注册 Firebase；防止 FCM 入口访问缺失的默认 FirebaseApp。
+            // 仅此 buildType 关闭远程推送，本地常驻通知和原有渠道配置不变。
+            buildConfigField("boolean", "REMOTE_PUSH_ENABLED", "false")
+        }
+    }
     buildFeatures { viewBinding = true; buildConfig = true }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
@@ -59,6 +68,11 @@ android {
 // 与 app 使用相同构建边界，避免本机聚合任务间接编译 Google 渠道库。
 androidComponents.beforeVariants(androidComponents.selector().withFlavor("distribution" to "google")) {
     it.enable = providers.environmentVariable("GITHUB_ACTIONS").orNull == "true"
+}
+
+// 仅 localRiskDebug 与联调 APK 匹配，不生成 Google 联调库。
+androidComponents.beforeVariants(androidComponents.selector().withFlavor("distribution" to "google").withBuildType("riskDebug")) {
+    it.enable = false
 }
 
 dependencies {
