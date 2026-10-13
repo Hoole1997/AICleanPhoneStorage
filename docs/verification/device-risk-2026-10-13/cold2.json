@@ -1,0 +1,46 @@
+{
+  "run": "cold2",
+  "safe_startup_logs": [
+    {
+      "elapsed_seconds": 1.286,
+      "message": "Startup consent: started"
+    },
+    {
+      "elapsed_seconds": 1.29,
+      "message": "Startup consent: completed"
+    },
+    {
+      "elapsed_seconds": 1.302,
+      "message": "Startup splash: requested"
+    },
+    {
+      "elapsed_seconds": 7.241,
+      "message": "Device risk: status=FAILED_OPEN reason=SDK_ERROR"
+    }
+  ],
+  "integrity_event_names": [
+    "XM_PlayIntegrity_Fail",
+    "XM_PlayIntegrity_Start"
+  ],
+  "pi_error_metadata": [
+    [
+      {
+        "key": ".properties.errorMessage",
+        "negative_codes": [
+          "-16"
+        ],
+        "known_error_names": []
+      }
+    ]
+  ],
+  "recognized_negative_codes": [
+    "-16"
+  ],
+  "resumed_components": [
+    "com.hotpotgames.happysave.global/com.example.aicleanphonestorage.app.MainActivity"
+  ],
+  "capture_truncated": false,
+  "launch_ok": true,
+  "cache_before_millis": "1791871871493",
+  "cache_after_millis": "1791871921222"
+}

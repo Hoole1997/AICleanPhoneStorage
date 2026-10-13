@@ -1,0 +1,5 @@
+com.example.aicleanphonestorage.app.risk.LocalRiskRestrictionDeviceTest:...
+
+Time: 6.687
+
+OK (3 tests)

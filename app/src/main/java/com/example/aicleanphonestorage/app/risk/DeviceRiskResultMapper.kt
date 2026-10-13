@@ -5,10 +5,12 @@ import com.google.gson.Strictness
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import java.io.StringReader
+import java.math.BigDecimal
 
 /**
  * SDK 0.0.5 会把 HTTP 失败和有效空 deviceId 都表示为远端异常；仅布尔值不足以决定拦截。
- * 本产品 SDK 随包测试确认成功协议为 code=200/data 对象，空 ID 的诊断为“deviceId 缺失”。
+ * 成功协议兼容 SDK 随包测试的 code=200 与联调服务的 code="success"，data 必须为对象。
+ * 空 ID 的诊断为“deviceId 缺失”；两个已知 ID 字段都必须为空，避免字段迁移期间误拦截。
  * 无法确认完成的检测（网络/超时/解析/未知响应）整体放行，不伪造安全结果。
  */
 internal object DeviceRiskResultMapper {
@@ -58,11 +60,23 @@ internal object DeviceRiskResultMapper {
             if (!parsed.isJsonObject) return false
             val root = parsed.asJsonObject
             val code = root.get("code")
-            if (code == null || !code.isJsonPrimitive || code.asString != "200") return false
+            if (code == null || !code.isJsonPrimitive) return false
+            val primitive = code.asJsonPrimitive
+            val successful = when {
+                primitive.isNumber -> primitive.asBigDecimal.compareTo(SUCCESS_CODE) == 0
+                primitive.isString -> primitive.asString == "200" || primitive.asString == "success"
+                else -> false
+            }
+            if (!successful) return false
             val data = root.get("data")
             if (data == null || !data.isJsonObject) return false
-            val id = data.asJsonObject.get("deviceId")
-            id == null || id.isJsonNull || (id.isJsonPrimitive && id.asJsonPrimitive.isString && id.asString.isBlank())
+            // 服务端目前使用 device_id，旧 SDK 示例使用 deviceId；任一字段有值或类型异常即失败。
+            // 不根据 decision=reject 自行推断风险，PLAY 仍须同时由 SDK 的远端异常标记确认。
+            listOf("deviceId", "device_id").all { name ->
+                val id = data.asJsonObject.get(name)
+                id == null || id.isJsonNull ||
+                    (id.isJsonPrimitive && id.asJsonPrimitive.isString && id.asString.isBlank())
+            }
         } catch (_: Exception) {
             false
         }
@@ -88,6 +102,7 @@ internal object DeviceRiskResultMapper {
     }
 
     private const val MISSING_DEVICE_ID = "deviceId 缺失"
+    private val SUCCESS_CODE = BigDecimal.valueOf(200)
     private const val MAX_RESPONSE_CHARS = 65_536
     private const val MAX_DEPTH = 8
 }

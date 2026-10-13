@@ -12,6 +12,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
 import net.corekit.core.controller.ChannelUserController
 
@@ -27,8 +28,10 @@ internal object DeviceRiskRuntime {
     fun initialize(application: Application, telemetryReady: Deferred<Boolean>) {
         synchronized(lock) {
             if (coordinator != null) return
-            val bridge = DeviceRiskPolicyBridge(scope, AdRisk.signalConfig, AdRisk::updatePlatformRestriction)
             val telemetry = DeviceRiskTelemetry()
+            val bridge = DeviceRiskPolicyBridge(
+                scope, AdRisk.signalConfig, AdRisk::updatePlatformRestriction, telemetry::reportAdBlock,
+            )
             val sdk = try {
                 createDeviceRiskSdk(application, telemetry::reportXmEvent)
             } catch (_: Exception) {
@@ -56,6 +59,12 @@ internal object DeviceRiskRuntime {
                 },
             )
             coordinator = detector
+            scope.launch {
+                // 策略同步成功也可能刚好越过检测截止时间；只有最终 APPLIED 才开启独立遥测。
+                // Reporter 工作不参与 15 秒门禁，失败/超时终态永远不开启此门闩。
+                if (detector.state.first { it != DeviceRiskStatus.WAITING && it != DeviceRiskStatus.DETECTING } ==
+                    DeviceRiskStatus.APPLIED) bridge.confirmInitialDecision()
+            }
             if (enabled) {
                 installCollectAdCallbacks(application)
                 uploadForPaidUser(sdk, telemetryReady)

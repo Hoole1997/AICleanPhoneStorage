@@ -1,12 +1,13 @@
 package com.example.aicleanphonestorage.app.risk
 
 import android.util.Log
+import com.android.common.risk.AdRiskSignalConfig
 import net.corekit.core.report.ReportDataManager
 import java.lang.reflect.Array as ReflectArray
 import java.util.IdentityHashMap
 
 /**
- * XM 遥测出口。复用 metrics 已注册的数数实例及公共参数，
+ * XM/广告风险遥测出口。复用 metrics 已注册的数数实例及公共参数，
  * 不广播给其他 Reporter；调用方须在启动 XM/广告前完成 Reporter 注册。
  */
 internal class DeviceRiskTelemetry(
@@ -26,7 +27,30 @@ internal class DeviceRiskTelemetry(
         } catch (_: Exception) {
             // SDK 参数容器也可能在遍历时抛异常；遥测不能中断 XM 检测结果的处理。
             safelyReportFailure(eventName)
+        } catch (_: LinkageError) {
+            safelyReportFailure(eventName)
         }
+    }
+
+    /** 与 EasyLoan 协议一致：scope 是广告平台覆盖范围，与 PROCESS/TODAY 作用域无关。 */
+    fun reportAdBlock(signal: DeviceRiskSignal, policy: Int) {
+        val scope = when (policy) {
+            AdRiskSignalConfig.BLOCK_ADMOB -> "admob"
+            AdRiskSignalConfig.BLOCK_ALL_ADS -> "all"
+            else -> return
+        }
+        val name = when (signal) {
+            DeviceRiskSignal.VPN -> "Ad_Block_VPN"
+            DeviceRiskSignal.DNS -> "Ad_Block_DNS"
+            DeviceRiskSignal.IP -> "Ad_Block_IP"
+            DeviceRiskSignal.SIMULATOR -> "Ad_Block_Simulator"
+            DeviceRiskSignal.ADB -> "Ad_Block_ADB"
+            DeviceRiskSignal.NO_SIM -> "Ad_Block_SIM"
+            DeviceRiskSignal.NO_GP -> "Ad_Block_No_GP"
+            DeviceRiskSignal.SYS_9_LOW -> "Ad_Block_Sys_9_Low"
+            DeviceRiskSignal.PLAY -> "Ad_Block_Play"
+        }
+        emit(name, mapOf("scope" to scope))
     }
 
     private fun emit(name: String, params: Map<String, Any>) {
@@ -34,11 +58,15 @@ internal class DeviceRiskTelemetry(
             eventSink(name, params)
         } catch (_: Exception) {
             safelyReportFailure(name)
+        } catch (_: LinkageError) {
+            safelyReportFailure(name)
         }
     }
 
     private fun safelyReportFailure(name: String) {
-        try { reportFailure(name) } catch (_: Exception) { /* 日志失败也不得影响业务。 */ }
+        try { reportFailure(name) }
+        catch (_: Exception) { /* 日志失败也不得影响业务。 */ }
+        catch (_: LinkageError) { /* 日志 native 入口不可用也不得影响业务。 */ }
     }
 
 }

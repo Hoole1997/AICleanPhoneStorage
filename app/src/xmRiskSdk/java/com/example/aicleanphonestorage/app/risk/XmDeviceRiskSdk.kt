@@ -73,9 +73,9 @@ internal class XmDeviceRiskSdk(
                     // 只保留有界数数透传；迟到检测结果仍由下方 active 门闩过滤，不改变已放行决策。
                     runCatching { eventSink(eventName, properties) }
                 }
-                // SDK 0.0.5 的 init 会无限期复用持久化缓存。冷启动唯一检测前用官方
-                // clearCache 入口清除旧结果，再注册结果回调，避免立即拿到旧缓存。
-                aeacefbcddb.eddfbffdcceeceb()
+                // 冷进程的 clearCache 没有 Context，不能保证清掉尚未装载的持久化结果。
+                // 先注册等待者，再由带 Application Context 的 refresh 创建首个检测会话；
+                // SDK 的 refresh/restart 契约会忽略旧缓存，不先调用可能返回缓存的 init。
                 aeacefbcddb.becebfbdedbf { result: RiskDetectionResult ->
                     if (active.get() && resultAccepted.compareAndSet(false, true)) {
                         try {
@@ -94,9 +94,9 @@ internal class XmDeviceRiskSdk(
                         }
                     }
                 }
-                // 结果回调支持 init 前注册，不再把取得结果绑到 XM_SDK_Init 埋点事件。
+                // 结果回调支持首个会话创建前注册，不把取得结果绑到 XM_SDK_Init 埋点事件。
                 // 宿主只允许本次冷启动一次检测；不额外安排 SDK 的远端重试窗口。
-                aeacefbcddb.eadddaedeaaebbdce(application, baseUrl, fingerprint, 0)
+                aeacefbcddb.fdbfceeededfd(application, baseUrl, fingerprint, 0)
             }
         } finally {
             active.set(false)

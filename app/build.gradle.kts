@@ -29,6 +29,9 @@ val riskDebugConfig = channelConfig("localRiskDebug")
 val riskDebugApplicationId = riskDebugConfig.getProperty("applicationId", "").trim()
 val riskDebugEnabled = riskDebugConfig.getProperty("xmRiskEnabled", "false").toBooleanStrict()
 val riskDebugBaseUrl = riskDebugConfig.getProperty("xmRiskBaseUrl", "").trim()
+// 默认仪器测试仍测试 debug；只有显式选择才生成 local 的 SDK 联调测试 APK。
+// googleRiskDebug 始终由既有 beforeVariants 禁用，此开关不启用 Google 编译/安装。
+val localRiskInstrumentation = providers.gradleProperty("localRiskInstrumentation").orNull == "true"
 require(riskDebugApplicationId.matches(Regex("[a-zA-Z][a-zA-Z0-9_]*(\\.[a-zA-Z][a-zA-Z0-9_]*)+"))) {
     "app/src/localRiskDebug/config.properties 缺少合法 applicationId"
 }
@@ -54,6 +57,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    if (localRiskInstrumentation) testBuildType = "riskDebug"
 
     // 只给 googleRelease 绑定上传签名；签名文件由 Actions 从 main 复用或首次生成，密码从 Secret 注入。
     signingConfigs {

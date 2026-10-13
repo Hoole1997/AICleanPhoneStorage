@@ -70,11 +70,13 @@ Collect consumer 中重复且过宽的 android/androidx/com.google keep 需要�
 
 ## 冷启动和失败边界
 
-分发 ZIP 附带的 SDK 单测源码明确验证：`DetectionSessionCoordinator.init_keepsUsingCachedResultRegardlessOfAge` 会无限期复用缓存，且 `init_usesCachedResultWithoutStartingRemoteTask` 不启动远端任务。为了每次冷启动取得本次环境结果，宿主每进程唯一检测依次调用事件注册、官方 clearCache、结果回调注册、init；没有 refresh、定时复测或 VPN 变化复测。
+分发 ZIP 附带的 SDK 单测源码明确验证：`DetectionSessionCoordinator.init_keepsUsingCachedResultRegardlessOfAge` 会无限期复用缓存，且 `init_usesCachedResultWithoutStartingRemoteTask` 不启动远端任务。真机复核发现，冷进程在 init 前调用不带 Context 的 clearCache 仍会复用磁盘缓存。因此每进程唯一检测改为事件注册、结果回调注册、带 Application Context 的官方 refresh；不先调用 init，不由宿主读写 SDK 缓存文件，也不安排定时或 VPN 变化复测。
 
-结果回调在 init 前可注册，见分发测试 `RiskDetectionUtilsTest.becebfbdedbf_waitsWhenCalledBeforeInitRiskDetection`；不依赖 `XM_SDK_Init` 事件是否发出来取得结果。原生入口在单线程有界 worker 执行，宿主指纹等待最多 5 秒，并由应用级协调器限制全链路总等待。SDK 没有公开取消入口：取消只撤销宿主等待、清除 continuation、移除未执行任务并忽略迟到回调，不能承诺 SDK 内部网络任务同时停止。显式 retryCount=0，不扩大为长时间远端重试。
+结果回调可在首个 refresh 会话创建前注册，见分发测试 `RiskDetectionUtilsTest.becebfbdedbf_waitsForRefreshRiskDetectionWhenRefreshCreatesFirstSession`；`DetectionSessionCoordinator.restart_ignoresCachedResultAndRunsFreshTask` 验证 refresh 绕过缓存并更新远端结果。不依赖 `XM_SDK_Init` 事件取得结果。原生入口在单线程有界 worker 执行，宿主指纹等待最多 5 秒，并由应用级协调器限制全链路总等待。SDK 没有公开取消入口：取消只撤销宿主等待、清除 continuation、移除未执行任务并忽略迟到回调，不能承诺 SDK 内部网络任务同时停止。显式 retryCount=0，不扩大为长时间远端重试。
 
 SDK 公开结果没有 success 字段，远端状态只能由 `deviceId/errorMessage/rawResponse` 与九个布尔字段判定。分发测试记录：HTTP 200 有效响应且 ID 缺失可返回 `deviceId 缺失`；HTTP 502 返回 `HTTP 502`；HTTP 200 解析失败返回 `响应解析失败`。宿主必须用公共、可单测 mapper 严格区分有效拒绝与失败，网络、解析、超时及未知状态都失败放行，不能直接将 `isRemoteAbnormal=true` 当成可限制的远端风险。
+
+空 ID 的有效完成协议兼容数字 `200`、字符串 `"200"` 和联调服务的 `"success"`，且 data 必须为对象。`deviceId`/`device_id` 两个字段均须缺失、null 或空字符串；任一字段非空、类型非法或存在冲突均不当成有效空 ID。`PLAY` 仍要求 SDK 远端异常标记，不能只凭 `decision=reject` 造风险。已收到 PI 失败事件时，即使后续回包符合成功协议，也整体放行。
 
 SDK debug 始终关闭，不输出指纹、Token、deviceId 或原始远端响应；XM 事件通过宿主已有数数 Reporter 定向转发，分析上报失败不阻断检测结果。首次策略截止不关闭遥测出口，SDK 后续 Play Integrity 补报事件仍转发，但迟到检测结果不再施加限制。
 
@@ -84,11 +86,13 @@ SDK debug 始终关闭，不输出指纹、Token、deviceId 或原始远端响�
 - 指纹、XM 结果及初次策略同步统一在 15 秒总期限内；异常/超时整体撤销本桥接拥有的 PROCESS 限制，结果不得伪装成成功。
 - 同一平台的多个风险采用 OR 聚合；最新在线配置重新计算已完成快照，全部平台通过 `AdPlatform.entries` 覆盖 MAX。平台 API 失败最多尝试 5 次，旧版本重试不能覆盖新版本。
 - 业务原生、插屏及开屏的统一请求入口等待首次决策后，重新核验页面前台与业务条件。启动页的通知权限及 `gatherConsent` 顺序不变，仍不读取 `allowed`。
-- 保留 SDK 内置 `ad_show_fail(reason=risk_restricted)`。当前版本没有公有单项平台排除观察 API，宿主请求入口不足以证明实际跳过某个平台，故不推断补报 `Ad_Block_*`。
+- 保留 SDK 内置 `ad_show_fail(reason=risk_restricted)`。`Ad_Block_*` 按 EasyLoan 的限制生效语义上报：首次检测已达到 APPLIED，最新整组平台限制同步成功后，每风险维度每进程一次；scope 为 `admob`/`all`。未配置、检测失败、超时、部分平台同步失败均不报，配置更新及重试不重复；该事件不声称某次广告展示实际被跳过。遥测在锁外独立执行，不增加 15 秒启动等待。
 - `BillConfig.onAdRevenue/onAdClick` 组合已有回调，只发送 Collect 协议广播；原有 Adjust/Firebase 收益 Reporter 不重复注册或重复上报。
 - 已确认买量时才调用 Collect 显式设备上传，归因等待最多 30 秒。Core 以非线程安全列表同步派发归因监听：每进程最多保留一个不捕获 Context 的信号门闩，等待结束清除 Deferred 引用，后续无工作，避免并发移除破坏其他监听。
 
 ## 验证范围
+
+2026-10-13 缓存修复、协议兼容和限制遥测的 local 真机复核见 [验证记录](../verification/device-risk-2026-10-13/README.md)。以下为最初接入的历史验证范围。
 
 本次本地复核：`assembleLocalRiskDebug`、`lintLocalRiskDebug`、`testLocalDebugUnitTest` 和 `assembleLocalDebug` 通过；共 294 项 app 单测（其中风控 32 项）无失败。联调 APK 为 `app/build/outputs/apk/local/riskDebug/app-local-riskDebug.apk`，产物元数据确认实际包名为 `com.hotpotgames.happysave.global`，Google Services 资源生成任务跳过，普通 local 仍为原包名。联调构建使用 SDK 公有 `skipRuntimeAdIdConfig`，不等待不存在的 Firebase 在线广告 ID；该设置不作用于普通 local 或 Google。
 

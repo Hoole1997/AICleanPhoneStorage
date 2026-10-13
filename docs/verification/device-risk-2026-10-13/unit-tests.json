@@ -1,0 +1,31 @@
+{
+  "app_tests": 306,
+  "failures": 0,
+  "errors": 0,
+  "risk_suites": [
+    {
+      "name": "com.example.aicleanphonestorage.app.risk.DeviceRiskPolicyBridgeTest",
+      "tests": "17",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.aicleanphonestorage.app.risk.DeviceRiskTelemetryTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.aicleanphonestorage.app.risk.DeviceRiskResultMapperTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.aicleanphonestorage.app.risk.DeviceRiskCoordinatorTest",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0"
+    }
+  ]
+}

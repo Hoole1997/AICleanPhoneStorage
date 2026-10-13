@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -24,6 +25,7 @@ internal class DeviceRiskPolicyBridge(
     scope: CoroutineScope,
     signalConfig: Flow<AdRiskSignalConfig>,
     private val updateRestriction: (AdPlatform, AdRestrictionScope, Boolean) -> Boolean,
+    private val reportAdBlock: (DeviceRiskSignal, Int) -> Unit = { _, _ -> },
 ) {
     private data class Target(
         val version: Long,
@@ -43,6 +45,9 @@ internal class DeviceRiskPolicyBridge(
     private val applied = mutableSetOf<AdPlatform>()
     private val targets = MutableStateFlow(Target(0, true, emptyMap(), emptySet()))
     private val synchronization = MutableStateFlow(Synchronization(0, settled = true, successful = true))
+    private val telemetryEnabled = MutableStateFlow(false)
+    // 每进程每维度最多尝试一次；遥测失败不重试，避免下游已收事件却抛异常时重复统计。
+    private val reportedSignals = mutableSetOf<DeviceRiskSignal>()
 
     init {
         scope.launch {
@@ -58,6 +63,14 @@ internal class DeviceRiskPolicyBridge(
             // collectLatest 取消旧等待，且会等旧同步结束后再执行新目标，不并发写 SDK。
             targets.collectLatest(::synchronize)
         }
+        scope.launch {
+            // 遥测独立于策略同步和启动门禁。只有首次检测已确认 APPLIED 才允许报告；
+            // 目标整体同步失败时不为先成功的平台提前上报，超时释放也不会留下误导的事件。
+            combine(telemetryEnabled, synchronization) { enabled, result -> enabled to result }
+                .collectLatest { (enabled, result) ->
+                    if (enabled && result.settled && result.successful) reportSynchronizedSignals(result.version)
+                }
+        }
     }
 
     fun apply(snapshot: DeviceRiskSnapshot) {
@@ -65,6 +78,11 @@ internal class DeviceRiskPolicyBridge(
             this.snapshot = snapshot.copy(detectedSignals = snapshot.detectedSignals.toSet())
             publishTargetLocked()
         }
+    }
+
+    /** 仅由进程检测的 APPLIED 终态开启；此方法不调用 Reporter，也不增加广告等待时间。 */
+    fun confirmInitialDecision() {
+        telemetryEnabled.value = true
     }
 
     /** 首条广告等待当前目标：新版本会继续等待；false 表示本轮有限重试耗尽，不表示成功。 */
@@ -162,6 +180,29 @@ internal class DeviceRiskPolicyBridge(
 
     private fun settleLocked(target: Target, successful: Boolean) {
         synchronization.value = Synchronization(target.version, settled = true, successful = successful)
+    }
+
+    private suspend fun reportSynchronizedSignals(version: Long) {
+        val signals = synchronized(lock) {
+            targets.value.takeIf { it.version == version }?.signals.orEmpty().toList()
+        }
+        for ((signal, policy) in signals) {
+            currentCoroutineContext().ensureActive()
+            val claimed = synchronized(lock) {
+                val currentTarget = targets.value
+                val currentSynchronization = synchronization.value
+                // 配置/失败释放可能已发布新版本；只有最新、完整生效的目标可以认领事件。
+                telemetryEnabled.value && currentTarget.version == version &&
+                    currentSynchronization.version == version && currentSynchronization.settled &&
+                    currentSynchronization.successful && currentTarget.signals[signal] == policy &&
+                    platformsFor(policy).all { it in applied } && reportedSignals.add(signal)
+            }
+            if (!claimed) continue
+            // 锁内只认领事件，SDK 遥测在锁外执行；Reporter 阻塞/异常不拖住策略撤销或启动。
+            try { reportAdBlock(signal, policy) }
+            catch (_: Exception) { /* 回调失败不改变已生效策略，也不重复上报。 */ }
+            catch (_: LinkageError) { /* Reporter/native 入口缺失同样不影响广告。 */ }
+        }
     }
 
     private fun policyFor(signal: DeviceRiskSignal): Int = when (signal) {
