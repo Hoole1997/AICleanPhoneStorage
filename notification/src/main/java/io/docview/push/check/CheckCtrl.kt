@@ -36,6 +36,7 @@ class CheckCtrl private constructor() {
     private object Keys {
         const val LAST_UNLOCK_NOTIFICATION_TIME = "last_unlock_notification_time"
         const val LAST_BACKGROUND_NOTIFICATION_TIME = "last_background_notification_time"
+        const val LAST_ALARM_NOTIFICATION_TIME = "last_alarm_notification_time"
         const val CURRENT_NOTIFICATION_COUNT = "current_notification_count"
     }
 
@@ -50,6 +51,7 @@ class CheckCtrl private constructor() {
         UNLOCK("local_push"),      // 解锁通知
         BACKGROUND("local_push"),  // 后台通知
         KEEPALIVE("local_push"),   // 保活通知（无间隔限制）
+        ALARM_MANAGER("alarmmanager"), // 独立系统调度来源，复用普通推送准入。
         FCM("firebase_push"),          // FCM 推送通知（无间隔限制）
         RESIDENT("top_notification"),          // 常驻（无间隔限制）
         EARTHQUAKE("earthquake"),          // 地震通知（无间隔限制）
@@ -75,7 +77,7 @@ class CheckCtrl private constructor() {
      * @param type 通知类型
      * @return 检查结果，包含是否可以触发和拦截原因
      */
-    fun canTriggerNotificationWithReason(type: NotificationType): Pair<Boolean, BlockReason?> {
+    fun canTriggerNotificationWithReason(type: NotificationType, intervalMillis: Long? = null): Pair<Boolean, BlockReason?> {
         // 1. 检查基础条件（通知权限、开关、免打扰、前台状态、总次数限制、新用户冷却时间）
         val basicConditionResult = checkAllConditionsWithReason()
         if (!basicConditionResult.first) {
@@ -83,7 +85,7 @@ class CheckCtrl private constructor() {
         }
 
         // 2. 检查触发间隔
-        val intervalResult = checkTriggerIntervalWithReason(type)
+        val intervalResult = checkTriggerIntervalWithReason(type, intervalMillis)
         if (!intervalResult.first) {
             return Pair(false, intervalResult.second)
         }
@@ -169,10 +171,10 @@ class CheckCtrl private constructor() {
      * @param type 通知类型
      * @return 检查结果，包含是否满足触发间隔要求和拦截原因
      */
-    private fun checkTriggerIntervalWithReason(type: NotificationType): Pair<Boolean, BlockReason?> {
+    private fun checkTriggerIntervalWithReason(type: NotificationType, intervalMillis: Long?): Pair<Boolean, BlockReason?> {
         val currentTime = System.currentTimeMillis()
         val lastTime = if(debugZeroInterval) 0L else getLastNotificationTimeInternal(type)
-        val intervalMs = if(debugZeroInterval) 0L else  getNotificationInterval(type)
+        val intervalMs = if(debugZeroInterval) 0L else intervalMillis ?: getNotificationInterval(type)
 
         // 如果是第一次触发，或者距离上次触发已经超过间隔时间
         val canTrigger = lastTime == 0L || (currentTime - lastTime) >= intervalMs
@@ -234,6 +236,7 @@ class CheckCtrl private constructor() {
         return when (type) {
             NotificationType.UNLOCK -> resetController.getLongValue(Keys.LAST_UNLOCK_NOTIFICATION_TIME)
             NotificationType.BACKGROUND -> resetController.getLongValue(Keys.LAST_BACKGROUND_NOTIFICATION_TIME)
+            NotificationType.ALARM_MANAGER -> resetController.getLongValue(Keys.LAST_ALARM_NOTIFICATION_TIME)
             else -> 0L
         }
     }
@@ -247,6 +250,7 @@ class CheckCtrl private constructor() {
         return when (type) {
             NotificationType.UNLOCK -> ConfigCtrl.getUnlockPushIntervalMin() * 60 * 1000L
             NotificationType.BACKGROUND -> ConfigCtrl.getBackgroundPushIntervalMin() * 60 * 1000L
+            NotificationType.ALARM_MANAGER -> 15 * 60_000L
             else -> 0L
         }
     }
@@ -260,6 +264,7 @@ class CheckCtrl private constructor() {
         when (type) {
             NotificationType.UNLOCK -> resetController.setLongValue(Keys.LAST_UNLOCK_NOTIFICATION_TIME, currentTime)
             NotificationType.BACKGROUND -> resetController.setLongValue(Keys.LAST_BACKGROUND_NOTIFICATION_TIME, currentTime)
+            NotificationType.ALARM_MANAGER -> resetController.setLongValue(Keys.LAST_ALARM_NOTIFICATION_TIME, currentTime)
             else -> {
                 // 其它，因为无间隔限制
                 Logger.d("${type.name}通知触发，不记录时间")
@@ -290,6 +295,7 @@ class CheckCtrl private constructor() {
     fun resetAllNotificationTimes() {
         resetController.resetValue(Keys.LAST_UNLOCK_NOTIFICATION_TIME)
         resetController.resetValue(Keys.LAST_BACKGROUND_NOTIFICATION_TIME)
+        resetController.resetValue(Keys.LAST_ALARM_NOTIFICATION_TIME)
         Logger.d("重置所有通知时间记录")
     }
 
@@ -301,6 +307,7 @@ class CheckCtrl private constructor() {
         when (type) {
             NotificationType.UNLOCK -> resetController.resetValue(Keys.LAST_UNLOCK_NOTIFICATION_TIME)
             NotificationType.BACKGROUND -> resetController.resetValue(Keys.LAST_BACKGROUND_NOTIFICATION_TIME)
+            NotificationType.ALARM_MANAGER -> resetController.resetValue(Keys.LAST_ALARM_NOTIFICATION_TIME)
             else -> {
                 // 其它，无需重置
                 Logger.d("${type.name}通知无时间记录，无需重置")

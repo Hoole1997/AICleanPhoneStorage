@@ -27,9 +27,7 @@ import io.docview.push.check.CheckCtrl
 import io.docview.push.earthquake.EarthquakeInfo
 import io.docview.push.utils.Logger
 import io.docview.push.receiver.DeleteReceiver
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import io.docview.push.host.canSendNotification
@@ -54,8 +52,8 @@ object TriggerCtrl {
     private var notificationManager: NotificationManagerCompat? = null
     private var context: Context? = null
 
-    // 全局协程作用域，用于异步构建通知
-    private val notificationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    // 复用应用级有限 IO scope，后台触发不会为每次通知创建无界工作队列。
+    private val notificationScope = io.docview.push.host.PushEnvironment.scope
 
     // 重复通知相关（全局单例）
     private var repeatHandler: Handler? = null
@@ -126,46 +124,62 @@ object TriggerCtrl {
         onNotificationSent: ((GeneralNotificationData, Notification) -> Unit)? = null,
         paidOnly: Boolean = false,
     ) {
-        val context = context ?: return
-        val notificationManager = notificationManager ?: return
-
-        // 使用全局协程异步构建通知
         notificationScope.launch {
-            try {
-                // 再查一次实时归因快照，直接调用/已排队任务不能绕过 TimingCtrl 的准入。
-                if (paidOnly && !io.docview.push.host.PushUserChannel.isConfirmedPaidUser()) return@launch
-                // 在 IO 线程中构建通知数据
-                val notificationData = withContext(Dispatchers.IO) {
-                    modelBuilder(context)
-                }
-
-                // 在 IO 线程中构建通知对象
-                val notification = withContext(Dispatchers.IO) {
-                    notificationBuilder(notificationData).also {
-                        if (paidOnly) it.extras.putBoolean(DAY_POOL_NOTIFICATION, true)
-                    }
-                }
-
-                // 切换到主线程执行 notify
-                withContext(Dispatchers.Main) {
-                    // 构建与发布之间也可能转为自然用户；常驻通知不受此限制。
-                    if (paidOnly && !io.docview.push.host.PushUserChannel.isConfirmedPaidUser()) return@withContext
-                    if (!io.docview.push.NotificationPermissionAccess.isGranted(context,
-                            if (Build.VERSION.SDK_INT >= 26) notification.channelId else null)) return@withContext
-                    try {
-                        notificationManager.notify(notificationData.notificationId, notification)
-                    } catch (_: SecurityException) { return@withContext }
-                    Logger.d("${notificationType}发送成功，ID: ${notificationData.notificationId}")
-
-                    // 调用通知完成回调
-                    onNotificationSent?.invoke(notificationData, notification)
-                }
-
-            } catch (e: Exception) {
-                Logger.e("发送${notificationType}失败", e)
-            }
+            sendNotification(notificationType, modelBuilder, notificationBuilder, onNotificationSent, paidOnly)
         }
     }
+
+    /** 可等待的发布核心，使 Receiver 的取消/超时覆盖真实构建和 notify，不遗留异步发送。 */
+    private suspend fun sendNotification(
+        notificationType: String,
+        modelBuilder: suspend (Context) -> GeneralNotificationData,
+        notificationBuilder: (GeneralNotificationData) -> Notification,
+        onNotificationSent: ((GeneralNotificationData, Notification) -> Unit)? = null,
+        paidOnly: Boolean = false,
+        canSend: () -> Boolean = { true },
+    ): Boolean {
+        val context = context ?: return false
+        val manager = notificationManager ?: return false
+        return try {
+            if (!canSend() || (paidOnly && !io.docview.push.host.PushUserChannel.isConfirmedPaidUser())) return false
+            val data = withContext(Dispatchers.IO) { modelBuilder(context) }
+            val notification = withContext(Dispatchers.IO) {
+                notificationBuilder(data).also { if (paidOnly) it.extras.putBoolean(DAY_POOL_NOTIFICATION, true) }
+            }
+            withContext(Dispatchers.Main.immediate) {
+                // 排队和构建期间可能回前台、关闭开关或撤权，发布前再次检查当前状态。
+                if (!canSend() || (paidOnly && !io.docview.push.host.PushUserChannel.isConfirmedPaidUser())) return@withContext false
+                if (!io.docview.push.NotificationPermissionAccess.isGranted(context,
+                        if (Build.VERSION.SDK_INT >= 26) notification.channelId else null)) return@withContext false
+                try { manager.notify(data.notificationId, notification) }
+                catch (_: SecurityException) { return@withContext false }
+                Logger.d("${notificationType}发送成功，ID: ${data.notificationId}")
+                onNotificationSent?.invoke(data, notification)
+                true
+            }
+        } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled }
+        catch (error: Exception) {
+            Logger.e("发送${notificationType}失败", error)
+            false
+        }
+    }
+
+    internal suspend fun triggerGeneralNotificationAndAwait(
+        type: CheckCtrl.NotificationType,
+        canSend: () -> Boolean,
+        onSent: () -> Unit,
+    ): Boolean = sendNotification(
+        notificationType = "常规通知",
+        modelBuilder = { GeneralModelManager().getModel(it, type) },
+        notificationBuilder = { general(it) },
+        onNotificationSent = { data, notification ->
+            onSent()
+            generalTrack(type, data)
+            checkAndStartRepeatNotification(data, notification, type)
+        },
+        paidOnly = true,
+        canSend = canSend,
+    )
 
     /**
      * 检查是否应该启用重复通知
@@ -541,6 +555,7 @@ object TriggerCtrl {
                     CheckCtrl.NotificationType.UNLOCK -> 1
                     CheckCtrl.NotificationType.BACKGROUND -> 1
                     CheckCtrl.NotificationType.KEEPALIVE -> 1
+                    CheckCtrl.NotificationType.ALARM_MANAGER -> 1
                     CheckCtrl.NotificationType.FCM -> 3
                     CheckCtrl.NotificationType.RESIDENT -> 4
                     CheckCtrl.NotificationType.EARTHQUAKE -> 5
@@ -548,7 +563,8 @@ object TriggerCtrl {
                 "Notific_Position" to 1,
                 "Notific_Priority" to "PRIORITY_MAX",
                 "event_id" to "customer_general_style",
-            ) + io.docview.push.analytics.NotificationContent(notificationData.contentTitle, notificationData.contentContent)
+            ) + (if (type == CheckCtrl.NotificationType.ALARM_MANAGER) mapOf("trigger_source" to type.string) else emptyMap())
+                + io.docview.push.analytics.NotificationContent(notificationData.contentTitle, notificationData.contentContent)
                 .properties(io.docview.push.analytics.NotificationVisibility.backgroundForDisplay())
         )
     }

@@ -21,6 +21,16 @@ class NotificationRuntime(context: Context, host: NotificationHost) {
     private val app = context.applicationContext
     private val started = AtomicBoolean(false)
     private val ready = CompletableDeferred<Unit>()
+    private val audienceReady = CompletableDeferred<Unit>()
+    private val alarms by lazy {
+        io.docview.push.alarm.AlarmWakeupCoordinator(app, PushEnvironment.host::alarmWakeupConfig,
+            awaitAudience = { withTimeoutOrNull(500L) { audienceReady.await() }; Unit },
+        ) { interval, canSend ->
+            TimingCtrl.getInstance().triggerNotificationAndAwait(
+                CheckCtrl.NotificationType.ALARM_MANAGER, interval, canSend,
+            )
+        }
+    }
     // 捕获首次进程启动所在自然日，避免 IO 排队跨午夜后误记为次日；不使用安装时间。
     private val firstObservedEpochDay = java.time.LocalDate.now().toEpochDay()
     init { PushEnvironment.install(app, host) }
@@ -42,12 +52,18 @@ class NotificationRuntime(context: Context, host: NotificationHost) {
                 // 清除旧实现的两个固定通知，迁移后只由新模块发布。
                 NotificationManagerCompat.from(app).cancel(4101)
                 NotificationManagerCompat.from(app).cancel(4102)
-                withContext(Dispatchers.Main.immediate) { TimingCtrl.getInstance().initialize(app) }
+                val alarmCoordinator = alarms // SharedPreferences 首次加载离开主线程。
+                withContext(Dispatchers.Main.immediate) {
+                    TimingCtrl.getInstance().initialize(app)
+                    alarmCoordinator.start()
+                }
                 // Service 恢复必须等到事件分发器/生命周期状态准备好，再注册第二份监听。
                 ready.complete(Unit)
+                refreshAlarmSchedule()
                 PushRemoteConfig.initialize()
                 ConfigCtrl.initialize(app)
                 ContentController.initialize(app, firstObservedEpochDay)
+                refreshAlarmSchedule()
             } catch (error: CancellationException) { throw error }
             catch (error: Exception) {
                 ready.completeExceptionally(error)
@@ -61,6 +77,7 @@ class NotificationRuntime(context: Context, host: NotificationHost) {
         io.docview.push.host.PushUserChannel.setChannel(if (paid)
             io.docview.push.host.PushUserChannel.UserChannelType.PAID
             else io.docview.push.host.PushUserChannel.UserChannelType.NATURAL)
+        audienceReady.complete(Unit)
         initialize()
         PushEnvironment.scope.launch {
             try {
@@ -73,6 +90,7 @@ class NotificationRuntime(context: Context, host: NotificationHost) {
                         TriggerCtrl.cancelDayPoolNotification()
                     }
                 }
+                alarms.refresh()
             } catch (cancelled: CancellationException) { throw cancelled }
             catch (error: Exception) {
                 android.util.Log.w("CleanPush", "Unable to update day-pool eligibility", error)
@@ -91,4 +109,29 @@ class NotificationRuntime(context: Context, host: NotificationHost) {
     }
 
     suspend fun awaitReady() { initialize(); ready.await() }
+
+    /** Remax 激活回调和前台恢复共用调度入口；配置读取与注册不占用主线程。 */
+    fun refreshAlarmSchedule() {
+        initialize()
+        PushEnvironment.scope.launch {
+            try { ready.await(); withTimeoutOrNull(500L) { audienceReady.await() }; alarms.refresh() }
+            catch (cancelled: CancellationException) { throw cancelled }
+            catch (error: Exception) { android.util.Log.w("CleanPush", "Unable to refresh alarm schedule", error) }
+        }
+    }
+
+    /** Receiver 的有界任务等待实际发布结束；重启/更新只恢复调度，不能直接展示通知。 */
+    internal suspend fun handleAlarmWakeup(token: String?, restore: Boolean) {
+        awaitReady()
+        // 宿主恢复已保存的渠道通常只需一次 IO；未能确认时按 standard tier，不能猜测买量归因。
+        withTimeoutOrNull(500L) { audienceReady.await() }
+        if (!restore && io.docview.push.host.PushUserChannel.isConfirmedPaidUser() && !ContentController.isInitialized()) {
+            ContentController.initialize(app, firstObservedEpochDay)
+        }
+        if (restore) alarms.refresh(force = true)
+        else if (token != null) alarms.deliver(token)
+    }
+
+    /** 不依赖 ready 成功，避免冷初始化失败后留下已消费的 Alarm 注册标记。 */
+    internal suspend fun recoverAlarmWakeup(token: String) = alarms.recoverDelivery(token)
 }

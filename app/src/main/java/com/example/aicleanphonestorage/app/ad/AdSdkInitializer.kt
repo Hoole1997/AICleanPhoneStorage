@@ -53,7 +53,18 @@ internal object AdSdkInitializer {
                 // 此等待不改变启动页原有通知权限、consent 的执行顺序和 allowed 处理方式。
                 kotlinx.coroutines.withTimeoutOrNull(5_000L) { telemetryReady.await() }
                 ChannelUserController.setDefaultChannel(BuildConfig.DEFAULT_USER_CHANNEL)
-                if (FirebaseApp.getApps(application).isNotEmpty()) ConfigRemoteManager.initialize()
+                if (FirebaseApp.getApps(application).isNotEmpty()) {
+                    // initialize 发起异步 fetchAndActivate；成功回调后再读取解密配置并重排 alarm。
+                    // 该 SDK 仅提供一个回调槽，项目在此统一注册，避免多个业务互相覆盖监听。
+                    ConfigRemoteManager.setOnConfigUpdatedCallback {
+                        (application as? io.docview.push.NotificationRuntimeOwner)
+                            ?.notificationRuntime?.refreshAlarmSchedule()
+                    }
+                    ConfigRemoteManager.initialize()
+                    // 已初始化时 SDK 不再发成功回调；这次入口也需要复核当前线上策略。
+                    (application as? io.docview.push.NotificationRuntimeOwner)
+                        ?.notificationRuntime?.refreshAlarmSchedule()
+                }
                 Log.i(TAG, "SDK initialization: invoking AppOpenBiddingInitializer")
                 // 与来源项目一致，在 SDK 的配置回调中安装默认值。SDK 自行拉取云端 ID 并管理请求时限；
                 // 启动页离线退出不取消应用级 SDK 初始化，google 本地 ID 为空也必须调用。

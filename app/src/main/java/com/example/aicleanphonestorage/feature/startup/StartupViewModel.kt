@@ -76,6 +76,7 @@ internal class StartupViewModel(
         saved["startup.notification.title"] = notification?.content?.bounded()?.title
         saved["startup.notification.text"] = notification?.content?.bounded()?.text
         saved["startup.notification.background"] = notification?.fromBackground
+        saved["startup.notification.trigger_source"] = notification?.triggerSource
         // 等待中的新通知只更新目标；已交接后的新入口才开启下一次广告请求。
         if (current.value.consumed) {
             offlineJob?.cancel()
@@ -99,7 +100,8 @@ internal class StartupViewModel(
     fun entry() = StartupEntry(
         NotificationDestination.fromKey(saved[DESTINATION]), saved[PREVIEW], saved[HOT_START] ?: false,
         NotificationClickContext.create(saved["startup.notification.origin"], saved["startup.notification.title"],
-            saved["startup.notification.text"], saved["startup.notification.background"] ?: true),
+            saved["startup.notification.text"], saved["startup.notification.background"] ?: true,
+            saved["startup.notification.trigger_source"]),
     )
 
     fun permissionFinished() {

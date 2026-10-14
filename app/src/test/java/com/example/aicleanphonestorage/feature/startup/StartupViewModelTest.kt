@@ -82,14 +82,18 @@ class StartupViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         try {
             val saved = SavedStateHandle()
-            val first = com.example.aicleanphonestorage.feature.push.NotificationClickContext.create("local", "First", "First body", true)
+            val first = com.example.aicleanphonestorage.feature.push.NotificationClickContext.create(
+                "local", "First", "First body", true, triggerSource = "alarmmanager",
+            )
             val vm = StartupViewModel(saved, clock = { testScheduler.currentTime }) {}
             vm.accept(StartupEntry(NotificationDestination.HOME, notification = first))
-            val restored = StartupViewModel(SavedStateHandle(saved.keys().associateWith { saved.get<Any?>(it) }), clock = { testScheduler.currentTime }) {}
+            val restoredSaved = SavedStateHandle(saved.keys().associateWith { saved.get<Any?>(it) })
+            val restored = StartupViewModel(restoredSaved, clock = { testScheduler.currentTime }) {}
             assertEquals(first, restored.entry().notification)
             val second = com.example.aicleanphonestorage.feature.push.NotificationClickContext.create("resident", "Second", "Second body", false)
             restored.accept(StartupEntry(NotificationDestination.HOME, notification = second))
             assertEquals(second, restored.entry().notification)
+            assertNull(restoredSaved.get<String>("startup.notification.trigger_source"))
             restored.accept(StartupEntry(NotificationDestination.HOME))
             assertNull(restored.entry().notification)
             runCurrent()

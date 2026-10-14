@@ -52,17 +52,19 @@ internal class CleanNotificationHost(
             )
         } else com.example.aicleanphonestorage.app.ad.AdAnalytics.report(name, properties)
         // 复用模块的 FCM/定时触发事件。仅“确保存在”不会重建已有通知，这里请求同 ID 内容刷新。
-        // 常驻展示上报不是 Notific_Pull，不会形成刷新递归，也不改变 notification 模块逻辑。
-        if (name == "Notific_Pull") refreshResident()
+        // Alarm 仅检查普通推送，不顺带请求常驻服务；其他触发沿用现有常驻刷新。
+        if (name == "Notific_Pull" && properties["trigger_source"] != "alarmmanager") refreshResident()
     }
 
-    // 用户选择双层屏幕事件监听；不启用 periodicPushEnabled 的旧定时推送。
+    // 屏幕事件、旧周期任务与 Alarm 的开关各自独立，Alarm 由在线参数控制。
     override val backgroundServiceEnabled = true
 
     override val periodicPushEnabled: Boolean
         get() = true
 
     override suspend fun awaitContentLanguage() = awaitLanguage()
+
+    override suspend fun alarmWakeupConfig(): String? = AlarmWakeupRemoteConfig.read()
 
     override val contentLanguageTag: String
         get() = AppCompatDelegate.getApplicationLocales()[0]?.toLanguageTag()

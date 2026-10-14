@@ -1,0 +1,11 @@
+{
+  "alarm_wakeup_enabled": 1,
+  "paid_tier": {
+    "alarm_wakeup_enabled": 1,
+    "service_heartbeat_interval": 15
+  },
+  "standard_tier": {
+    "alarm_wakeup_enabled": 0,
+    "service_heartbeat_interval": 15
+  }
+}

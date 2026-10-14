@@ -67,7 +67,9 @@ fun entryPointPendingIntent(
     intent.putExtra(LANDING_NOTIFICATION_ID, notificationId)
     applyIntent?.invoke(intent)
     // 同一普通通知槽位也按业务动作区分 PendingIntent，旧卡片不会被后续另一业务覆盖路由。
-    intent.action = "${context.packageName}.push.$notificationId.${intent.getIntExtra(LANDING_NOTIFICATION_ACTION, Content.TYPE_HOME)}"
+    val alarmSource = if (intent.getStringExtra(LANDING_NOTIFICATION_FROM) == "alarmmanager") ".alarmmanager" else ""
+    // 构建后若因前台/撤权取消发布，独立来源的 PI 不能改写已显示的普通推送点击埋点。
+    intent.action = "${context.packageName}.push.$notificationId.${intent.getIntExtra(LANDING_NOTIFICATION_ACTION, Content.TYPE_HOME)}$alarmSource"
 
 
     return PendingIntent.getActivity(

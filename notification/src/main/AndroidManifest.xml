@@ -15,8 +15,16 @@
 
     <!-- 锁屏监听权限 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application>
+        <!-- 系统重启/升级仅恢复唯一任务；自定义 alarm 仅由显式 immutable PendingIntent 投递。 -->
+        <receiver android:name=".alarm.AlarmWakeupReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
         <!-- WorkManager 初始化 -->
         <provider
             android:name="androidx.startup.InitializationProvider"

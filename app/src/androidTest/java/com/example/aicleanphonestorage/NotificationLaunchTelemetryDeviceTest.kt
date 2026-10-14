@@ -66,6 +66,47 @@ class NotificationLaunchTelemetryDeviceTest {
         NotificationLaunchTelemetry.clicked(null) { _, _ -> fail("Ordinary launch must not report notification clicks") }
     }
 
+    @Test fun alarmTriggerSurvivesStartupAndIsConsumedWithTheNotificationSnapshot() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val incoming = Intent().putExtra("from_notification", true)
+            .putExtra(NotificationNavigation.EXTRA_DESTINATION, "clean")
+            .putExtra(io.docview.push.builder.LANDING_NOTIFICATION_FROM, "alarmmanager")
+            .putExtra("landing_notification_title", "Alarm title")
+            .putExtra("landing_notification_content", "Alarm body")
+        val entry = StartupNavigation.read(incoming, fromBackground = true)
+        assertEquals("local", entry.notification?.origin)
+        assertEquals("alarmmanager", entry.notification?.triggerSource)
+        val events = mutableListOf<Pair<MetricEvent, Map<String, Any>>>()
+        val sink = EventSink { event, values -> events += event to values }
+        NotificationLaunchTelemetry.clicked(entry.notification, sink)
+
+        val normalized = StartupNavigation.startupIntent(context, entry)
+        assertEquals("alarmmanager", normalized.getStringExtra(NotificationLaunchTelemetry.TRIGGER_SOURCE))
+        assertFalse(normalized.hasExtra(io.docview.push.builder.LANDING_NOTIFICATION_FROM))
+        val home = StartupNavigation.homeIntent(context, StartupNavigation.read(normalized, fromBackground = false))
+        NotificationLaunchTelemetry.entered(home, sink)
+        NotificationLaunchTelemetry.entered(home, sink)
+
+        assertEquals(listOf(MetricEvent.NOTIFICATION_CLICK, MetricEvent.NOTIFICATION_ENTER), events.map { it.first })
+        assertEquals(events.first().second, events.last().second)
+        assertEquals("alarmmanager", events.last().second["trigger_source"])
+        assertEquals(1, events.last().second["Notific_Type"])
+        assertEquals("true", events.last().second["from_background"])
+        assertFalse(home.hasExtra(NotificationLaunchTelemetry.TRIGGER_SOURCE))
+        assertFalse(home.hasExtra(NotificationLaunchTelemetry.ORIGIN))
+    }
+
+    @Test fun unknownTriggerIsDroppedAndWritingLegacyContextClearsPriorTrigger() {
+        val input = Intent().putExtra("from_notification", true)
+            .putExtra(io.docview.push.builder.LANDING_NOTIFICATION_FROM, "untrusted".repeat(1000))
+        val snapshot = requireNotNull(NotificationLaunchTelemetry.read(input, fromBackground = false))
+        assertNull(snapshot.triggerSource)
+        assertFalse(snapshot.properties().containsKey("trigger_source"))
+        val normalized = Intent().putExtra(NotificationLaunchTelemetry.TRIGGER_SOURCE, "alarmmanager")
+        NotificationLaunchTelemetry.write(normalized, snapshot)
+        assertFalse(normalized.hasExtra(NotificationLaunchTelemetry.TRIGGER_SOURCE))
+    }
+
     @Test fun largeNotificationExtrasAreBoundedAndResidentContentUsesActualResourceText() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val input = Intent().putExtra("from_notification", true)

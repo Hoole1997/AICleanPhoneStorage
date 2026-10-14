@@ -22,6 +22,8 @@ import io.docview.push.utils.TopicMgr
 import io.docview.push.utils.Logger
 import io.docview.push.worker.KeepAliveWorker
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import io.docview.push.host.PushEventReporter
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -50,6 +52,7 @@ class TimingCtrl private constructor() : DefaultLifecycleObserver {
     private var context: Context? = null
     private var applicationScreenRegistration: ScreenEventRegistration? = null
     private val screenEvents = ScreenEventGate()
+    private val dispatchMutex = Mutex()
 
     /**
      * 初始化通知时机控制器
@@ -241,43 +244,42 @@ class TimingCtrl private constructor() : DefaultLifecycleObserver {
      * @param type 通知类型
      */
     fun triggerNotificationIfAllowed(type: CheckCtrl.NotificationType) {
-        io.docview.push.host.PushEnvironment.scope.launch { triggerOnWorker(type) }
+        io.docview.push.host.PushEnvironment.scope.launch { triggerNotificationAndAwait(type) }
     }
 
-    private fun triggerOnWorker(type: CheckCtrl.NotificationType) {
-        // 分池仅属于已确认的买量用户；自然/未确认渠道不进入频次检查、取池及普通推送流程。
-        if (!io.docview.push.host.PushUserChannel.isConfirmedPaidUser()) return
-        val description = when (type) {
-            CheckCtrl.NotificationType.UNLOCK -> "解锁通知"
-            CheckCtrl.NotificationType.BACKGROUND -> "后台通知"
-            CheckCtrl.NotificationType.KEEPALIVE -> "保活通知"
-            CheckCtrl.NotificationType.FCM -> "FCM推送通知"
-            CheckCtrl.NotificationType.RESIDENT -> ""
-            CheckCtrl.NotificationType.EARTHQUAKE -> "地震通知"
+    /** 一次检查等待实际发布并记录次数，Alarm Receiver 不遗留脱离时限的发送协程。 */
+    internal suspend fun triggerNotificationAndAwait(
+        type: CheckCtrl.NotificationType,
+        intervalMillis: Long? = null,
+        canSend: () -> Boolean = { true },
+    ) = dispatchMutex.withLock {
+        val source = if (type == CheckCtrl.NotificationType.ALARM_MANAGER)
+            mapOf("trigger_source" to type.string) else emptyMap()
+        fun failed(reason: String) {
+            Logger.d("通知检查未通过: trigger=${type.name}, reason=$reason")
+            PushEventReporter.reportData("Notific_Show_Fail", mapOf("reason" to "app_inner_${type.string}_$reason") + source)
         }
-        // UNLOCK 与 BACKGROUND 的埋点同为 local_push，日志必须保留具体触发类型。
-        Logger.d("开始检查${description}: trigger=${type.name}")
-        PushEventReporter.reportData("Notific_Pull", mapOf("topic" to "localPush"))
-
-        // 检查是否可以触发通知，并获取具体的拦截原因
-        val checkResult = CheckCtrl.getInstance().canTriggerNotificationWithReason(type)
-        if (!checkResult.first) {
-            val blockReason = checkResult.second
-            val reasonString = blockReason?.reason ?: "unknown"
-            val reasonDescription = blockReason?.description ?: "未知原因"
-
-            Logger.d("${description}检查未通过，跳过触发 - trigger=${type.name}, reason=$reasonString, 原因: ${reasonDescription}")
-            PushEventReporter.reportData("Notific_Show_Fail", mapOf(
-                "reason" to "app_inner_${type.string}_${reasonString}",
-            ))
-            return
+        // 分池仍仅属于已确认的买量用户，独立 Alarm 开关不改变普通推送的用户资格。
+        if (!io.docview.push.host.PushUserChannel.isConfirmedPaidUser()) {
+            if (source.isNotEmpty()) failed("audience_not_eligible")
+            return@withLock
         }
-
-        Logger.d("触发${description}")
-        TriggerCtrl.triggerGeneralNotification(type){
-            CheckCtrl.getInstance().recordNotificationTrigger(type)
-            CheckCtrl.getInstance().incrementNotificationCount()
+        if (!canSend()) return@withLock
+        Logger.d("开始检查通知: trigger=${type.name}")
+        PushEventReporter.reportData("Notific_Pull", mapOf("topic" to "localPush") + source)
+        val checker = CheckCtrl.getInstance()
+        val checked = checker.canTriggerNotificationWithReason(type, intervalMillis)
+        if (!checked.first) { failed(checked.second?.reason ?: "unknown"); return@withLock }
+        val app = context ?: return@withLock
+        if (!io.docview.push.NotificationPermissionAccess.isGranted(app, TriggerCtrl.CHANNEL_ID_GENERAL)) {
+            failed("channel_disabled")
+            return@withLock
         }
+        val sent = TriggerCtrl.triggerGeneralNotificationAndAwait(type,
+            canSend = { canSend() && checker.canTriggerNotificationWithReason(type, intervalMillis).first },
+            onSent = { checker.recordNotificationTrigger(type); checker.incrementNotificationCount() },
+        )
+        if (!sent) failed(checker.canTriggerNotificationWithReason(type, intervalMillis).second?.reason ?: "notification_not_sent")
     }
 
     /**

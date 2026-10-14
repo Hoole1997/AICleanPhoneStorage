@@ -14,6 +14,8 @@ interface NotificationHost {
     val contentLanguageTag: String get() = "en"
     /** 冷启动先恢复 APP 语言，防止后台首条通知抢在语言偏好恢复之前生成。 */
     suspend fun awaitContentLanguage() {}
+    /** null 表示线上尚未就绪，空串表示参数缺失/无效；模块统一选择有效线上/缓存/本地默认配置。 */
+    suspend fun alarmWakeupConfig(): String? = null
     fun contentIntent(destination: NotificationDestination): PendingIntent
     fun residentViews(compact: Boolean): RemoteViews
     fun residentContent() = io.docview.push.analytics.NotificationContent(appName, "")

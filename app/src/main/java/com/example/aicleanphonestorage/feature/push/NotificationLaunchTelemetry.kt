@@ -11,6 +11,7 @@ import io.docview.push.analytics.NotificationVisibility
 internal object NotificationLaunchTelemetry {
     const val ORIGIN = "notification.metrics.origin"
     const val FROM_BACKGROUND = "notification.metrics.from_background"
+    const val TRIGGER_SOURCE = "notification.metrics.trigger_source"
 
     fun origin(intent: Intent): String? {
         intent.getStringExtra(ORIGIN)?.takeIf { it in NotificationClickContext.origins }?.let { return it }
@@ -27,13 +28,17 @@ internal object NotificationLaunchTelemetry {
         val source = origin(intent) ?: return null
         val content = NotificationContentIntent.read(intent)
         val background = if (intent.hasExtra(FROM_BACKGROUND)) intent.getBooleanExtra(FROM_BACKGROUND, fromBackground) else fromBackground
-        return NotificationClickContext.create(source, content.title, content.text, background)
+        // 原始模块 Intent 与启动页规范化快照共用白名单，来源与通知类型分别保留。
+        val trigger = if (intent.hasExtra(TRIGGER_SOURCE)) intent.getStringExtra(TRIGGER_SOURCE)
+            else intent.getStringExtra(io.docview.push.builder.LANDING_NOTIFICATION_FROM)
+        return NotificationClickContext.create(source, content.title, content.text, background, trigger)
     }
 
     fun write(intent: Intent, snapshot: NotificationClickContext?) {
         clear(intent)
         if (snapshot == null) return
         intent.putExtra(ORIGIN, snapshot.origin).putExtra(FROM_BACKGROUND, snapshot.fromBackground)
+        snapshot.triggerSource?.let { intent.putExtra(TRIGGER_SOURCE, it) }
         NotificationContentIntent.write(intent, snapshot.content)
     }
 
@@ -52,6 +57,7 @@ internal object NotificationLaunchTelemetry {
     private fun clear(intent: Intent) {
         intent.removeExtra(ORIGIN)
         intent.removeExtra(FROM_BACKGROUND)
+        intent.removeExtra(TRIGGER_SOURCE)
         NotificationContentIntent.clear(intent)
     }
 }
