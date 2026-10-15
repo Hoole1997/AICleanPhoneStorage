@@ -1,10 +1,10 @@
 # Collect / XM 分发与联调记录
 
-记录日期：2026-10-12。来源是用户为本产品提供的 SDK 下载文件；不记录下载链接的签名参数、Token 或后台密钥。正式接入用于 `google`，分发声明包名为 `com.ai.clean.phone.storage.junk.cleaner`。普通 `localDebug/localRelease` 不合入 SDK；用户另行授权的 `localRiskDebug` 使用真实联调 applicationId 和测试地址，可在本机编译、执行。Google 渠道仍只允许 GitHub Actions 构建。
+首次记录日期：2026-10-12；接线说明更新于 2026-10-15。来源是用户为本产品提供的 SDK 下载文件；不记录下载链接的签名参数、Token 或后台密钥。正式接入用于 `google`，分发声明包名为 `com.ai.clean.phone.storage.junk.cleaner`。普通 `localDebug/localRelease` 现按 local 自身的 `xmRiskEnabled` 决定是否合入真实 SDK；独立的 `localRiskDebug` 保留其真实联调 applicationId 和测试地址。local 可在本机编译、执行，Google 渠道仍只允许 GitHub Actions 构建。
 
 ## 原始文件与完整性
 
-`app/libs` 保存 SDK 方的原始字节；`scripts/prepare_product_risk_sdks.py` 生成构建副本，`gradle/product-risk-sdk.gradle.kts` 仅将副本合入 `google` 和 `localRiskDebug`，不覆盖源文件。
+`app/libs` 保存 SDK 方的原始字节；`scripts/prepare_product_risk_sdks.py` 生成构建副本，`gradle/product-risk-sdk.gradle.kts` 将副本合入 `google`、独立 `localRiskDebug` 及已启用风控的普通 local，不覆盖源文件。Google 使用原有 `googleImplementation`；普通 local 开启时使用 `localImplementation` 覆盖其全部 buildType，关闭时仅由 `riskDebugImplementation` 为独立联调包提供 SDK，避免同一 variant 重复声明 AAR。
 
 | 仓库文件 | 分发文件 / 版本 | 原始 SHA-256 |
 |---|---|---|
@@ -37,10 +37,12 @@ SDK 入口均为 native。宿主读取当前 variant 的 `XM_RISK_BASE_URL`，�
 | 构建 | 实际 applicationId | 风控配置 |
 |---|---|---|
 | `google` | `com.ai.clean.phone.storage.junk.cleaner` | `https://aiclean.gravitonlumina.com/`，启用 |
-| 普通 `localDebug/localRelease` | `com.leafmotivation.quizguessoncolor` | 地址为空，关闭，不打包 SDK |
+| 普通 `localDebug/localRelease` | `com.leafmotivation.quizguessoncolor` | 按 `app/src/local/config.properties` 的 `xmRiskEnabled` 启停；当前已启用，Base URL 为 `https://aimouse.xoxneaxrch.com/` |
 | `localRiskDebug` | `com.hotpotgames.happysave.global` | `http://test-happysave.movieapi.novhop.com/`，启用 |
 
-联调参数独立放在 `app/src/localRiskDebug/config.properties`，不改普通 local/google 配置。HTTP 仅通过该 variant 的 network security config 放行精确测试域名，不放行子域名或其他明文地址。SDK 的 `com.ai.clean…` namespace 是入口类路径，不等于 APK 的 applicationId；随包 `IntegrityReportServiceTest` 的协议测试以运行时包名派生请求密钥，支持按真实 applicationId 联调。但 Collect/native 是否还有分发包绑定须由真机结果确认，不能仅凭类路径或协议测试保证跨包可用。
+普通 local 使用自身配置文件、原包名及原有 Firebase JSON，不借用 Google 或独立联调包的参数。开启时仅向 `localDebug/localRelease` 映射真实 SDK 源码和 keepRules。普通 local 和 Google 继续使用原有 HTTPS 地址校验及全局禁止明文流量配置；本次 HTTP 临时测试用的例外校验、清单和白名单资源均已移除。
+
+独立联调参数仍放在 `app/src/localRiskDebug/config.properties`，其原有 network security config 只放行 `test-happysave.movieapi.novhop.com` 精确域名，不放行子域名或其他明文地址，也不作用于普通 local 或 Google。SDK 的 `com.ai.clean…` namespace 是入口类路径，不等于 APK 的 applicationId；随包 `IntegrityReportServiceTest` 的协议测试以运行时包名派生请求密钥，支持按真实 applicationId 联调。但 Collect/native 是否还有分发包绑定须由真机结果确认，不能仅凭类路径或协议测试保证跨包可用。
 
 测试包未在当前 Firebase 项目注册，`localRiskDebug` 关闭 Google Services 资源生成及远程推送，保留普通 local/google 原有 JSON 和包名。不能手改 `google-services.json` 冒充注册；Firebase、FCM、Remote Config 联调需要在 Firebase 中注册匹配的测试应用并取得其真实配置。
 
@@ -66,7 +68,7 @@ SDK 入口均为 native。宿主读取当前 variant 的 `XM_RISK_BASE_URL`，�
 
 公开 lambda 外壳分别有 65 / 23 个类引用该注解描述符，native 内部是否反射访问不可见。构建副本因此只删除 XM 中的同名定义，保留 Collect 的单一定义并保留注解，不将两份同时删掉。其余 AAR 条目保持原字节。
 
-Collect consumer 中重复且过宽的 android/androidx/com.google keep 需要限定；`src/xmRiskSdk/java` 与 `src/xmRiskSdk/keepRules/vendor-risk.keep` 由 google 和 localRiskDebug 共用，保留产品 SDK 包、加固所需 Kotlin/Kotlinx、Play Integrity/GMS Tasks/Gson，以及 SDK 网络所需 OkHttp/Okio。普通 local 使用 `src/riskDisabled/java` 工厂，不合入 SDK 和这些规则。不能用 dontwarn 掩盖未声明依赖。
+Collect consumer 中重复且过宽的 android/androidx/com.google keep 需要限定；`src/xmRiskSdk/java` 与 `src/xmRiskSdk/keepRules/vendor-risk.keep` 由 google、独立 localRiskDebug 及已启用风控的普通 local 共用，保留产品 SDK 包、加固所需 Kotlin/Kotlinx、Play Integrity/GMS Tasks/Gson，以及 SDK 网络所需 OkHttp/Okio。普通 local 开关同时决定编译接线和运行时配置：开启时编译真实工厂、合入 SDK 和这些规则；关闭时改用 `src/riskDisabled/java` 工厂且不合入 SDK 或规则，不生成伪造的成功检测结果。不能用 dontwarn 掩盖未声明依赖。
 
 ## 冷启动和失败边界
 
@@ -92,7 +94,11 @@ SDK debug 始终关闭，不输出指纹、Token、deviceId 或原始远端响�
 
 ## 验证范围
 
-2026-10-13 缓存修复、协议兼容和限制遥测的 local 真机复核见 [验证记录](../verification/device-risk-2026-10-13/README.md)。以下为最初接入的历史验证范围。
+2026-10-15 普通 local 开启真实 SDK 后，localDebug 构建、Lint 和 320 项 app 单测通过，其中风控 44 项。最初 HTTP 地址观察到 301 跳转，SDK 报 HTTP 401；宿主约 6.8 秒进入 `FAILED_OPEN / SDK_ERROR`，原 consent 正常执行并到达 MainActivity。该结果验证此次失败正常放行，不能据此确定 401 的原因。
+
+改为同域名 HTTPS 后，真机收到 `code="success"`、`data.device_id=null`、`device_risk.decision="reject"` 的有效拒绝响应，观察到 `XM_Upload_PlayIntegrity_Result` 和 `Get_Result`，本次未收到 PI Fail 事件。宿主约 6.626 秒进入 `APPLIED`，SDK 缓存时间戳更新；原 consent 在约 0.928–0.930 秒执行，MainActivity 约 5.14 秒到达。该次检测完成了响应解析及初次策略同步，仍未取得 deviceId，不能把有效拒绝当成检测失败。此次未观察到 `Ad_Block_*` 事件，`APPLIED` 也不代表全部广告已被拦截；服务端拒绝原因尚未确认，不能因同时检测到 ADB、VPN 或 DNS 异常就断言拒绝由它们导致。最终保留 HTTPS 配置，详细结果及后续复测以 [本次普通 local 验证记录](../verification/device-risk-local-2026-10-15/README.md) 为准。
+
+2026-10-13 缓存修复、协议兼容和限制遥测的 local 真机复核见 [验证记录](../verification/device-risk-2026-10-13/README.md)。以下均为 2026-10-12 最初接入的历史验证范围，其中普通 local 当时尚未启用 SDK。
 
 本次本地复核：`assembleLocalRiskDebug`、`lintLocalRiskDebug`、`testLocalDebugUnitTest` 和 `assembleLocalDebug` 通过；共 294 项 app 单测（其中风控 32 项）无失败。联调 APK 为 `app/build/outputs/apk/local/riskDebug/app-local-riskDebug.apk`，产物元数据确认实际包名为 `com.hotpotgames.happysave.global`，Google Services 资源生成任务跳过，普通 local 仍为原包名。联调构建使用 SDK 公有 `skipRuntimeAdIdConfig`，不等待不存在的 Firebase 在线广告 ID；该设置不作用于普通 local 或 Google。
 

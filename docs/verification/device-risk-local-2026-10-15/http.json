@@ -1,0 +1,134 @@
+{
+  "run": "cold3",
+  "package": "com.leafmotivation.quizguessoncolor",
+  "base_url": "http://aimouse.xoxneaxrch.com/",
+  "launch_ok": true,
+  "safe_startup_logs": [
+    {
+      "seconds": 0.964,
+      "message": "Startup consent: started"
+    },
+    {
+      "seconds": 0.979,
+      "message": "Startup consent: completed"
+    },
+    {
+      "seconds": 1.13,
+      "message": "Startup splash: requested"
+    },
+    {
+      "seconds": 6.757,
+      "message": "Device risk: status=FAILED_OPEN reason=SDK_ERROR"
+    }
+  ],
+  "first_home_seconds": 5.252,
+  "resumed_components": [
+    "com.leafmotivation.quizguessoncolor/com.example.aicleanphonestorage.app.MainActivity"
+  ],
+  "cache_before": {
+    "exists": true,
+    "cached_at_millis": null,
+    "has_result": null,
+    "sdk_http_success": null,
+    "local_flags": {},
+    "error_present": false,
+    "response_code": "other"
+  },
+  "cache_after": {
+    "exists": true,
+    "cached_at_millis": null,
+    "has_result": null,
+    "sdk_http_success": null,
+    "local_flags": {},
+    "error_present": false,
+    "response_code": "other"
+  },
+  "event_names": [
+    "XM_Detection_Cache_Clear",
+    "XM_PlayIntegrity_Result",
+    "XM_PlayIntegrity_Start",
+    "XM_Upload_PlayIntegrity_Fail",
+    "XM_Upload_PlayIntegrity_Start"
+  ],
+  "pi_error_codes": [],
+  "pi_error_names": [],
+  "event_metadata": {
+    "XM_Detection_Cache_Clear": {
+      "keys": [
+        "#distinct_id",
+        "#event_name",
+        "#time",
+        "#type",
+        "#uuid",
+        "properties"
+      ],
+      "fields": [
+        {
+          "path": ".properties.reason",
+          "type": "str",
+          "length": 7,
+          "http_codes": [],
+          "negative_codes": [],
+          "categories": []
+        }
+      ]
+    },
+    "XM_PlayIntegrity_Start": {
+      "keys": [
+        "#distinct_id",
+        "#event_name",
+        "#time",
+        "#type",
+        "#uuid",
+        "properties"
+      ],
+      "fields": []
+    },
+    "XM_PlayIntegrity_Result": {
+      "keys": [
+        "#distinct_id",
+        "#event_name",
+        "#time",
+        "#type",
+        "#uuid",
+        "properties"
+      ],
+      "fields": []
+    },
+    "XM_Upload_PlayIntegrity_Start": {
+      "keys": [
+        "#distinct_id",
+        "#event_name",
+        "#time",
+        "#type",
+        "#uuid",
+        "properties"
+      ],
+      "fields": []
+    },
+    "XM_Upload_PlayIntegrity_Fail": {
+      "keys": [
+        "#distinct_id",
+        "#event_name",
+        "#time",
+        "#type",
+        "#uuid",
+        "properties"
+      ],
+      "fields": [
+        {
+          "path": ".properties.errorMessage",
+          "type": "str",
+          "length": 8,
+          "http_codes": [
+            "401"
+          ],
+          "negative_codes": [],
+          "categories": []
+        }
+      ]
+    }
+  },
+  "fatal_exception_seen": false,
+  "capture_truncated": false
+}

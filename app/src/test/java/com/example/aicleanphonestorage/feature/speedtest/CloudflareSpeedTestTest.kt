@@ -1,6 +1,7 @@
 package com.example.aicleanphonestorage.feature.speedtest
 
-import com.example.aicleanphonestorage.feature.speedtest.data.CloudflareSpeedTest
+import com.example.aicleanphonestorage.feature.speedtest.data.HttpSpeedTest
+import com.example.aicleanphonestorage.feature.speedtest.data.CloudflareSpeedTestEndpoint
 import com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestConnectivity
 import com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestConnectivityState
 import com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestEvent
@@ -87,7 +88,7 @@ class CloudflareSpeedTestTest {
     private val connectivity = FakeConnectivity()
 
     private fun repository(limits: SpeedTestLimits = this.limits) =
-        CloudflareSpeedTest(connectivity, limits, server.url("/").toString().trimEnd('/'))
+        HttpSpeedTest(connectivity, limits, listOf(CloudflareSpeedTestEndpoint(server.url("/").toString().trimEnd('/'))))
 
     private suspend fun failure(limits: SpeedTestLimits = this.limits): SpeedTestException.Reason = try {
         withTimeout(20_000) { repository(limits).run().toList() }

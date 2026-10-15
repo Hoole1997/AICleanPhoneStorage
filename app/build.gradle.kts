@@ -23,6 +23,9 @@ fun Map<*, *>.section(name: String): Map<*, *> = this[name] as? Map<*, *> ?: emp
 fun Map<*, *>.text(name: String) = this[name]?.toString().orEmpty()
 fun buildString(value: String) = "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
 
+// local 的开关同时决定编译接线和运行时配置，避免启用后仍使用无 SDK 工厂。
+val localRiskEnabled = channelConfig("local").getProperty("xmRiskEnabled", "false").toBooleanStrict()
+
 // 联调配置独立于 google/local，不通过任务名、环境变量或包名伪装切换生产配置。
 // riskDebug 仅属于 local，真正 applicationId 会在公开 Variant API 中覆盖。
 val riskDebugConfig = channelConfig("localRiskDebug")
@@ -144,8 +147,16 @@ android {
         viewBinding = true
         buildConfig = true
     }
-    // 正式 SDK 与本地联调共用适配代码；普通 local 不编译 native 类型、不合入这些规则。
+    // 启用风控的渠道共用适配器；local 关闭时不编译 native 类型或打包 SDK。
     sourceSets {
+        // DEBUG 工具共用代码/资源；release 只编译空入口，正式包不包含调试页面或清单入口。
+        listOf("debug", "riskDebug").forEach { source ->
+            maybeCreate(source).apply {
+                kotlin.directories += "src/debugTools/java"
+                res.srcDir("src/debugTools/res")
+                manifest.srcFile("src/debugTools/AndroidManifest.xml")
+            }
+        }
         listOf("google", "localRiskDebug").forEach { source ->
             maybeCreate(source).apply {
                 kotlin.directories += "src/xmRiskSdk/java"
@@ -153,7 +164,14 @@ android {
             }
         }
         listOf("localDebug", "localRelease").forEach { source ->
-            maybeCreate(source).kotlin.directories += "src/riskDisabled/java"
+            maybeCreate(source).apply {
+                if (localRiskEnabled) {
+                    kotlin.directories += "src/xmRiskSdk/java"
+                    keepRules.directories += "src/xmRiskSdk/keepRules"
+                } else {
+                    kotlin.directories += "src/riskDisabled/java"
+                }
+            }
         }
     }
     // 应用内切换可离线完成，避免语言资源只随安装时的系统语言拆分交付。
@@ -175,7 +193,7 @@ dependencies {
     implementation(libs.lottie)
 
     implementation("com.github.toukaremax:core:1.0.15")
-    implementation("com.github.toukaremax:bill:support_risk_1.0.11")
+    implementation("com.github.toukaremax:bill:support_risk_1.0.12")
     implementation("com.github.toukaremax:ad-risk:1.0.8")
     implementation("com.google.code.gson:gson:2.13.1")
     implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.0.0")

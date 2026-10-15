@@ -4,7 +4,7 @@ import android.app.Application
 import com.example.aicleanphonestorage.BuildConfig
 
 /**
- * 只合入正式 Google 和独立 localRiskDebug 的产品适配器，普通 local 不编译此目录。
+ * Google、独立 localRiskDebug 及已启用风控的普通 local 共用产品适配器。
  *
  * 地址未配置时先返回不可用实现，避免访问 native 类、获取指纹或上传设备数据。
  * 所有 SDK 操作仅接收 Application，不保留启动页和其他 Activity。

@@ -14,7 +14,7 @@ data class SpeedTestMetrics(
     val uploadJitterMs: Double? = null,
 )
 
-/** 测速节点：Cloudflare 只公开机房 IATA 代码（如 HKG），不返回城市或运营商。 */
+/** 当前真实测速路线及节点；Cloudflare 使用机房代码，备用使用服务公开的节点名称。 */
 data class SpeedTestServer(val provider: String, val node: String?)
 
 enum class SpeedTestNetworkType { Wifi, Cellular, Ethernet, Other }

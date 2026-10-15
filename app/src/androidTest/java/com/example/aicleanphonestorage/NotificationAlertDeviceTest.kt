@@ -61,21 +61,21 @@ class NotificationAlertDeviceTest {
         assertTrue(migrated.shouldVibrate())
     }
 
-    @Test fun firstOrdinaryMessageUsesAlertingChannelAndRepeatsAreExplicitlySilent() = runBlocking {
+    @Test fun ordinaryMessagesAllowUpdateAlertsAndExplicitRepeatsRemainSilent() = runBlocking {
         (context.applicationContext as CleanApplication).notificationRuntime.awaitReady()
         val data = GeneralNotificationData(981739, "Alert policy test", "Test content")
         val firstMethod = TriggerCtrl::class.java.getDeclaredMethod("general", GeneralNotificationData::class.java)
             .apply { isAccessible = true }
         val first = firstMethod.invoke(TriggerCtrl, data) as Notification
         assertEquals(GeneralNotificationChannels.ALERTING, first.channelId)
-        assertTrue(first.flags and Notification.FLAG_ONLY_ALERT_ONCE != 0)
+        assertFalse(first.flags and Notification.FLAG_ONLY_ALERT_ONCE != 0)
         assertFalse(first.flags and Notification.FLAG_ONGOING_EVENT != 0)
         val method = TriggerCtrl::class.java.getDeclaredMethod("buildGeneralNotification",
             GeneralNotificationData::class.java, Boolean::class.javaPrimitiveType).apply { isAccessible = true }
         repeat(3) {
             val followUp = method.invoke(TriggerCtrl, data, true) as Notification
             assertEquals(TriggerCtrl.CHANNEL_ID_GENERAL_SILENT, followUp.channelId)
-            assertTrue(followUp.flags and Notification.FLAG_ONLY_ALERT_ONCE != 0)
+            assertFalse(followUp.flags and Notification.FLAG_ONLY_ALERT_ONCE != 0)
             assertEquals(0, followUp.defaults and (Notification.DEFAULT_SOUND or Notification.DEFAULT_VIBRATE))
             assertNull(followUp.sound)
             assertNull(followUp.vibrate)

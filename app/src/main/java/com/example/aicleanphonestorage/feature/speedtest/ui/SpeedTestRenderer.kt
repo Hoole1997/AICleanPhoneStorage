@@ -1,5 +1,7 @@
 package com.example.aicleanphonestorage.feature.speedtest.ui
 
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.view.isInvisible
@@ -40,6 +42,18 @@ internal class SpeedTestRenderer(private val binding: ScreenSpeedTestBinding) {
         }
         binding.speedDetails.detailsNetwork.detailIcon.setImageResource(R.drawable.ic_speed_network)
         binding.speedDetails.detailsServer.detailIcon.setImageResource(R.drawable.ic_speed_server)
+        // 长节点名/运营商和放大字体须自然换行；窄屏或大字号不挤在两个半宽列中。
+        val configuration = context.resources.configuration
+        if (configuration.fontScale >= 1.5f || configuration.screenWidthDp < 360) {
+            with(binding.speedDetails.detailsColumns) {
+                orientation = LinearLayout.VERTICAL
+                for (index in 0 until childCount) {
+                    getChildAt(index).layoutParams = LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ).apply { topMargin = if (index == 0) 0 else (16 * resources.displayMetrics.density).roundToLong().toInt() }
+                }
+            }
+        }
     }
 
     fun render(state: SpeedTestUiState) {

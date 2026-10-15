@@ -9,10 +9,10 @@
         android:orientation="vertical">
         <com.google.android.material.textview.MaterialTextView android:id="@+id/detail_title" style="@style/Widget.Home.Text.Medium"
             android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="14sp"
-            android:textColor="@color/speed_metric_value" android:maxLines="2" android:ellipsize="end" tools:text="NETVIGATOR" />
+            android:textColor="@color/speed_metric_value" tools:text="NETVIGATOR" />
         <com.google.android.material.textview.MaterialTextView android:id="@+id/detail_subtitle" style="@style/Widget.Home.Text"
             android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp"
-            android:textSize="12sp" android:textColor="@color/speed_detail_subtitle" android:maxLines="1" android:ellipsize="end"
+            android:textSize="12sp" android:textColor="@color/speed_detail_subtitle"
             tools:text="SM-G986N" />
     </LinearLayout>
 </LinearLayout>

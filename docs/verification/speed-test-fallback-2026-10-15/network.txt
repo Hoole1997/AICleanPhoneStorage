@@ -1,0 +1,10 @@
+
+com.example.aicleanphonestorage.SpeedTestNetworkDeviceTest:INSTRUMENTATION_STATUS: speedtest=provider=Cloudflare node=FRA download=8399KB/s upload=820KB/s ping=232.0ms dJitter=106.42857142857143 uJitter=86.1875 duration=19.6s progressEvents=170
+INSTRUMENTATION_STATUS_CODE: 0
+.INSTRUMENTATION_STATUS: speedtest=provider=LibreSpeed node=Los Angeles download=39KB/s upload=529KB/s ping=280.0ms dJitter=102.0 uJitter=71.0 duration=12.1s progressEvents=103
+INSTRUMENTATION_STATUS_CODE: 0
+.
+
+Time: 31.785
+
+OK (2 tests)

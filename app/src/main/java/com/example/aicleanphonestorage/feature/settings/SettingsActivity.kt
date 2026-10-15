@@ -22,6 +22,7 @@ class SettingsActivity : AppCompatActivity() {
             page.settingsBody.paddingBottom,
         )
         menu = ViewSettingsMenuBinding.inflate(layoutInflater, page.settingsBody, true)
+        DebugSettingsEntry.install(this, page.settingsBody)
         menu.settingsNotifications.setOnClickListener {
             com.hjq.permissions.XXPermissions.startPermissionActivity(
                 this,

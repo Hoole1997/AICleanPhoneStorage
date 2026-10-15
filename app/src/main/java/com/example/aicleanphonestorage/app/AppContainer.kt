@@ -115,7 +115,7 @@ class AppContainer(context: Context) {
     }
     // OkHttpClient 在仓库内首次测速时于 IO 线程懒创建；进程内复用，测速结束释放连接。
     internal val speedTestRepository: com.example.aicleanphonestorage.feature.speedtest.data.SpeedTestRepository by lazy {
-        com.example.aicleanphonestorage.feature.speedtest.data.CloudflareSpeedTest(speedTestNetwork)
+        com.example.aicleanphonestorage.feature.speedtest.data.HttpSpeedTest(speedTestNetwork)
     }
     val networkTrafficRepository: NetworkTrafficRepository by lazy {
         AndroidNetworkTrafficRepository(applicationContext, taskExecutor)

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <ProgressBar
+        android:id="@+id/ad_debug_preview_progress"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@string/ad_debug_showing" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/ad_debug_preview_result"
+        style="@style/Widget.Home.Text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:accessibilityLiveRegion="polite"
+        android:text="@string/ad_debug_showing"
+        android:textColor="@color/home_text_primary"
+        android:textIsSelectable="true"
+        android:textSize="14sp" />
+    <!-- 只有 SettingsPage 的单层滚动容器；由 SDK 负责原生广告素材及点击区域。 -->
+    <FrameLayout
+        android:id="@+id/ad_debug_preview_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:minHeight="240dp" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/ad_debug_preview_close"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:minHeight="48dp"
+        android:text="@string/ad_debug_close_preview"
+        android:textAllCaps="false" />
+</LinearLayout>

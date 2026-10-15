@@ -9,7 +9,7 @@
             android:importantForAccessibility="no" android:contentDescription="@null" tools:src="@drawable/ic_speed_ping" />
         <com.google.android.material.textview.MaterialTextView android:id="@+id/metric_label" style="@style/Widget.Home.Text"
             android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="2dp"
-            android:textSize="11sp" android:textColor="@color/speed_metric_label" android:gravity="center" android:maxLines="2"
+            android:textSize="11sp" android:textColor="@color/speed_metric_label" android:gravity="center"
             tools:text="Ping" />
     </LinearLayout>
     <Space android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />

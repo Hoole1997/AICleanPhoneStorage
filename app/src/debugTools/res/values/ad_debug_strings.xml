@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Internal DEBUG tools deliberately support English and Simplified Chinese; other locales use English. -->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="settings_ad_debug">DEBUG · Advertising</string>
+    <string name="ad_debug_description">Choose a source and format, then tap Show ad. SDK limits and fill still apply. Source and ad switch persist across restarts; Restore defaults restores automatic bidding and enables ads.</string>
+    <string name="ad_debug_controls">Ad controls</string>
+    <string name="ad_debug_global_enabled">Enable SDK ads</string>
+    <string name="ad_debug_source">Ad source</string>
+    <string name="ad_debug_format">Ad format</string>
+    <string name="ad_debug_show">Show ad</string>
+    <string name="ad_debug_showing">Requesting / showing ad…</string>
+    <string name="ad_debug_refresh">Refresh status</string>
+    <string name="ad_debug_reset">Restore defaults</string>
+    <string name="ad_debug_clear">Clear result</string>
+    <string name="ad_debug_max_debugger">Open MAX mediation debugger</string>
+    <string name="ad_debug_result">Request result</string>
+    <string name="ad_debug_no_result">No request yet.</string>
+    <string name="ad_debug_diagnostics">SDK status and restrictions</string>
+    <string name="ad_debug_result_cleared">Result cleared.</string>
+    <string name="ad_debug_preview_title">DEBUG · Ad preview</string>
+    <string name="ad_debug_close_preview">Close preview</string>
+    <string name="ad_debug_interrupted">Preview interrupted by a page recreation. Tap Show ad to request again.</string>
+    <string name="ad_debug_error">Request error: %1$s</string>
+    <string name="ad_debug_format_app_open">App open</string>
+    <string name="ad_debug_format_interstitial">Interstitial</string>
+    <string name="ad_debug_format_rewarded">Rewarded</string>
+    <string name="ad_debug_format_full_screen_native">Full-screen native</string>
+    <string name="ad_debug_format_native">Native preview</string>
+    <string name="ad_debug_format_banner">Banner preview</string>
+</resources>

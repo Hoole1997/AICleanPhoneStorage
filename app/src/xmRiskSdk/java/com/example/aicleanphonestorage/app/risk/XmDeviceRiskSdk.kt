@@ -18,7 +18,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeoutOrNull
 
 /**
- * 产品 Collect → XM 适配器；正式 Google 与独立 localRiskDebug 共用真实入口映射。
+ * 产品 Collect → XM 适配器；所有已启用风控的渠道共用真实入口映射。
  *
  * 加固入口是 native，同步返回时间不能由协程强制中断。因此入口放在单线程、有界队列
  * worker，宿主只挂起等待回调；超时取消立即释放 continuation 并忽略迟到结果。这里

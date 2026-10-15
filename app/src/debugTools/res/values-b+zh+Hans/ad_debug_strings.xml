@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_ad_debug">DEBUG · 广告调试</string>
+    <string name="ad_debug_description">选择广告来源和类型后点击展示。来源与总开关会跨重启保存；“恢复默认”切回自动竞价并开启广告。展示仍受 SDK 限制与真实填充影响。</string>
+    <string name="ad_debug_controls">广告控制</string>
+    <string name="ad_debug_global_enabled">开启 SDK 广告</string>
+    <string name="ad_debug_source">广告来源</string>
+    <string name="ad_debug_format">广告类型</string>
+    <string name="ad_debug_show">展示广告</string>
+    <string name="ad_debug_showing">正在请求或展示广告…</string>
+    <string name="ad_debug_refresh">刷新状态</string>
+    <string name="ad_debug_reset">恢复默认设置</string>
+    <string name="ad_debug_clear">清除结果</string>
+    <string name="ad_debug_max_debugger">打开 MAX 聚合调试器</string>
+    <string name="ad_debug_result">请求结果</string>
+    <string name="ad_debug_no_result">尚未发起请求。</string>
+    <string name="ad_debug_diagnostics">SDK 状态与限制</string>
+    <string name="ad_debug_result_cleared">已清除结果。</string>
+    <string name="ad_debug_preview_title">DEBUG · 广告预览</string>
+    <string name="ad_debug_close_preview">关闭预览</string>
+    <string name="ad_debug_interrupted">页面重建已中断预览，请点击“展示广告”重新请求。</string>
+    <string name="ad_debug_error">请求异常：%1$s</string>
+    <string name="ad_debug_format_app_open">开屏广告</string>
+    <string name="ad_debug_format_interstitial">插屏广告</string>
+    <string name="ad_debug_format_rewarded">激励广告</string>
+    <string name="ad_debug_format_full_screen_native">全屏原生广告</string>
+    <string name="ad_debug_format_native">原生广告预览</string>
+    <string name="ad_debug_format_banner">横幅广告预览</string>
+</resources>

@@ -18,7 +18,7 @@ import net.corekit.core.controller.ChannelUserController
 
 /**
  * Application 的唯一装配点：SDK/策略/遥测各自独立，页面只等待首次有期限的决策。
- * 普通 local 不合入 SDK，本地联调有独立构建；不持 Activity，不跟随热启动重复检测或轮询设备。
+ * 各渠道由自身开关选择 SDK；不持 Activity，不跟随热启动重复检测或轮询设备。
  */
 internal object DeviceRiskRuntime {
     private val lock = Any()

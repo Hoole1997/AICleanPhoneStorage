@@ -1,0 +1,25 @@
+{
+  "variant": "localDebug",
+  "package": "com.leafmotivation.quizguessoncolor",
+  "unit_tests": {
+    "tests": 344,
+    "failures": 0,
+    "errors": 0,
+    "speed_tests": 49
+  },
+  "lint_severity_counts": {
+    "Warning": 220
+  },
+  "network_tests": 2,
+  "rendering_tests": 2,
+  "device_vpn_off": "user confirmed",
+  "primary": "Cloudflare",
+  "backup": "LibreSpeed / Clouvider Los Angeles",
+  "backup_url": "https://la.speedtest.clouvider.net/backend",
+  "google_built": false,
+  "google_installed": false,
+  "git_committed": false,
+  "network_test_apk_sha256": "9b7a40e5b397ee5cf8425480be07034e145d7d5c4b938def0c518a868661092a",
+  "rendering_test_apk_sha256": "0618318522052dcc39ed682294d78725b64f7a6c9d87b0f0005f189c78fae88b",
+  "scope": "Historical working-tree verification including concurrent debug tools and Bill 1.0.12; delivery build tracked separately."
+}

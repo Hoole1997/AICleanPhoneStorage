@@ -1,0 +1,6 @@
+<!-- Internal DEBUG tools deliberately support English and Simplified Chinese; other locales use English. -->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="ad_debug_state_operation_failed">Unable to update ad debug settings</string>
+    <string name="ad_debug_state_cancelled">Preview cancelled</string>
+    <string name="ad_debug_state_restored">Automatic bidding restored and global ads enabled. Other SDK restrictions still apply.</string>
+</resources>

@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"
     android:paddingVertical="16dp" android:background="@drawable/speed_card_surface">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:baselineAligned="false">
+    <LinearLayout android:id="@+id/details_columns" android:layout_width="match_parent" android:layout_height="wrap_content" android:baselineAligned="false">
         <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:paddingHorizontal="8dp">
             <include android:id="@+id/details_network" layout="@layout/item_speed_detail" />
         </FrameLayout>

@@ -1,0 +1,21 @@
+{
+  "variant": "localDebug",
+  "unit_tests": {
+    "tests": 320,
+    "failures": 0,
+    "errors": 0,
+    "risk_tests": 44
+  },
+  "lint_severity_counts": {
+    "Warning": 220
+  },
+  "package": "com.leafmotivation.quizguessoncolor",
+  "networkSecurityConfig": null,
+  "usesCleartextTraffic": "false",
+  "google_built": false,
+  "google_installed": false,
+  "consent_source_modified": false,
+  "git_committed": false,
+  "final_base_url": "https://aimouse.xoxneaxrch.com/",
+  "apk_sha256": "9300e18d82d7dfee710f493827111251eb133d81ed6cd0eabd624f14642bc53d"
+}

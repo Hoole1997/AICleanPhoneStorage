@@ -1,0 +1,5 @@
+<resources>
+    <string name="ad_debug_state_operation_failed">广告调试设置更新失败</string>
+    <string name="ad_debug_state_cancelled">已取消广告预览</string>
+    <string name="ad_debug_state_restored">已恢复自动竞价并开启全局广告，SDK 其他限制仍然生效。</string>
+</resources>

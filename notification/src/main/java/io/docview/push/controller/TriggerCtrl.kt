@@ -364,7 +364,7 @@ object TriggerCtrl {
 
     /**
      * 构建通知对象，可指定是否使用静音通道
-     * 首条允许系统提醒，后续更新只更新内容；展开状态由系统和用户决定
+     * 普通通道的首次发布与后续更新均允许系统提醒；展开状态由系统和用户决定
      * @param model 通知数据
      * @param useSilent 是否使用静音通道
      */
@@ -429,9 +429,8 @@ object TriggerCtrl {
 
         Logger.d("构建通知，使用${if (useSilent) "静音" else "普通"}通道: $channelId，${if (useBigLayout) "大布局(Android 13+)" else "原始策略"}")
 
-        // 同 ID 卡片仍显示时，不重复响铃/震动；被用户清除后下一条可以再次提醒。
-        builder.setOnlyAlertOnce(true)
-            .setSilent(useSilent)
+        // 普通卡片更新也允许提醒；显式静音通道仍保持静音，实际提示受系统冷却和用户设置控制。
+        builder.setSilent(useSilent)
             .setDefaults(if (useSilent) 0 else Notification.DEFAULT_SOUND or Notification.DEFAULT_VIBRATE)
         return builder.build()
     }

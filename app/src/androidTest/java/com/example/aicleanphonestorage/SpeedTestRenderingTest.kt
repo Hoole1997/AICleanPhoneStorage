@@ -51,6 +51,9 @@ class SpeedTestRenderingTest {
             val suffix = "${locale.language}_$scale"
             screen("testing_$suffix", testing, locale, scale)
             screen("result_$suffix", done, locale, scale)
+            // 备用必须显示自己的节点，且没有 Cloudflare Ray ID 时隐藏 Test ID 行。
+            screen("backup_$suffix", done.copy(result = SpeedTestResult(metrics,
+                SpeedTestServer("LibreSpeed", "Los Angeles"), null)), locale, scale)
             SpeedTestException.Reason.entries.forEach { reason -> dialog("failed_${reason.name}_$suffix", reason, locale, scale) }
         }
     }
@@ -93,6 +96,8 @@ class SpeedTestRenderingTest {
             SpeedTestRenderer(binding).render(state)
             binding.root
         }.also { root ->
+            if (state is SpeedTestUiState.Done && state.result.testId == null)
+                assertEquals(View.GONE, root.findViewById<View>(R.id.details_test_id).visibility)
             // 数值与单位基线对齐；标签与数值完整显示，不被截断。
             val metric = root.findViewById<View>(R.id.metrics_ping)
             val value = metric.findViewById<TextView>(R.id.metric_value)
@@ -100,7 +105,9 @@ class SpeedTestRenderingTest {
             assertEquals("$name baseline", value.top + value.baseline, unit.top + unit.baseline)
             allTexts(root).forEach { text ->
                 val layout = text.layout ?: return@forEach
-                if (text.isShown) assertEquals("$name ellipsized: ${text.text}", 0, (0 until layout.lineCount).sumOf { layout.getEllipsisCount(it) })
+                assertEquals("$name ellipsized: ${text.text}", 0, (0 until layout.lineCount).sumOf { layout.getEllipsisCount(it) })
+                assertTrue("$name clipped height: ${text.text}",
+                    text.height - text.compoundPaddingTop - text.compoundPaddingBottom >= layout.height)
             }
         }
     }
@@ -152,7 +159,8 @@ class SpeedTestRenderingTest {
         return root
     }
 
-    private fun allTexts(view: View): List<TextView> = when (view) {
+    // 离屏根视图未 attach，isShown 恒为 false；按可见父链遍历，才能真正检查可见文案。
+    private fun allTexts(view: View): List<TextView> = if (view.visibility != View.VISIBLE) emptyList() else when (view) {
         is TextView -> listOf(view)
         is ViewGroup -> (0 until view.childCount).flatMap { allTexts(view.getChildAt(it)) }
         else -> emptyList()
