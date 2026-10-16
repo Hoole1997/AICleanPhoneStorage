@@ -176,9 +176,12 @@ class NotificationTriggerSourceDeviceTest {
             val entry = StartupNavigation.read(incoming, background)
             val events = mutableListOf<Pair<MetricEvent, Map<String, Any>>>()
             val sink = EventSink { event, values -> events += event to values }
-            NotificationLaunchTelemetry.clicked(entry.notification, sink)
             val normalized = StartupNavigation.startupIntent(context, entry)
-            val home = StartupNavigation.homeIntent(context, StartupNavigation.read(normalized, !background))
+            // 启动页先使用点击快照配对上报，首页收到的路由不再携带已消费的埋点快照。
+            val restored = StartupNavigation.read(normalized, !background)
+            NotificationLaunchTelemetry.entered(restored.notification, sink)
+            assertEquals(2, events.size)
+            val home = StartupNavigation.homeIntent(context, restored.copy(notification = null))
             NotificationLaunchTelemetry.entered(home, sink)
             NotificationLaunchTelemetry.entered(home, sink)
             assertEquals(listOf(MetricEvent.NOTIFICATION_CLICK, MetricEvent.NOTIFICATION_ENTER), events.map { it.first })

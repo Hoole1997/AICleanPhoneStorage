@@ -44,6 +44,7 @@ import com.example.aicleanphonestorage.feature.notifications.ui.NotificationEntr
 import kotlinx.coroutines.launch
 import com.example.aicleanphonestorage.feature.rating.*
 import com.example.aicleanphonestorage.feature.push.NotificationNavigation
+import com.example.aicleanphonestorage.feature.push.NotificationLaunchTelemetry
 import com.example.aicleanphonestorage.feature.push.PushPermissionCoordinator
 import com.example.aicleanphonestorage.feature.push.PushPermissionViewModel
 import io.docview.push.NotificationDestination
@@ -155,6 +156,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // 直接进首页的通知已计数时，进程/页面重建不能再次消费系统保存的原始 Intent。
+        if (savedInstanceState?.getBoolean(NotificationLaunchTelemetry.ENTRY_CONSUMED) == true)
+            intent.putExtra(NotificationLaunchTelemetry.ENTRY_CONSUMED, true)
         // 兼容升级前已经存在的、仍指向 MainActivity 的通知 PendingIntent。
         if (StartupNavigation.needsStartup(intent)) {
             redirectedToStartup = true
@@ -425,7 +429,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleNotificationIntent(intent: Intent) {
-        com.example.aicleanphonestorage.feature.push.NotificationLaunchTelemetry.entered(intent)
+        NotificationLaunchTelemetry.entered(intent)
         val destination = NotificationNavigation.consume(intent) ?: return
         when (destination) {
             NotificationDestination.HOME -> homeActions.cancelPending()
@@ -445,6 +449,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        val notificationConsumed = NotificationLaunchTelemetry.ENTRY_CONSUMED
+        outState.putBoolean(notificationConsumed, intent.getBooleanExtra(notificationConsumed, false))
         // Bundle 只保存小型预览模式标记，滚动位置交给 RecyclerView，绝不存入列表或位图。
         HomePreviewSupport.saveSelection(outState, previewSelection)
         super.onSaveInstanceState(outState)

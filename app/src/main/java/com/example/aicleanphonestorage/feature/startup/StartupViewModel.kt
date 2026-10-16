@@ -71,12 +71,7 @@ internal class StartupViewModel(
         saved[PREVIEW] = entry.previewMode
         saved[HOT_START] = entry.hotStart
         // 只保存有界基本字段，供广告/权限等待期间的页面重建使用，不保存 Notification/完整 Intent。
-        val notification = entry.notification
-        saved["startup.notification.origin"] = notification?.origin
-        saved["startup.notification.title"] = notification?.content?.bounded()?.title
-        saved["startup.notification.text"] = notification?.content?.bounded()?.text
-        saved["startup.notification.background"] = notification?.fromBackground
-        saved["startup.notification.trigger_source"] = notification?.triggerSource
+        saveNotification(entry.notification)
         // 等待中的新通知只更新目标；已交接后的新入口才开启下一次广告请求。
         if (current.value.consumed) {
             offlineJob?.cancel()
@@ -93,6 +88,21 @@ internal class StartupViewModel(
                     consentCompleted = current.value.consentCompleted,
                 )
         }
+    }
+
+    private fun saveNotification(notification: NotificationClickContext?) {
+        saved["startup.notification.origin"] = notification?.origin
+        saved["startup.notification.title"] = notification?.content?.bounded()?.title
+        saved["startup.notification.text"] = notification?.content?.bounded()?.text
+        saved["startup.notification.background"] = notification?.fromBackground
+        saved["startup.notification.trigger_source"] = notification?.triggerSource
+    }
+
+    /** 启动页优先消费点击快照；不依赖广告/权限进度，重建及后续首页不再重复计数，业务目标保留。 */
+    fun consumeNotificationEntry(): NotificationClickContext? {
+        val notification = entry().notification ?: return null
+        saveNotification(null)
+        return notification
     }
 
     fun hasEntry() = saved.contains(DESTINATION)

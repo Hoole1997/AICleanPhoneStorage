@@ -61,3 +61,5 @@
 - 用户于 2026-10-15 要求 Alarm 最小间隔放宽到 1 分钟，默认仍为 15 分钟。`alarm_wakeup_config` 各 tier 的 `service_heartbeat_interval` 使用整数分钟，远程可配置范围为 1～1440 分钟；解析与调度共用边界，不影响其他通知来源的间隔。保持既有的待执行 Alarm，更新间隔从下一轮注册生效。
 
 - 用户于 2026-10-15 要求自家通知的 Notific_Show、Notific_Click、Notific_Enter 统一携带 `trigger_source`：解锁 `unlock`、退后台 `background`、KEEPALIVE `keepalive`、AlarmManager `alarmmanager`、FCM `fcm`、常驻 `resident`。保持现有 Notific_Type 分类不变；来源在构建通知时锁存，贯穿启动页和状态恢复，PendingIntent 按来源隔离。旧 `local_push` 无法细分时不得猜测来源；系统直接展示的 FCM 通知不补造客户端未收到的展示事件。
+
+- 用户于 2026-10-16 要求通知点击进入启动页即上报 Notific_Enter，不等待权限、广告或首页；Notific_Click 与 Notific_Enter 共用点击快照并配对上报。启动页优先消费，直接进入首页时才由首页兜底，同一次点击跨页、重建不重复；新的通知点击独立计数。

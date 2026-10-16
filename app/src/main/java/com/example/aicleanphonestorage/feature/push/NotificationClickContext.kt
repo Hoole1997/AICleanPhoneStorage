@@ -3,7 +3,7 @@ package com.example.aicleanphonestorage.feature.push
 import io.docview.push.analytics.NotificationContent
 import io.docview.push.analytics.NotificationTriggerSource
 
-/** 点击时锁存的小型快照；Click 与 Enter 共用，进入首页后不重新判断后台状态。 */
+/** 点击时锁存的小型快照；Click 与 Enter 在首个入口共用，不在后续页面重新判断后台状态。 */
 internal data class NotificationClickContext(
     val origin: String,
     val content: NotificationContent,

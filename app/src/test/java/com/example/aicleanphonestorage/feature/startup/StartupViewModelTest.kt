@@ -13,6 +13,57 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class StartupViewModelTest {
     @Test
+    fun notificationEntryIsConsumedBeforeStartupFinishesAndStaysConsumedAfterRestore() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        try {
+            val saved = SavedStateHandle()
+            val snapshot = requireNotNull(NotificationClickContext.create("local", "Title", "Body", true, "unlock"))
+            val model = StartupViewModel(saved, clock = { testScheduler.currentTime }) {}
+            model.accept(StartupEntry(NotificationDestination.CLEAN, notification = snapshot))
+            // 不等待语言、权限、consent 或广告；进入启动页即消费，业务路由不受影响。
+            assertFalse(model.state.value.prepared)
+            assertFalse(model.state.value.ready)
+            assertEquals(snapshot, model.consumeNotificationEntry())
+            assertNull(model.consumeNotificationEntry())
+            assertEquals(NotificationDestination.CLEAN, model.entry().destination)
+            assertNull(model.entry().notification)
+
+            val restored = StartupViewModel(SavedStateHandle(saved.keys().associateWith { saved.get<Any?>(it) }),
+                clock = { testScheduler.currentTime }) {}
+            assertTrue(restored.hasEntry())
+            assertNull(restored.consumeNotificationEntry())
+            assertEquals(NotificationDestination.CLEAN, restored.entry().destination)
+            restored.permissionFinished()
+            restored.consentFinished()
+            runCurrent()
+            restored.adFinished(requireNotNull(restored.beginAd()))
+            advanceTimeBy(3_000)
+            runCurrent()
+            val home = requireNotNull(restored.consume())
+            assertEquals(NotificationDestination.CLEAN, home.destination)
+            assertNull(home.notification)
+        } finally { Dispatchers.resetMain() }
+    }
+
+    @Test
+    fun eachNewNotificationDuringStartupGetsOneEntryEvenWithIdenticalContent() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        try {
+            val model = StartupViewModel(SavedStateHandle(), clock = { testScheduler.currentTime }) {}
+            val snapshot = requireNotNull(NotificationClickContext.create("remote", "Same title", "Same body", false, "fcm"))
+            for (destination in listOf(NotificationDestination.PHOTOS, NotificationDestination.HOME)) {
+                model.accept(StartupEntry(destination, notification = snapshot))
+                assertEquals(snapshot, model.consumeNotificationEntry())
+                assertNull(model.consumeNotificationEntry())
+                assertEquals(destination, model.entry().destination)
+            }
+            model.accept(StartupEntry(NotificationDestination.HOME, hotStart = true))
+            assertNull(model.consumeNotificationEntry())
+            runCurrent()
+        } finally { Dispatchers.resetMain() }
+    }
+
+    @Test
     fun consentInvocationMustFinishBeforeRequestAndKeepsNotificationArrivingWhileSuspended() = runTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         try {

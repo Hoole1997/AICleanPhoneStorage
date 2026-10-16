@@ -6,6 +6,10 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.example.aicleanphonestorage.core.analytics.*
 import com.example.aicleanphonestorage.feature.push.*
 import com.example.aicleanphonestorage.feature.startup.StartupNavigation
+import com.example.aicleanphonestorage.feature.startup.StartupEntry
+import com.example.aicleanphonestorage.feature.startup.StartupViewModel
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModelStore
 import io.docview.push.analytics.NotificationContentIntent
 import org.junit.Assert.*
 import org.junit.Test
@@ -35,13 +39,14 @@ class NotificationLaunchTelemetryDeviceTest {
             val entry = StartupNavigation.read(incoming, fromBackground = background)
             val events = mutableListOf<Pair<MetricEvent, Map<String, Any>>>()
             val sink = EventSink { event, values -> events += event to values }
-            NotificationLaunchTelemetry.clicked(entry.notification, sink)
             val normalized = StartupNavigation.startupIntent(context, entry)
             assertFalse(normalized.hasExtra("landing_notification_content"))
             assertFalse(normalized.hasExtra("external_uri"))
             assertEquals("$source body", normalized.getStringExtra(NotificationContentIntent.TEXT))
-            // 启动广告/权限结束后应用状态可能反转，Enter 仍必须沿用点击时的快照。
-            val home = StartupNavigation.homeIntent(context, StartupNavigation.read(normalized, fromBackground = !background))
+            // 进入启动页就配对上报；广告/权限尚未结束，也不需要等待首页。
+            val consumed = enterStartup(StartupNavigation.read(normalized, fromBackground = !background), sink)
+            assertEquals(listOf("Notific_Click", "Notific_Enter"), events.map { it.first.wireName })
+            val home = StartupNavigation.homeIntent(context, consumed)
             NotificationLaunchTelemetry.entered(home, sink)
             NotificationLaunchTelemetry.entered(home, sink)
             assertEquals(listOf("Notific_Click", "Notific_Enter"), events.map { it.first.wireName })
@@ -63,7 +68,7 @@ class NotificationLaunchTelemetryDeviceTest {
         assertEquals("resident", NotificationLaunchTelemetry.origin(Intent("fixture.resident.clean.shown")
             .putExtra(NotificationNavigation.EXTRA_DESTINATION, "clean")))
         assertNull(NotificationLaunchTelemetry.read(Intent()))
-        NotificationLaunchTelemetry.clicked(null) { _, _ -> fail("Ordinary launch must not report notification clicks") }
+        NotificationLaunchTelemetry.entered(null as NotificationClickContext?) { _, _ -> fail("Ordinary launch must not report notification clicks") }
     }
 
     @Test fun alarmTriggerSurvivesStartupAndIsConsumedWithTheNotificationSnapshot() {
@@ -78,12 +83,13 @@ class NotificationLaunchTelemetryDeviceTest {
         assertEquals("alarmmanager", entry.notification?.triggerSource)
         val events = mutableListOf<Pair<MetricEvent, Map<String, Any>>>()
         val sink = EventSink { event, values -> events += event to values }
-        NotificationLaunchTelemetry.clicked(entry.notification, sink)
 
         val normalized = StartupNavigation.startupIntent(context, entry)
         assertEquals("alarmmanager", normalized.getStringExtra(NotificationLaunchTelemetry.TRIGGER_SOURCE))
         assertFalse(normalized.hasExtra(io.docview.push.builder.LANDING_NOTIFICATION_FROM))
-        val home = StartupNavigation.homeIntent(context, StartupNavigation.read(normalized, fromBackground = false))
+        val consumed = enterStartup(StartupNavigation.read(normalized, fromBackground = false), sink)
+        assertEquals(2, events.size)
+        val home = StartupNavigation.homeIntent(context, consumed)
         NotificationLaunchTelemetry.entered(home, sink)
         NotificationLaunchTelemetry.entered(home, sink)
 
@@ -94,6 +100,58 @@ class NotificationLaunchTelemetryDeviceTest {
         assertEquals("true", events.last().second["from_background"])
         assertFalse(home.hasExtra(NotificationLaunchTelemetry.TRIGGER_SOURCE))
         assertFalse(home.hasExtra(NotificationLaunchTelemetry.ORIGIN))
+    }
+
+    @Test fun directHomeConsumesRawNotificationOnceAndNewClickCanReportAgain() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val events = mutableListOf<Pair<MetricEvent, Map<String, Any>>>()
+        val sink = EventSink { event, values -> events += event to values }
+        val raw = Intent().putExtra("from_notification", true)
+            .putExtra(StartupNavigation.COMPLETED, true)
+            .putExtra(NotificationLaunchTelemetry.FROM_BACKGROUND, false)
+            .putExtra(io.docview.push.builder.LANDING_NOTIFICATION_FROM, "alarmmanager")
+            .putExtra("landing_notification_title", "Direct title")
+            .putExtra("landing_notification_content", "Direct body")
+        assertFalse(StartupNavigation.needsStartup(raw))
+        val nextClick = Intent(raw)
+        NotificationLaunchTelemetry.entered(raw, sink)
+        NotificationLaunchTelemetry.entered(raw, sink)
+        NotificationLaunchTelemetry.entered(Intent(raw), sink) // 系统重建保留已消费标记。
+        assertEquals(listOf(MetricEvent.NOTIFICATION_CLICK, MetricEvent.NOTIFICATION_ENTER), events.map { it.first })
+        assertEquals(events[0].second, events[1].second)
+        assertEquals("false", events[1].second["from_background"])
+        assertEquals("alarmmanager", events[1].second["trigger_source"])
+        assertEquals("Direct title", events[1].second["title"])
+        // 保留业务目标；消费埋点不能阻断后续首页路由。
+        assertNotNull(NotificationNavigation.read(raw))
+        assertNull(NotificationLaunchTelemetry.read(raw))
+        NotificationLaunchTelemetry.entered(nextClick, sink)
+        assertEquals(listOf(MetricEvent.NOTIFICATION_CLICK, MetricEvent.NOTIFICATION_ENTER,
+            MetricEvent.NOTIFICATION_CLICK, MetricEvent.NOTIFICATION_ENTER), events.map { it.first })
+        NotificationLaunchTelemetry.entered(Intent(context, com.example.aicleanphonestorage.app.MainActivity::class.java), sink)
+        assertEquals(4, events.size)
+    }
+
+    /** 复用生产启动状态消费逻辑；只注入本地事件出口，不打开广告或发送虚构埋点。 */
+    private fun enterStartup(entry: StartupEntry, sink: EventSink): StartupEntry {
+        lateinit var outgoing: StartupEntry
+        InstrumentationRegistry.getInstrumentation().runOnMainSync {
+            val saved = SavedStateHandle()
+            val store = ViewModelStore()
+            try {
+                val model = StartupViewModel(saved, prepare = {}).also { store.put("original", it) }
+                model.accept(entry)
+                NotificationLaunchTelemetry.entered(model.consumeNotificationEntry(), sink)
+                NotificationLaunchTelemetry.entered(model.consumeNotificationEntry(), sink)
+                val restored = StartupViewModel(SavedStateHandle(saved.keys().associateWith { saved.get<Any?>(it) }),
+                    prepare = {}).also { store.put("restored", it) }
+                NotificationLaunchTelemetry.entered(restored.consumeNotificationEntry(), sink)
+                outgoing = restored.entry()
+                assertEquals(entry.destination, outgoing.destination)
+                assertNull(outgoing.notification)
+            } finally { store.clear() }
+        }
+        return outgoing
     }
 
     @Test fun unknownTriggerIsDroppedAndWritingLegacyContextClearsPriorTrigger() {

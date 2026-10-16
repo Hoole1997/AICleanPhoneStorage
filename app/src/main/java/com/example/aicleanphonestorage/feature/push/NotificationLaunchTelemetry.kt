@@ -13,6 +13,7 @@ internal object NotificationLaunchTelemetry {
     const val ORIGIN = "notification.metrics.origin"
     const val FROM_BACKGROUND = "notification.metrics.from_background"
     const val TRIGGER_SOURCE = NotificationTriggerSource.EXTRA
+    const val ENTRY_CONSUMED = "notification.metrics.entry_consumed"
 
     fun origin(intent: Intent): String? {
         intent.getStringExtra(ORIGIN)?.takeIf { it in NotificationClickContext.origins }?.let { return it }
@@ -29,6 +30,7 @@ internal object NotificationLaunchTelemetry {
     }
 
     fun read(intent: Intent, fromBackground: Boolean = NotificationVisibility.backgroundForClick()): NotificationClickContext? {
+        if (intent.getBooleanExtra(ENTRY_CONSUMED, false)) return null
         val source = origin(intent) ?: return null
         val content = NotificationContentIntent.read(intent)
         val background = if (intent.hasExtra(FROM_BACKGROUND)) intent.getBooleanExtra(FROM_BACKGROUND, fromBackground) else fromBackground
@@ -45,22 +47,27 @@ internal object NotificationLaunchTelemetry {
 
     fun write(intent: Intent, snapshot: NotificationClickContext?) {
         clear(intent)
+        intent.removeExtra(ENTRY_CONSUMED)
         if (snapshot == null) return
         intent.putExtra(ORIGIN, snapshot.origin).putExtra(FROM_BACKGROUND, snapshot.fromBackground)
         snapshot.triggerSource?.let { intent.putExtra(TRIGGER_SOURCE, it) }
         NotificationContentIntent.write(intent, snapshot.content)
     }
 
-    fun clicked(snapshot: NotificationClickContext?, sink: EventSink = BusinessTelemetry) {
-        snapshot?.let { sink.send(MetricEvent.NOTIFICATION_CLICK, it.properties()) }
+    /** 入口已接收到通知点击即算进入，不等待权限、广告或首页。调用方先消费快照，再调用此方法。 */
+    fun entered(snapshot: NotificationClickContext?, sink: EventSink = BusinessTelemetry) {
+        snapshot ?: return
+        val properties = snapshot.properties()
+        sink.send(MetricEvent.NOTIFICATION_CLICK, properties)
+        sink.send(MetricEvent.NOTIFICATION_ENTER, properties)
     }
 
     fun entered(intent: Intent, sink: EventSink = BusinessTelemetry) {
-        // 仅消费启动页传来的规范化上下文；移除后旋转/再次调用不会通过遗留来源字段重复上报。
-        if (intent.getStringExtra(ORIGIN) !in NotificationClickContext.origins) return
-        val snapshot = read(intent)
+        // 首页兜底也兼容直接到达的旧通知/FCM Intent；标记阻止原始来源字段被再次识别。
+        val snapshot = read(intent) ?: return
+        intent.putExtra(ENTRY_CONSUMED, true)
         clear(intent)
-        snapshot?.let { sink.send(MetricEvent.NOTIFICATION_ENTER, it.properties()) }
+        entered(snapshot, sink)
     }
 
     private fun clear(intent: Intent) {

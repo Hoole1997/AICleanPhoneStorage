@@ -25,6 +25,7 @@ import com.example.aicleanphonestorage.core.permissions.PermissionCoordinator
 import com.example.aicleanphonestorage.core.permissions.PermissionFlowViewModel
 import com.example.aicleanphonestorage.databinding.ScreenStartupBinding
 import com.example.aicleanphonestorage.feature.push.PushPermissionCoordinator
+import com.example.aicleanphonestorage.feature.push.NotificationLaunchTelemetry
 import com.example.aicleanphonestorage.feature.push.PushPermissionViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.CancellationException
@@ -71,7 +72,6 @@ class StartupActivity : AppCompatActivity() {
         )
         com.example.aicleanphonestorage.feature.push.ResidentClickTelemetry.consume(intent)
         val incoming = StartupNavigation.read(intent)
-        if (savedInstanceState == null) com.example.aicleanphonestorage.feature.push.NotificationLaunchTelemetry.clicked(incoming.notification)
         // 在创建 SavedStateHandle 前规范化 Intent，仅允许有界自家通知埋点字段进入状态。
         setIntent(StartupNavigation.startupIntent(this, incoming))
         val binding = ScreenStartupBinding.inflate(layoutInflater)
@@ -95,6 +95,7 @@ class StartupActivity : AppCompatActivity() {
         }
         ViewCompat.requestApplyInsets(binding.root)
         if (!model.hasEntry()) model.accept(incoming)
+        reportNotificationEntry()
         if (model.entry().hotStart) {
             HotStartAdLog.event("startup_created mode=hot restored=${savedInstanceState != null}")
             model.permissionFinished()
@@ -138,11 +139,17 @@ class StartupActivity : AppCompatActivity() {
         if (permissions.onReturnIntent(intent)) return
         com.example.aicleanphonestorage.feature.push.ResidentClickTelemetry.consume(intent)
         val incoming = StartupNavigation.read(intent)
-        com.example.aicleanphonestorage.feature.push.NotificationLaunchTelemetry.clicked(incoming.notification)
         setIntent(StartupNavigation.startupIntent(this, incoming))
         model.accept(incoming)
+        reportNotificationEntry()
         if (incoming.hotStart) model.permissionFinished()
         proceedIfReady()
+    }
+
+    private fun reportNotificationEntry() {
+        NotificationLaunchTelemetry.entered(model.consumeNotificationEntry())
+        // Intent 与 SavedStateHandle 同步清除已消费的埋点快照，只把业务路由交给首页。
+        setIntent(StartupNavigation.startupIntent(this, model.entry()))
     }
 
     private fun proceedIfReady() {
