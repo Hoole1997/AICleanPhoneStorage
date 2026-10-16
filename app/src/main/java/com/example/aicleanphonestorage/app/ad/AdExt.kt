@@ -73,30 +73,14 @@ fun FragmentActivity.loadInterstitial(
     condition: () -> Boolean = { true },
     call: (Boolean) -> Unit,
 ) {
-    lifecycleScope.launch {
-        val transition = ForegroundTransitionGuard.hold("interstitial:$positionName")
-        try {
-            if (!condition.invoke() || !isAdSlotEnabled(positionName)) {
-                call.invoke(false)
-                return@launch
-            }
-
-            DeviceRiskRuntime.awaitInitialDecision()
-            coroutineContext.ensureActive()
-            if (!condition.invoke() || !isAdSlotEnabled(positionName) || !canRequestAfterRiskWait()) {
-                call.invoke(false)
-                return@launch
-            }
-
-            when (AdShowExt.showInterstitialAd(this@loadInterstitial, position = positionName)) {
-                is AdResult.Success -> call.invoke(true)
-                is AdResult.Failure -> call.invoke(false)
-            }
-        } catch (_: Exception) {
-            call.invoke(false)
-        } finally {
-            transition.close()
+    launchInterstitialRequest(positionName, call) {
+        if (!condition() || !isAdSlotEnabled(positionName)) return@launchInterstitialRequest false
+        DeviceRiskRuntime.awaitInitialDecision()
+        coroutineContext.ensureActive()
+        if (!condition() || !isAdSlotEnabled(positionName) || !canRequestAfterRiskWait()) {
+            return@launchInterstitialRequest false
         }
+        AdShowExt.showInterstitialAd(this@loadInterstitial, position = positionName) is AdResult.Success
     }
 }
 

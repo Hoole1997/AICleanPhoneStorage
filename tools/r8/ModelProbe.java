@@ -1,6 +1,7 @@
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import io.docview.push.config.ConfigKt;
+import io.docview.push.alarm.AlarmWakeupConfigKt;
 import io.docview.push.config.Content;
 import io.docview.push.config.ContentKt;
 import io.docview.push.config.DayContentPoolKt;
@@ -20,6 +21,15 @@ public final class ModelProbe {
                 root.resolve("notification/src/main/assets/pvvvush_config.json")));
         require(config.getPaidChannel().getDoNotDisturbStart() != null, "nested config");
         require(config.getOrganicChannel().getTotalPushCount() >= 0, "config fields");
+        // Alarm 使用显式 JsonReader，不依赖 DTO 字段名。经 R8 改名后仍须遵守线上/缓存协议。
+        var alarmJson = Files.readString(root.resolve("notification/src/main/assets/alarm_wakeup_config.json"));
+        var alarm = AlarmWakeupConfigKt.parseAlarmWakeupConfig(alarmJson);
+        require(alarm.policyFor(true).getEnabled(), "alarm paid default enabled");
+        require(!alarm.policyFor(false).getEnabled(), "alarm organic default disabled");
+        require(alarm.policyFor(true).getIntervalMinutes() == 15, "alarm default minutes");
+        var minimum = AlarmWakeupConfigKt.parseAlarmWakeupConfig(alarmJson.replace(": 15", ": 1"));
+        require(minimum.policyFor(true).getIntervalMinutes() == 1, "alarm one minute after R8");
+        require(!AlarmWakeupConfigKt.parseAlarmWakeupConfig("{}").getEnabled(), "invalid alarm config");
         List<Content> contents = ContentKt.parsePushContents(Files.readString(
                 root.resolve("notification/src/main/assets/pvvvvush_content_config.json")));
         require(!contents.isEmpty() && !contents.get(0).getTitle().isEmpty(), "TypeToken content list");
@@ -63,7 +73,7 @@ public final class ModelProbe {
         var json = JsonParser.parseString(gson.toJson(info)).getAsJsonObject();
         require(json.size() == 10 && json.get("magnitude").getAsDouble() == 3.5, "earthquake serialization");
         require(json.get("shortMagType").getAsString().equals("ML"), "earthquake JSON key");
-        System.out.println("PASS: config, content TypeToken, 141 daily entries and nested translations, both revenue arrays, nested earthquake models, JSON keys");
+        System.out.println("PASS: config, Alarm JsonReader and minute bounds, content TypeToken, 141 daily entries and nested translations, both revenue arrays, nested earthquake models, JSON keys");
     }
 
     private static void require(boolean condition, String contract) {

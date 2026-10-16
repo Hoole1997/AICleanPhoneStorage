@@ -44,9 +44,11 @@ internal class FileOperationEngine(
     private val executor: TaskExecutor,
     private val unusedPackages: com.example.aicleanphonestorage.feature.unused.data.UnusedPackages =
         com.example.aicleanphonestorage.feature.unused.data.AndroidUnusedPackages(context),
+    private val deleteMedia: (Uri) -> Int = { context.applicationContext.contentResolver.delete(it, null, null) },
 ) {
     private val app = context.applicationContext
     private val content = FileContentAccess(app)
+    private val videoTargets = VideoDeletionTargetResolver(app, content)
     private val compressor = PhotoCompressor(app, content)
     private val emptyDirectories = EmptyDirectoryDeleter(content)
     private val lock = Mutex()
@@ -87,7 +89,7 @@ internal class FileOperationEngine(
     suspend fun delete(operation: Long, progress: (Int, Int) -> Unit): OperationStep =
         lock.withLock {
             executor.io {
-                val managedMedia = index.operationFeature(operation)?.usesAllFilesMediaAccess == true
+                val feature = index.operationFeature(operation)
                 val operationContext = currentCoroutineContext()
                 val unused = com.example.aicleanphonestorage.feature.unused.data.UnusedClassifier(app, unusedPackages) { operationContext.ensureActive() }
                 val total = index.operationCount(operation)
@@ -99,6 +101,7 @@ internal class FileOperationEngine(
                     val media = ArrayList<ScannedFile>()
                     for (file in batch) {
                         currentCoroutineContext().ensureActive()
+                        var stage = "validate"
                         try {
                             // 旧版本缓存的垃圾候选同样要检查来源，不允许从旧结果页删除应用文档提供者内容。
                             if (file.backend == FileBackend.DOCUMENT &&
@@ -137,20 +140,37 @@ internal class FileOperationEngine(
                                 }
                             }
                             content.validate(file)
-                        if(file.path.isBlank())content.identityPath(file)?.let{index.rememberPath(file.id,it)}
+                            if (file.path.isBlank()) content.identityPath(file)?.let { index.rememberPath(file.id, it) }
                             // 删除原图前再次检查副本，避免生成后被移走/修改却仍删除原图。
                             index.output(operation, file.id)?.let { (uri, sha) ->
                                 verifyCopy(uri, sha)
                             }
-                            // 视频/相似照片已由用户授予所有文件访问时，直接走 Provider 删除；不主动创建额外系统确认。
-                            // 每项重新读取权限，兼容操作过程中撤权；其他清理入口仍保持原来的系统确认流程。
-                            if (file.backend == FileBackend.MEDIA && Build.VERSION.SDK_INT >= 30 &&
+                            val largeVideo = feature == CleanupFeature.LARGE_FILES && file.category == FileCategory.VIDEOS
+                            val managedMedia = feature?.usesAllFilesMediaAccess == true || largeVideo
+                            stage = "resolve_video"
+                            val target = if (largeVideo) {
+                                val mapped = videoTargets.resolve(file)
+                                DeletionFailureLog.route(operation, file, mapped != null)
+                                mapped ?: file
+                            } else file
+                            stage = "validate_target"
+                            if (target !== file) {
+                                // 映射期间原文件也可能变化；源授权和源元数据再次核对，媒体大小/时间单独校验。
+                                content.validate(file)
+                                content.validate(target)
+                                if (file.path.isBlank() && target.path.isNotBlank()) index.rememberPath(file.id, target.path)
+                            }
+                            if (target.backend == FileBackend.MEDIA) index.rememberDeleteUri(operation, file.id, target.uri)
+                            stage = "delete"
+                            // 大文件视频与独立视频入口共用此分支；其他文件仍保持原删除策略。
+                            // 每项重新检查所有文件权限；权限撤销或 OEM 拒绝时交给公开系统确认。
+                            if (target.backend == FileBackend.MEDIA && Build.VERSION.SDK_INT >= 30 &&
                                 !(managedMedia && android.os.Environment.isExternalStorageManager())) {
-                                media += file
+                                media += target
                                 continue
                             }
                             val deleted =
-                                when (file.backend) {
+                                when (target.backend) {
                                     FileBackend.DIRECT -> content.validatedFile(file).delete()
                                     FileBackend.DOCUMENT ->
                                         DocumentsContract.deleteDocument(
@@ -158,11 +178,12 @@ internal class FileOperationEngine(
                                             Uri.parse(file.uri),
                                         )
                                     FileBackend.MEDIA -> try {
-                                        content.resolver.delete(Uri.parse(file.uri), null, null) > 0
+                                        deleteMedia(Uri.parse(target.uri)) > 0
                                     } catch (error: SecurityException) {
                                         // OEM Provider 仍要求确认或授权在检查后被撤销时，退回公开系统确认 API。
                                         if (managedMedia && Build.VERSION.SDK_INT >= 30) {
-                                            media += file
+                                            DeletionFailureLog.failure(operation, file, feature, "direct_media_fallback", error)
+                                            media += target
                                             continue
                                         }
                                         throw error
@@ -171,7 +192,7 @@ internal class FileOperationEngine(
                             if (!deleted) throw IOException("Deletion rejected")
                             index.mark(operation, file.id, "deleted")
                             index.remove(file.id, notify = false)
-                            if (file.backend == FileBackend.DIRECT)
+                            if (target.backend == FileBackend.DIRECT)
                                 MediaScannerConnection.scanFile(app, arrayOf(file.path), null, null)
                         } catch (error: Exception) {
                             if (
@@ -186,17 +207,25 @@ internal class FileOperationEngine(
                                 )
                             }
                             expected(error)
+                            DeletionFailureLog.failure(operation, file, feature, stage, error)
                             index.mark(operation, file.id, "failed")
                         }
                         progress(++done, total)
                     }
                     if (media.isNotEmpty() && Build.VERSION.SDK_INT >= 30) {
                         // 系统在用户确认后执行这批删除，ActivityResult返回时再推进索引；单批远低于系统URI上限。
-                        val request =
-                            MediaStore.createDeleteRequest(
-                                content.resolver,
-                                media.map { Uri.parse(it.uri) },
-                            )
+                        val request = try {
+                            MediaStore.createDeleteRequest(content.resolver, media.map { Uri.parse(it.uri) })
+                        } catch (error: Exception) {
+                            expected(error)
+                            media.forEach {
+                                DeletionFailureLog.failure(operation, it, feature, "request_system_delete", error)
+                                index.mark(operation, it.id, "failed")
+                                progress(++done, total)
+                            }
+                            index.refresh()
+                            continue
+                        }
                         media.forEach { index.mark(operation, it.id, "awaiting") }
                         index.finishOperation(operation, "awaiting_delete")
                         index.refresh()
@@ -221,13 +250,21 @@ internal class FileOperationEngine(
                     if (systemDeleted) {
                         // 视频结果以系统媒体库中真实消失为准，避免把部分失败/撤销读取权统计成删除成功。
                         val removed = if (it.category != FileCategory.VIDEOS && !verifyPhotos) true else try {
-                            content.resolver.query(Uri.parse(it.uri), arrayOf(MediaStore.MediaColumns._ID), null, null, null)
+                            content.resolver.query(Uri.parse(index.deleteUri(operation, it.id) ?: it.uri), arrayOf(MediaStore.MediaColumns._ID), null, null, null)
                                 ?.use { cursor -> !cursor.moveToFirst() } == true
-                        } catch (_: SecurityException) { false }
+                        } catch (error: Exception) {
+                            expected(error)
+                            DeletionFailureLog.failure(operation, it, index.operationFeature(operation), "verify_system_delete", error)
+                            false
+                        }
                         if (removed) {
                             index.mark(operation, it.id, "deleted")
                             index.remove(it.id, notify = false)
-                        } else index.mark(operation, it.id, "failed")
+                        } else {
+                            DeletionFailureLog.failure(operation, it, index.operationFeature(operation), "verify_system_delete",
+                                IOException("System deletion not verified"))
+                            index.mark(operation, it.id, "failed")
+                        }
                     } else index.mark(operation, it.id, "pending")
                 }
                 index.finishOperation(operation, "running")

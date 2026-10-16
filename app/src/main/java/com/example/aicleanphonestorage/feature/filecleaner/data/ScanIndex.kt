@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.update
 
 /** 仅缓存元数据/选择状态的临时索引。所有方法由Repository在I/O线程调用，不存文件内容或Bitmap。 */
 internal class ScanIndex(context: Context) :
-    SQLiteOpenHelper(context.applicationContext, "cleanup_index.db", null, 9) {
+    SQLiteOpenHelper(context.applicationContext, "cleanup_index.db", null, 10) {
     private val revision = kotlinx.coroutines.flow.MutableStateFlow(0L)
     val changes: kotlinx.coroutines.flow.StateFlow<Long> = revision
     private val sources = Collections.newSetFromMap(WeakHashMap<PagingSource<*, *>, Boolean>())
@@ -40,11 +40,13 @@ internal class ScanIndex(context: Context) :
         )
         db.execSQL(
             """CREATE TABLE operation_items(op INTEGER NOT NULL, file INTEGER NOT NULL, state TEXT NOT NULL DEFAULT 'pending',
-            file_bytes INTEGER NOT NULL DEFAULT 0, output TEXT, output_bytes INTEGER, output_sha TEXT, PRIMARY KEY(op,file))"""
+            file_bytes INTEGER NOT NULL DEFAULT 0, output TEXT, output_bytes INTEGER, output_sha TEXT, delete_uri TEXT, PRIMARY KEY(op,file))"""
         )
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        // 系统确认可能跨重建/进程恢复；保存实际媒体目标，不能用原 file:// / document URI 核验媒体删除。
+        if (oldVersion < 10) db.execSQL("ALTER TABLE operation_items ADD COLUMN delete_uri TEXT")
         // 仅添加固定大小的视觉特征，不丢弃已有选择、Original 或操作记录。
         if (oldVersion in 7..8) db.execSQL("ALTER TABLE similar_signatures ADD COLUMN layout BLOB")
         if (oldVersion < 8) {
@@ -478,6 +480,16 @@ internal class ScanIndex(context: Context) :
                 arrayOf(operation.toString(), state, limit.toString()),
             )
             .use { cursor -> buildList { while (cursor.moveToNext()) add(row(cursor)) } }
+
+    /** 保留原始扫描/选择身份，只给这一次操作记录经校验的删除 URI。 */
+    fun rememberDeleteUri(operation: Long, file: Long, uri: String) {
+        writableDatabase.update("operation_items", ContentValues().apply { put("delete_uri", uri) },
+            "op=? AND file=?", arrayOf(operation.toString(), file.toString()))
+    }
+
+    fun deleteUri(operation: Long, file: Long): String? = readableDatabase.rawQuery(
+        "SELECT delete_uri FROM operation_items WHERE op=? AND file=?", arrayOf(operation.toString(), file.toString()),
+    ).use { if (it.moveToFirst() && !it.isNull(0)) it.getString(0) else null }
 
     fun mark(
         operation: Long,

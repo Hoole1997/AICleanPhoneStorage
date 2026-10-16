@@ -11,6 +11,8 @@ import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStream
 import java.nio.file.Files
+import java.nio.file.LinkOption
+import java.nio.file.attribute.BasicFileAttributes
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 
@@ -74,9 +76,14 @@ internal class FileContentAccess(context: Context) {
 
     fun validate(item: ScannedFile) {
         val current =
-            if (item.backend == FileBackend.DIRECT)
-                validatedFile(item).let { it.length() to it.lastModified() }
-            else {
+            if (item.backend == FileBackend.DIRECT) {
+                // 与 DirectStorageScanner 的 BasicFileAttributes 使用同一套元数据和时间精度。
+                // 不混用 File.length/lastModified（分次读取且实现可能不同），不通过容差放宽文件变化保护。
+                val attrs = Files.readAttributes(validatedPath(item).toPath(), BasicFileAttributes::class.java, LinkOption.NOFOLLOW_LINKS)
+                if (attrs.isSymbolicLink) throw IOException("Symbolic link skipped")
+                if (!attrs.isRegularFile) throw IOException("File missing")
+                attrs.size() to attrs.lastModifiedTime().toMillis()
+            } else {
                 val size =
                     if (item.backend == FileBackend.MEDIA) MediaStore.MediaColumns.SIZE
                     else DocumentsContract.Document.COLUMN_SIZE
@@ -102,6 +109,14 @@ internal class FileContentAccess(context: Context) {
                     current.second > 0 &&
                     current.second != item.modifiedMillis)
         )
-            throw IOException("File changed since scan")
+            throw FileSnapshotChangedException(item.size, current.first, item.modifiedMillis, current.second)
     }
 }
+
+/** 仅携带有界数值差异，便于定位文件真实变化或 OEM 元数据差异；不记录文件名和路径。 */
+internal class FileSnapshotChangedException(
+    val scannedBytes: Long,
+    val currentBytes: Long,
+    val scannedModifiedMillis: Long,
+    val currentModifiedMillis: Long,
+) : IOException("File changed since scan")

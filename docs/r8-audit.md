@@ -1,6 +1,6 @@
 # 三模块 R8 审计与维护说明
 
-最新增量审计（2026-09-20，`64dff000` → `18216b7`）见 [新功能混淆核验](r8-incremental-2026-09-20.md)。新增 Trustlook 和推送翻译模型已覆盖；下文原始双渠道执行记录为历史结果，当前 google 渠道只允许在 GitHub Actions 构建。
+最新增量审计（2026-10-16，包含 `be09530a` 起的提交及当前修复）见 [新增功能混淆核验](r8-incremental-2026-10-16.md)。测速、Alarm、风控 SDK 与清理修复已核验；下文双渠道执行记录为历史结果，当前 google 渠道只允许在 GitHub Actions 构建。
 
 审计日期：2026-09-15。范围为 `settings.gradle.kts` 注册的 app、notification、metrics。
 
