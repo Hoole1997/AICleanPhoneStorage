@@ -3,6 +3,8 @@ package com.example.aicleanphonestorage.feature.startup
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelStore
 import io.docview.push.NotificationDestination
+import io.docview.push.analytics.NotificationTriggerSource
+import com.example.aicleanphonestorage.feature.push.NotificationClickContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.*
 import org.junit.Assert.*
@@ -93,9 +95,35 @@ class StartupViewModelTest {
             val second = com.example.aicleanphonestorage.feature.push.NotificationClickContext.create("resident", "Second", "Second body", false)
             restored.accept(StartupEntry(NotificationDestination.HOME, notification = second))
             assertEquals(second, restored.entry().notification)
-            assertNull(restoredSaved.get<String>("startup.notification.trigger_source"))
+            assertEquals("resident", restoredSaved.get<String>("startup.notification.trigger_source"))
             restored.accept(StartupEntry(NotificationDestination.HOME))
             assertNull(restored.entry().notification)
+            runCurrent()
+        } finally { Dispatchers.resetMain() }
+    }
+
+    @Test
+    fun allNotificationTriggerSourcesSurviveProcessStateRestore() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        try {
+            for (source in NotificationTriggerSource.entries) {
+                val origin = when (source) {
+                    NotificationTriggerSource.RESIDENT -> "resident"
+                    NotificationTriggerSource.FCM -> "remote"
+                    else -> "local"
+                }
+                val saved = SavedStateHandle()
+                val snapshot = requireNotNull(NotificationClickContext.create(origin, "Title", "Body", true, source.value))
+                val original = StartupViewModel(saved, clock = { testScheduler.currentTime }) {}
+                original.accept(StartupEntry(NotificationDestination.HOME, notification = snapshot))
+                val restored = StartupViewModel(
+                    SavedStateHandle(saved.keys().associateWith { saved.get<Any?>(it) }),
+                    clock = { testScheduler.currentTime },
+                ) {}
+                assertEquals(snapshot, restored.entry().notification)
+                assertEquals(source.value, restored.entry().notification?.properties()?.get("trigger_source"))
+                assertEquals(snapshot.properties()["Notific_Type"], restored.entry().notification?.properties()?.get("Notific_Type"))
+            }
             runCurrent()
         } finally { Dispatchers.resetMain() }
     }

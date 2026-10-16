@@ -61,7 +61,7 @@ class NotificationAlertDeviceTest {
         assertTrue(migrated.shouldVibrate())
     }
 
-    @Test fun ordinaryMessagesAllowUpdateAlertsAndExplicitRepeatsRemainSilent() = runBlocking {
+    @Test fun firstTwoMessagesAllowAlertsAndRemainingRepeatsStaySilent() = runBlocking {
         (context.applicationContext as CleanApplication).notificationRuntime.awaitReady()
         val data = GeneralNotificationData(981739, "Alert policy test", "Test content")
         val firstMethod = TriggerCtrl::class.java.getDeclaredMethod("general", GeneralNotificationData::class.java)
@@ -70,16 +70,23 @@ class NotificationAlertDeviceTest {
         assertEquals(GeneralNotificationChannels.ALERTING, first.channelId)
         assertFalse(first.flags and Notification.FLAG_ONLY_ALERT_ONCE != 0)
         assertFalse(first.flags and Notification.FLAG_ONGOING_EVENT != 0)
-        val method = TriggerCtrl::class.java.getDeclaredMethod("buildGeneralNotification",
-            GeneralNotificationData::class.java, Boolean::class.javaPrimitiveType).apply { isAccessible = true }
-        repeat(3) {
-            val followUp = method.invoke(TriggerCtrl, data, true) as Notification
+        // 调用循环实际使用的构建入口，覆盖计数从 0 开始的边界，避免只测试手动指定的静音参数。
+        val method = TriggerCtrl::class.java.getDeclaredMethod("buildRepeatNotification",
+            GeneralNotificationData::class.java, Int::class.javaPrimitiveType).apply { isAccessible = true }
+        val second = method.invoke(TriggerCtrl, data, 0) as Notification
+        assertEquals(GeneralNotificationChannels.ALERTING, second.channelId)
+        assertFalse("Second notification must allow alerting the same ID again",
+            second.flags and Notification.FLAG_ONLY_ALERT_ONCE != 0)
+        for (completedRepeats in 1..7) {
+            val followUp = method.invoke(TriggerCtrl, data, completedRepeats) as Notification
             assertEquals(TriggerCtrl.CHANNEL_ID_GENERAL_SILENT, followUp.channelId)
             assertFalse(followUp.flags and Notification.FLAG_ONLY_ALERT_ONCE != 0)
             assertEquals(0, followUp.defaults and (Notification.DEFAULT_SOUND or Notification.DEFAULT_VIBRATE))
             assertNull(followUp.sound)
             assertNull(followUp.vibrate)
         }
+        val nextRoundSecond = method.invoke(TriggerCtrl, data, 0) as Notification
+        assertEquals("A new round gets its own second alert", GeneralNotificationChannels.ALERTING, nextRoundSecond.channelId)
         val resident = TriggerCtrl.buildResidentNotification(context)
         assertEquals(TriggerCtrl.CHANNEL_ID_RESIDENT, resident.channelId)
         assertTrue(resident.flags and Notification.FLAG_ONGOING_EVENT != 0)

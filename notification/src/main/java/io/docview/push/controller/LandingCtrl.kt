@@ -8,6 +8,7 @@ import io.docview.push.builder.LANDING_NOTIFICATION_ID
 import io.docview.push.builder.NotificationType
 import io.docview.push.builder.markRedPointClicked
 import io.docview.push.builder.type2notificationId
+import io.docview.push.analytics.NotificationTriggerSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -83,6 +84,7 @@ object LandingCtrl {
         intent.removeExtra("mark_red_point_clicked")
         intent.removeExtra(LANDING_NOTIFICATION_ID)
         intent.removeExtra(LANDING_NOTIFICATION_FROM)
+        intent.removeExtra(NotificationTriggerSource.EXTRA)
         intent.removeExtra(io.docview.push.builder.LANDING_NOTIFICATION_TITLE)
         intent.removeExtra(io.docview.push.builder.LANDING_NOTIFICATION_CONTENT)
         intent.removeExtra(io.docview.push.builder.LANDING_NOTIFICATION_EARTHQUAKE_DATA)

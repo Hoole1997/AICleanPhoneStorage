@@ -57,3 +57,7 @@
 - 用户于 2026-10-12 授权独立测网速（Figma 6554:757 / 6554:793 / 6565:1676），测速服务使用 Cloudflare 公共端点，单次下载上限 50MB、上传 20MB、每阶段约 10 秒。测速中须显示真实进度、阶段、节点、延迟与实时速度；离开前台立即取消，不在后台测速；失败不展示部分结果。失败按无网络（默认）、网络过弱、测速超时、网络切换、网络受限、网络信息失败、服务器异常七类显示用户指定文案。首页入口遵守角标规则（统一开关）。测速成功后等待插屏 `scan_complete_speedtest` 回调再展示结果；返回首页使用插屏 `back_home_speedtest`，两者 Slot Key 与 position name 相同。
 
 - 用户于 2026-10-14 要求 AlarmManager 推送独立读取 `alarm_wakeup_config`，本地 assets 必须预留默认 JSON：总开关开启、已确认买量用户开启、自然/未确认用户关闭、循环间隔 15 分钟。有效线上配置优先，其次有效缓存，最后本地默认；未下发参数不能导致默认关闭，线上显式关闭仍须生效。保持单次非精确 Alarm 循环和 `alarmmanager` 触发源，复用原通知准入规则，不自动打开页面或绕过系统省电限制。
+
+- 用户于 2026-10-15 要求 Alarm 最小间隔放宽到 1 分钟，默认仍为 15 分钟。`alarm_wakeup_config` 各 tier 的 `service_heartbeat_interval` 使用整数分钟，远程可配置范围为 1～1440 分钟；解析与调度共用边界，不影响其他通知来源的间隔。保持既有的待执行 Alarm，更新间隔从下一轮注册生效。
+
+- 用户于 2026-10-15 要求自家通知的 Notific_Show、Notific_Click、Notific_Enter 统一携带 `trigger_source`：解锁 `unlock`、退后台 `background`、KEEPALIVE `keepalive`、AlarmManager `alarmmanager`、FCM `fcm`、常驻 `resident`。保持现有 Notific_Type 分类不变；来源在构建通知时锁存，贯穿启动页和状态恢复，PendingIntent 按来源隔离。旧 `local_push` 无法细分时不得猜测来源；系统直接展示的 FCM 通知不补造客户端未收到的展示事件。

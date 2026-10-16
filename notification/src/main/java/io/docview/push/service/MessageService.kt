@@ -9,6 +9,7 @@ import io.docview.push.timing.TimingCtrl
 import io.docview.push.utils.Logger
 import io.docview.push.utils.Topic
 import io.docview.push.host.PushEventReporter
+import io.docview.push.analytics.NotificationTriggerSource
 
 /**
  * FCM 消息处理服务
@@ -59,7 +60,7 @@ class MessageService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
 
         kotlinx.coroutines.runBlocking { (application as io.docview.push.NotificationRuntimeOwner).notificationRuntime.awaitReady() }
-        PushEventReporter.reportData("Notific_Pull", mapOf("topic" to Topic.ALL_TOKEN))
+        PushEventReporter.reportData("Notific_Pull", mapOf("topic" to Topic.ALL_TOKEN) + NotificationTriggerSource.FCM.properties())
 
         Logger.d("收到 FCM 消息")
         Logger.d("消息来源: ${remoteMessage.from}")

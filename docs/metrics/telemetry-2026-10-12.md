@@ -21,13 +21,13 @@
 | A11 | `speed_scan_back` | 用户从测速扫描页面通过顶部或系统返回实际离开；结果页返回及失败 Cancel 不算扫描返回 |
 | A12:A14 | `speed_result_show` | 插屏回调后，结果在前台实际显示；同一测速代次只发送一次 |
 | A15 | `TestAgain_click` | 结果页面点击 Test Again；失败 Retry 不发送此事件 |
-| A16:A25 | `speed_scan_fail` | 失败弹窗在前台展示，以及用户操作该弹窗；使用下述字段 |
+| A16:A25 | `speed_scan_fail` | 用户操作失败弹窗时上报；展示弹窗不再上报（2026-10-16 修正） |
 
 前四个事件没有业务参数，不上传测速节点、运营商、设备型号、Ray ID 或速度数值。
 
 `speed_scan_fail.reason` 对应 `no_internet`、`weak_network`、`timeout`、`network_changed`、`network_restricted`、`network_info_failed`、`server_error`、`unknown`。
 
-文档 C16:C25 要求弹窗展示时上报，E16:H17 的 `action` 只定义 `cancel/retry`，未定义展示动作。因此展示事件仅传 `reason`；点击事件传 `reason` 与 `action`。两种记录用 `action` 是否存在区分；不要将两者相加当作失败次数。Cancel 关闭并返回首页，Retry 开始新测速。系统取消等同 Cancel。旧弹窗和重复结果不改变新测速，也不重复上报。
+按用户 2026-10-16 确认，移除失败弹窗展示时的上报，仅在用户操作时发送 `speed_scan_fail`，每条必须同时携带 `reason` 与 `action=cancel/retry`。自动失败、Retry 后再次失败、弹窗恢复与前后台切换均不额外上报；历史验证日志中的无 `action` 记录属于修正前行为。Cancel 关闭并返回首页，Retry 开始新测速。系统取消等同 Cancel。旧弹窗和重复结果不改变新测速，也不重复上报。
 
 ## 配置页的黄色条目
 

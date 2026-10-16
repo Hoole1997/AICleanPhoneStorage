@@ -12,7 +12,8 @@ data class AlarmWakeupPolicy(
 ) {
     companion object {
         const val DEFAULT_INTERVAL_MINUTES = 15
-        const val MIN_INTERVAL_MINUTES = 15
+        // 默认周期与远程可配置下限独立；解析和调度共用边界，线上可缩短到 1 分钟。
+        const val MIN_INTERVAL_MINUTES = 1
         const val MAX_INTERVAL_MINUTES = 1_440
     }
 }

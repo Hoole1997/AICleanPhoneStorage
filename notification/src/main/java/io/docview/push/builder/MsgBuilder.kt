@@ -18,6 +18,7 @@ import io.docview.push.earthquake.EarthquakeController
 import io.docview.push.earthquake.EarthquakeInfo
 import io.docview.push.service.KeepAliveServiceManager
 import io.docview.push.host.PushLanguage
+import io.docview.push.analytics.NotificationTriggerSource
 import java.time.LocalDate
 import kotlin.random.Random
 
@@ -66,10 +67,14 @@ fun entryPointPendingIntent(
     val intent = entryPointIntent(context)
     intent.putExtra(LANDING_NOTIFICATION_ID, notificationId)
     applyIntent?.invoke(intent)
-    // 同一普通通知槽位也按业务动作区分 PendingIntent，旧卡片不会被后续另一业务覆盖路由。
-    val alarmSource = if (intent.getStringExtra(LANDING_NOTIFICATION_FROM) == "alarmmanager") ".alarmmanager" else ""
-    // 构建后若因前台/撤权取消发布，独立来源的 PI 不能改写已显示的普通推送点击埋点。
-    intent.action = "${context.packageName}.push.$notificationId.${intent.getIntExtra(LANDING_NOTIFICATION_ACTION, Content.TYPE_HOME)}$alarmSource"
+    // extras 不参与 PendingIntent 身份比较。按来源隔离，防止另一来源在取消发布后改写旧卡片。
+    // 旧 Alarm 构建调用仍保留已有 .alarmmanager 身份；没有细分来源的旧通知维持原身份。
+    val source = NotificationTriggerSource.fromValue(intent.getStringExtra(NotificationTriggerSource.EXTRA))
+        ?: NotificationTriggerSource.ALARM_MANAGER.takeIf {
+            intent.getStringExtra(LANDING_NOTIFICATION_FROM) == it.value
+        }
+    val sourceSuffix = source?.let { ".${it.value}" }.orEmpty()
+    intent.action = "${context.packageName}.push.$notificationId.${intent.getIntExtra(LANDING_NOTIFICATION_ACTION, Content.TYPE_HOME)}$sourceSuffix"
 
 
     return PendingIntent.getActivity(
@@ -172,6 +177,7 @@ class EarthquakeModelManager() {
         val pendingIntent = entryPointPendingIntent(context, notificationId) {
             it.putExtra(LANDING_NOTIFICATION_ACTION,EARTHQUAKE_NOTIFICATION_ACTION)
             it.putExtra(LANDING_NOTIFICATION_FROM, type.string)
+            type.triggerSource?.let { source -> it.putExtra(NotificationTriggerSource.EXTRA, source.value) }
             it.putExtra(LANDING_NOTIFICATION_TITLE, title)
             it.putExtra(LANDING_NOTIFICATION_CONTENT, content)
             it.putExtra(LANDING_NOTIFICATION_EARTHQUAKE_DATA, earthquakeJson)
@@ -216,6 +222,7 @@ class GeneralModelManager() {
         val pendingIntent = entryPointPendingIntent(context, notificationId) {
             it.putExtra(LANDING_NOTIFICATION_ACTION, data.destination.contentType)
             it.putExtra(LANDING_NOTIFICATION_FROM, type.string)
+            type.triggerSource?.let { source -> it.putExtra(NotificationTriggerSource.EXTRA, source.value) }
             it.putExtra(LANDING_NOTIFICATION_TITLE, title)
             it.putExtra(LANDING_NOTIFICATION_CONTENT, content)
         }

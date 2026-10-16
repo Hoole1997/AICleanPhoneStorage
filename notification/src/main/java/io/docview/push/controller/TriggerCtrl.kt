@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import io.docview.push.host.canSendNotification
 import io.docview.push.host.PushEventReporter
+import io.docview.push.analytics.NotificationTriggerSource
 
 /**
  * 通知触发控制器
@@ -247,12 +248,11 @@ object TriggerCtrl {
                 val maxCount = getRepeatLoopCount()
 
                 if (repeatCount < maxCount) {
-                    // 所有重复通知都使用静音通道
-                    val notificationToSend = buildGeneralNotification(notificationData, useSilent = true)
+                    val notificationToSend = buildRepeatNotification(notificationData, repeatCount)
 
                     // 执行重复通知
                     notificationManager?.notify(currentNotificationId, notificationToSend)
-                    Logger.d("重复通知执行，ID: $currentNotificationId，第${repeatCount + 1}次，使用静音通道")
+                    Logger.d("重复通知执行，ID: $currentNotificationId，第${repeatCount + 1}次，静音: ${repeatCount > 0}")
 
                     // 增加计数
                     repeatCount++
@@ -436,9 +436,16 @@ object TriggerCtrl {
     }
 
     private fun general(model: GeneralNotificationData): Notification {
-        // 首次通知总是使用普通通道（有声音）
+        // 每轮首条使用普通提醒通道，声音和震动仍遵循用户的系统设置。
         return buildGeneralNotification(model, useSilent = false)
     }
+
+    /**
+     * completedRepeats 不包含首条通知：0 表示第一次重复，即本轮第 2 条，仍允许响铃和震动；
+     * 从第二次重复（本轮第 3 条）起静音。每轮开始时重复计数归零，提醒额度不跨轮累计。
+     */
+    private fun buildRepeatNotification(model: GeneralNotificationData, completedRepeats: Int): Notification =
+        buildGeneralNotification(model, useSilent = completedRepeats > 0)
 
     /** 自然用户仅撤回分池卡片，保留常驻入口和其他通知类型。 */
     fun cancelDayPoolNotification() {
@@ -540,7 +547,8 @@ object TriggerCtrl {
                 "Notific_Position" to 2,
                 "Notific_Priority" to "PRIORITY_DEFAULT",
                 "event_id" to "permanent",
-            ) + content.properties(io.docview.push.analytics.NotificationVisibility.backgroundForDisplay())
+            ) + NotificationTriggerSource.RESIDENT.properties()
+                + content.properties(io.docview.push.analytics.NotificationVisibility.backgroundForDisplay())
         )
     }
 
@@ -562,7 +570,7 @@ object TriggerCtrl {
                 "Notific_Position" to 1,
                 "Notific_Priority" to "PRIORITY_MAX",
                 "event_id" to "customer_general_style",
-            ) + (if (type == CheckCtrl.NotificationType.ALARM_MANAGER) mapOf("trigger_source" to type.string) else emptyMap())
+            ) + type.triggerSource?.properties().orEmpty()
                 + io.docview.push.analytics.NotificationContent(notificationData.contentTitle, notificationData.contentContent)
                 .properties(io.docview.push.analytics.NotificationVisibility.backgroundForDisplay())
         )

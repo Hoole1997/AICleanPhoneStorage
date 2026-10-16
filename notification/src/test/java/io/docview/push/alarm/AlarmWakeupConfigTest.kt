@@ -59,12 +59,21 @@ class AlarmWakeupConfigTest {
         assertEquals(AlarmWakeupPolicy(true, 15), config.paidTier)
     }
 
+    @Test fun acceptsShortRemoteIntervalsIndependentlyForBothAudienceTiers() {
+        val parsed = parseAlarmWakeupConfig(config(
+            paid = policy(interval = "1"),
+            standard = policy(enabled = "0", interval = "5"),
+        ))
+        assertEquals(AlarmWakeupPolicy(true, 1), parsed.paidTier)
+        assertEquals(AlarmWakeupPolicy(false, 5), parsed.standardTier)
+    }
+
     @Test fun clampsIntegerIntervalsWithoutOverflow() {
         val intervals = mapOf(
-            "-1" to 15, "0" to 15, "14" to 15, "15" to 15,
+            "-1" to 1, "0" to 1, "1" to 1, "2" to 2, "14" to 14, "15" to 15,
             "1440" to 1_440, "1441" to 1_440,
             "999999999999999999999999999999999999" to 1_440,
-            "-999999999999999999999999999999999999" to 15,
+            "-999999999999999999999999999999999999" to 1,
         )
         intervals.forEach { (remote, expected) ->
             val parsed = parseAlarmWakeupConfig(config(paid = policy(interval = remote)))

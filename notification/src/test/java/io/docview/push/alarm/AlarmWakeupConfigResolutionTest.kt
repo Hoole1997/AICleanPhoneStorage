@@ -45,6 +45,20 @@ class AlarmWakeupConfigResolutionTest {
         assertEquals(AlarmWakeupPolicy(true, 45), resolved.config.policyFor(confirmedPaid = false))
     }
 
+    @Test fun remoteOneMinuteIntervalOverridesFifteenMinuteCacheAndPackagedDefault() {
+        val remote = config(interval = "1")
+        val resolved = resolveAlarmWakeupConfig(remote, config(interval = "15"), defaultJson)
+        assertEquals(remote, resolved.remoteJson)
+        assertEquals(AlarmWakeupPolicy(true, 1), resolved.config.policyFor(confirmedPaid = true))
+        assertEquals(AlarmWakeupPolicy(false, 1), resolved.config.policyFor(confirmedPaid = false))
+    }
+
+    @Test fun cachedOneMinuteIntervalSurvivesRemoteUnavailability() {
+        val resolved = resolveAlarmWakeupConfig(null, config(interval = "1"), defaultJson)
+        assertEquals(AlarmWakeupPolicy(true, 1), resolved.config.policyFor(confirmedPaid = true))
+        assertNull(resolved.remoteJson)
+    }
+
     @Test fun explicitRemoteMasterOffOverridesEnabledCacheAndLocalDefault() {
         val remote = config(master = "0", paid = "1", standard = "1")
         val resolved = resolveAlarmWakeupConfig(remote, config(), defaultJson)

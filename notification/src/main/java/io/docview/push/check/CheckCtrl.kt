@@ -7,6 +7,8 @@ import com.blankj.utilcode.util.TimeUtils
 import io.docview.push.timing.TimingCtrl
 import io.docview.push.host.PushBooleanPreference
 import io.docview.push.host.canSendNotification
+import io.docview.push.analytics.NotificationTriggerSource
+import io.docview.push.alarm.AlarmWakeupPolicy
 
 /**
  * 通知检查控制器
@@ -47,14 +49,15 @@ class CheckCtrl private constructor() {
     /**
      * 通知类型枚举
      */
-    enum class NotificationType(val string: String) {
-        UNLOCK("local_push"),      // 解锁通知
-        BACKGROUND("local_push"),  // 后台通知
-        KEEPALIVE("local_push"),   // 保活通知（无间隔限制）
-        ALARM_MANAGER("alarmmanager"), // 独立系统调度来源，复用普通推送准入。
-        FCM("firebase_push"),          // FCM 推送通知（无间隔限制）
-        RESIDENT("top_notification"),          // 常驻（无间隔限制）
-        EARTHQUAKE("earthquake"),          // 地震通知（无间隔限制）
+    enum class NotificationType(val string: String, val triggerSource: NotificationTriggerSource?) {
+        // 保留旧 string 路由协议；细分触发来源通过独立字段传递。
+        UNLOCK("local_push", NotificationTriggerSource.UNLOCK),      // 解锁通知
+        BACKGROUND("local_push", NotificationTriggerSource.BACKGROUND),  // 后台通知
+        KEEPALIVE("local_push", NotificationTriggerSource.KEEPALIVE),   // 保活通知（无间隔限制）
+        ALARM_MANAGER("alarmmanager", NotificationTriggerSource.ALARM_MANAGER), // 独立系统调度来源，复用普通推送准入。
+        FCM("firebase_push", NotificationTriggerSource.FCM),          // FCM 推送通知（无间隔限制）
+        RESIDENT("top_notification", NotificationTriggerSource.RESIDENT),          // 常驻（无间隔限制）
+        EARTHQUAKE("earthquake", null),          // 旧地震协议不属于这六类来源。
     }
 
     /**
@@ -250,7 +253,7 @@ class CheckCtrl private constructor() {
         return when (type) {
             NotificationType.UNLOCK -> ConfigCtrl.getUnlockPushIntervalMin() * 60 * 1000L
             NotificationType.BACKGROUND -> ConfigCtrl.getBackgroundPushIntervalMin() * 60 * 1000L
-            NotificationType.ALARM_MANAGER -> 15 * 60_000L
+            NotificationType.ALARM_MANAGER -> AlarmWakeupPolicy.DEFAULT_INTERVAL_MINUTES * 60_000L
             else -> 0L
         }
     }

@@ -58,7 +58,6 @@ internal class SpeedTestViewModel(
     private var pendingStart = true
     private var lastDone: SpeedTestUiState.Done? = null
     private var resultShownGeneration = -1L
-    private var failureShownGeneration = -1L
     private var failureActionGeneration = -1L
     private var scanBackGeneration = -1L
 
@@ -150,14 +149,6 @@ internal class SpeedTestViewModel(
         job?.cancel()
         job = null
         telemetry.scanBack()
-    }
-
-    /** 弹框已实际显示时才曝光；同代次恢复的 DialogFragment 不重复计数。 */
-    fun failureVisible(expectedGeneration: Long, expectedReason: SpeedTestException.Reason?) {
-        val failed = current.value as? SpeedTestUiState.Failed ?: return
-        if (expectedGeneration != generation || expectedReason != failed.reason || failureShownGeneration == generation) return
-        failureShownGeneration = generation
-        telemetry.failureShown(failed.reason)
     }
 
     /** FragmentResult 携带原弹框原因与代次，旧弹框/重复回调不能操作或上报下一轮失败。 */

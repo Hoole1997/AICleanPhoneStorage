@@ -253,15 +253,15 @@ class TimingCtrl private constructor() : DefaultLifecycleObserver {
         intervalMillis: Long? = null,
         canSend: () -> Boolean = { true },
     ) = dispatchMutex.withLock {
-        val source = if (type == CheckCtrl.NotificationType.ALARM_MANAGER)
-            mapOf("trigger_source" to type.string) else emptyMap()
+        val source = type.triggerSource?.properties().orEmpty()
         fun failed(reason: String) {
             Logger.d("通知检查未通过: trigger=${type.name}, reason=$reason")
             PushEventReporter.reportData("Notific_Show_Fail", mapOf("reason" to "app_inner_${type.string}_$reason") + source)
         }
         // 分池仍仅属于已确认的买量用户，独立 Alarm 开关不改变普通推送的用户资格。
         if (!io.docview.push.host.PushUserChannel.isConfirmedPaidUser()) {
-            if (source.isNotEmpty()) failed("audience_not_eligible")
+            // 旧协议仅为独立 Alarm 记录此失败原因，增加来源字段不扩张普通推送上报频率。
+            if (type == CheckCtrl.NotificationType.ALARM_MANAGER) failed("audience_not_eligible")
             return@withLock
         }
         if (!canSend()) return@withLock

@@ -126,12 +126,15 @@ class SpeedTestViewModelTest {
         vm.onForeground()
         val failed = vm.state.value as SpeedTestUiState.Failed
         assertEquals(SpeedTestException.Reason.NoInternet, failed.reason)
-        vm.failureVisible(vm.generation, failed.reason)
-        vm.failureVisible(vm.generation, failed.reason)
+        assertTrue(events.isEmpty()) // 失败发生、结果渲染及前后台恢复均不算用户操作。
+        vm.resultVisible()
+        vm.onBackground()
+        vm.onForeground()
+        assertEquals(1, runs)
+        assertTrue(events.isEmpty())
         assertTrue("no previous result: page should close", vm.failureAction(vm.generation, failed.reason, SpeedTestFailureAction.Cancel))
         assertFalse(vm.failureAction(vm.generation, failed.reason, SpeedTestFailureAction.Cancel))
         assertEquals(listOf(
-            MetricEvent.SPEED_SCAN_FAIL to mapOf("reason" to "no_internet"),
             MetricEvent.SPEED_SCAN_FAIL to mapOf("reason" to "no_internet", "action" to "cancel"),
         ), events)
 
@@ -152,22 +155,26 @@ class SpeedTestViewModelTest {
         gate.complete(Unit)
         vm.onForeground()
         val firstGeneration = vm.generation
-        vm.failureVisible(firstGeneration, SpeedTestException.Reason.Timeout)
+        assertTrue(events.isEmpty())
         assertFalse(vm.failureAction(firstGeneration - 1, SpeedTestException.Reason.Timeout, SpeedTestFailureAction.Retry))
         assertFalse(vm.failureAction(firstGeneration, SpeedTestException.Reason.ServerError, SpeedTestFailureAction.Cancel))
         assertEquals(1, runs)
+        assertTrue(events.isEmpty()) // 旧代次或错误原因不能产生操作事件。
         failNext = SpeedTestException.Reason.NetworkChanged
         assertFalse(vm.failureAction(firstGeneration, SpeedTestException.Reason.Timeout, SpeedTestFailureAction.Retry))
         assertEquals(2, runs)
-        vm.failureVisible(vm.generation, SpeedTestException.Reason.NetworkChanged)
-        vm.failureVisible(vm.generation, SpeedTestException.Reason.NetworkChanged)
         assertFalse(vm.failureAction(firstGeneration, SpeedTestException.Reason.Timeout, SpeedTestFailureAction.Cancel))
         assertEquals(listOf(
-            MetricEvent.SPEED_SCAN_FAIL to mapOf("reason" to "timeout"),
             MetricEvent.SPEED_SCAN_FAIL to mapOf("reason" to "timeout", "action" to "retry"),
-            MetricEvent.SPEED_SCAN_FAIL to mapOf("reason" to "network_changed"),
         ), events)
         assertEquals(0, eventCount(MetricEvent.TEST_AGAIN_CLICK))
+        // Retry 后立即再次失败也不自动上报；第二轮只在 Cancel 时新增一条。
+        assertTrue(vm.failureAction(vm.generation, SpeedTestException.Reason.NetworkChanged, SpeedTestFailureAction.Cancel))
+        assertFalse(vm.failureAction(vm.generation, SpeedTestException.Reason.NetworkChanged, SpeedTestFailureAction.Cancel))
+        assertEquals(listOf(
+            MetricEvent.SPEED_SCAN_FAIL to mapOf("reason" to "timeout", "action" to "retry"),
+            MetricEvent.SPEED_SCAN_FAIL to mapOf("reason" to "network_changed", "action" to "cancel"),
+        ), events)
     }
 
     @Test fun `Test Again is only a visible result button click and each result shows once`() = runTest {
@@ -216,7 +223,7 @@ class SpeedTestViewModelTest {
         vm.onForeground()
         assertTrue(vm.state.value is SpeedTestUiState.Failed)
         assertEquals(0, eventCount(MetricEvent.SPEED_SCAN_RESULT))
-        assertEquals(0, eventCount(MetricEvent.SPEED_SCAN_FAIL)) // 仅完成前台弹框显示才曝光。
+        assertEquals(0, eventCount(MetricEvent.SPEED_SCAN_FAIL)) // 自动失败不发送，等待用户操作。
     }
 
     @Test fun `late non cooperative error after background cancellation never becomes failure`() = runTest {
@@ -236,10 +243,9 @@ class SpeedTestViewModelTest {
         vm.onForeground()
         val failed = vm.state.value as SpeedTestUiState.Failed
         assertEquals(null, failed.reason)
-        vm.failureVisible(vm.generation, failed.reason)
+        assertTrue(events.isEmpty())
         vm.failureAction(vm.generation, failed.reason, SpeedTestFailureAction.Cancel)
         assertEquals(listOf(
-            MetricEvent.SPEED_SCAN_FAIL to mapOf("reason" to "unknown"),
             MetricEvent.SPEED_SCAN_FAIL to mapOf("reason" to "unknown", "action" to "cancel"),
         ), events)
     }

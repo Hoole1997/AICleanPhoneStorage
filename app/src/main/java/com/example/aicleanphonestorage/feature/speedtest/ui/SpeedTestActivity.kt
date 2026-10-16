@@ -84,7 +84,7 @@ class SpeedTestActivity : AppCompatActivity() {
             if ((model.state.value as? SpeedTestUiState.Done)?.revealed == true) "speedtest_result" else "speedtestScan"
         })
         lifecycleScope.launch {
-            // 结果/失败曝光与真正可见的前台渲染绑定，插屏覆盖或后台不能提前计数。
+            // 结果曝光与前台渲染绑定；失败弹框仅展示，埋点由用户操作的 FragmentResult 触发。
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 model.state.collect { state ->
                     val footerVisible = binding.speedFooter.isVisible
@@ -131,12 +131,11 @@ class SpeedTestActivity : AppCompatActivity() {
         if (manager.isStateSaved) return
         val existing = manager.findFragmentByTag(SpeedTestFailureDialog.TAG) as? SpeedTestFailureDialog
         if (state is SpeedTestUiState.Failed) {
-            val dialog = if (existing?.belongsTo(state.reason, model.generation) == true) existing else {
+            if (existing?.belongsTo(state.reason, model.generation) != true) {
                 // 快速重测失败时可能尚未处理旧弹框 dismiss；只保留当前代次的原因/操作。
                 existing?.dismissNow()
                 SpeedTestFailureDialog.create(state.reason, model.generation).also { it.showNow(manager, SpeedTestFailureDialog.TAG) }
             }
-            if (dialog.dialog?.isShowing == true) model.failureVisible(model.generation, state.reason)
         } else existing?.dismiss()
     }
 }

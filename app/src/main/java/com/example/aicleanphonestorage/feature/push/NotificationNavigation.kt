@@ -7,6 +7,7 @@ import com.example.aicleanphonestorage.feature.startup.StartupActivity
 import io.docview.push.NotificationDestination
 import io.docview.push.analytics.NotificationContent
 import io.docview.push.analytics.NotificationContentIntent
+import io.docview.push.analytics.NotificationTriggerSource
 
 /** 通知先直接投递到启动 Activity，再由首页执行权限与业务入口；没有广播/Service 中转。 */
 internal object NotificationNavigation {
@@ -18,6 +19,7 @@ internal object NotificationNavigation {
                 .setAction("${context.packageName}.notification.${destination.key}")
                 .putExtra(EXTRA_DESTINATION, destination.key)
                 .putExtra(NotificationLaunchTelemetry.ORIGIN, "resident")
+                .putExtra(NotificationTriggerSource.EXTRA, NotificationTriggerSource.RESIDENT.value)
                 .apply { NotificationContentIntent.write(this, content) }
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
@@ -35,6 +37,7 @@ internal object NotificationNavigation {
             .setAction("${context.packageName}.resident.$entry.$badge.${appBadgeCount ?: "unknown"}")
             .putExtra(EXTRA_DESTINATION, destination.key)
             .putExtra(NotificationLaunchTelemetry.ORIGIN, "resident")
+            .putExtra(NotificationTriggerSource.EXTRA, NotificationTriggerSource.RESIDENT.value)
             .apply { NotificationContentIntent.write(this, content) }
             .putExtra(ResidentClickTelemetry.ENTRY, entry)
             .putExtra(ResidentClickTelemetry.BADGE, badge)

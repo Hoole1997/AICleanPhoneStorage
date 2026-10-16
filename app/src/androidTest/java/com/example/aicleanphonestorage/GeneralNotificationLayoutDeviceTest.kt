@@ -4,8 +4,14 @@ import android.app.Notification
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.DrawableContainer
+import android.graphics.drawable.DrawableWrapper
+import android.graphics.drawable.LayerDrawable
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -78,14 +84,21 @@ class GeneralNotificationLayoutDeviceTest {
                     val title = allText(root).firstOrNull { it.text.toString() == texts.first && it.isShownInTree() }
                     assertNotNull("$tag/$scale/$night/$state: visible title", title)
                     val bitmap = Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888)
+                    val softwareImages = mutableListOf<Bitmap>()
                     try {
+                        // Android 37 系统图标可能为 HARDWARE；只转换本次离屏模板的图像，保留原始像素。
+                        softwareImageCopies(root, softwareImages)
                         val canvas = Canvas(bitmap)
                         canvas.drawColor(if (night) android.graphics.Color.DKGRAY else android.graphics.Color.WHITE)
                         root.draw(canvas)
                         File(output, "${tag}_${scale}_${night}_$state.png").outputStream().use {
                             bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
                         }
-                    } finally { bitmap.recycle() }
+                    } finally {
+                        bitmap.recycle()
+                        // 只释放测试创建的副本，系统/资源持有的原始图像不可回收。
+                        softwareImages.forEach(Bitmap::recycle)
+                    }
                     assertVisibleTitle(requireNotNull(title), texts.first)
                 }
             }
@@ -153,6 +166,46 @@ class GeneralNotificationLayoutDeviceTest {
             View.MeasureSpec.makeMeasureSpec(maxHeight ?: 0,
                 if (maxHeight == null) View.MeasureSpec.UNSPECIFIED else View.MeasureSpec.AT_MOST))
         view.layout(0, 0, view.measuredWidth, view.measuredHeight)
+    }
+
+    /** 模板未附着窗口且只截取当前状态；不更改布局、文字断言或生产通知的加载方式。 */
+    private fun softwareImageCopies(view: View, copies: MutableList<Bitmap>) {
+        fun software(drawable: Drawable): Drawable = when (drawable) {
+            is BitmapDrawable -> if (drawable.bitmap.config != Bitmap.Config.HARDWARE) drawable else {
+                val bytes = drawable.bitmap.width.toLong() * drawable.bitmap.height * 4
+                require(copies.sumOf { it.allocationByteCount.toLong() } + bytes <= 8 * 1024 * 1024) {
+                    "Notification template hardware bitmap copies exceed the 8 MiB test budget"
+                }
+                val image = requireNotNull(drawable.bitmap.copy(Bitmap.Config.ARGB_8888, false))
+                copies += image
+                BitmapDrawable(view.resources, image).apply {
+                    // Bitmap.copy 保留密度；沿用原图的裁剪/重复/画笔，避免改变截图里的图标效果。
+                    gravity = drawable.gravity
+                    tileModeX = drawable.tileModeX
+                    tileModeY = drawable.tileModeY
+                    paint.set(drawable.paint)
+                    bounds = drawable.copyBounds()
+                    level = drawable.level
+                    state = drawable.state
+                    layoutDirection = drawable.layoutDirection
+                    isAutoMirrored = drawable.isAutoMirrored
+                }
+            }
+            is LayerDrawable -> (drawable.mutate() as LayerDrawable).apply {
+                for (index in 0 until numberOfLayers) setDrawable(index, software(getDrawable(index)))
+            }
+            is DrawableWrapper -> (drawable.mutate() as DrawableWrapper).apply {
+                this.drawable?.let { this.drawable = software(it) }
+            }
+            // 截图仅画当前选中状态；保留没有硬件图像的容器，避免无必要地展开状态树。
+            is DrawableContainer -> drawable.current.let { current ->
+                val converted = if (current !== drawable) software(current) else current
+                if (converted !== current) converted else drawable
+            }
+            else -> drawable
+        }
+        if (view is ImageView) view.drawable?.let { view.setImageDrawable(software(it)) }
+        if (view is ViewGroup) for (index in 0 until view.childCount) softwareImageCopies(view.getChildAt(index), copies)
     }
 
     private fun View.isShownInTree() = generateSequence(this) { it.parent as? View }.all { it.visibility == View.VISIBLE }

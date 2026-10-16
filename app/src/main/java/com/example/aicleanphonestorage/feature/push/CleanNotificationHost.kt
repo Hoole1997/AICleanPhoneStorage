@@ -62,6 +62,9 @@ internal class CleanNotificationHost(
     override val periodicPushEnabled: Boolean
         get() = true
 
+    override val repeatNotificationsEnabled: Boolean
+        get() = true
+
     override suspend fun awaitContentLanguage() = awaitLanguage()
 
     override suspend fun alarmWakeupConfig(): String? = AlarmWakeupRemoteConfig.read()

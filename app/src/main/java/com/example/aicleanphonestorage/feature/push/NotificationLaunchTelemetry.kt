@@ -5,13 +5,14 @@ import com.example.aicleanphonestorage.core.analytics.BusinessTelemetry
 import com.example.aicleanphonestorage.core.analytics.EventSink
 import com.example.aicleanphonestorage.core.analytics.MetricEvent
 import io.docview.push.analytics.NotificationContentIntent
+import io.docview.push.analytics.NotificationTriggerSource
 import io.docview.push.analytics.NotificationVisibility
 
 /** 自家通知的有界文案与来源通过白名单传递；不读取其他 App 通知，也不复制完整 extras。 */
 internal object NotificationLaunchTelemetry {
     const val ORIGIN = "notification.metrics.origin"
     const val FROM_BACKGROUND = "notification.metrics.from_background"
-    const val TRIGGER_SOURCE = "notification.metrics.trigger_source"
+    const val TRIGGER_SOURCE = NotificationTriggerSource.EXTRA
 
     fun origin(intent: Intent): String? {
         intent.getStringExtra(ORIGIN)?.takeIf { it in NotificationClickContext.origins }?.let { return it }
@@ -19,7 +20,10 @@ internal object NotificationLaunchTelemetry {
             (intent.action?.contains(".resident.") == true || intent.action?.contains(".notification.") == true)) return "resident"
         if (intent.hasExtra("google.message_id") || intent.hasExtra("gcm.message_id")) return "remote"
         if (io.docview.push.controller.LandingCtrl.isFromNotification(intent)) {
-            return if (intent.getStringExtra(io.docview.push.builder.LANDING_NOTIFICATION_FROM) in setOf("fcm", "firebase_push")) "remote" else "local"
+            return when (intent.getStringExtra(io.docview.push.builder.LANDING_NOTIFICATION_FROM)) {
+                "fcm", "firebase_push" -> "remote"
+                else -> "local"
+            }
         }
         return null
     }
@@ -28,9 +32,14 @@ internal object NotificationLaunchTelemetry {
         val source = origin(intent) ?: return null
         val content = NotificationContentIntent.read(intent)
         val background = if (intent.hasExtra(FROM_BACKGROUND)) intent.getBooleanExtra(FROM_BACKGROUND, fromBackground) else fromBackground
-        // 原始模块 Intent 与启动页规范化快照共用白名单，来源与通知类型分别保留。
+        // 新通知在构建时锁存准确来源；旧 local_push 不包含足够信息，不能补成某一种本地触发。
+        // 常驻/FCM 旧 Intent 由 create 根据明确类别兼容，Notific_Type 仍按原类别计算。
         val trigger = if (intent.hasExtra(TRIGGER_SOURCE)) intent.getStringExtra(TRIGGER_SOURCE)
-            else intent.getStringExtra(io.docview.push.builder.LANDING_NOTIFICATION_FROM)
+            else when (val legacy = intent.getStringExtra(io.docview.push.builder.LANDING_NOTIFICATION_FROM)) {
+                // 兼容旧来源时只补来源字段，不改变旧 origin / Notific_Type 的归类规则。
+                "top_notification" -> NotificationTriggerSource.RESIDENT.value
+                else -> legacy
+            }
         return NotificationClickContext.create(source, content.title, content.text, background, trigger)
     }
 

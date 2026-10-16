@@ -1,6 +1,7 @@
 package com.example.aicleanphonestorage.feature.push
 
 import io.docview.push.analytics.NotificationContent
+import io.docview.push.analytics.NotificationTriggerSource
 
 /** 点击时锁存的小型快照；Click 与 Enter 共用，进入首页后不重新判断后台状态。 */
 internal data class NotificationClickContext(
@@ -16,12 +17,10 @@ internal data class NotificationClickContext(
     ) + content.properties(fromBackground) + triggerProperties()
 
     private fun triggerProperties(): Map<String, Any> =
-        triggerSource?.takeIf { it in triggerSources }?.let { mapOf("trigger_source" to it) }.orEmpty()
+        NotificationTriggerSource.fromValue(triggerSource)?.properties().orEmpty()
 
     companion object {
         val origins = setOf("resident", "local", "remote")
-        // 只保存明确约定的短来源值；旧通知没有该字段时保持原有埋点协议。
-        private val triggerSources = setOf("alarmmanager")
         fun create(
             origin: String?,
             title: String?,
@@ -34,8 +33,18 @@ internal data class NotificationClickContext(
                     it,
                     NotificationContent(title.orEmpty(), text.orEmpty()).bounded(),
                     fromBackground,
-                    triggerSource?.takeIf { source -> source in triggerSources },
+                    resolveTriggerSource(it, triggerSource)?.value,
                 )
             }
+
+        private fun resolveTriggerSource(origin: String, value: String?): NotificationTriggerSource? {
+            NotificationTriggerSource.fromValue(value)?.let { return it }
+            // 老版本常驻/FCM 的类别足以确认来源；local_push 无法细分，不能猜成解锁。
+            return when (origin) {
+                "resident" -> NotificationTriggerSource.RESIDENT
+                "remote" -> NotificationTriggerSource.FCM
+                else -> null
+            }
+        }
     }
 }

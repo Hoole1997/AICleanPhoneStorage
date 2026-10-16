@@ -12,10 +12,7 @@ internal class SpeedTestTelemetry(private val sink: EventSink = BusinessTelemetr
     fun resultShown() = sink.send(MetricEvent.SPEED_RESULT_SHOW, emptyMap())
     fun testAgain() = sink.send(MetricEvent.TEST_AGAIN_CLICK, emptyMap())
 
-    /** 文档同一事件覆盖弹框曝光和按钮点击：曝光尚无 action，仅携带真实 reason。 */
-    fun failureShown(reason: SpeedTestException.Reason?) =
-        sink.send(MetricEvent.SPEED_SCAN_FAIL, mapOf("reason" to reasonValue(reason)))
-
+    /** 失败事件仅记录用户操作；弹框展示不发送，保证每条记录都有 reason 与 action。 */
     fun failureAction(reason: SpeedTestException.Reason?, action: SpeedTestFailureAction) =
         sink.send(MetricEvent.SPEED_SCAN_FAIL, mapOf("reason" to reasonValue(reason), "action" to action.wireValue))
 
@@ -31,5 +28,5 @@ internal class SpeedTestTelemetry(private val sink: EventSink = BusinessTelemetr
     }
 }
 
-/** action 只接受文档两种用户操作，曝光不能伪造为 Cancel/Retry。 */
+/** action 只接受协议中的两种用户操作，曝光不能伪造为 Cancel/Retry。 */
 internal enum class SpeedTestFailureAction(val wireValue: String) { Cancel("cancel"), Retry("retry") }

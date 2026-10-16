@@ -65,6 +65,42 @@ class AlarmWakeupLoopTest {
         assertEquals(1, fixture.port.scheduled.size)
     }
 
+    @Test fun oneMinutePolicyRegistersAndRepeatsWithoutBeingRaisedToTheDefault() {
+        val fixture = Fixture()
+        val policy = AlarmWakeupPolicy(true, 1)
+        fixture.loop.reconcile(policy)
+        val first = requireNotNull(fixture.store.registration)
+        assertEquals(NOW + 60_000L, first.dueElapsedMillis)
+
+        fixture.now = first.dueElapsedMillis - 1
+        assertFalse(fixture.loop.beginDelivery(first.token, policy))
+        fixture.now = first.dueElapsedMillis
+        assertTrue(fixture.loop.beginDelivery(first.token, policy))
+        fixture.now += 123L
+        fixture.loop.finishDelivery(policy)
+
+        assertEquals(fixture.now + 60_000L, fixture.store.registration?.dueElapsedMillis)
+        assertNotEquals(first.token, fixture.store.registration?.token)
+        assertEquals(2, fixture.port.scheduled.size)
+    }
+
+    @Test fun shorteningToOneMinuteAppliesAfterTheAlreadyScheduledAlarm() {
+        val fixture = Fixture()
+        fixture.loop.reconcile(ENABLED)
+        val original = requireNotNull(fixture.store.registration)
+        val policy = AlarmWakeupPolicy(true, 1)
+
+        fixture.loop.reconcile(policy)
+        assertEquals(original, fixture.store.registration)
+        assertEquals(1, fixture.port.scheduled.size)
+
+        fixture.now = original.dueElapsedMillis
+        assertTrue(fixture.loop.beginDelivery(original.token, policy))
+        fixture.loop.finishDelivery(policy)
+        assertEquals(fixture.now + 60_000L, fixture.store.registration?.dueElapsedMillis)
+        assertEquals(2, fixture.port.scheduled.size)
+    }
+
     @Test fun explicitForceReplacesTheWaitingAlarm() {
         val fixture = Fixture()
         fixture.loop.reconcile(ENABLED)
@@ -183,7 +219,7 @@ class AlarmWakeupLoopTest {
     @Test fun registrationDefensivelyBoundsIntervalAndSaturatesDeadline() {
         val low = Fixture()
         low.loop.reconcile(AlarmWakeupPolicy(true, Int.MIN_VALUE))
-        assertEquals(low.now + FIFTEEN_MINUTES, low.store.registration?.dueElapsedMillis)
+        assertEquals(low.now + 60_000L, low.store.registration?.dueElapsedMillis)
 
         val high = Fixture()
         high.loop.reconcile(AlarmWakeupPolicy(true, Int.MAX_VALUE))

@@ -35,11 +35,9 @@ class SpeedTestTelemetryTest {
         )
         cases.forEach { (reason, wireReason) ->
             events.clear()
-            telemetry.failureShown(reason)
             telemetry.failureAction(reason, SpeedTestFailureAction.Cancel)
             telemetry.failureAction(reason, SpeedTestFailureAction.Retry)
             assertEquals(listOf(
-                MetricEvent.SPEED_SCAN_FAIL to mapOf("reason" to wireReason),
                 MetricEvent.SPEED_SCAN_FAIL to mapOf("reason" to wireReason, "action" to "cancel"),
                 MetricEvent.SPEED_SCAN_FAIL to mapOf("reason" to wireReason, "action" to "retry"),
             ), events)
