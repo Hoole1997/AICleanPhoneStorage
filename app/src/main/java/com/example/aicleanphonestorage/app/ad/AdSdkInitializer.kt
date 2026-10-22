@@ -23,6 +23,11 @@ internal object AdSdkInitializer {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val current = MutableStateFlow(AdInitializationState.IDLE)
     val state = current.asStateFlow()
+    private val remoteRevision = MutableStateFlow(0L)
+    // 只在 SDK 激活远程参数后发出版本，启动页订阅；不新增 SDK 回调、不轮询、不触发后台上报。
+    val groupingConfigReady = kotlinx.coroutines.flow.combine(remoteRevision, AdAnalytics.ready) { revision, ready ->
+        if (ready) revision else 0L
+    }
 
     fun initialize(application: Application) {
         if (started.getAndSet(true)) {
@@ -57,10 +62,16 @@ internal object AdSdkInitializer {
                     // initialize 发起异步 fetchAndActivate；成功回调后再读取解密配置并重排 alarm。
                     // 该 SDK 仅提供一个回调槽，项目在此统一注册，避免多个业务互相覆盖监听。
                     ConfigRemoteManager.setOnConfigUpdatedCallback {
+                        remoteRevision.value += 1
+                        (application as? io.docview.push.NotificationRuntimeOwner)?.notificationRuntime?.refreshScenePushConfig()
+                        (application as? com.example.aicleanphonestorage.app.CleanApplication)?.container?.uninstallRetention?.refresh()
                         (application as? io.docview.push.NotificationRuntimeOwner)
                             ?.notificationRuntime?.refreshAlarmSchedule()
                     }
                     ConfigRemoteManager.initialize()
+                    if (ConfigRemoteManager.isInitialized()) remoteRevision.value += 1
+                    (application as? io.docview.push.NotificationRuntimeOwner)?.notificationRuntime?.refreshScenePushConfig()
+                    (application as? com.example.aicleanphonestorage.app.CleanApplication)?.container?.uninstallRetention?.refresh()
                     // 已初始化时 SDK 不再发成功回调；这次入口也需要复核当前线上策略。
                     (application as? io.docview.push.NotificationRuntimeOwner)
                         ?.notificationRuntime?.refreshAlarmSchedule()

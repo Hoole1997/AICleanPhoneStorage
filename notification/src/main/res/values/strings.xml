@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="noti_resident_title">OpenBrowser</string>
-    <string name="noti_resident_service_running">Service is running</string>
-    <string name="noti_earthquake_click_text">- See Impact Radius…… </string>
+    <!-- 来源模块的固定兼容文案保持原样；实际常驻名称由 NotificationHost 本地化提供。
+         新场景增加语言资源目录后，明确这些旧回退文本不参与新文案翻译，避免改变旧展示。 -->
+    <string name="noti_resident_title" translatable="false">OpenBrowser</string>
+    <string name="noti_resident_service_running" translatable="false">Service is running</string>
+    <string name="noti_earthquake_click_text" translatable="false">- See Impact Radius…… </string>
 </resources>

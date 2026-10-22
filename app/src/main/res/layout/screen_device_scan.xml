@@ -1,0 +1,67 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/new_user_background">
+    <ImageView android:contentDescription="@null" android:layout_width="match_parent" android:layout_height="334dp"
+        android:src="@drawable/new_user_background" android:scaleType="fitXY" android:importantForAccessibility="no" />
+    <androidx.core.widget.NestedScrollView android:id="@+id/scanScroll"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:clipToPadding="false" android:scrollbars="none">
+        <LinearLayout android:id="@+id/scanContent" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/new_user_page_gutter" android:paddingTop="@dimen/new_user_header_space"
+            android:orientation="vertical">
+            <!-- 原稿拆层：手机/星星固定，蓝色扫描弧独立旋转；完成时换原版整环和勾选。 -->
+            <FrameLayout android:layout_width="@dimen/new_user_hero_size" android:layout_height="@dimen/new_user_hero_size"
+                android:layout_gravity="center_horizontal" android:importantForAccessibility="noHideDescendants">
+                <ImageView android:contentDescription="@null" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/new_user_halo" />
+                <ImageView android:contentDescription="@null" android:layout_width="@dimen/new_user_ring_size" android:layout_height="@dimen/new_user_ring_size"
+                    android:layout_marginStart="9dp" android:layout_marginTop="9dp" android:src="@drawable/new_user_track" />
+                <FrameLayout android:id="@+id/scanningRing" android:layout_width="@dimen/new_user_ring_size"
+                    android:layout_height="@dimen/new_user_ring_size" android:layout_marginStart="9dp" android:layout_marginTop="9dp">
+                    <ImageView android:contentDescription="@null" android:layout_width="58.0775dp" android:layout_height="107.416dp"
+                        android:layout_gravity="end|top" android:src="@drawable/new_user_arc" />
+                </FrameLayout>
+                <ImageView android:contentDescription="@null" android:id="@+id/completedRing" android:layout_width="@dimen/new_user_ring_size"
+                    android:layout_height="@dimen/new_user_ring_size" android:layout_marginStart="9dp" android:layout_marginTop="9dp"
+                    android:src="@drawable/new_user_ring_complete" android:visibility="gone" />
+                <ImageView android:contentDescription="@null" android:layout_width="52dp" android:layout_height="66dp"
+                    android:layout_marginStart="41dp" android:layout_marginTop="34dp" android:src="@drawable/new_user_phone" />
+                <ImageView android:contentDescription="@null" android:layout_width="11.186dp" android:layout_height="11.186dp"
+                    android:layout_marginStart="33.56dp" android:layout_marginTop="38.03dp" android:src="@drawable/new_user_star_large" />
+                <ImageView android:contentDescription="@null" android:layout_width="6.712dp" android:layout_height="6.712dp"
+                    android:layout_marginStart="98.44dp" android:layout_marginTop="53.69dp" android:src="@drawable/new_user_star_small" />
+                <ImageView android:contentDescription="@null" android:id="@+id/completedCheck" android:layout_width="56dp" android:layout_height="56dp"
+                    android:layout_marginStart="38dp" android:layout_marginTop="38dp" android:src="@drawable/new_user_complete"
+                    android:visibility="gone" />
+            </FrameLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:minHeight="68dp" android:padding="12dp" android:orientation="horizontal"
+                android:background="@drawable/bg_new_user_notice" android:gravity="top">
+                <ImageView android:contentDescription="@null" android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/new_user_notice"
+                    android:importantForAccessibility="no" />
+                <TextView android:id="@+id/scanNotice" android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:layout_marginStart="8dp" android:includeFontPadding="false"
+                    android:textColor="#666666" android:textSize="12sp" android:text="@string/new_user_notice" />
+            </LinearLayout>
+            <include android:id="@+id/deviceRow" layout="@layout/item_device_scan" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/new_user_row_gap" />
+            <include android:id="@+id/systemRow" layout="@layout/item_device_scan" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/new_user_row_gap" />
+            <include android:id="@+id/resolutionRow" layout="@layout/item_device_scan" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/new_user_row_gap" />
+            <include android:id="@+id/densityRow" layout="@layout/item_device_scan" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/new_user_row_gap" />
+            <include android:id="@+id/storageRow" layout="@layout/item_device_scan" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/new_user_row_gap" />
+            <include android:id="@+id/engineRow" layout="@layout/item_device_scan" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/new_user_row_gap" />
+            <TextView android:id="@+id/scanError" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:textSize="14sp" android:textColor="@color/new_user_title"
+                android:accessibilityLiveRegion="polite" android:visibility="gone" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/scanAction"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp"
+                android:layout_marginHorizontal="14dp" android:layout_marginTop="32dp"
+                android:paddingVertical="14dp" android:insetTop="0dp" android:insetBottom="0dp"
+                android:text="@string/new_user_scanning" android:textSize="16sp" android:textAllCaps="false"
+                android:fontFamily="sans-serif-medium" android:includeFontPadding="false"
+                android:letterSpacing="0" android:textStyle="normal"
+                android:elevation="0dp" android:stateListAnimator="@null"
+                android:textColor="@android:color/white" android:enabled="false"
+                app:cornerRadius="24dp" app:backgroundTint="@color/new_user_button" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</FrameLayout>

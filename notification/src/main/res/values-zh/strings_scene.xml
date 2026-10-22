@@ -1,0 +1,18 @@
+<resources>
+    <string name="scene_alerts">智能提醒</string>
+    <string name="scene_all">启用智能提醒</string>
+    <string name="scene_charge_start">充电开始</string>
+    <string name="scene_charge_end">充电结束</string>
+    <string name="scene_low_battery">低电量</string>
+    <string name="scene_network">网络变化</string>
+    <string name="scene_screenshot">新增截图</string>
+    <string name="scene_app_install">应用安装</string>
+    <string name="scene_app_uninstall">应用卸载</string>
+    <string name="scene_download">新增下载</string>
+    <string name="scene_back">返回</string>
+    <string name="scene_settings_description">选择可以显示提醒的设备事件。原有推送单独管理。</string>
+    <string name="scene_settings_error">无法保存设置，请重试。</string>
+    <string name="scene_charge_summary">充电结束时间：%1$s · 电量：%2$d%%</string>
+    <string name="scene_charge_duration">本次充电时长：%1$s</string>
+    <string name="scene_network_tip">未联网？请先检查 Wi-Fi 或移动数据，再开始测速。</string>
+</resources>

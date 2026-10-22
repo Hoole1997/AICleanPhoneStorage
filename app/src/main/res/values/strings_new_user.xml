@@ -1,0 +1,18 @@
+<resources>
+    <string name="new_user_device">Device</string>
+    <string name="new_user_system">System OS version</string>
+    <string name="new_user_resolution">Screen Resolution</string>
+    <string name="new_user_density">Screen Density</string>
+    <string name="new_user_storage">Storage Used</string>
+    <string name="new_user_engine">Initializing engine</string>
+    <string name="new_user_scanning">Scanning...</string>
+    <string name="new_user_initializing">Initializing</string>
+    <string name="new_user_done">Done</string>
+    <string name="new_user_unknown">Unknown</string>
+    <string name="new_user_start">Start Clean</string>
+    <string name="new_user_retry">Retry</string>
+    <string name="new_user_engine_failed">Engine initialization failed</string>
+    <string name="new_user_save_failed">Unable to save progress. Please try again.</string>
+    <string name="new_user_notice"><font color="#222222"><b>Please note:</b></font> The first scan may take a little longer while it searches for junk files and analyzes your phone\'s data.</string>
+    <string name="new_user_storage_format" translatable="false">%1$s GB/%2$s GB</string>
+</resources>

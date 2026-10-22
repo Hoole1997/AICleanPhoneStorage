@@ -50,6 +50,12 @@ class NetworkTrafficActivity : AppCompatActivity() {
         enableEdgeToEdge(SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT), SystemBarStyle.light(Color.TRANSPARENT, Color.BLACK))
         val binding = ScreenNetworkTrafficBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        if (io.docview.push.scene.SceneLandingData.read(intent)?.code == 1104) {
+            binding.trafficSceneActions.visibility = android.view.View.VISIBLE
+            binding.trafficSceneTest.setOnClickListener {
+                startActivity(Intent(this, com.example.aicleanphonestorage.feature.speedtest.ui.SpeedTestActivity::class.java))
+            }
+        }
         com.example.aicleanphonestorage.core.analytics.PageTelemetry.attach(this, "traffic",
             com.example.aicleanphonestorage.app.analytics.FeatureTelemetry.permission(application as CleanApplication, "traffic"))
         NativeAdCoordinator(this, binding.nativeAd, NativeAdFeature.NETWORK.featureSlot)

@@ -1,0 +1,17 @@
+<resources>
+    <string name="new_user_device">Cihaz</string>
+    <string name="new_user_system">Android sürümü</string>
+    <string name="new_user_resolution">Ekran Çözünürlüğü</string>
+    <string name="new_user_density">Ekran Yoğunluğu</string>
+    <string name="new_user_storage">Kullanılan Depolama</string>
+    <string name="new_user_engine">Motor başlatılıyor</string>
+    <string name="new_user_scanning">Taranıyor…</string>
+    <string name="new_user_initializing">Başlatılıyor</string>
+    <string name="new_user_done">Tamamlandı</string>
+    <string name="new_user_unknown">Bilinmiyor</string>
+    <string name="new_user_start">Temizliği Başlat</string>
+    <string name="new_user_retry">Yeniden Dene</string>
+    <string name="new_user_engine_failed">Motor başlatılamadı</string>
+    <string name="new_user_save_failed">İlerleme kaydedilemedi. Lütfen yeniden deneyin.</string>
+    <string name="new_user_notice"><font color="#222222"><b>Lütfen dikkat:</b></font> İlk tarama, gereksiz dosyaları arayıp telefonunuzun verilerini analiz ettiği için biraz daha uzun sürebilir.</string>
+</resources>

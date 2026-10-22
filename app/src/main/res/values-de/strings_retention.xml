@@ -1,0 +1,26 @@
+<resources>
+    <string name="retention_before">Bevor du gehst…</string>
+    <string name="retention_loss">Wenn du diese App deinstallierst, verlierst du den Zugriff auf folgende Funktionen:</string>
+    <string name="retention_more">…und weitere wichtige Funktionen</string>
+    <string name="retention_keep">App behalten</string>
+    <string name="retention_anyway">Trotzdem deinstallieren</string>
+    <string name="retention_why">Warum deinstallierst du die App?</string>
+    <string name="retention_reason_difficult">Schwer zu bedienen</string>
+    <string name="retention_reason_ads">Zu viel Werbung</string>
+    <string name="retention_reason_results">Die Bereinigung entspricht nicht meinen Erwartungen</string>
+    <string name="retention_reason_features">Benötigte Funktionen fehlen</string>
+    <string name="retention_reason_slow">Ruckeln beim Laden</string>
+    <string name="retention_reason_other">Sonstiges</string>
+    <string name="retention_feedback_hint">Bitte gib an, warum du %1$s deinstallierst</string>
+    <string name="retention_not_yet">Noch nicht deinstallieren</string>
+    <string name="retention_uninstall">Deinstallieren</string>
+    <string name="retention_shortcut_disabled">Diese Verknüpfung ist nicht mehr verfügbar.</string>
+    <string name="retention_unavailable">Die Deinstallationsansicht des Systems konnte nicht geöffnet werden. Bitte erneut versuchen.</string>
+    <string name="retention_back">Zurück</string>
+    <string name="retention_junk">Datenmüll bereinigen</string>
+    <string name="retention_malware">Malware-Scan</string>
+    <string name="retention_similar">Doppelte Fotos</string>
+    <string name="retention_screenshots">Screenshots bereinigen</string>
+    <string name="retention_large">Große Dateien</string>
+    <string name="retention_notifications">Mitteilungen bereinigen</string>
+</resources>

@@ -1,0 +1,18 @@
+<resources>
+    <string name="scene_alerts">تنبيهات ذكية</string>
+    <string name="scene_all">تفعيل التنبيهات الذكية</string>
+    <string name="scene_charge_start">بدء الشحن</string>
+    <string name="scene_charge_end">انتهاء الشحن</string>
+    <string name="scene_low_battery">بطارية منخفضة</string>
+    <string name="scene_network">تغييرات الشبكة</string>
+    <string name="scene_screenshot">لقطات شاشة جديدة</string>
+    <string name="scene_app_install">تثبيت تطبيق</string>
+    <string name="scene_app_uninstall">إزالة تطبيق</string>
+    <string name="scene_download">تنزيلات جديدة</string>
+    <string name="scene_back">رجوع</string>
+    <string name="scene_settings_description">اختر أحداث الجهاز التي يمكنها عرض التذكيرات. تُدار الإشعارات الحالية بشكل منفصل.</string>
+    <string name="scene_settings_error">تعذر حفظ الإعداد. حاول مجددًا.</string>
+    <string name="scene_charge_summary">انتهى الشحن في %1$s · البطارية: %2$d%%</string>
+    <string name="scene_charge_duration">مدة الشحن: %1$s</string>
+    <string name="scene_network_tip">لا يوجد اتصال؟ تحقق من Wi-Fi أو بيانات الهاتف قبل اختبار السرعة.</string>
+</resources>

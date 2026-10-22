@@ -262,6 +262,11 @@ internal class ScanIndex(context: Context) :
         limit: Int,
     ): List<ScannedFile> {
         val (selection, args) = where(handle.id, handle.feature, filter)
+        // 推送只改变真实匹配项的排序，不改变筛选/选择/删除资格；无法定位时继续按大小排序。
+        val preferredId = filter.preferredUri?.takeIf { handle.feature == CleanupFeature.LARGE_FILES }?.let { uri ->
+            readableDatabase.rawQuery("SELECT id FROM files WHERE scan=? AND uri=? LIMIT 1", arrayOf(handle.id.toString(), uri))
+                .use { if (it.moveToFirst()) it.getLong(0) else null }
+        }
         return readableDatabase
             .query(
                 "files",
@@ -278,6 +283,7 @@ internal class ScanIndex(context: Context) :
                 else if (handle.feature == CleanupFeature.SMART_CLEAN && filter.bucket == "INSTALLERS")
                     "CASE risk_level WHEN 'MALWARE' THEN 0 WHEN 'PUA' THEN 1 ELSE 2 END,size DESC,id"
                 else if (handle.feature == CleanupFeature.UNUSED_FILES || handle.feature == CleanupFeature.VIDEOS) "modified DESC,id"
+                else if (preferredId != null) "CASE WHEN id=$preferredId THEN 0 ELSE 1 END,size DESC,id"
                 else "size DESC,id",
                 "$offset,$limit",
             )

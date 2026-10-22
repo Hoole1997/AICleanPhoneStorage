@@ -1,0 +1,26 @@
+<resources>
+    <string name="retention_before">离开之前…</string>
+    <string name="retention_loss">卸载此应用后，你将无法使用以下功能：</string>
+    <string name="retention_more">…以及其他实用功能</string>
+    <string name="retention_keep">保留应用</string>
+    <string name="retention_anyway">仍要卸载</string>
+    <string name="retention_why">为什么要卸载？</string>
+    <string name="retention_reason_difficult">使用困难</string>
+    <string name="retention_reason_ads">广告太多</string>
+    <string name="retention_reason_results">清理效果不符合预期</string>
+    <string name="retention_reason_features">缺少需要的功能</string>
+    <string name="retention_reason_slow">加载卡顿</string>
+    <string name="retention_reason_other">其他</string>
+    <string name="retention_feedback_hint">请输入卸载 %1$s 的原因</string>
+    <string name="retention_not_yet">暂不卸载</string>
+    <string name="retention_uninstall">卸载</string>
+    <string name="retention_shortcut_disabled">此快捷入口已不可用。</string>
+    <string name="retention_unavailable">无法打开系统卸载页面，请重试。</string>
+    <string name="retention_back">返回</string>
+    <string name="retention_junk">垃圾清理</string>
+    <string name="retention_malware">恶意软件扫描</string>
+    <string name="retention_similar">重复照片清理</string>
+    <string name="retention_screenshots">截图清理</string>
+    <string name="retention_large">大文件清理</string>
+    <string name="retention_notifications">通知清理</string>
+</resources>

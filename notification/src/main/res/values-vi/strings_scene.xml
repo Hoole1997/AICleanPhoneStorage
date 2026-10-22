@@ -1,0 +1,18 @@
+<resources>
+    <string name="scene_alerts">Nhắc nhở thông minh</string>
+    <string name="scene_all">Bật nhắc nhở thông minh</string>
+    <string name="scene_charge_start">Bắt đầu sạc</string>
+    <string name="scene_charge_end">Kết thúc sạc</string>
+    <string name="scene_low_battery">Pin yếu</string>
+    <string name="scene_network">Thay đổi mạng</string>
+    <string name="scene_screenshot">Ảnh chụp màn hình mới</string>
+    <string name="scene_app_install">Cài ứng dụng</string>
+    <string name="scene_app_uninstall">Gỡ ứng dụng</string>
+    <string name="scene_download">Tệp tải mới</string>
+    <string name="scene_back">Quay lại</string>
+    <string name="scene_settings_description">Chọn sự kiện thiết bị được phép hiển thị nhắc nhở. Thông báo hiện có được quản lý riêng.</string>
+    <string name="scene_settings_error">Không thể lưu cài đặt. Vui lòng thử lại.</string>
+    <string name="scene_charge_summary">Sạc kết thúc lúc %1$s · Pin: %2$d%%</string>
+    <string name="scene_charge_duration">Thời gian sạc: %1$s</string>
+    <string name="scene_network_tip">Không có kết nối? Kiểm tra Wi-Fi hoặc dữ liệu di động trước khi đo tốc độ.</string>
+</resources>

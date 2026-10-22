@@ -16,6 +16,9 @@ interface NotificationHost {
     suspend fun awaitContentLanguage() {}
     /** null 表示线上尚未就绪，空串表示参数缺失/无效；模块统一选择有效线上/缓存/本地默认配置。 */
     suspend fun alarmWakeupConfig(): String? = null
+    /** 宿主只提供 Remax 解密边界；新场景的解析、缓存、频控及监听均属于 notification。 */
+    suspend fun scenePushParameter(key: String): String? = null
+    fun supportsSceneForegroundHint(activityClassName: String): Boolean = false
     fun contentIntent(destination: NotificationDestination): PendingIntent
     fun residentViews(compact: Boolean): RemoteViews
     fun residentContent() = io.docview.push.analytics.NotificationContent(appName, "")

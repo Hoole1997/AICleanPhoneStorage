@@ -1,0 +1,17 @@
+<resources>
+    <string name="new_user_device">الجهاز</string>
+    <string name="new_user_system">إصدار Android</string>
+    <string name="new_user_resolution">دقة الشاشة</string>
+    <string name="new_user_density">كثافة الشاشة</string>
+    <string name="new_user_storage">مساحة التخزين المستخدمة</string>
+    <string name="new_user_engine">تهيئة المحرك</string>
+    <string name="new_user_scanning">جارٍ الفحص…</string>
+    <string name="new_user_initializing">جارٍ التهيئة</string>
+    <string name="new_user_done">تم</string>
+    <string name="new_user_unknown">غير معروف</string>
+    <string name="new_user_start">بدء التنظيف</string>
+    <string name="new_user_retry">إعادة المحاولة</string>
+    <string name="new_user_engine_failed">تعذرت تهيئة المحرك</string>
+    <string name="new_user_save_failed">تعذر حفظ التقدم. يرجى المحاولة مجددًا.</string>
+    <string name="new_user_notice"><font color="#222222"><b>يرجى ملاحظة:</b></font> قد يستغرق الفحص الأول وقتًا أطول قليلًا أثناء البحث عن الملفات غير الضرورية وتحليل بيانات هاتفك.</string>
+</resources>

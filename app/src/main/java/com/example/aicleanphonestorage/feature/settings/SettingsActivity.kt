@@ -30,6 +30,7 @@ class SettingsActivity : AppCompatActivity() {
             )
         }
         menu.settingsLanguage.setOnClickListener { open(LanguageSettingsActivity::class.java) }
+        menu.settingsSmartAlerts.setOnClickListener { open(io.docview.push.scene.ScenePushSettingsActivity::class.java) }
         menu.settingsFeedback.setOnClickListener { open(FeedbackActivity::class.java) }
         menu.settingsAbout.setOnClickListener { open(AboutActivity::class.java) }
         menu.settingsPrivacy.setOnClickListener {

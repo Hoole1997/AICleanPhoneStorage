@@ -53,8 +53,9 @@ internal class CleanupViewModel(
             bucket = saved["filter.bucket"] ?: initialFilter.bucket,
             category =
                 FileCategory.entries.getOrElse(saved["filter.category"] ?: 0) { FileCategory.ALL },
-            minimumBytes = saved["filter.size"] ?: 10_000_000L,
-            recentDays = saved["filter.recent"] ?: 0,
+            minimumBytes = saved["filter.size"] ?: initialFilter.minimumBytes,
+            recentDays = saved["filter.recent"] ?: initialFilter.recentDays,
+            preferredUri = initialFilter.preferredUri,
             unusedDays = 30, // 固定候选范围，旧版本保存的筛选条件不再隐式过滤结果。
             referenceMillis = saved["filter.clock"] ?: System.currentTimeMillis(),
         )

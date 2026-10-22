@@ -1,0 +1,26 @@
+<resources>
+    <string name="retention_before">アンインストールする前に…</string>
+    <string name="retention_loss">このアプリをアンインストールすると、以下の機能が使えなくなります：</string>
+    <string name="retention_more">…その他の便利な機能</string>
+    <string name="retention_keep">アプリを残す</string>
+    <string name="retention_anyway">アンインストールを続ける</string>
+    <string name="retention_why">アンインストールする理由は？</string>
+    <string name="retention_reason_difficult">使いにくい</string>
+    <string name="retention_reason_ads">広告が多すぎる</string>
+    <string name="retention_reason_results">クリーンアップの結果が期待と違う</string>
+    <string name="retention_reason_features">必要な機能がない</string>
+    <string name="retention_reason_slow">読み込み時に動作が重い</string>
+    <string name="retention_reason_other">その他</string>
+    <string name="retention_feedback_hint">%1$s をアンインストールする理由を入力してください</string>
+    <string name="retention_not_yet">今はアンインストールしない</string>
+    <string name="retention_uninstall">アンインストール</string>
+    <string name="retention_shortcut_disabled">このショートカットは利用できなくなりました。</string>
+    <string name="retention_unavailable">システムのアンインストール画面を開けませんでした。もう一度お試しください。</string>
+    <string name="retention_back">戻る</string>
+    <string name="retention_junk">不要ファイルの削除</string>
+    <string name="retention_malware">マルウェアスキャン</string>
+    <string name="retention_similar">重複写真の整理</string>
+    <string name="retention_screenshots">スクリーンショット整理</string>
+    <string name="retention_large">大容量ファイルの整理</string>
+    <string name="retention_notifications">通知の整理</string>
+</resources>

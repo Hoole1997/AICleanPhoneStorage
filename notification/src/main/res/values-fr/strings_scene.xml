@@ -1,0 +1,18 @@
+<resources>
+    <string name="scene_alerts">Alertes intelligentes</string>
+    <string name="scene_all">Activer les alertes intelligentes</string>
+    <string name="scene_charge_start">Recharge démarrée</string>
+    <string name="scene_charge_end">Recharge terminée</string>
+    <string name="scene_low_battery">Batterie faible</string>
+    <string name="scene_network">Changements de réseau</string>
+    <string name="scene_screenshot">Nouvelles captures</string>
+    <string name="scene_app_install">Application installée</string>
+    <string name="scene_app_uninstall">Application désinstallée</string>
+    <string name="scene_download">Nouveaux téléchargements</string>
+    <string name="scene_back">Retour</string>
+    <string name="scene_settings_description">Choisissez les événements pouvant afficher des rappels. Les notifications existantes sont gérées séparément.</string>
+    <string name="scene_settings_error">Impossible d’enregistrer ce réglage. Réessayez.</string>
+    <string name="scene_charge_summary">Fin de charge à %1$s · Batterie : %2$d%%</string>
+    <string name="scene_charge_duration">Durée de charge : %1$s</string>
+    <string name="scene_network_tip">Pas de connexion ? Vérifiez le Wi-Fi ou les données mobiles avant de tester le débit.</string>
+</resources>

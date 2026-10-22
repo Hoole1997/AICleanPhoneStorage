@@ -1,0 +1,26 @@
+<resources>
+    <string name="retention_before">Sebelum Anda pergi…</string>
+    <string name="retention_loss">Jika Anda menghapus aplikasi ini, Anda akan kehilangan akses ke fitur berikut:</string>
+    <string name="retention_more">…dan fitur penting lainnya</string>
+    <string name="retention_keep">Pertahankan Aplikasi</string>
+    <string name="retention_anyway">Tetap Hapus</string>
+    <string name="retention_why">Mengapa Anda menghapus aplikasi?</string>
+    <string name="retention_reason_difficult">Sulit digunakan</string>
+    <string name="retention_reason_ads">Terlalu banyak iklan</string>
+    <string name="retention_reason_results">Hasil pembersihan tidak sesuai harapan</string>
+    <string name="retention_reason_features">Fitur yang saya butuhkan tidak tersedia</string>
+    <string name="retention_reason_slow">Tersendat saat memuat</string>
+    <string name="retention_reason_other">Lainnya</string>
+    <string name="retention_feedback_hint">Masukkan alasan Anda menghapus %1$s</string>
+    <string name="retention_not_yet">Jangan hapus dulu</string>
+    <string name="retention_uninstall">Hapus instalasi</string>
+    <string name="retention_shortcut_disabled">Pintasan ini tidak tersedia lagi.</string>
+    <string name="retention_unavailable">Tidak dapat membuka layar penghapusan sistem. Silakan coba lagi.</string>
+    <string name="retention_back">Kembali</string>
+    <string name="retention_junk">Pembersih Sampah</string>
+    <string name="retention_malware">Pemindaian Malware</string>
+    <string name="retention_similar">Foto Duplikat</string>
+    <string name="retention_screenshots">Pembersih Tangkapan Layar</string>
+    <string name="retention_large">File Besar</string>
+    <string name="retention_notifications">Pembersih Notifikasi</string>
+</resources>

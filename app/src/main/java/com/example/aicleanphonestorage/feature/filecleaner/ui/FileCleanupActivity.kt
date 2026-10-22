@@ -54,7 +54,9 @@ class FileCleanupActivity : AppCompatActivity() {
                     container.fileOperations,
                     createSavedStateHandle(),
                     intent.getLongExtra(EXTRA_SCAN, -1),
-                    initialFilter = CleanupFilter(bucket = intent.getStringExtra(EXTRA_BUCKET)),
+                    initialFilter = CleanupFilter(bucket = intent.getStringExtra(EXTRA_BUCKET),
+                        recentDays = if (io.docview.push.scene.SceneLandingData.read(intent)?.code == 1105) 7 else 0,
+                        preferredUri = io.docview.push.scene.SceneLandingData.read(intent)?.takeIf { it.code == 1108 }?.reference?.takeIf { it.isNotEmpty() }),
                 )
             }
         }

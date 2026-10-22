@@ -1,0 +1,18 @@
+<resources>
+    <string name="scene_alerts">スマート通知</string>
+    <string name="scene_all">スマート通知を有効にする</string>
+    <string name="scene_charge_start">充電開始</string>
+    <string name="scene_charge_end">充電終了</string>
+    <string name="scene_low_battery">バッテリー残量低下</string>
+    <string name="scene_network">ネットワークの変更</string>
+    <string name="scene_screenshot">新しいスクリーンショット</string>
+    <string name="scene_app_install">アプリのインストール</string>
+    <string name="scene_app_uninstall">アプリのアンインストール</string>
+    <string name="scene_download">新しいダウンロード</string>
+    <string name="scene_back">戻る</string>
+    <string name="scene_settings_description">リマインダーを表示する端末イベントを選択します。既存の通知は個別に管理されます。</string>
+    <string name="scene_settings_error">設定を保存できませんでした。もう一度お試しください。</string>
+    <string name="scene_charge_summary">充電終了：%1$s · バッテリー：%2$d%%</string>
+    <string name="scene_charge_duration">充電時間：%1$s</string>
+    <string name="scene_network_tip">接続がありませんか？速度を測定する前に Wi-Fi またはモバイルデータを確認してください。</string>
+</resources>

@@ -1,0 +1,6 @@
+<resources>
+    <style name="Theme.SceneSettings" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">#0D60F1</item><item name="colorSecondary">#0D60F1</item>
+        <item name="android:layoutDirection">ltr</item><item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>

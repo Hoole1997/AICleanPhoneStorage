@@ -7,6 +7,9 @@
         <com.example.aicleanphonestorage.feature.settings.SettingsItemView android:id="@+id/settings_language" android:layout_marginTop="8dp"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             app:settingTitle="@string/settings_language" app:settingIcon="@drawable/ic_settings_language" />
+        <com.example.aicleanphonestorage.feature.settings.SettingsItemView android:id="@+id/settings_smart_alerts" android:layout_marginTop="8dp"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            app:settingTitle="@string/scene_alerts" app:settingIcon="@drawable/ic_settings_notifications" />
         <com.example.aicleanphonestorage.feature.settings.SettingsItemView android:id="@+id/settings_privacy" android:layout_marginTop="8dp"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             app:settingTitle="@string/settings_privacy" app:settingIcon="@drawable/ic_settings_privacy" />

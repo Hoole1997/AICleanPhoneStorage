@@ -1,0 +1,18 @@
+<resources>
+    <string name="scene_alerts">স্মার্ট সতর্কতা</string>
+    <string name="scene_all">স্মার্ট সতর্কতা চালু করুন</string>
+    <string name="scene_charge_start">চার্জ শুরু</string>
+    <string name="scene_charge_end">চার্জ শেষ</string>
+    <string name="scene_low_battery">ব্যাটারি কম</string>
+    <string name="scene_network">নেটওয়ার্ক পরিবর্তন</string>
+    <string name="scene_screenshot">নতুন স্ক্রিনশট</string>
+    <string name="scene_app_install">অ্যাপ ইনস্টল</string>
+    <string name="scene_app_uninstall">অ্যাপ আনইনস্টল</string>
+    <string name="scene_download">নতুন ডাউনলোড</string>
+    <string name="scene_back">ফিরুন</string>
+    <string name="scene_settings_description">কোন ডিভাইস ইভেন্টে রিমাইন্ডার দেখাবে তা বেছে নিন। আগের বিজ্ঞপ্তি আলাদাভাবে পরিচালিত হয়।</string>
+    <string name="scene_settings_error">সেটিং সেভ হয়নি। আবার চেষ্টা করুন।</string>
+    <string name="scene_charge_summary">চার্জ শেষ %1$s-এ · ব্যাটারি: %2$d%%</string>
+    <string name="scene_charge_duration">চার্জের সময়: %1$s</string>
+    <string name="scene_network_tip">সংযোগ নেই? গতি পরীক্ষার আগে Wi-Fi বা মোবাইল ডেটা পরীক্ষা করুন।</string>
+</resources>

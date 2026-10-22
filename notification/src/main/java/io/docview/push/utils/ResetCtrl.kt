@@ -3,7 +3,6 @@ package io.docview.push.utils
 import android.content.Context
 import android.content.SharedPreferences
 import java.time.LocalDate
-import java.util.concurrent.atomic.AtomicLong
 
 /**
  * 0点重置控制器
@@ -47,6 +46,7 @@ class ResetCtrl private constructor() {
      * @param enableMidnightReset 是否启用0点重置
      * @return 当前值
      */
+    @Synchronized
     fun getLongValue(key: String, defaultValue: Long = 0L, enableMidnightReset: Boolean = true): Long {
         val prefs = sharedPreferences ?: return defaultValue
 
@@ -79,6 +79,7 @@ class ResetCtrl private constructor() {
      * @param value 值
      * @param enableMidnightReset 是否启用0点重置
      */
+    @Synchronized
     fun setLongValue(key: String, value: Long, enableMidnightReset: Boolean = true) {
         val prefs = sharedPreferences ?: return
 
@@ -129,10 +130,19 @@ class ResetCtrl private constructor() {
      * @param enableMidnightReset 是否启用0点重置
      * @return 增加后的值
      */
+    @Synchronized
     fun incrementLongValue(key: String, increment: Long = 1L, enableMidnightReset: Boolean = true): Long {
-        val currentValue = getLongValue(key, 0L, enableMidnightReset)
+        val prefs = sharedPreferences ?: return increment
+        // 一次操作只取一次日期：分开调用 get/set 可能刚好跨午夜，把昨天的次数写到今天。
+        // 锁覆盖读改写；apply 同步更新内存、异步落盘，不在通知事件线程阻塞等待磁盘。
+        val today = if (enableMidnightReset) LocalDate.now().toString() else null
+        val dateKey = "${key}_date"
+        val currentValue = if (today != null && prefs.getString(dateKey, "") != today) 0L else prefs.getLong(key, 0L)
         val newValue = currentValue + increment
-        setLongValue(key, newValue, enableMidnightReset)
+        prefs.edit().apply {
+            putLong(key, newValue)
+            if (today != null) putString(dateKey, today)
+        }.apply()
         return newValue
     }
 

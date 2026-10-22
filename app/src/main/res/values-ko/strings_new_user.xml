@@ -1,0 +1,17 @@
+<resources>
+    <string name="new_user_device">기기</string>
+    <string name="new_user_system">Android 버전</string>
+    <string name="new_user_resolution">화면 해상도</string>
+    <string name="new_user_density">화면 밀도</string>
+    <string name="new_user_storage">사용 중인 저장 공간</string>
+    <string name="new_user_engine">엔진 초기화</string>
+    <string name="new_user_scanning">스캔 중…</string>
+    <string name="new_user_initializing">초기화 중</string>
+    <string name="new_user_done">완료</string>
+    <string name="new_user_unknown">알 수 없음</string>
+    <string name="new_user_start">정리 시작</string>
+    <string name="new_user_retry">다시 시도</string>
+    <string name="new_user_engine_failed">엔진 초기화에 실패했습니다</string>
+    <string name="new_user_save_failed">진행 상황을 저장할 수 없습니다. 다시 시도해 주세요.</string>
+    <string name="new_user_notice"><font color="#222222"><b>참고:</b></font> 첫 스캔은 불필요한 파일을 검색하고 휴대전화 데이터를 분석하므로 시간이 조금 더 걸릴 수 있습니다.</string>
+</resources>

@@ -368,8 +368,11 @@ object TriggerCtrl {
      * @param model 通知数据
      * @param useSilent 是否使用静音通道
      */
-    private fun buildGeneralNotification(model: GeneralNotificationData, useSilent: Boolean): Notification {
-        val channelId = if (useSilent) {
+    private fun buildGeneralNotification(model: GeneralNotificationData, useSilent: Boolean): Notification =
+        buildAlertingNotification(model, useSilent, null)
+
+    private fun buildAlertingNotification(model: GeneralNotificationData, useSilent: Boolean, sceneChannel: String?): Notification {
+        val channelId = sceneChannel ?: if (useSilent) {
             CHANNEL_ID_GENERAL_SILENT  // 使用静音通道
         } else {
             CHANNEL_ID_GENERAL // 使用普通通道
@@ -379,7 +382,7 @@ object TriggerCtrl {
         val deleteIntent = Intent(context, DeleteReceiver::class.java).apply {
             action = "io.docview.push.ACTION_NOTIFICATION_DELETE"
         }
-        val deletePendingIntent = PendingIntent.getBroadcast(
+        val deletePendingIntent = if (sceneChannel != null) null else PendingIntent.getBroadcast(
             context,
             System.currentTimeMillis().toInt(),
             deleteIntent,
@@ -396,7 +399,7 @@ object TriggerCtrl {
                 .setColor(ContextCompat.getColor(context!!, R.color.noti_color))
                 .setSmallIcon(io.docview.push.host.PushEnvironment.host.smallIcon)
                 .setAutoCancel(true)
-                .setGroup("push_" + System.currentTimeMillis())
+                .setGroup(if (sceneChannel == null) "push_" + System.currentTimeMillis() else "scene_${model.notificationId}")
                 .setContentTitle(model.contentTitle)
                 .setContentText(model.contentContent)
                 .setContentIntent(model.contentIntent)
@@ -412,7 +415,7 @@ object TriggerCtrl {
                 .setColor(ContextCompat.getColor(context!!, R.color.noti_color))
                 .setSmallIcon(io.docview.push.host.PushEnvironment.host.smallIcon)
                 .setAutoCancel(true)
-                .setGroup("push_" + System.currentTimeMillis())
+                .setGroup(if (sceneChannel == null) "push_" + System.currentTimeMillis() else "scene_${model.notificationId}")
                 .setContentTitle(model.contentTitle)
                 .setContentText(model.contentContent)
                 .setContentIntent(model.contentIntent)
@@ -431,9 +434,19 @@ object TriggerCtrl {
 
         // 普通卡片更新也允许提醒；显式静音通道仍保持静音，实际提示受系统冷却和用户设置控制。
         builder.setSilent(useSilent)
-            .setDefaults(if (useSilent) 0 else Notification.DEFAULT_SOUND or Notification.DEFAULT_VIBRATE)
+            .setDefaults(if (useSilent) 0 else if (sceneChannel != null) Notification.DEFAULT_SOUND else Notification.DEFAULT_SOUND or Notification.DEFAULT_VIBRATE)
+        if (sceneChannel != null) builder
+            // 新稿中的 App 名称、时间和收起控件由系统头部提供，不绘制假控件或重复头部。
+            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+            .setContentTitle(null)
+            .setShowWhen(true)
+            .setCustomHeadsUpContentView(model.contentView)
         return builder.build()
     }
+
+    /** 复用悬浮通知样式，场景卡片不挂旧 DeleteReceiver，不取消旧重复推送，不参与旧分池计数。 */
+    internal fun sceneNotification(model: GeneralNotificationData, channel: String, useSilent: Boolean = false): Notification =
+        buildAlertingNotification(model, useSilent = useSilent, sceneChannel = channel)
 
     private fun general(model: GeneralNotificationData): Notification {
         // 每轮首条使用普通提醒通道，声音和震动仍遵循用户的系统设置。

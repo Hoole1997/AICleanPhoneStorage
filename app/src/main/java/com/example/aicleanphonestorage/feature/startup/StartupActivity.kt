@@ -39,8 +39,11 @@ class StartupActivity : AppCompatActivity() {
     private val model: StartupViewModel by viewModels {
         viewModelFactory {
             initializer {
-                val languages = (application as CleanApplication).languages
-                StartupViewModel(createSavedStateHandle(), prepare = { languages.ready.await() })
+                val app = application as CleanApplication
+                StartupViewModel(createSavedStateHandle(), resolveNewUserFlow = {
+                    app.container.newUserFlow.eligible() &&
+                        com.example.aicleanphonestorage.feature.onboarding.NewUserFlowConfig.enabled()
+                }, resolveRetention = { app.container.uninstallRetention.checkNow() }, prepare = { app.languages.ready.await() })
             }
         }
     }
@@ -101,6 +104,16 @@ class StartupActivity : AppCompatActivity() {
             model.permissionFinished()
         }
         val app = application as CleanApplication
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                com.example.aicleanphonestorage.app.ad.AdSdkInitializer.groupingConfigReady.collect { revision ->
+                    if (revision > 0) try {
+                        app.container.groupingReporter.reportCurrent()
+                    } catch (cancelled: CancellationException) { throw cancelled }
+                    catch (error: Exception) { Log.w("BusinessMetrics", "Grouping 分组上报失败，下次启动重试", error) }
+                }
+            }
+        }
         permissions = PermissionCoordinator(this, permissionFlow, app.container.permissionAccess)
         pushPermission =
             PushPermissionCoordinator.attach(
@@ -164,6 +177,12 @@ class StartupActivity : AppCompatActivity() {
             HotStartAdLog.event("startup_finished destination=caller")
             StartupNavigation.returnToCaller(this, animate = renderer.transitionsEnabled)
         }
+        else if (entry.uninstallRetention && model.state.value.retentionAllowed == true) {
+            (application as CleanApplication).container.uninstallRetention.recordEntry()
+            StartupNavigation.openRetention(this)
+        }
+        else if (model.state.value.newUserFlow == true && entry.launcher)
+            StartupNavigation.openDeviceScan(this)
         else StartupNavigation.openHome(this, entry, animate = renderer.transitionsEnabled)
     }
 

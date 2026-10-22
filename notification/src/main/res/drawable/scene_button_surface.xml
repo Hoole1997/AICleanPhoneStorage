@@ -1,0 +1,9 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="295dp" android:height="39dp" android:viewportWidth="295" android:viewportHeight="39">
+    <group android:name="pulse" android:pivotX="147.5" android:pivotY="19.5">
+        <path android:fillColor="#0D60F1" android:pathData="M 19.5,0 H 275.5 A 19.5,19.5 0 0 1 295,19.5 A 19.5,19.5 0 0 1 275.5,39 H 19.5 A 19.5,19.5 0 0 1 0,19.5 A 19.5,19.5 0 0 1 19.5,0 Z" />
+        <clip-path android:pathData="M 19.5,0 H 275.5 A 19.5,19.5 0 0 1 295,19.5 A 19.5,19.5 0 0 1 275.5,39 H 19.5 A 19.5,19.5 0 0 1 0,19.5 A 19.5,19.5 0 0 1 19.5,0 Z" />
+        <group android:name="sweep" android:translateX="-58.410">
+            <path android:fillColor="#26FFFFFF" android:pathData="M -53.1,19.5 a 53.1,53.1 0 1 0 106.2,0 a 53.1,53.1 0 1 0 -106.2,0 Z" />
+        </group>
+    </group>
+</vector>

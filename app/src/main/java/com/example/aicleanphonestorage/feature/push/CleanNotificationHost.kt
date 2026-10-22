@@ -69,6 +69,17 @@ internal class CleanNotificationHost(
 
     override suspend fun alarmWakeupConfig(): String? = AlarmWakeupRemoteConfig.read()
 
+    override suspend fun scenePushParameter(key: String): String? {
+        if (key !in setOf(io.docview.push.scene.ScenePushKeys.CONFIG, io.docview.push.scene.ScenePushKeys.CONTENT)) return null
+        return kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            if (!net.corekit.core.utils.ConfigRemoteManager.isInitialized()) null
+            else net.corekit.core.utils.ConfigRemoteManager.getString(key, "")
+        }
+    }
+    override fun supportsSceneForegroundHint(activityClassName: String) =
+        activityClassName.startsWith("com.example.aicleanphonestorage.") &&
+            !activityClassName.contains(".startup.") && !activityClassName.contains(".retention.") && !activityClassName.contains(".onboarding.")
+
     override val contentLanguageTag: String
         get() = AppCompatDelegate.getApplicationLocales()[0]?.toLanguageTag()
             ?: app.resources.configuration.locales[0].toLanguageTag()

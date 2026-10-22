@@ -136,6 +136,7 @@ class CoreService : Service() {
     private var requestedIntervalSeconds: Long? = null
     private var runtimeReady = false
     private var screenRegistration: AutoCloseable? = null
+    private var sceneRegistration: AutoCloseable? = null
     private var initialization: Job? = null
     private data class StartAttribution(val via: String, val from: String)
     private var startAttribution = StartAttribution("direct", "direct")
@@ -155,6 +156,8 @@ class CoreService : Service() {
             // 只释放这个 Service 的监听，Application 的句柄和去重状态仍然保留。
             screenRegistration?.close()
             screenRegistration = null
+            sceneRegistration?.close()
+            sceneRegistration = null
         },
         leaveForeground = { stopForeground(STOP_FOREGROUND_REMOVE) },
         stopService = { stopSelf() },
@@ -254,6 +257,10 @@ class CoreService : Service() {
                 intervalSeconds = effectiveInterval()
                 if (!session.refresh()) return@launch
                 screenRegistration = TimingCtrl.getInstance().registerServiceScreenReceiver(this@CoreService)
+                // 新场景独立注册和释放；初始化失败只跳过本功能，不终止已有屏幕/周期推送会话。
+                try { sceneRegistration = (application as NotificationRuntimeOwner).notificationRuntime.registerSceneEvents(this@CoreService, serviceScope) }
+                catch (cancelled: CancellationException) { throw cancelled }
+                catch (error: Exception) { Logger.w("场景监听不可用: ${error.javaClass.simpleName}") }
                 // 刷新通知和注册监听都成功后才记为拉活成功，避免把 Provider 请求当成成功启动。
                 PushEventReporter.reportData("Notific_Pull", mapOf(
                     "topic" to "permanent", "via" to attribution.via, "from" to attribution.from))

@@ -1,0 +1,222 @@
+[
+  {
+    "name": "phone",
+    "url": "https://www.figma.com/api/mcp/asset/432f9fdc-eb11-41f3-bdc7-0c64454b8153.png",
+    "node": "7121:9029",
+    "source": "design/figma/new-user/source/phone.png",
+    "sha256": "b8f7d31321d1e5fbecac559eb563f84b270c112b65eab5f9e45c7058f5646d7f",
+    "resource": "new_user_phone",
+    "pixels4x": [
+      208,
+      264
+    ]
+  },
+  {
+    "name": "background",
+    "url": "https://www.figma.com/api/mcp/asset/6664ecfc-3d52-4869-be68-b995d585a63f.png",
+    "node": "7121:9030",
+    "source": "design/figma/new-user/source/background-figma.png",
+    "sha256": "79f329cbe2729436fbae3402c6b8edd6ba1cbe8285c8a12c0a7ea0c9403b3cfc",
+    "resource": "new_user_background",
+    "pixels4x": null,
+    "originalVectorUrl": "https://www.figma.com/api/mcp/asset/fe58b23b-7bf4-47f3-8595-1d19f6f5d8ee.svg",
+    "originalRaster": "design/figma/new-user/source/background-figma.png",
+    "reason": "Figma isolated background export preserves blur filters that librsvg does not reproduce.",
+    "pixels": [
+      375,
+      334
+    ]
+  },
+  {
+    "name": "halo",
+    "url": "https://www.figma.com/api/mcp/asset/c8323cf1-154c-4070-9a95-bf74c2c7bdea.svg",
+    "node": "7121:9029",
+    "source": "design/figma/new-user/source/halo.svg",
+    "sha256": "1a2dc6ea8ed3df63532f247fa2a8b986726ed94cc6a52fc7a4fca72902fcafa9",
+    "resource": "new_user_halo",
+    "pixels4x": [
+      528,
+      528
+    ]
+  },
+  {
+    "name": "track",
+    "url": "https://www.figma.com/api/mcp/asset/8fa4a1d0-b89a-4613-9d2b-f319b37dd918.svg",
+    "node": "7121:9029",
+    "source": "design/figma/new-user/source/track.svg",
+    "sha256": "34a1741c306d521e8d52d0f3c22da0fc816da9309ff68953eedec55686600630",
+    "resource": "new_user_track",
+    "pixels4x": [
+      465,
+      465
+    ]
+  },
+  {
+    "name": "arc",
+    "url": "https://www.figma.com/api/mcp/asset/4c4ed13f-cefc-46f8-9239-5275796a0924.svg",
+    "node": "7121:9029",
+    "source": "design/figma/new-user/source/arc.svg",
+    "sha256": "2762c903c98a4241fee8781cde68d6b340f602aeec2d0b104f7cf136061aeef7",
+    "resource": "new_user_arc",
+    "pixels4x": [
+      232,
+      430
+    ]
+  },
+  {
+    "name": "star_large",
+    "url": "https://www.figma.com/api/mcp/asset/9faa9593-3a3f-4c4f-b440-e5d7552354de.svg",
+    "node": "7121:9029",
+    "source": "design/figma/new-user/source/star_large.svg",
+    "sha256": "686cf0a4a3c55d19143bfbdc3486f0c5b2d0cc7094eda83eb8dff05850b6ce9b",
+    "resource": "new_user_star_large",
+    "pixels4x": [
+      45,
+      45
+    ]
+  },
+  {
+    "name": "star_small",
+    "url": "https://www.figma.com/api/mcp/asset/a71f0840-1ab5-488c-b20b-3f81272c161a.svg",
+    "node": "7121:9029",
+    "source": "design/figma/new-user/source/star_small.svg",
+    "sha256": "a253a15cd5381495fd03b9394ae4e2e1443a7839f5afc4a6c863f2d466dd1b49",
+    "resource": "new_user_star_small",
+    "pixels4x": [
+      27,
+      27
+    ]
+  },
+  {
+    "name": "notice",
+    "url": "https://www.figma.com/api/mcp/asset/1a76dc07-10ef-4a7c-82ee-42703099924d.svg",
+    "node": "7121:9029",
+    "source": "design/figma/new-user/source/notice.svg",
+    "sha256": "e2fd9554be535abac46fda00ea005fdd90bbd94e90a3b8c79d6bd73a1c516a3f",
+    "resource": "new_user_notice",
+    "pixels4x": [
+      80,
+      80
+    ]
+  },
+  {
+    "name": "device",
+    "url": "https://www.figma.com/api/mcp/asset/529946ca-f814-48ec-b0ed-81fccaa2b6bc.svg",
+    "node": "7121:9029",
+    "source": "design/figma/new-user/source/device.svg",
+    "sha256": "398e2dcb49d0104f88db123a5f156c0b021e9befac638186a3cf69d8fdfc2ed5",
+    "resource": "new_user_device",
+    "pixels4x": [
+      128,
+      128
+    ]
+  },
+  {
+    "name": "selected",
+    "url": "https://www.figma.com/api/mcp/asset/6bd71bd6-9ff5-4ef8-810b-1a3cadf2c358.svg",
+    "node": "7121:9029",
+    "source": "design/figma/new-user/source/selected.svg",
+    "sha256": "ef9db8686509dae7695d8d6fddb641e4365e48b87458fff19c08739c0f947c93",
+    "resource": "new_user_selected",
+    "pixels4x": [
+      88,
+      88
+    ]
+  },
+  {
+    "name": "system",
+    "url": "https://www.figma.com/api/mcp/asset/0f3eba45-1ce0-4530-b2f0-92809a795610.svg",
+    "node": "7121:9029",
+    "source": "design/figma/new-user/source/system.svg",
+    "sha256": "b162cd9fedc74f1aa222ed9d2031c6b7119a14799dea14bff95d67db17bebf83",
+    "resource": "new_user_system",
+    "pixels4x": [
+      128,
+      128
+    ]
+  },
+  {
+    "name": "resolution",
+    "url": "https://www.figma.com/api/mcp/asset/e9bdfab7-e9da-4246-9a03-fbf36876d87f.svg",
+    "node": "7121:9029",
+    "source": "design/figma/new-user/source/resolution.svg",
+    "sha256": "26659679216e97ed4782c995d4e66b4d84d071081d0e5eac6545b96960da1322",
+    "resource": "new_user_resolution",
+    "pixels4x": [
+      128,
+      128
+    ]
+  },
+  {
+    "name": "density",
+    "url": "https://www.figma.com/api/mcp/asset/ecccc8da-10ed-47d5-bc25-2e1c0cbcda00.svg",
+    "node": "7121:9029",
+    "source": "design/figma/new-user/source/density.svg",
+    "sha256": "ac558ed94122dd4ce8d6f5a64ff84571891eb012642f174655c4d1604645d017",
+    "resource": "new_user_density",
+    "pixels4x": [
+      128,
+      128
+    ]
+  },
+  {
+    "name": "storage",
+    "url": "https://www.figma.com/api/mcp/asset/938f6ad6-e68a-4255-b110-108f1ad76de9.svg",
+    "node": "7121:9029",
+    "source": "design/figma/new-user/source/storage.svg",
+    "sha256": "17f50f4a98305e45d4452cf3ade84b0009851f9e3e11dd78c6ac5921b320595f",
+    "resource": "new_user_storage",
+    "pixels4x": [
+      128,
+      128
+    ]
+  },
+  {
+    "name": "engine",
+    "url": "https://www.figma.com/api/mcp/asset/7a5aafff-93c1-487f-b01a-8f7ff5abb24f.svg",
+    "node": "7121:9029",
+    "source": "design/figma/new-user/source/engine.svg",
+    "sha256": "112c4212ef9504d9913411a1518d73ca73acddb58d1b2fd1cca232b15e3b3f80",
+    "resource": "new_user_engine",
+    "pixels4x": [
+      128,
+      128
+    ]
+  },
+  {
+    "name": "loading",
+    "url": "https://www.figma.com/api/mcp/asset/d5990598-0a33-45cb-b7f4-12b7fc02961c.svg",
+    "node": "7121:9029",
+    "source": "design/figma/new-user/source/loading.svg",
+    "sha256": "42e9d675de6db24680a6435803bea5f17fffde5341413921198cff73ef993d90",
+    "resource": "new_user_loading",
+    "pixels4x": [
+      88,
+      88
+    ]
+  },
+  {
+    "name": "ring_complete",
+    "url": "https://www.figma.com/api/mcp/asset/41eb3b37-f06d-423c-9e26-f3f4d27c892e.svg",
+    "node": "7121:9151",
+    "source": "design/figma/new-user/source/ring_complete.svg",
+    "sha256": "b177ab51bb6a87456f63f3c2970c1d53a73f42c9d8573c09f609c40ae2d7fba7",
+    "resource": "new_user_ring_complete",
+    "pixels4x": [
+      465,
+      465
+    ]
+  },
+  {
+    "name": "complete",
+    "url": "https://www.figma.com/api/mcp/asset/ffc7b50e-489d-49f7-ba9a-39adda4fca51.svg",
+    "node": "7121:9151",
+    "source": "design/figma/new-user/source/complete.svg",
+    "sha256": "7eb59eb70a72204dcb80dc3dfc5b35d2e7ab2872f0ef8b0656f669f8e02d4bb0",
+    "resource": "new_user_complete",
+    "pixels4x": [
+      224,
+      224
+    ]
+  }
+]

@@ -122,6 +122,8 @@ internal class HotStartAdCoordinator(
 
     private fun isBusinessActivity(activity: Activity) =
         activity !is StartupActivity &&
+            activity !is com.example.aicleanphonestorage.feature.retention.UninstallRetentionActivity &&
+            activity !is com.example.aicleanphonestorage.feature.onboarding.DeviceScanActivity &&
             activity.javaClass.name.startsWith("com.example.aicleanphonestorage.")
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit

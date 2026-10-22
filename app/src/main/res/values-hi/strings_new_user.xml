@@ -1,0 +1,17 @@
+<resources>
+    <string name="new_user_device">डिवाइस</string>
+    <string name="new_user_system">Android संस्करण</string>
+    <string name="new_user_resolution">स्क्रीन रिज़ॉल्यूशन</string>
+    <string name="new_user_density">स्क्रीन घनत्व</string>
+    <string name="new_user_storage">इस्तेमाल किया गया स्टोरेज</string>
+    <string name="new_user_engine">इंजन शुरू हो रहा है</string>
+    <string name="new_user_scanning">स्कैन हो रहा है…</string>
+    <string name="new_user_initializing">शुरू हो रहा है</string>
+    <string name="new_user_done">पूर्ण</string>
+    <string name="new_user_unknown">अज्ञात</string>
+    <string name="new_user_start">सफ़ाई शुरू करें</string>
+    <string name="new_user_retry">फिर कोशिश करें</string>
+    <string name="new_user_engine_failed">इंजन शुरू नहीं हो सका</string>
+    <string name="new_user_save_failed">प्रगति सेव नहीं हो सकी। फिर कोशिश करें।</string>
+    <string name="new_user_notice"><font color="#222222"><b>कृपया ध्यान दें:</b></font> पहले स्कैन में अनावश्यक फ़ाइलें खोजने और आपके फ़ोन के डेटा का विश्लेषण करने में थोड़ा अधिक समय लग सकता है।</string>
+</resources>

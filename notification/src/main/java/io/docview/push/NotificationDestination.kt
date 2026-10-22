@@ -21,6 +21,6 @@ enum class NotificationDestination(val key: String, val contentType: Int) {
     companion object {
         fun fromKey(key: String?) = entries.firstOrNull { it.key == key } ?: HOME
         fun findContentType(type: Int) = entries.firstOrNull { it.contentType == type }
-        fun fromContentType(type: Int) = findContentType(type) ?: HOME
+        fun fromContentType(type: Int) = io.docview.push.scene.PushScene.fromCode(type)?.destination ?: findContentType(type) ?: HOME
     }
 }

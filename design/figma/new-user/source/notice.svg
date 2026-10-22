@@ -1,0 +1,11 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Warning" clip-path="url(#clip0_0_32)">
+<circle id="Ellipse 2405" cx="10" cy="10" r="10" fill="#0D60F1"/>
+<path id="Vector" d="M11.0674 11.5825C11.0056 12.2285 10.577 12.5305 10.1539 12.5305C9.75189 12.4578 9.43983 12.2937 9.30296 11.6402L8.75 5.53215C8.75 4.91835 9.52899 4.375 10.1899 4.375C10.8508 4.375 11.5625 4.94308 11.5625 5.55613L11.0674 11.5825ZM10.1562 13.3294C9.49536 13.3294 8.95883 13.8428 8.95883 14.4768C8.95883 15.1109 9.49458 15.625 10.1562 15.625C10.8179 15.625 11.3537 15.1109 11.3537 14.4768C11.3537 13.8436 10.8179 13.3294 10.1562 13.3294Z" fill="white"/>
+</g>
+<defs>
+<clipPath id="clip0_0_32">
+<rect width="20" height="20" fill="white"/>
+</clipPath>
+</defs>
+</svg>

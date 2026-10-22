@@ -41,6 +41,11 @@ internal object JunkRules {
     private val tokenSeparator = Regex("[^a-z0-9]+")
     private val camelBoundary = Regex("([a-z0-9])([A-Z])")
 
+    /** JVM 初始化本对象时加载集合并编译规则；显式入口允许引导页报告真实准备失败。 */
+    fun prepare() {
+        check(temporaryExtensions.isNotEmpty() && adTokens.isNotEmpty() && adSdkTokens.isNotEmpty())
+    }
+
     @Suppress("UNUSED_PARAMETER") // 新规则不再按文件年龄过滤，保留旧调用签名。
     fun classify(file: ScannedFile, now: Long, folder: String = file.path.substringBeforeLast('/', "")): JunkKind? {
         if (file.isDirectory) return JunkKind.EMPTY_FOLDERS // 仅由确认整棵子树无文件的扫描器发出。

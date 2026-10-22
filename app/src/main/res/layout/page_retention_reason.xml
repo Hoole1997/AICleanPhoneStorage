@@ -1,0 +1,34 @@
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/reasonScroll" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:fillViewport="true" android:clipToPadding="false" android:scrollbars="none">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"
+        android:paddingHorizontal="@dimen/retention_gutter" android:paddingBottom="32dp">
+        <ImageButton android:id="@+id/back" android:layout_width="48dp" android:layout_height="48dp"
+            android:layout_marginStart="-12dp" android:padding="12dp" android:src="@drawable/retention_back"
+            android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="@string/retention_back" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp"
+            android:text="@string/retention_why" android:textSize="16sp" android:textColor="@color/retention_text"
+            android:fontFamily="sans-serif" android:textStyle="bold" android:id="@+id/reasonHeading" />
+        <RadioGroup android:id="@+id/reasons" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="6dp" android:orientation="vertical">
+            <androidx.appcompat.widget.AppCompatRadioButton android:id="@+id/reasonDifficult" style="@style/Retention.Reason" android:text="@string/retention_reason_difficult" />
+            <androidx.appcompat.widget.AppCompatRadioButton android:id="@+id/reasonAds" style="@style/Retention.Reason" android:text="@string/retention_reason_ads" />
+            <androidx.appcompat.widget.AppCompatRadioButton android:id="@+id/reasonResults" style="@style/Retention.Reason" android:text="@string/retention_reason_results" />
+            <androidx.appcompat.widget.AppCompatRadioButton android:id="@+id/reasonFeatures" style="@style/Retention.Reason" android:text="@string/retention_reason_features" />
+            <androidx.appcompat.widget.AppCompatRadioButton android:id="@+id/reasonSlow" style="@style/Retention.Reason" android:text="@string/retention_reason_slow" />
+            <androidx.appcompat.widget.AppCompatRadioButton android:id="@+id/reasonOther" style="@style/Retention.Reason" android:text="@string/retention_reason_other" />
+        </RadioGroup>
+        <androidx.appcompat.widget.AppCompatEditText android:id="@+id/feedback" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:minHeight="120dp" android:layout_marginTop="14dp" android:paddingHorizontal="@dimen/retention_gutter" android:paddingVertical="12dp"
+            android:background="@drawable/bg_retention_feedback" android:gravity="top|start" android:fontFamily="sans-serif"
+            android:textSize="14sp" android:textColor="@color/retention_text" android:textColorHint="#999999"
+            android:inputType="textMultiLine|textCapSentences" android:maxLength="500" android:saveEnabled="false"
+            android:importantForAutofill="noExcludeDescendants" android:hint="@string/retention_feedback_hint" />
+        <TextView android:id="@+id/uninstallError" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:text="@string/retention_unavailable" android:textColor="@color/retention_text"
+            android:textSize="14sp" android:visibility="gone" android:accessibilityLiveRegion="polite" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/reasonKeep" style="@style/Retention.ReasonPrimary"
+            android:layout_marginTop="62dp" android:text="@string/retention_not_yet" />
+        <TextView android:id="@+id/uninstall" style="@style/Retention.Link" android:textColor="#999999" android:text="@string/retention_uninstall" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

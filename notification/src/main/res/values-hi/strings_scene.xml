@@ -1,0 +1,18 @@
+<resources>
+    <string name="scene_alerts">स्मार्ट अलर्ट</string>
+    <string name="scene_all">स्मार्ट अलर्ट चालू करें</string>
+    <string name="scene_charge_start">चार्जिंग शुरू</string>
+    <string name="scene_charge_end">चार्जिंग समाप्त</string>
+    <string name="scene_low_battery">कम बैटरी</string>
+    <string name="scene_network">नेटवर्क में बदलाव</string>
+    <string name="scene_screenshot">नए स्क्रीनशॉट</string>
+    <string name="scene_app_install">ऐप इंस्टॉल हुआ</string>
+    <string name="scene_app_uninstall">ऐप अनइंस्टॉल हुआ</string>
+    <string name="scene_download">नए डाउनलोड</string>
+    <string name="scene_back">वापस</string>
+    <string name="scene_settings_description">चुनें कि किन डिवाइस घटनाओं पर रिमाइंडर दिखें। मौजूदा सूचनाएँ अलग से प्रबंधित होती हैं।</string>
+    <string name="scene_settings_error">सेटिंग सेव नहीं हुई। फिर कोशिश करें।</string>
+    <string name="scene_charge_summary">चार्जिंग %1$s पर समाप्त · बैटरी: %2$d%%</string>
+    <string name="scene_charge_duration">चार्जिंग समय: %1$s</string>
+    <string name="scene_network_tip">कनेक्शन नहीं है? स्पीड टेस्ट से पहले Wi-Fi या मोबाइल डेटा जाँचें।</string>
+</resources>

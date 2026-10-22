@@ -16,6 +16,7 @@ internal class AppManagerEntryCoordinator(
     private val model: AppManagerEntryViewModel,
     private val transfer: OneShotTransfer<AppManagerCatalog>,
     // 功能页真正打开后回调（首页据此隐藏当日入口角标）；授权拒绝、取消或失败均不回调。
+    private val decorateIntent: (Intent) -> Unit = {},
     private val onOpened: () -> Unit = {},
 ) {
     private val ads = InterstitialActions(activity)
@@ -24,7 +25,7 @@ internal class AppManagerEntryCoordinator(
         // 广告状态只携带 transfer 令牌，重建后仍由当前页面续接；失败也继续业务。
         ads.register(InterstitialPlacements.APPS_SCAN) { token ->
             activity.startActivity(Intent(activity, AppManagerActivity::class.java)
-                .putExtra(AppManagerActivity.EXTRA_CATALOG, token))
+                .putExtra(AppManagerActivity.EXTRA_CATALOG, token).apply(decorateIntent))
             onOpened()
         }
         activity.supportFragmentManager.setFragmentResultListener(CANCEL, activity) { _, result ->

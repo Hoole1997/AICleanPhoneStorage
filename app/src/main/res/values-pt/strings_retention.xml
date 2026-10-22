@@ -1,0 +1,26 @@
+<resources>
+    <string name="retention_before">Antes de ir…</string>
+    <string name="retention_loss">Se você desinstalar este app, perderá o acesso aos seguintes recursos:</string>
+    <string name="retention_more">…e outros recursos essenciais</string>
+    <string name="retention_keep">Manter o app</string>
+    <string name="retention_anyway">Desinstalar mesmo assim</string>
+    <string name="retention_why">Por que você está desinstalando?</string>
+    <string name="retention_reason_difficult">Difícil de usar</string>
+    <string name="retention_reason_ads">Muitos anúncios</string>
+    <string name="retention_reason_results">A limpeza não atende às minhas expectativas</string>
+    <string name="retention_reason_features">Faltam recursos de que preciso</string>
+    <string name="retention_reason_slow">Travamentos ao carregar</string>
+    <string name="retention_reason_other">Outros</string>
+    <string name="retention_feedback_hint">Informe por que você está desinstalando %1$s</string>
+    <string name="retention_not_yet">Não desinstalar ainda</string>
+    <string name="retention_uninstall">Desinstalar</string>
+    <string name="retention_shortcut_disabled">Este atalho não está mais disponível.</string>
+    <string name="retention_unavailable">Não foi possível abrir a tela de desinstalação do sistema. Tente novamente.</string>
+    <string name="retention_back">Voltar</string>
+    <string name="retention_junk">Limpeza de lixo</string>
+    <string name="retention_malware">Análise de malware</string>
+    <string name="retention_similar">Fotos duplicadas</string>
+    <string name="retention_screenshots">Limpeza de capturas</string>
+    <string name="retention_large">Arquivos grandes</string>
+    <string name="retention_notifications">Limpeza de notificações</string>
+</resources>

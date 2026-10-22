@@ -1,0 +1,18 @@
+<resources>
+    <string name="scene_alerts">Akıllı uyarılar</string>
+    <string name="scene_all">Akıllı uyarıları etkinleştir</string>
+    <string name="scene_charge_start">Şarj başladı</string>
+    <string name="scene_charge_end">Şarj bitti</string>
+    <string name="scene_low_battery">Düşük pil</string>
+    <string name="scene_network">Ağ değişiklikleri</string>
+    <string name="scene_screenshot">Yeni ekran görüntüleri</string>
+    <string name="scene_app_install">Uygulama yüklendi</string>
+    <string name="scene_app_uninstall">Uygulama kaldırıldı</string>
+    <string name="scene_download">Yeni indirmeler</string>
+    <string name="scene_back">Geri</string>
+    <string name="scene_settings_description">Hatırlatma gösterebilecek cihaz olaylarını seçin. Mevcut bildirimler ayrı yönetilir.</string>
+    <string name="scene_settings_error">Ayar kaydedilemedi. Tekrar deneyin.</string>
+    <string name="scene_charge_summary">Şarj bitişi: %1$s · Pil: %2$d%%</string>
+    <string name="scene_charge_duration">Şarj süresi: %1$s</string>
+    <string name="scene_network_tip">Bağlantı yok mu? Hız testinden önce Wi-Fi veya mobil veriyi kontrol edin.</string>
+</resources>

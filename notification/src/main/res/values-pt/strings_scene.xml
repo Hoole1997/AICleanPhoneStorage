@@ -1,0 +1,18 @@
+<resources>
+    <string name="scene_alerts">Alertas inteligentes</string>
+    <string name="scene_all">Ativar alertas inteligentes</string>
+    <string name="scene_charge_start">Carregamento iniciado</string>
+    <string name="scene_charge_end">Carregamento encerrado</string>
+    <string name="scene_low_battery">Bateria fraca</string>
+    <string name="scene_network">Mudanças de rede</string>
+    <string name="scene_screenshot">Novas capturas</string>
+    <string name="scene_app_install">App instalado</string>
+    <string name="scene_app_uninstall">App desinstalado</string>
+    <string name="scene_download">Novos downloads</string>
+    <string name="scene_back">Voltar</string>
+    <string name="scene_settings_description">Escolha quais eventos podem exibir lembretes. As notificações existentes são gerenciadas separadamente.</string>
+    <string name="scene_settings_error">Não foi possível salvar. Tente novamente.</string>
+    <string name="scene_charge_summary">Fim da carga: %1$s · Bateria: %2$d%%</string>
+    <string name="scene_charge_duration">Tempo de carga: %1$s</string>
+    <string name="scene_network_tip">Sem conexão? Verifique o Wi-Fi ou os dados móveis antes do teste de velocidade.</string>
+</resources>

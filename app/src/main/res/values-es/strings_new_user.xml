@@ -1,0 +1,17 @@
+<resources>
+    <string name="new_user_device">Dispositivo</string>
+    <string name="new_user_system">Versión de Android</string>
+    <string name="new_user_resolution">Resolución de pantalla</string>
+    <string name="new_user_density">Densidad de pantalla</string>
+    <string name="new_user_storage">Almacenamiento usado</string>
+    <string name="new_user_engine">Inicializando motor</string>
+    <string name="new_user_scanning">Analizando…</string>
+    <string name="new_user_initializing">Inicializando</string>
+    <string name="new_user_done">Listo</string>
+    <string name="new_user_unknown">Desconocido</string>
+    <string name="new_user_start">Iniciar limpieza</string>
+    <string name="new_user_retry">Reintentar</string>
+    <string name="new_user_engine_failed">No se pudo inicializar el motor</string>
+    <string name="new_user_save_failed">No se pudo guardar el progreso. Inténtalo de nuevo.</string>
+    <string name="new_user_notice"><font color="#222222"><b>Ten en cuenta:</b></font> El primer análisis puede tardar un poco más mientras busca archivos basura y analiza los datos de tu teléfono.</string>
+</resources>

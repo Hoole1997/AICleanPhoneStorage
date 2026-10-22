@@ -4,6 +4,7 @@ import com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature
 
 /** 与需求总表同步；只描述触发来源，请求资格、频次和填充继续由 AdExt/SDK 处理。 */
 internal object InterstitialPlacements {
+    const val UNINSTALL_ANYWAY = "uninstall_anyway"
     const val MALWARE_EXIT = "back_home_malware"
     const val MALWARE_SCAN = "scan_complete_virus"
     const val NOTIFICATIONS_SCAN = "scan_complete_notify"

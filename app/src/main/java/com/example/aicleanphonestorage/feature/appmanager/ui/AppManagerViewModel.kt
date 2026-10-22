@@ -25,7 +25,9 @@ internal class AppManagerViewModel(
     private val executor: TaskExecutor,
     private val saved: SavedStateHandle,
     private val locale: Locale,
+    preferredPackage: String? = null,
 ) : ViewModel() {
+    private var preferred = saved.get<String>("scene.preferred.package") ?: preferredPackage?.take(255)
     private val restored =
         AppManagerSort(
             AppSortKey.entries.firstOrNull { it.name == saved.get<String>("sort.key") }
@@ -39,10 +41,13 @@ internal class AppManagerViewModel(
     private var needsRefresh = initial == null
 
     init {
+        preferred?.let { saved["scene.preferred.package"] = it }
         sortRows()
     }
 
     fun selectSort(key: AppSortKey) {
+        preferred = null
+        saved.remove<String>("scene.preferred.package")
         val next = current.value.sort.select(key)
         saved["sort.key"] = next.key.name
         saved["sort.descending"] = next.descending
@@ -58,7 +63,11 @@ internal class AppManagerViewModel(
         sorting =
             viewModelScope.launch {
                 val rows =
-                    executor.computation { AppManagerOrdering.sorted(catalog.apps, sort, locale) }
+                    executor.computation {
+                        val sorted = AppManagerOrdering.sorted(catalog.apps, sort, locale)
+                        val index = sorted.indexOfFirst { it.packageName == preferred }
+                        if (index <= 0) sorted else sorted.toMutableList().apply { add(0, removeAt(index)) }
+                    }
                 ensureActive()
                 current.update { it.copy(rows = rows, sorting = false) }
             }

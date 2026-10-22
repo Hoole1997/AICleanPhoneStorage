@@ -1,5 +1,11 @@
 # 广告位与联调清单
 
+## v1.0.5 新用户流程
+
+新增插屏 `new_user_start_clean`（Slot Key 与 Position Name 相同）：独立设备扫描 Activity 完成后，由用户点击 Start Clean 请求一次；关闭/无填充/失败/点位不可用后进入首页。扫描中不请求。详见 [新用户流程](../new-user-flow.md)。此位沿用现有远程开关与 SDK 频控，不强制放行。
+
+卸载挽留新增插屏 `uninstall_anyway`：第一张挽留页点击 Uninstall Anyway 后请求，关闭/失败/无填充后才显示原因页；Keep the App 和最终系统卸载按钮不新增广告。详见 [卸载挽留流程](../uninstall-retention.md)。
+
 已合并 [v1.0.1 需求第 4 章](https://pic6ktmsyi.feishu.cn/wiki/T4vOwfFKviXZBYkwCgFcH6xmnAc)（2026-09-20 核对）与原 v11 总表，共 **55 个 Key，52 个已接入实际入口**，另有 1 个条件位与 2 个预留完成页位。本次只完善广告位和业务触发，不改内置配置、远程开关、广告 ID 或频控。入口接入不代表真实 SDK 一定填充。原版审计见 [历史审计报告](slot-key-audit.md)。
 
 ## 测试开关与 SDK 参数

@@ -1,0 +1,17 @@
+<resources>
+    <string name="new_user_device">Dispositivo</string>
+    <string name="new_user_system">Versão do Android</string>
+    <string name="new_user_resolution">Resolução da tela</string>
+    <string name="new_user_density">Densidade da tela</string>
+    <string name="new_user_storage">Armazenamento usado</string>
+    <string name="new_user_engine">Inicializando mecanismo</string>
+    <string name="new_user_scanning">Analisando…</string>
+    <string name="new_user_initializing">Inicializando</string>
+    <string name="new_user_done">Concluído</string>
+    <string name="new_user_unknown">Desconhecido</string>
+    <string name="new_user_start">Iniciar limpeza</string>
+    <string name="new_user_retry">Tentar novamente</string>
+    <string name="new_user_engine_failed">Falha ao inicializar o mecanismo</string>
+    <string name="new_user_save_failed">Não foi possível salvar o progresso. Tente novamente.</string>
+    <string name="new_user_notice"><font color="#222222"><b>Atenção:</b></font> A primeira análise pode demorar um pouco mais enquanto procura arquivos desnecessários e analisa os dados do seu telefone.</string>
+</resources>

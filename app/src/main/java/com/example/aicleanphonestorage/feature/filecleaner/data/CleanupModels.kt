@@ -41,6 +41,7 @@ data class CleanupFilter(
     val unusedDays: Int = 30,
     val referenceMillis: Long = System.currentTimeMillis(),
     val bucket: String? = null,
+    val preferredUri: String? = null,
 )
 
 data class ScannedFile(

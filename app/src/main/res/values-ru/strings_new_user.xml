@@ -1,0 +1,17 @@
+<resources>
+    <string name="new_user_device">Устройство</string>
+    <string name="new_user_system">Версия Android</string>
+    <string name="new_user_resolution">Разрешение экрана</string>
+    <string name="new_user_density">Плотность экрана</string>
+    <string name="new_user_storage">Занято в хранилище</string>
+    <string name="new_user_engine">Инициализация модуля</string>
+    <string name="new_user_scanning">Сканирование…</string>
+    <string name="new_user_initializing">Инициализация</string>
+    <string name="new_user_done">Готово</string>
+    <string name="new_user_unknown">Неизвестно</string>
+    <string name="new_user_start">Начать очистку</string>
+    <string name="new_user_retry">Повторить</string>
+    <string name="new_user_engine_failed">Не удалось инициализировать модуль</string>
+    <string name="new_user_save_failed">Не удалось сохранить прогресс. Повторите попытку.</string>
+    <string name="new_user_notice"><font color="#222222"><b>Обратите внимание:</b></font> Первое сканирование может занять немного больше времени из-за поиска ненужных файлов и анализа данных телефона.</string>
+</resources>

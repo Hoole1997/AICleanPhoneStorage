@@ -20,8 +20,10 @@ internal class HomeEntryActions(
     private val openSettings: () -> Unit,
     // 测网速没有首页加载/授权步骤，直接打开功能页即视为真正进入。
     private val openSpeedTest: () -> Unit,
+    private val sceneHints: com.example.aicleanphonestorage.feature.push.SceneNotificationHints? = null,
 ) : HomeUiActions {
     fun cancelPending() {
+        sceneHints?.replace(null)
         malware.cancel()
         permissions.cancel()
         traffic.cancelEntry()
@@ -37,9 +39,12 @@ internal class HomeEntryActions(
         cancelPending()
         cleanup.begin(CleanupFeature.SMART_CLEAN, runId)
     }
-    override fun onSmartClean() { cancelPending(); cleanup.begin(CleanupFeature.SMART_CLEAN) }
-    override fun onToolSelected(tool: HomeTool) {
+    override fun onSmartClean() = onSmartClean(null)
+    fun onSmartClean(scene: io.docview.push.scene.SceneLandingData?) { cancelPending(); sceneHints?.replace(scene); cleanup.begin(CleanupFeature.SMART_CLEAN) }
+    override fun onToolSelected(tool: HomeTool) = onToolSelected(tool, null)
+    fun onToolSelected(tool: HomeTool, scene: io.docview.push.scene.SceneLandingData?) {
         cancelPending()
+        sceneHints?.replace(scene)
         when (tool) {
             HomeTool.Network -> traffic.beginEntry()
             HomeTool.Notifications -> notifications.beginEntry()

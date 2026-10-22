@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="8dp" android:layout_marginTop="18dp">
+        <ImageView android:id="@+id/sceneButtonStatic" android:layout_width="0dp" android:layout_height="0dp"
+            android:layout_alignStart="@id/tvAction" android:layout_alignEnd="@id/tvAction" android:layout_alignTop="@id/tvAction" android:layout_alignBottom="@id/tvAction"
+            android:background="@drawable/scene_button_background" android:importantForAccessibility="no" />
+        <ProgressBar android:id="@+id/sceneButtonMotion" android:layout_width="0dp" android:layout_height="0dp"
+            android:layout_alignStart="@id/tvAction" android:layout_alignEnd="@id/tvAction" android:layout_alignTop="@id/tvAction" android:layout_alignBottom="@id/tvAction"
+            android:indeterminate="true" android:indeterminateTint="@null" android:indeterminateOnly="false" android:minHeight="0dp" android:minWidth="0dp"
+            android:indeterminateDrawable="@drawable/scene_button_shimmer" android:importantForAccessibility="no" />
+        <ProgressBar android:id="@+id/sceneArrowStart" android:layout_width="32dp" android:layout_height="24dp" android:layout_alignParentStart="true" android:layout_centerVertical="true" android:layout_marginStart="20dp"
+            android:indeterminate="true" android:indeterminateTint="@null" android:indeterminateOnly="true" android:minHeight="0dp" android:minWidth="0dp"
+            android:indeterminateDrawable="@drawable/scene_arrow_motion" android:importantForAccessibility="no" />
+        <ProgressBar android:id="@+id/sceneArrowEnd" android:layout_width="32dp" android:layout_height="24dp" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:layout_marginEnd="20dp" android:scaleX="-1"
+            android:indeterminate="true" android:indeterminateTint="@null" android:indeterminateOnly="true" android:minHeight="0dp" android:minWidth="0dp"
+            android:indeterminateDrawable="@drawable/scene_arrow_motion_end" android:importantForAccessibility="no" />
+        <TextView android:id="@+id/tvAction" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="39dp" android:paddingHorizontal="56dp"
+            android:paddingVertical="6dp" android:gravity="center" android:includeFontPadding="false" android:maxLines="2" android:ellipsize="end"
+            android:textSize="16sp" android:textColor="#FFFFFF" android:fontFamily="sans-serif-medium" />
+    </RelativeLayout>

@@ -37,6 +37,13 @@
             </ScrollView>
         </FrameLayout>
         <!-- 默认收起，由 loadNative 成功/失败回调控制整块广告的显示。 -->
+        <LinearLayout android:id="@+id/traffic_scene_actions" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:paddingHorizontal="16dp" android:visibility="gone">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/scene_network_tip"
+                android:textSize="13sp" android:textColor="@color/home_text_secondary" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/traffic_scene_test" style="@style/Widget.Traffic.Button"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/speed_test_title" />
+        </LinearLayout>
         <FrameLayout android:id="@+id/native_ad" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:visibility="gone" />
     </LinearLayout>

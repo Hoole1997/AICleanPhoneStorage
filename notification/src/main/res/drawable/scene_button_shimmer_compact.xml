@@ -1,0 +1,4 @@
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android" android:drawable="@drawable/scene_button_surface_compact">
+    <target android:name="pulse" android:animation="@animator/scene_button_pulse" />
+    <target android:name="sweep" android:animation="@animator/scene_button_sweep_compact" />
+</animated-vector>

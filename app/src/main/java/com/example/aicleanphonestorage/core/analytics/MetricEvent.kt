@@ -2,6 +2,14 @@ package com.example.aicleanphonestorage.core.analytics
 
 /** 飞书业务工作表的事件名；未实现业务不通过虚构调用补齐。 */
 internal enum class MetricEvent(val wireName: String) {
+    UNINSTALL_RETENTION_SHOW("uninstall_retention_show"),
+    UNINSTALL_FEATURE_CLICK("uninstall_feature_click"),
+    UNINSTALL_RETENTION_CLICK("uninstall_retention_click"),
+    UNINSTALL_REASON_SHOW("uninstall_reason_show"),
+    UNINSTALL_REASON_CLICK("uninstall_reason_click"),
+    NEW_USER_SCAN_EXPOSURE("new_user_scan_exposure"),
+    NEW_USER_SCAN_FINISH("new_user_scan_finish"),
+    NEW_USER_START_CLEAN_CLICK("new_user_start_clean_click"),
     VIDEO_SCAN_RESULT("video_scan_result"),
     VIDEO_CHECK("video_check"),
     VIDEO_CLEAN_CLICK("video_clean_click"),

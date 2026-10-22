@@ -1,0 +1,26 @@
+<resources>
+    <string name="retention_before">Gitmeden önce…</string>
+    <string name="retention_loss">Bu uygulamayı kaldırırsanız aşağıdaki özelliklere erişiminizi kaybedersiniz:</string>
+    <string name="retention_more">…ve diğer önemli özellikler</string>
+    <string name="retention_keep">Uygulamayı Tut</string>
+    <string name="retention_anyway">Yine de Kaldır</string>
+    <string name="retention_why">Neden kaldırıyorsunuz?</string>
+    <string name="retention_reason_difficult">Kullanımı zor</string>
+    <string name="retention_reason_ads">Çok fazla reklam var</string>
+    <string name="retention_reason_results">Temizleme sonuçları beklentilerimi karşılamıyor</string>
+    <string name="retention_reason_features">İhtiyacım olan özellikler eksik</string>
+    <string name="retention_reason_slow">Yükleme sırasında takılıyor</string>
+    <string name="retention_reason_other">Diğer</string>
+    <string name="retention_feedback_hint">Lütfen %1$s uygulamasını neden kaldırdığınızı yazın</string>
+    <string name="retention_not_yet">Henüz kaldırma</string>
+    <string name="retention_uninstall">Kaldır</string>
+    <string name="retention_shortcut_disabled">Bu kısayol artık kullanılamıyor.</string>
+    <string name="retention_unavailable">Sistemin kaldırma ekranı açılamadı. Lütfen tekrar deneyin.</string>
+    <string name="retention_back">Geri</string>
+    <string name="retention_junk">Gereksiz Dosya Temizliği</string>
+    <string name="retention_malware">Kötü Amaçlı Yazılım Taraması</string>
+    <string name="retention_similar">Yinelenen Fotoğraflar</string>
+    <string name="retention_screenshots">Ekran Görüntüleri</string>
+    <string name="retention_large">Büyük Dosyalar</string>
+    <string name="retention_notifications">Bildirim Temizliği</string>
+</resources>

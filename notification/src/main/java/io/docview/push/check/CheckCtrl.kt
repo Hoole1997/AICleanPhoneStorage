@@ -277,18 +277,19 @@ class CheckCtrl private constructor() {
     }
 
     /**
-     * 获取当前通知次数（不进行0点重置）
+     * 准入检查先按设备本地自然日校正计数，不依赖午夜定时器或进程持续存活。
      * @return 当前通知次数
      */
     private fun getCurrentNotificationCount(): Int {
-        return resetController.getIntValue(Keys.CURRENT_NOTIFICATION_COUNT, enableMidnightReset = false)
+        return getTodayNotificationCount()
     }
 
     /**
      * 增加通知计数（外部调用）
      */
     fun incrementNotificationCount() {
-        val newCount = resetController.incrementIntValue(Keys.CURRENT_NOTIFICATION_COUNT, enableMidnightReset = false)
+        // 实际发布可能跨过午夜，累加本身也核对日期，不能沿用准入时的昨天计数。
+        val newCount = resetController.incrementIntValue(Keys.CURRENT_NOTIFICATION_COUNT, enableMidnightReset = true)
         Logger.d("通知计数增加: $newCount")
     }
 
@@ -348,7 +349,7 @@ class CheckCtrl private constructor() {
      * 重置今日通知计数
      */
     fun resetTodayNotificationCount() {
-        resetController.resetValue(Keys.CURRENT_NOTIFICATION_COUNT, enableMidnightReset = false)
+        resetController.resetValue(Keys.CURRENT_NOTIFICATION_COUNT, enableMidnightReset = true)
         Logger.d("重置通知计数")
     }
 
@@ -357,7 +358,8 @@ class CheckCtrl private constructor() {
      * @return 今日已发送的通知数量
      */
     fun getTodayNotificationCount(): Int {
-        return resetController.getIntValue(Keys.CURRENT_NOTIFICATION_COUNT, enableMidnightReset = false)
+        // 旧版本没有记录日期，升级后首次读取会清零并建立今天的日期，解除历史累计额度阻塞。
+        return resetController.getIntValue(Keys.CURRENT_NOTIFICATION_COUNT, enableMidnightReset = true)
     }
 
     /**

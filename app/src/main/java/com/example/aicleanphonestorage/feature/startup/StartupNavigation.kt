@@ -15,6 +15,8 @@ import io.docview.push.NotificationDestination
 /** 启动页只转交白名单目标、调试标记及有界通知埋点快照，不复制任意 URI 或完整 extras。 */
 internal object StartupNavigation {
     private const val HOT_START = "startup.entry.hot"
+    private const val LAUNCHER = "startup.entry.launcher"
+    private const val RETENTION = "startup.entry.retention"
     const val COMPLETED = "startup.completed"
     const val PERMISSION_COMPLETED = "startup.permission.completed"
 
@@ -23,6 +25,10 @@ internal object StartupNavigation {
         HomePreviewSupport.initialSelection(intent, null),
         hotStart = intent.getBooleanExtra(HOT_START, false) && NotificationNavigation.read(intent) == null,
         notification = NotificationLaunchTelemetry.read(intent, fromBackground),
+        launcher = intent.getBooleanExtra(LAUNCHER, false) ||
+            (intent.action == Intent.ACTION_MAIN && intent.hasCategory(Intent.CATEGORY_LAUNCHER)),
+        uninstallRetention = intent.action == com.example.aicleanphonestorage.feature.retention.RetentionShortcut.ACTION || intent.getBooleanExtra(RETENTION, false),
+        scene = io.docview.push.scene.SceneLandingData.read(intent),
     )
 
     fun needsStartup(intent: Intent) = !intent.getBooleanExtra(COMPLETED, false) && NotificationNavigation.read(intent) != null
@@ -34,17 +40,31 @@ internal object StartupNavigation {
         if (entry.hotStart) hotIntent(context) else Intent(context, StartupActivity::class.java)
             .putExtra(NotificationNavigation.EXTRA_DESTINATION, entry.destination.key)
             .putExtra(HomePreviewSupport.EXTRA_MODE, entry.previewMode)
+            .putExtra(LAUNCHER, entry.launcher)
+            .putExtra(RETENTION, entry.uninstallRetention)
+            .apply { entry.scene?.write(this) }
             .apply { NotificationLaunchTelemetry.write(this, entry.notification) }
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
     fun homeIntent(context: Context, entry: StartupEntry) =
         Intent(context, MainActivity::class.java)
+            .apply { entry.scene?.write(this) }
             .putExtra(NotificationNavigation.EXTRA_DESTINATION, entry.destination.key)
             .putExtra(HomePreviewSupport.EXTRA_MODE, entry.previewMode)
             .apply { NotificationLaunchTelemetry.write(this, entry.notification) }
             .putExtra(COMPLETED, true)
             .putExtra(PERMISSION_COMPLETED, true)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+
+    fun openDeviceScan(activity: Activity) {
+        activity.startActivity(Intent(activity, com.example.aicleanphonestorage.feature.onboarding.DeviceScanActivity::class.java))
+        activity.finish()
+    }
+
+    fun openRetention(activity: Activity) {
+        activity.startActivity(Intent(activity, com.example.aicleanphonestorage.feature.retention.UninstallRetentionActivity::class.java))
+        activity.finish()
+    }
 
     /** 热启动只结束自身；不重建原页，不启动首页，不清理任务栈。 */
     @Suppress("DEPRECATION")

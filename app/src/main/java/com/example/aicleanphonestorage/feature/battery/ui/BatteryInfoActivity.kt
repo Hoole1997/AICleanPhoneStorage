@@ -41,6 +41,10 @@ class BatteryInfoActivity : AppCompatActivity() {
         )
         val binding = ScreenBatteryInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        io.docview.push.scene.SceneLandingPresentation.batterySummary(this, io.docview.push.scene.SceneLandingData.read(intent))?.let {
+            binding.batterySceneSummary.text = it
+            binding.batterySceneSummary.visibility = android.view.View.VISIBLE
+        }
         ViewCompat.setAccessibilityHeading(binding.batteryTitle, true)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val bars =

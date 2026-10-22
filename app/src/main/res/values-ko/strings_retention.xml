@@ -1,0 +1,26 @@
+<resources>
+    <string name="retention_before">떠나시기 전에…</string>
+    <string name="retention_loss">이 앱을 삭제하면 다음 기능을 사용할 수 없게 됩니다:</string>
+    <string name="retention_more">…그리고 다른 유용한 기능</string>
+    <string name="retention_keep">앱 유지</string>
+    <string name="retention_anyway">그래도 삭제</string>
+    <string name="retention_why">앱을 삭제하는 이유가 무엇인가요?</string>
+    <string name="retention_reason_difficult">사용하기 어려움</string>
+    <string name="retention_reason_ads">광고가 너무 많음</string>
+    <string name="retention_reason_results">정리 결과가 기대에 미치지 못함</string>
+    <string name="retention_reason_features">필요한 기능이 없음</string>
+    <string name="retention_reason_slow">로딩 중 버벅거림</string>
+    <string name="retention_reason_other">기타</string>
+    <string name="retention_feedback_hint">%1$s을(를) 삭제하는 이유를 입력해 주세요</string>
+    <string name="retention_not_yet">아직 삭제하지 않기</string>
+    <string name="retention_uninstall">삭제</string>
+    <string name="retention_shortcut_disabled">이 바로가기는 더 이상 사용할 수 없습니다.</string>
+    <string name="retention_unavailable">시스템 삭제 화면을 열 수 없습니다. 다시 시도해 주세요.</string>
+    <string name="retention_back">뒤로</string>
+    <string name="retention_junk">불필요한 파일 정리</string>
+    <string name="retention_malware">악성 소프트웨어 검사</string>
+    <string name="retention_similar">중복 사진 정리</string>
+    <string name="retention_screenshots">스크린샷 정리</string>
+    <string name="retention_large">대용량 파일 정리</string>
+    <string name="retention_notifications">알림 정리</string>
+</resources>

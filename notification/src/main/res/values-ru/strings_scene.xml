@@ -1,0 +1,18 @@
+<resources>
+    <string name="scene_alerts">Умные напоминания</string>
+    <string name="scene_all">Включить умные напоминания</string>
+    <string name="scene_charge_start">Зарядка началась</string>
+    <string name="scene_charge_end">Зарядка завершена</string>
+    <string name="scene_low_battery">Низкий заряд</string>
+    <string name="scene_network">Изменения сети</string>
+    <string name="scene_screenshot">Новые скриншоты</string>
+    <string name="scene_app_install">Установка приложения</string>
+    <string name="scene_app_uninstall">Удаление приложения</string>
+    <string name="scene_download">Новые загрузки</string>
+    <string name="scene_back">Назад</string>
+    <string name="scene_settings_description">Выберите события для напоминаний. Существующие уведомления управляются отдельно.</string>
+    <string name="scene_settings_error">Не удалось сохранить настройку. Повторите попытку.</string>
+    <string name="scene_charge_summary">Зарядка завершена в %1$s · Заряд: %2$d%%</string>
+    <string name="scene_charge_duration">Длительность зарядки: %1$s</string>
+    <string name="scene_network_tip">Нет соединения? Проверьте Wi-Fi или мобильные данные перед проверкой скорости.</string>
+</resources>

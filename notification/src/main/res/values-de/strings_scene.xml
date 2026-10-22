@@ -1,0 +1,18 @@
+<resources>
+    <string name="scene_alerts">Intelligente Hinweise</string>
+    <string name="scene_all">Intelligente Hinweise aktivieren</string>
+    <string name="scene_charge_start">Laden gestartet</string>
+    <string name="scene_charge_end">Laden beendet</string>
+    <string name="scene_low_battery">Niedriger Akkustand</string>
+    <string name="scene_network">Netzwerkänderungen</string>
+    <string name="scene_screenshot">Neue Screenshots</string>
+    <string name="scene_app_install">App installiert</string>
+    <string name="scene_app_uninstall">App deinstalliert</string>
+    <string name="scene_download">Neue Downloads</string>
+    <string name="scene_back">Zurück</string>
+    <string name="scene_settings_description">Wähle die Geräteereignisse für Erinnerungen. Bisherige Benachrichtigungen werden separat verwaltet.</string>
+    <string name="scene_settings_error">Einstellung konnte nicht gespeichert werden. Bitte erneut versuchen.</string>
+    <string name="scene_charge_summary">Ladeende: %1$s · Akku: %2$d%%</string>
+    <string name="scene_charge_duration">Ladedauer: %1$s</string>
+    <string name="scene_network_tip">Keine Verbindung? Prüfe WLAN oder mobile Daten vor dem Geschwindigkeitstest.</string>
+</resources>

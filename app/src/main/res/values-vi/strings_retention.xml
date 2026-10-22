@@ -1,0 +1,26 @@
+<resources>
+    <string name="retention_before">Trước khi bạn rời đi…</string>
+    <string name="retention_loss">Nếu gỡ cài đặt ứng dụng, bạn sẽ không còn dùng được các tính năng sau:</string>
+    <string name="retention_more">…và các tính năng thiết yếu khác</string>
+    <string name="retention_keep">Giữ ứng dụng</string>
+    <string name="retention_anyway">Vẫn gỡ cài đặt</string>
+    <string name="retention_why">Vì sao bạn gỡ cài đặt?</string>
+    <string name="retention_reason_difficult">Khó sử dụng</string>
+    <string name="retention_reason_ads">Quá nhiều quảng cáo</string>
+    <string name="retention_reason_results">Kết quả dọn dẹp không như mong đợi</string>
+    <string name="retention_reason_features">Thiếu tính năng tôi cần</string>
+    <string name="retention_reason_slow">Giật lag khi tải</string>
+    <string name="retention_reason_other">Khác</string>
+    <string name="retention_feedback_hint">Vui lòng nhập lý do bạn gỡ cài đặt %1$s</string>
+    <string name="retention_not_yet">Chưa gỡ cài đặt</string>
+    <string name="retention_uninstall">Gỡ cài đặt</string>
+    <string name="retention_shortcut_disabled">Lối tắt này không còn khả dụng.</string>
+    <string name="retention_unavailable">Không thể mở màn hình gỡ cài đặt của hệ thống. Vui lòng thử lại.</string>
+    <string name="retention_back">Quay lại</string>
+    <string name="retention_junk">Dọn tệp rác</string>
+    <string name="retention_malware">Quét phần mềm độc hại</string>
+    <string name="retention_similar">Dọn ảnh trùng lặp</string>
+    <string name="retention_screenshots">Dọn ảnh chụp màn hình</string>
+    <string name="retention_large">Dọn tệp lớn</string>
+    <string name="retention_notifications">Dọn thông báo</string>
+</resources>

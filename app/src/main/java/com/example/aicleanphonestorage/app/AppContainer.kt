@@ -23,6 +23,21 @@ import kotlinx.coroutines.SupervisorJob
 /** 手动依赖注入的唯一组装入口。应用级对象禁止保存 Activity/View 或启动隐式后台任务。 */
 class AppContainer(context: Context) {
     private val applicationContext = context.applicationContext
+    internal val groupingReporter by lazy {
+        com.example.aicleanphonestorage.feature.startup.grouping.GroupingReporter(
+            read = { net.corekit.core.utils.ConfigRemoteManager.getString("Grouping", "").orEmpty() },
+            // SharedPreferences 首次加载也在 reportCurrent 的 IO 调度器内，不能在 Activity 初始化时读取。
+            store = com.example.aicleanphonestorage.feature.startup.grouping.PersistentGroupingStore(applicationContext),
+            send = com.example.aicleanphonestorage.app.ad.AdAnalytics::reportGrouping,
+        )
+    }
+    internal val uninstallRetention by lazy { com.example.aicleanphonestorage.feature.retention.RetentionRuntime(applicationContext) }
+    internal val newUserFlow by lazy { com.example.aicleanphonestorage.feature.onboarding.PersistentNewUserFlowStore(applicationContext) }
+    internal val deviceInfoSource by lazy {
+        com.example.aicleanphonestorage.feature.onboarding.AndroidDeviceInfoSource(applicationContext, taskExecutor) {
+            kotlinx.coroutines.withContext(Dispatchers.IO) { fileScanRepository.initializeEngine() }
+        }
+    }
     internal val batteryRepository by lazy {
         AndroidBatteryRepository(applicationContext, taskExecutor)
     }

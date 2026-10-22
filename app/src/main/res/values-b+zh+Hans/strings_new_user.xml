@@ -1,0 +1,17 @@
+<resources>
+    <string name="new_user_device">设备</string>
+    <string name="new_user_system">系统版本</string>
+    <string name="new_user_resolution">屏幕分辨率</string>
+    <string name="new_user_density">屏幕密度</string>
+    <string name="new_user_storage">已用存储空间</string>
+    <string name="new_user_engine">初始化引擎</string>
+    <string name="new_user_scanning">正在扫描…</string>
+    <string name="new_user_initializing">正在初始化</string>
+    <string name="new_user_done">完成</string>
+    <string name="new_user_unknown">未知</string>
+    <string name="new_user_start">开始清理</string>
+    <string name="new_user_retry">重试</string>
+    <string name="new_user_engine_failed">引擎初始化失败</string>
+    <string name="new_user_save_failed">无法保存进度，请重试。</string>
+    <string name="new_user_notice"><font color="#222222"><b>请注意：</b></font>首次扫描需要搜索垃圾文件并分析手机数据，可能需要稍长时间。</string>
+</resources>

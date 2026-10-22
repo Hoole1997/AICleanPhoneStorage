@@ -1,0 +1,26 @@
+<resources>
+    <string name="retention_before">Прежде чем уйти…</string>
+    <string name="retention_loss">Если вы удалите приложение, вы потеряете доступ к следующим функциям:</string>
+    <string name="retention_more">…и другим важным функциям</string>
+    <string name="retention_keep">Оставить приложение</string>
+    <string name="retention_anyway">Всё равно удалить</string>
+    <string name="retention_why">Почему вы удаляете приложение?</string>
+    <string name="retention_reason_difficult">Сложно пользоваться</string>
+    <string name="retention_reason_ads">Слишком много рекламы</string>
+    <string name="retention_reason_results">Очистка не соответствует ожиданиям</string>
+    <string name="retention_reason_features">Не хватает нужных функций</string>
+    <string name="retention_reason_slow">Зависает при загрузке</string>
+    <string name="retention_reason_other">Другое</string>
+    <string name="retention_feedback_hint">Укажите причину удаления %1$s</string>
+    <string name="retention_not_yet">Пока не удалять</string>
+    <string name="retention_uninstall">Удалить</string>
+    <string name="retention_shortcut_disabled">Этот ярлык больше недоступен.</string>
+    <string name="retention_unavailable">Не удалось открыть системное окно удаления. Повторите попытку.</string>
+    <string name="retention_back">Назад</string>
+    <string name="retention_junk">Очистка мусора</string>
+    <string name="retention_malware">Поиск вредоносного ПО</string>
+    <string name="retention_similar">Повторяющиеся фото</string>
+    <string name="retention_screenshots">Очистка скриншотов</string>
+    <string name="retention_large">Большие файлы</string>
+    <string name="retention_notifications">Очистка уведомлений</string>
+</resources>

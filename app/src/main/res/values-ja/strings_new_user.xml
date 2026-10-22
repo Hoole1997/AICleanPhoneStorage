@@ -1,0 +1,17 @@
+<resources>
+    <string name="new_user_device">デバイス</string>
+    <string name="new_user_system">Android バージョン</string>
+    <string name="new_user_resolution">画面解像度</string>
+    <string name="new_user_density">画面密度</string>
+    <string name="new_user_storage">ストレージ使用量</string>
+    <string name="new_user_engine">エンジンを初期化</string>
+    <string name="new_user_scanning">スキャン中…</string>
+    <string name="new_user_initializing">初期化中</string>
+    <string name="new_user_done">完了</string>
+    <string name="new_user_unknown">不明</string>
+    <string name="new_user_start">クリーンアップ開始</string>
+    <string name="new_user_retry">再試行</string>
+    <string name="new_user_engine_failed">エンジンの初期化に失敗しました</string>
+    <string name="new_user_save_failed">進行状況を保存できませんでした。もう一度お試しください。</string>
+    <string name="new_user_notice"><font color="#222222"><b>ご注意：</b></font>初回のスキャンでは不要なファイルの検索とスマートフォンのデータ分析を行うため、通常より時間がかかる場合があります。</string>
+</resources>

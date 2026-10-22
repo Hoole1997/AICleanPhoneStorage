@@ -1,0 +1,17 @@
+<resources>
+    <string name="new_user_device">Gerät</string>
+    <string name="new_user_system">Android-Version</string>
+    <string name="new_user_resolution">Bildschirmauflösung</string>
+    <string name="new_user_density">Bildschirmdichte</string>
+    <string name="new_user_storage">Belegter Speicher</string>
+    <string name="new_user_engine">Engine initialisieren</string>
+    <string name="new_user_scanning">Scan läuft…</string>
+    <string name="new_user_initializing">Wird initialisiert</string>
+    <string name="new_user_done">Fertig</string>
+    <string name="new_user_unknown">Unbekannt</string>
+    <string name="new_user_start">Reinigung starten</string>
+    <string name="new_user_retry">Erneut versuchen</string>
+    <string name="new_user_engine_failed">Engine konnte nicht initialisiert werden</string>
+    <string name="new_user_save_failed">Fortschritt konnte nicht gespeichert werden. Bitte erneut versuchen.</string>
+    <string name="new_user_notice"><font color="#222222"><b>Bitte beachten:</b></font> Der erste Scan kann etwas länger dauern, da nach unnötigen Dateien gesucht wird und die Daten auf deinem Smartphone analysiert werden.</string>
+</resources>

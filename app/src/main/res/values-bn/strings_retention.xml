@@ -1,0 +1,26 @@
+<resources>
+    <string name="retention_before">চলে যাওয়ার আগে…</string>
+    <string name="retention_loss">এই অ্যাপ আনইনস্টল করলে নিচের সুবিধাগুলো আর ব্যবহার করতে পারবেন না:</string>
+    <string name="retention_more">…এবং অন্যান্য প্রয়োজনীয় সুবিধা</string>
+    <string name="retention_keep">অ্যাপটি রাখুন</string>
+    <string name="retention_anyway">তবুও আনইনস্টল করুন</string>
+    <string name="retention_why">আপনি কেন আনইনস্টল করছেন?</string>
+    <string name="retention_reason_difficult">ব্যবহার করা কঠিন</string>
+    <string name="retention_reason_ads">অনেক বেশি বিজ্ঞাপন</string>
+    <string name="retention_reason_results">পরিষ্কারের ফল প্রত্যাশা অনুযায়ী নয়</string>
+    <string name="retention_reason_features">প্রয়োজনীয় সুবিধা নেই</string>
+    <string name="retention_reason_slow">লোড হওয়ার সময় আটকে যায়</string>
+    <string name="retention_reason_other">অন্যান্য</string>
+    <string name="retention_feedback_hint">কেন %1$s আনইনস্টল করছেন তা লিখুন</string>
+    <string name="retention_not_yet">এখনই আনইনস্টল নয়</string>
+    <string name="retention_uninstall">আনইনস্টল</string>
+    <string name="retention_shortcut_disabled">এই শর্টকাট আর উপলব্ধ নেই।</string>
+    <string name="retention_unavailable">সিস্টেমের আনইনস্টল স্ক্রিন খোলা যায়নি। আবার চেষ্টা করুন।</string>
+    <string name="retention_back">ফিরুন</string>
+    <string name="retention_junk">অপ্রয়োজনীয় ফাইল পরিষ্কার</string>
+    <string name="retention_malware">ম্যালওয়্যার স্ক্যান</string>
+    <string name="retention_similar">ডুপ্লিকেট ছবি পরিষ্কার</string>
+    <string name="retention_screenshots">স্ক্রিনশট পরিষ্কার</string>
+    <string name="retention_large">বড় ফাইল পরিষ্কার</string>
+    <string name="retention_notifications">বিজ্ঞপ্তি পরিষ্কার</string>
+</resources>

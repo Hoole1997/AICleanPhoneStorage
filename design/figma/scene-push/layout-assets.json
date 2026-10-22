@@ -1,0 +1,32 @@
+[
+  {
+    "node": "7136:4768",
+    "source": "design/figma/scene-push/layout-source/logo.png",
+    "sha256": "2965fb07b4496217d38fca4cd7d6d13743e91b156c5731930c7e3eaf96947137",
+    "resource": "scene_layout_logo",
+    "dp": [
+      28,
+      28
+    ]
+  },
+  {
+    "node": "7136:4768",
+    "source": "design/figma/scene-push/layout-source/arrow-left.png",
+    "sha256": "f27c0224c493e80e4cf15a98e96eb89df7707cd71633d520153e2d4ceb188fb6",
+    "resource": "scene_layout_arrow_left",
+    "dp": [
+      24,
+      24
+    ]
+  },
+  {
+    "node": "7136:4768",
+    "source": "design/figma/scene-push/layout-source/arrow-right.png",
+    "sha256": "f27c0224c493e80e4cf15a98e96eb89df7707cd71633d520153e2d4ceb188fb6",
+    "resource": "scene_layout_arrow_right",
+    "dp": [
+      24,
+      24
+    ]
+  }
+]

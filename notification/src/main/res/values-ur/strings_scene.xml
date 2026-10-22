@@ -1,0 +1,18 @@
+<resources>
+    <string name="scene_alerts">اسمارٹ الرٹس</string>
+    <string name="scene_all">اسمارٹ الرٹس فعال کریں</string>
+    <string name="scene_charge_start">چارجنگ شروع</string>
+    <string name="scene_charge_end">چارجنگ ختم</string>
+    <string name="scene_low_battery">کم بیٹری</string>
+    <string name="scene_network">نیٹ ورک میں تبدیلی</string>
+    <string name="scene_screenshot">نئے اسکرین شاٹس</string>
+    <string name="scene_app_install">ایپ انسٹال</string>
+    <string name="scene_app_uninstall">ایپ ان انسٹال</string>
+    <string name="scene_download">نئے ڈاؤن لوڈز</string>
+    <string name="scene_back">واپس</string>
+    <string name="scene_settings_description">منتخب کریں کہ کن ڈیوائس واقعات پر یاد دہانی دکھائی جائے۔ موجودہ اطلاعات الگ سے منظم ہوتی ہیں۔</string>
+    <string name="scene_settings_error">ترتیب محفوظ نہیں ہو سکی۔ دوبارہ کوشش کریں۔</string>
+    <string name="scene_charge_summary">چارجنگ %1$s پر ختم · بیٹری: %2$d%%</string>
+    <string name="scene_charge_duration">چارجنگ کا وقت: %1$s</string>
+    <string name="scene_network_tip">کنکشن نہیں؟ رفتار کی جانچ سے پہلے Wi-Fi یا موبائل ڈیٹا چیک کریں۔</string>
+</resources>

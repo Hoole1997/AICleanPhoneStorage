@@ -1,0 +1,115 @@
+D/NotificationModule( 4345): 场景推送：采用有效远程配置，参数=scene_push_config
+D/NotificationModule( 4345): 场景推送：采用本地默认，参数=scene_push_content
+D/NotificationModule( 4345): 场景推送：配置刷新完成，启用场景数量=8，各场景独立间隔单位为分钟
+D/NotificationModule( 4345): 场景推送：已注册新场景划除监听
+D/NotificationModule( 4345): 场景推送：服务监听会话已创建，启用串行触发队列
+D/NotificationModule( 4345): 场景推送：应用回到前台，清空触发队列并结束新场景循环
+D/NotificationModule( 4345): 场景推送：电池广播监听已注册，初始快照只建立基线
+D/NotificationModule( 4345): 场景推送：默认网络变化监听已注册
+D/NotificationModule( 4345): 场景推送：采用有效远程配置，参数=scene_push_config
+D/NotificationModule( 4345): 场景推送：采用本地默认，参数=scene_push_content
+D/NotificationModule( 4345): 场景推送：配置刷新完成，启用场景数量=8，各场景独立间隔单位为分钟
+D/NotificationModule( 4345): 场景推送：应用安装与卸载广播监听已注册
+D/NotificationModule( 4345): 场景推送：用户截图(1105) 暂不监听，场景开关关闭或缺少访问权限
+D/NotificationModule( 4345): 场景推送：新增下载(1108) 暂不监听，场景开关关闭或缺少访问权限
+D/NotificationModule( 4345): 场景推送：用户截图(1105) 暂不监听，场景开关关闭或缺少访问权限
+D/NotificationModule( 4345): 场景推送：新增下载(1108) 暂不监听，场景开关关闭或缺少访问权限
+D/NotificationModule( 4345): 场景推送：采用有效远程配置，参数=scene_push_config
+D/NotificationModule( 4345): 场景推送：采用本地默认，参数=scene_push_content
+D/NotificationModule( 4345): 场景推送：配置刷新完成，启用场景数量=0，各场景独立间隔单位为分钟
+D/NotificationModule( 4345): 场景推送：电池广播监听已释放
+D/NotificationModule( 4345): 场景推送：网络变化监听已释放
+D/NotificationModule( 4345): 场景推送：用户截图(1105) 暂不监听，场景开关关闭或缺少访问权限
+D/NotificationModule( 4345): 场景推送：新增下载(1108) 暂不监听，场景开关关闭或缺少访问权限
+D/NotificationModule( 4345): 场景推送：采用有效远程配置，参数=scene_push_config
+D/NotificationModule( 4345): 场景推送：采用本地默认，参数=scene_push_content
+D/NotificationModule( 4345): 场景推送：配置刷新完成，启用场景数量=8，各场景独立间隔单位为分钟
+D/NotificationModule( 4345): 场景推送：电池广播监听已注册，初始快照只建立基线
+D/NotificationModule( 4345): 场景推送：默认网络变化监听已注册
+D/NotificationModule( 4345): 场景推送：应用安装与卸载广播监听已注册
+D/NotificationModule( 4345): 场景推送：用户截图(1105) 暂不监听，场景开关关闭或缺少访问权限
+D/NotificationModule( 4345): 场景推送：新增下载(1108) 暂不监听，场景开关关闭或缺少访问权限
+D/NotificationModule( 4345): 场景推送：服务监听会话关闭，释放队列、循环和系统监听
+D/NotificationModule( 4345): 场景推送：关闭触发调度，取消待处理任务数量=0
+D/NotificationModule( 4345): 场景推送：电池广播监听已释放
+D/NotificationModule( 4345): 场景推送：网络变化监听已释放
+D/NotificationModule( 4345): 场景推送：释放应用、媒体与下载监听
+D/NotificationModule( 4345): 场景推送：已注册新场景划除监听
+D/NotificationModule( 4345): 场景推送：充电开始(1101) 调度触发候选，事件序号=1，触发确认等待=0毫秒
+D/NotificationModule( 4345): 场景推送：充电开始(1101) 触发事件入队，待播数量=1，当前播放=无
+D/NotificationModule( 4345): 场景推送：充电开始(1101) 触发事件出队，开始复核展示条件，剩余待播数量=0
+D/NotificationModule( 4345): 场景推送：网络变化(1104) 调度触发候选，事件序号=2，触发确认等待=0毫秒
+D/NotificationModule( 4345): 场景推送：网络变化(1104) 触发事件入队，待播数量=1，当前播放=充电开始(1101)
+D/NotificationModule( 4345): 场景推送：新增下载(1108) 调度触发候选，事件序号=3，触发确认等待=0毫秒
+D/NotificationModule( 4345): 场景推送：新增下载(1108) 触发事件入队，待播数量=2，当前播放=充电开始(1101)
+D/NotificationModule( 4345): 场景推送：应用安装(1106) 调度触发候选，事件序号=4，触发确认等待=0毫秒
+D/NotificationModule( 4345): 场景推送：应用安装(1106) 触发事件入队，待播数量=3，当前播放=充电开始(1101)
+D/NotificationModule( 4345): 场景推送：充电开始(1101) 出队条件通过，开始构建单句富文本通知，通知ID=13101
+D/NotificationModule( 4345): 场景推送：充电开始(1101) 首条通知已提交系统，通知ID=13101
+D/NotificationModule( 4345): 场景推送：充电开始(1101) 已进入展示周期，后续循环不重复校验原始触发快照
+D/NotificationModule( 4345): 场景推送：通知ID=13101 开始本轮展示，循环开关=开启，额外循环次数=1，每轮间隔=4000毫秒
+D/NotificationModule( 4345): 场景推送：充电开始(1101) 首次发布成功，已记录本场景间隔并推进文案轮播
+D/NotificationModule( 4345): 场景推送：充电开始(1101) 重复提交成功，通知ID=13101，额外循环序号=1，声音=遵循普通渠道设置
+D/NotificationModule( 4345): 场景推送：通知ID=13101 第1次重复已发布，等待下一个展示窗口
+D/NotificationModule( 4345): 场景推送：通知ID=13101 本轮停止，已完成额外循环=1，原因=次数已用尽、开关关闭或会话结束
+D/NotificationModule( 4345): 场景推送：通知ID=13101 本轮展示结束，交还展示位
+D/NotificationModule( 4345): 场景推送：充电开始(1101) 释放展示位，剩余待播数量=3
+D/NotificationModule( 4345): 场景推送：网络变化(1104) 触发事件出队，开始复核展示条件，剩余待播数量=2
+D/NotificationModule( 4345): 场景推送：网络变化(1104) 出队条件通过，开始构建单句富文本通知，通知ID=13104
+D/NotificationModule( 4345): 场景推送：网络变化(1104) 首条通知已提交系统，通知ID=13104
+D/NotificationModule( 4345): 场景推送：网络变化(1104) 已进入展示周期，后续循环不重复校验原始触发快照
+D/NotificationModule( 4345): 场景推送：通知ID=13104 开始本轮展示，循环开关=开启，额外循环次数=1，每轮间隔=4000毫秒
+D/NotificationModule( 4345): 场景推送：网络变化(1104) 首次发布成功，已记录本场景间隔并推进文案轮播
+D/NotificationModule( 4345): 场景推送：网络变化(1104) 收到划除回调，核验轮次后停止对应循环
+D/NotificationModule( 4345): 场景推送：通知ID=13104 循环任务已取消
+D/NotificationModule( 4345): 场景推送：通知ID=13104 本轮展示结束，交还展示位
+D/NotificationModule( 4345): 场景推送：网络变化(1104) 释放展示位，剩余待播数量=2
+D/NotificationModule( 4345): 场景推送：新增下载(1108) 触发事件出队，开始复核展示条件，剩余待播数量=1
+D/NotificationModule( 4345): 场景推送：新增下载(1108) 不再满足原触发条件，跳过本次展示
+D/NotificationModule( 4345): 场景推送：新增下载(1108) 释放展示位，剩余待播数量=1
+D/NotificationModule( 4345): 场景推送：应用安装(1106) 触发事件出队，开始复核展示条件，剩余待播数量=0
+D/NotificationModule( 4345): 场景推送：应用安装(1106) 出队条件通过，开始构建单句富文本通知，通知ID=13106
+D/NotificationModule( 4345): 场景推送：应用安装(1106) 首条通知已提交系统，通知ID=13106
+D/NotificationModule( 4345): 场景推送：应用安装(1106) 已进入展示周期，后续循环不重复校验原始触发快照
+D/NotificationModule( 4345): 场景推送：通知ID=13106 开始本轮展示，循环开关=开启，额外循环次数=1，每轮间隔=4000毫秒
+D/NotificationModule( 4345): 场景推送：应用安装(1106) 首次发布成功，已记录本场景间隔并推进文案轮播
+D/NotificationModule( 4345): 场景推送：清空播放队列，当前播放=应用安装(1106)，取消待播数量=0
+D/NotificationModule( 4345): 场景推送：关闭触发调度，取消待处理任务数量=0
+D/NotificationModule( 4345): 场景推送：通知ID=13106 循环任务已取消
+D/NotificationModule( 4345): 场景推送：通知ID=13106 本轮展示结束，交还展示位
+D/NotificationModule( 4345): 场景推送：已注册新场景划除监听
+D/NotificationModule( 4345): 场景推送：充电开始(1101) 出队条件通过，开始构建单句富文本通知，通知ID=13101
+D/NotificationModule( 4345): 场景推送：充电开始(1101) 首条通知已提交系统，通知ID=13101
+D/NotificationModule( 4345): 场景推送：充电开始(1101) 已进入展示周期，后续循环不重复校验原始触发快照
+D/NotificationModule( 4345): 场景推送：通知ID=13101 开始本轮展示，循环开关=开启，额外循环次数=2，每轮间隔=4000毫秒
+D/NotificationModule( 4345): 场景推送：网络变化(1104) 出队条件通过，开始构建单句富文本通知，通知ID=13104
+D/NotificationModule( 4345): 场景推送：网络变化(1104) 首条通知已提交系统，通知ID=13104
+D/NotificationModule( 4345): 场景推送：网络变化(1104) 已进入展示周期，后续循环不重复校验原始触发快照
+D/NotificationModule( 4345): 场景推送：通知ID=13104 开始本轮展示，循环开关=开启，额外循环次数=2，每轮间隔=4000毫秒
+D/NotificationModule( 4345): 场景推送：充电开始(1101) 重复提交成功，通知ID=13101，额外循环序号=1，声音=遵循普通渠道设置
+D/NotificationModule( 4345): 场景推送：通知ID=13101 第1次重复已发布，等待下一个展示窗口
+D/NotificationModule( 4345): 场景推送：网络变化(1104) 重复提交成功，通知ID=13104，额外循环序号=1，声音=遵循普通渠道设置
+D/NotificationModule( 4345): 场景推送：通知ID=13104 第1次重复已发布，等待下一个展示窗口
+D/NotificationModule( 4345): 场景推送：充电开始(1101) 收到划除回调，核验轮次后停止对应循环
+D/NotificationModule( 4345): 场景推送：通知ID=13101 循环任务已取消
+D/NotificationModule( 4345): 场景推送：通知ID=13101 本轮展示结束，交还展示位
+D/NotificationModule( 4345): 场景推送：网络变化(1104) 重复提交成功，通知ID=13104，额外循环序号=2，声音=静音
+D/NotificationModule( 4345): 场景推送：通知ID=13104 第2次重复已发布，等待下一个展示窗口
+D/NotificationModule( 4345): 场景推送：通知ID=13104 本轮停止，已完成额外循环=2，原因=次数已用尽、开关关闭或会话结束
+D/NotificationModule( 4345): 场景推送：通知ID=13104 本轮展示结束，交还展示位
+D/NotificationModule( 4345): 场景推送：充电开始(1101) 出队条件通过，开始构建单句富文本通知，通知ID=13101
+D/NotificationModule( 4345): 场景推送：充电开始(1101) 首条通知已提交系统，通知ID=13101
+D/NotificationModule( 4345): 场景推送：充电结束(1102) 出队条件通过，开始构建单句富文本通知，通知ID=13102
+D/NotificationModule( 4345): 场景推送：充电结束(1102) 首条通知已提交系统，通知ID=13102
+D/NotificationModule( 4345): 场景推送：低电量(1103) 出队条件通过，开始构建单句富文本通知，通知ID=13103
+D/NotificationModule( 4345): 场景推送：低电量(1103) 首条通知已提交系统，通知ID=13103
+D/NotificationModule( 4345): 场景推送：网络变化(1104) 出队条件通过，开始构建单句富文本通知，通知ID=13104
+D/NotificationModule( 4345): 场景推送：网络变化(1104) 首条通知已提交系统，通知ID=13104
+D/NotificationModule( 4345): 场景推送：用户截图(1105) 出队条件通过，开始构建单句富文本通知，通知ID=13105
+D/NotificationModule( 4345): 场景推送：用户截图(1105) 首条通知已提交系统，通知ID=13105
+D/NotificationModule( 4345): 场景推送：应用安装(1106) 出队条件通过，开始构建单句富文本通知，通知ID=13106
+D/NotificationModule( 4345): 场景推送：应用安装(1106) 首条通知已提交系统，通知ID=13106
+D/NotificationModule( 4345): 场景推送：应用卸载(1107) 出队条件通过，开始构建单句富文本通知，通知ID=13107
+D/NotificationModule( 4345): 场景推送：应用卸载(1107) 首条通知已提交系统，通知ID=13107
+D/NotificationModule( 4345): 场景推送：新增下载(1108) 出队条件通过，开始构建单句富文本通知，通知ID=13108
+D/NotificationModule( 4345): 场景推送：新增下载(1108) 首条通知已提交系统，通知ID=13108

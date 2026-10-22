@@ -44,6 +44,7 @@ class AppManagerActivity : AppCompatActivity() {
                     container.taskExecutor,
                     createSavedStateHandle(),
                     resources.configuration.locales[0],
+                    preferredPackage = io.docview.push.scene.SceneLandingData.read(intent)?.takeIf { it.code == 1106 }?.reference,
                 )
             }
         }

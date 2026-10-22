@@ -32,6 +32,13 @@ internal class FileScanRepository(
     private val sources = FileScanSources(context, index)
     private val scanLock = Mutex()
 
+    /** 首次引导只准备本应用的索引和静态规则；不创建扫描会话、不枚举文件、不初始化云查杀 SDK。 */
+    suspend fun initializeEngine() = executor.io {
+        currentCoroutineContext().ensureActive()
+        index.readableDatabase.rawQuery("SELECT 1", null).use { check(it.moveToFirst()) }
+        com.example.aicleanphonestorage.feature.junkcleaner.data.JunkRules.prepare()
+    }
+
     suspend fun resolveAccess(feature: CleanupFeature) = executor.io { access.resolve(feature) }
 
     suspend fun rememberTree(uri: String) = access.rememberTree(uri)

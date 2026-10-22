@@ -1,0 +1,18 @@
+<resources>
+    <string name="scene_alerts">Pengingat pintar</string>
+    <string name="scene_all">Aktifkan pengingat pintar</string>
+    <string name="scene_charge_start">Pengisian dimulai</string>
+    <string name="scene_charge_end">Pengisian selesai</string>
+    <string name="scene_low_battery">Baterai lemah</string>
+    <string name="scene_network">Perubahan jaringan</string>
+    <string name="scene_screenshot">Screenshot baru</string>
+    <string name="scene_app_install">Aplikasi dipasang</string>
+    <string name="scene_app_uninstall">Aplikasi dihapus</string>
+    <string name="scene_download">Unduhan baru</string>
+    <string name="scene_back">Kembali</string>
+    <string name="scene_settings_description">Pilih peristiwa perangkat yang dapat menampilkan pengingat. Notifikasi lama dikelola terpisah.</string>
+    <string name="scene_settings_error">Pengaturan tidak dapat disimpan. Coba lagi.</string>
+    <string name="scene_charge_summary">Pengisian berakhir pukul %1$s · Baterai: %2$d%%</string>
+    <string name="scene_charge_duration">Durasi pengisian: %1$s</string>
+    <string name="scene_network_tip">Tidak terhubung? Periksa Wi-Fi atau data seluler sebelum menguji kecepatan.</string>
+</resources>

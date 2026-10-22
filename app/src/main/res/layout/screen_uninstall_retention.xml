@@ -1,0 +1,10 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/retention_background">
+    <ImageView android:id="@+id/reasonBackground" android:layout_width="match_parent" android:layout_height="match_parent"
+        android:src="@drawable/retention_reason_background" android:scaleType="fitXY" android:visibility="gone"
+        android:importantForAccessibility="no" android:contentDescription="@null" />
+    <ViewFlipper android:id="@+id/pages" android:layout_width="match_parent" android:layout_height="match_parent">
+        <include android:id="@+id/offer" layout="@layout/page_retention_offer" />
+        <include android:id="@+id/reason" layout="@layout/page_retention_reason" />
+    </ViewFlipper>
+</FrameLayout>

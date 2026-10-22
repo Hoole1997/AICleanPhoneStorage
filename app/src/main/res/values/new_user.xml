@@ -1,0 +1,16 @@
+<resources>
+    <color name="new_user_background">#F6F6F6</color>
+    <color name="new_user_title">#444444</color>
+    <color name="new_user_value">#5E74A1</color>
+    <color name="new_user_done">#11E149</color>
+    <color name="new_user_disabled">#A8C6FA</color>
+    <color name="new_user_blue">#0D60F1</color>
+    <color name="new_user_notice">#DDE7FD</color>
+    <dimen name="new_user_hero_size">132dp</dimen>
+    <dimen name="new_user_ring_size">116.339dp</dimen>
+    <dimen name="new_user_page_gutter">16dp</dimen>
+    <dimen name="new_user_header_space">44dp</dimen>
+    <dimen name="new_user_bottom_space">88dp</dimen>
+    <dimen name="new_user_compact_bottom_space">24dp</dimen>
+    <dimen name="new_user_row_gap">12dp</dimen>
+</resources>

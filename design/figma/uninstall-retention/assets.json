@@ -1,0 +1,168 @@
+[
+  {
+    "name": "hero",
+    "url": "https://www.figma.com/api/mcp/asset/68a9cb5a-62cd-44f9-8f4f-be6fefead884.png",
+    "node": "7121:9276",
+    "source": "design/figma/uninstall-retention/source/hero.png",
+    "sha256": "edb08efbb576990e121709c72cdceb726c57bfdccfad504d28c36ac11a016a25",
+    "resource": "retention_hero",
+    "pixels4x": [
+      1500,
+      1320
+    ]
+  },
+  {
+    "name": "junk",
+    "url": "https://www.figma.com/api/mcp/asset/3cecac18-de06-49d5-b905-79cfe0219ab6.png",
+    "node": "7121:9276",
+    "source": "design/figma/uninstall-retention/source/junk.png",
+    "sha256": "556725eb580dc3bc4ec307d4441d3b7e87adcdfcc90953687f5998e837c5c653",
+    "resource": "retention_junk",
+    "pixels4x": [
+      180,
+      180
+    ]
+  },
+  {
+    "name": "malware",
+    "url": "https://www.figma.com/api/mcp/asset/fd63440e-1514-4f38-928c-9b1fae5a3f7b.png",
+    "node": "7121:9276",
+    "source": "design/figma/uninstall-retention/source/malware.png",
+    "sha256": "5b1d2aa42930bce9d85aa18705e115afab304a7ef7e08006e8b244ae462f2a04",
+    "resource": "retention_malware",
+    "pixels4x": [
+      180,
+      180
+    ]
+  },
+  {
+    "name": "similar",
+    "url": "https://www.figma.com/api/mcp/asset/34c597eb-286f-46e5-ba63-5f1fe1a0f260.png",
+    "node": "7121:9276",
+    "source": "design/figma/uninstall-retention/source/similar.png",
+    "sha256": "68081c92cafcd7db3ce6c31cab1dc1d51348af3ee2675a59d01592ec43671d42",
+    "resource": "retention_similar",
+    "pixels4x": [
+      180,
+      180
+    ]
+  },
+  {
+    "name": "screenshots",
+    "url": "https://www.figma.com/api/mcp/asset/9f182c34-3132-4568-9d5a-8a502bee6cce.png",
+    "node": "7121:9276",
+    "source": "design/figma/uninstall-retention/source/screenshots.png",
+    "sha256": "43793cf0bd3a2f96eae9d6eeeb2dabee925dd57f2e0cf66b460e3e774ff982d6",
+    "resource": "retention_screenshots",
+    "pixels4x": [
+      180,
+      180
+    ]
+  },
+  {
+    "name": "large",
+    "url": "https://www.figma.com/api/mcp/asset/8aaeda89-44be-46cd-baa2-9e0d0595bfd6.png",
+    "node": "7121:9276",
+    "source": "design/figma/uninstall-retention/source/large.png",
+    "sha256": "6d7be2f094f33ff3426c384b03f414e7fd8c822846ae4f88507b37da4cd7a902",
+    "resource": "retention_large",
+    "pixels4x": [
+      180,
+      180
+    ]
+  },
+  {
+    "name": "notifications",
+    "url": "https://www.figma.com/api/mcp/asset/643fa4de-0f06-4399-b20a-233e302a34af.png",
+    "node": "7121:9276",
+    "source": "design/figma/uninstall-retention/source/notifications.png",
+    "sha256": "daf72b2c68440ee93bb9512fef20d42f4649794689908c62d8766e77efb50414",
+    "resource": "retention_notifications",
+    "pixels4x": [
+      180,
+      180
+    ]
+  },
+  {
+    "name": "hero_mask",
+    "url": "https://www.figma.com/api/mcp/asset/da346a44-2f61-48aa-9aa6-6d3070b7d90e.svg",
+    "node": "7121:9276",
+    "source": "design/figma/uninstall-retention/source/hero_mask.svg",
+    "sha256": "4ed06072663a9e8b9453da70f953e2521e94f3ce7c8a2da5b2b79dcccf7b2edd"
+  },
+  {
+    "name": "next",
+    "url": "https://www.figma.com/api/mcp/asset/d94d7c46-ea0d-4758-ae1d-772765d22a32.svg",
+    "node": "7121:9276",
+    "source": "design/figma/uninstall-retention/source/next.svg",
+    "sha256": "4870fdc1880842f1e8074aa23a7a378a0e46183b49a8003552b2c7e6adc0085d",
+    "resource": "retention_next",
+    "pixels4x": [
+      48,
+      48
+    ]
+  },
+  {
+    "name": "reason_background",
+    "url": "https://www.figma.com/api/mcp/asset/26025ea9-ced7-49b8-b694-0f93bd92cdb9.svg",
+    "node": "7121:9377",
+    "source": "design/figma/uninstall-retention/source/reason_background-original.png",
+    "sha256": "98dec91beccc7ebcd88c03bb1a7130b0e532c5ee106ccfff9ba4296ba4c08bf4",
+    "resource": "retention_reason_background",
+    "pixels4x": null,
+    "originalRaster": "design/figma/uninstall-retention/source/reason_background-original.png",
+    "rasterUrl": "https://www.figma.com/api/mcp/asset/33961b37-29cf-4ede-b3a6-37981609325b.png",
+    "pixels": [
+      375,
+      812
+    ]
+  },
+  {
+    "name": "back",
+    "url": "https://www.figma.com/api/mcp/asset/9ac0fbcb-5e8a-4149-8c60-9be84cb7ef3c.svg",
+    "node": "7121:9376",
+    "source": "design/figma/uninstall-retention/source/back.svg",
+    "sha256": "865fd0d16e6ee40d412ebca3414bb36cfb99df5a16460f3b1ecfb63eaf5ac195",
+    "resource": "retention_back",
+    "pixels4x": [
+      96,
+      96
+    ]
+  },
+  {
+    "name": "selected",
+    "url": "https://www.figma.com/api/mcp/asset/ba989276-ba06-4ed9-be0b-a16b38c5b32c.svg",
+    "node": "7121:9376",
+    "source": "design/figma/uninstall-retention/source/selected.svg",
+    "sha256": "e4712f9c28e97d8e448f503409274c45802bac997c9d209342a474c1e979fb2f",
+    "resource": "retention_selected",
+    "pixels4x": [
+      72,
+      72
+    ]
+  },
+  {
+    "name": "unselected",
+    "url": "https://www.figma.com/api/mcp/asset/c45abe31-a32b-45c6-8e8d-ffa38aa9e058.svg",
+    "node": "7121:9376",
+    "source": "design/figma/uninstall-retention/source/unselected.svg",
+    "sha256": "1cfe11f103a186375302db2063ae889de456dba593816bb94dc35969519ce2b9",
+    "resource": "retention_unselected",
+    "pixels4x": [
+      72,
+      72
+    ]
+  },
+  {
+    "name": "shortcut",
+    "url": "https://www.figma.com/api/mcp/asset/6bebde79-258b-41e0-980b-57c91aaf7f88.svg",
+    "node": "7121:9431",
+    "source": "design/figma/uninstall-retention/source/shortcut.svg",
+    "sha256": "bb23fac390129050b9d62c044713c0c3c06bf4900cafce8c99fc30d9ac2be0c3",
+    "resource": "retention_shortcut",
+    "pixels4x": [
+      88,
+      88
+    ]
+  }
+]

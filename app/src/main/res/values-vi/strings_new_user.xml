@@ -1,0 +1,17 @@
+<resources>
+    <string name="new_user_device">Thiết bị</string>
+    <string name="new_user_system">Phiên bản Android</string>
+    <string name="new_user_resolution">Độ phân giải màn hình</string>
+    <string name="new_user_density">Mật độ điểm ảnh</string>
+    <string name="new_user_storage">Bộ nhớ đã dùng</string>
+    <string name="new_user_engine">Khởi tạo bộ quét</string>
+    <string name="new_user_scanning">Đang quét…</string>
+    <string name="new_user_initializing">Đang khởi tạo</string>
+    <string name="new_user_done">Xong</string>
+    <string name="new_user_unknown">Không xác định</string>
+    <string name="new_user_start">Bắt đầu dọn dẹp</string>
+    <string name="new_user_retry">Thử lại</string>
+    <string name="new_user_engine_failed">Không thể khởi tạo bộ quét</string>
+    <string name="new_user_save_failed">Không thể lưu tiến trình. Vui lòng thử lại.</string>
+    <string name="new_user_notice"><font color="#222222"><b>Lưu ý:</b></font> Lần quét đầu tiên có thể lâu hơn một chút vì cần tìm tệp rác và phân tích dữ liệu điện thoại của bạn.</string>
+</resources>

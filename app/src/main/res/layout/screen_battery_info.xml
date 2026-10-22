@@ -9,6 +9,8 @@
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="16dp" android:paddingBottom="24dp">
                 <com.example.aicleanphonestorage.feature.battery.ui.BatteryGaugeView android:id="@+id/battery_gauge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:layout_gravity="center_horizontal" />
                 <LinearLayout android:id="@+id/battery_cards" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:orientation="vertical" />
+                <TextView android:id="@+id/battery_scene_summary" android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp" android:textSize="14sp" android:textColor="@color/home_text_secondary" android:visibility="gone" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
         <LinearLayout android:id="@+id/battery_footer" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingTop="36dp" android:paddingBottom="100dp" android:background="@drawable/cleanup_footer_fade">

@@ -1,0 +1,26 @@
+<resources>
+    <string name="retention_before">Before you go…</string>
+    <string name="retention_loss">If you uninstall this app, you will lose access to the following features:</string>
+    <string name="retention_more">…and other essential features</string>
+    <string name="retention_keep">Keep the App</string>
+    <string name="retention_anyway">Uninstall Anyway</string>
+    <string name="retention_why">Why are you uninstalling?</string>
+    <string name="retention_reason_difficult">Difficult to use</string>
+    <string name="retention_reason_ads">Too many ads</string>
+    <string name="retention_reason_results">Cleaning results do not meet my expectations</string>
+    <string name="retention_reason_features">Missing features I need</string>
+    <string name="retention_reason_slow">Loading stutter</string>
+    <string name="retention_reason_other">Others</string>
+    <string name="retention_feedback_hint">Please enter the reason why you are uninstalling %1$s</string>
+    <string name="retention_not_yet">Don’t uninstall yet</string>
+    <string name="retention_uninstall">Uninstall</string>
+    <string name="retention_shortcut_disabled">This shortcut is no longer available.</string>
+    <string name="retention_unavailable">Unable to open the system uninstall screen. Please try again.</string>
+    <string name="retention_back">Back</string>
+    <string name="retention_junk">Junk Cleaner</string>
+    <string name="retention_malware">Malware Scan</string>
+    <string name="retention_similar">Duplicate Photo Cleaner</string>
+    <string name="retention_screenshots">Screenshot Cleaner</string>
+    <string name="retention_large">Large File Cleaner</string>
+    <string name="retention_notifications">Notification Cleaner</string>
+</resources>

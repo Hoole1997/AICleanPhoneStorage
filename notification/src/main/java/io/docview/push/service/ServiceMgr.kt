@@ -10,6 +10,7 @@ import io.docview.push.provider.Provider
 import io.docview.push.utils.Logger
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -28,27 +29,29 @@ object KeepAliveServiceManager {
                 return@launch
             }
             if (CoreService.isRunning) return@launch
+            val background = io.docview.push.analytics.NotificationVisibility.backgroundForDisplay()
+            if (!io.docview.push.boot.BootRestoreSession.allowNormalStart(background)) return@launch
+            // 只约束新建服务，不拦截上面的停用/撤权清理。冷进程的数据刷新没有后台启动资格；
+            // 开机由专用 Receiver 单次请求，正常前台、FCM 等原有显式来源保留自己的入口。
+            if (from == "resident_refresh" && background) return@launch
             try {
-                // Provider 调用可能触发冷启动初始化，放在 IO 线程避免阻塞主线程。
-                withContext(Dispatchers.IO) {
-                    val uri = Uri.parse("content://${app.packageName}.notification.provider")
-                    val extras = Bundle().apply { putString(Provider.EXTRA_FROM, from) }
-                    app.contentResolver.call(uri, Provider.METHOD_START_KEEP_ALIVE_SERVICE, null, extras)
-                }
+                requestThroughProvider(app, from)
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (error: Exception) {
                 Logger.e("通过通知 Provider 启动屏幕监听服务失败: from=$from", error)
                 TriggerCtrl.ensureResidentNotificationExists()
             }
-//            if (!ProcessLifecycleOwner.get().lifecycle.currentState
-//                    .isAtLeast(Lifecycle.State.STARTED)) {
-//                // 常驻通知与 Service 是不同的能力；不能借 Provider 调用绕过系统后台启动限制。
-//                TriggerCtrl.ensureResidentNotificationExists()
-//                Logger.d("屏幕监听服务等待前台且通知已授权: from=$from")
-//                return@launch
-//            }
         }
+    }
+
+    /** 可等待的同一 Provider 通道；广播必须持有 goAsync 到调用结束，不另起脱离生命周期的任务。 */
+    internal suspend fun requestThroughProvider(context: Context, from: String) = withContext(Dispatchers.IO) {
+        kotlinx.coroutines.currentCoroutineContext().ensureActive()
+        val uri = Uri.parse("content://${context.packageName}.notification.provider")
+        val extras = Bundle().apply { putString(Provider.EXTRA_FROM, from) }
+        context.contentResolver.call(uri, Provider.METHOD_START_KEEP_ALIVE_SERVICE, null, extras)
+        Unit
     }
 
     fun isKeepAliveServiceRunning(): Boolean = CoreService.isRunning

@@ -52,6 +52,9 @@ import com.example.aicleanphonestorage.feature.startup.StartupNavigation
 
 /** 只负责窗口和生命周期。系统状态栏由 Android 绘制，不用设计稿的 iOS 图标/时间冒充。 */
 class MainActivity : AppCompatActivity() {
+    private val sceneHints: com.example.aicleanphonestorage.feature.push.SceneNotificationHints by viewModels {
+        viewModelFactory { initializer { com.example.aicleanphonestorage.feature.push.SceneNotificationHints(createSavedStateHandle()) } }
+    }
     private val homeViewModel: HomeViewModel by viewModels {
         viewModelFactory {
             initializer {
@@ -172,6 +175,12 @@ class MainActivity : AppCompatActivity() {
         )
         val binding = ScreenHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        // 真正到达首页才结束未完成引导（包括远程关闭后的原有启动路径）。
+        lifecycleScope.launch {
+            try { (application as CleanApplication).container.newUserFlow.homeReached() }
+            catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled }
+            catch (error: Exception) { android.util.Log.w("NewUserFlow", "Unable to persist home arrival", error) }
+        }
         ViewCompat.setAccessibilityHeading(binding.pageTitle, true)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val bars =
@@ -194,6 +203,7 @@ class MainActivity : AppCompatActivity() {
                 trafficEntry,
                 (application as CleanApplication).container.trafficSnapshotTransfer,
                 permissions,
+                decorateIntent = { sceneHints.transfer(NotificationDestination.NETWORK, it) },
                 onOpened = { homeViewModel.onFeatureEntered(HomeBadge.NetworkTraffic) },
             )
         notificationCoordinator =
@@ -205,6 +215,14 @@ class MainActivity : AppCompatActivity() {
                 onOpened = { homeViewModel.onFeatureEntered(HomeBadge.ClearNotifications) },
             )
         cleanupCoordinator = CleanupEntryCoordinator(this, cleanupEntry, permissions,
+            decorateIntent = { feature, target ->
+                val destination = when (feature) {
+                    com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature.SCREENSHOTS -> NotificationDestination.SCREENSHOTS
+                    com.example.aicleanphonestorage.feature.filecleaner.data.CleanupFeature.LARGE_FILES -> NotificationDestination.LARGE_FILES
+                    else -> NotificationDestination.CLEAN
+                }
+                sceneHints.transfer(destination, target)
+            },
             onOpened = { feature -> homeViewModel.onFeatureEntered(HomeBadge.of(feature)) })
         observeEntryState(cleanupEntry.state, cleanupCoordinator::render)
         appManagerCoordinator =
@@ -212,6 +230,7 @@ class MainActivity : AppCompatActivity() {
                 this,
                 appManagerEntry,
                 (application as CleanApplication).container.appManagerTransfer,
+                decorateIntent = { sceneHints.transfer(NotificationDestination.APP_MANAGER, it) },
                 onOpened = { homeViewModel.onFeatureEntered(HomeBadge.AppManager) },
             )
         observeEntryState(appManagerEntry.state, appManagerCoordinator::render)
@@ -219,6 +238,7 @@ class MainActivity : AppCompatActivity() {
             this,
             batteryEntry,
             (application as CleanApplication).container.batteryTransfer,
+            decorateIntent = { sceneHints.transfer(NotificationDestination.BATTERY, it) },
             onOpened = { homeViewModel.onFeatureEntered(HomeBadge.BatteryInfo) },
         )
         observeEntryState(batteryEntry.state, batteryCoordinator::render)
@@ -227,6 +247,7 @@ class MainActivity : AppCompatActivity() {
         observeEntryState(malwareEntryModel.state, malwareEntry::render)
         homeActions = HomeEntryActions(
             permissions, trafficEntry, notificationEntry, cleanupEntry, appManagerEntry, batteryEntry, malwareEntry,
+            sceneHints = sceneHints,
             openSettings = {
                 startActivity(Intent(this, com.example.aicleanphonestorage.feature.settings.SettingsActivity::class.java)
                     .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP))
@@ -430,21 +451,23 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleNotificationIntent(intent: Intent) {
         NotificationLaunchTelemetry.entered(intent)
+        val scene = io.docview.push.scene.SceneLandingData.read(intent)
+        io.docview.push.scene.SceneLandingData.clear(intent)
         val destination = NotificationNavigation.consume(intent) ?: return
         when (destination) {
             NotificationDestination.HOME -> homeActions.cancelPending()
-            NotificationDestination.CLEAN -> homeActions.onSmartClean()
-            NotificationDestination.NETWORK -> homeActions.onToolSelected(HomeTool.Network)
+            NotificationDestination.CLEAN -> homeActions.onSmartClean(scene)
+            NotificationDestination.NETWORK -> homeActions.onToolSelected(HomeTool.Network, scene)
             NotificationDestination.PHOTOS -> homeActions.onToolSelected(HomeTool.Compress)
             NotificationDestination.UNUSED_FILES -> homeActions.onToolSelected(HomeTool.UnusedFiles)
-            NotificationDestination.SCREENSHOTS -> homeActions.onToolSelected(HomeTool.Screenshots)
-            NotificationDestination.LARGE_FILES -> homeActions.onToolSelected(HomeTool.LargeFiles)
+            NotificationDestination.SCREENSHOTS -> homeActions.onToolSelected(HomeTool.Screenshots, scene)
+            NotificationDestination.LARGE_FILES -> homeActions.onToolSelected(HomeTool.LargeFiles, scene)
             NotificationDestination.NOTIFICATION_CLEANER -> homeActions.onToolSelected(HomeTool.Notifications)
-            NotificationDestination.APP_MANAGER -> homeActions.onToolSelected(HomeTool.Apps)
+            NotificationDestination.APP_MANAGER -> homeActions.onToolSelected(HomeTool.Apps, scene)
             NotificationDestination.VIDEOS -> homeActions.onToolSelected(HomeTool.Videos)
             NotificationDestination.DUPLICATE_PHOTOS -> homeActions.onToolSelected(HomeTool.Similar)
             NotificationDestination.MALWARE -> homeActions.onMalwareScan()
-            NotificationDestination.BATTERY -> homeActions.onToolSelected(HomeTool.Battery)
+            NotificationDestination.BATTERY -> homeActions.onToolSelected(HomeTool.Battery, scene)
         }
     }
 

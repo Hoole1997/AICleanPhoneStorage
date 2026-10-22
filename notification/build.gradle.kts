@@ -18,6 +18,7 @@ android {
     compileSdk { version = release(37) }
     defaultConfig {
         minSdk = 24
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // 所有渠道/构建类型均导出规则，防止混淆宿主依赖 debug AAR 时丢失反射契约。
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -84,7 +85,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.startup.runtime)
-    implementation(libs.gson)
+    // 与 app 已使用的 Gson 版本一致，让场景配置可进行严格 JSON 校验，避免编译/运行版本不一致。
+    implementation("com.google.code.gson:gson:2.13.1")
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
     implementation(libs.utilcodex)
@@ -96,4 +98,7 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockwebserver)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.androidx.espresso.core)
 }

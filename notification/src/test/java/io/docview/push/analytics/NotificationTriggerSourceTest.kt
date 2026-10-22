@@ -7,7 +7,8 @@ import org.junit.Test
 
 class NotificationTriggerSourceTest {
     @Test fun canonicalValuesAreUniqueAndRoundTripThroughTheSharedWhitelist() {
-        val values = listOf("unlock", "background", "keepalive", "alarmmanager", "fcm", "resident")
+        val values = listOf("unlock", "background", "keepalive", "alarmmanager", "fcm", "resident",
+            "charge_start", "charge_end", "low_battery", "network_change", "screenshot", "app_install", "app_uninstall", "new_download")
         assertEquals(values, NotificationTriggerSource.entries.map { it.value })
         values.forEach { value ->
             val source = requireNotNull(NotificationTriggerSource.fromValue(value))

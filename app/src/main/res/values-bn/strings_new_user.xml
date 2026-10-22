@@ -1,0 +1,17 @@
+<resources>
+    <string name="new_user_device">ডিভাইস</string>
+    <string name="new_user_system">Android সংস্করণ</string>
+    <string name="new_user_resolution">স্ক্রিন রেজোলিউশন</string>
+    <string name="new_user_density">স্ক্রিনের ঘনত্ব</string>
+    <string name="new_user_storage">ব্যবহৃত স্টোরেজ</string>
+    <string name="new_user_engine">ইঞ্জিন চালু হচ্ছে</string>
+    <string name="new_user_scanning">স্ক্যান হচ্ছে…</string>
+    <string name="new_user_initializing">চালু হচ্ছে</string>
+    <string name="new_user_done">সম্পন্ন</string>
+    <string name="new_user_unknown">অজানা</string>
+    <string name="new_user_start">পরিষ্কার শুরু করুন</string>
+    <string name="new_user_retry">আবার চেষ্টা করুন</string>
+    <string name="new_user_engine_failed">ইঞ্জিন চালু করা যায়নি</string>
+    <string name="new_user_save_failed">অগ্রগতি সেভ করা যায়নি। আবার চেষ্টা করুন।</string>
+    <string name="new_user_notice"><font color="#222222"><b>মনে রাখবেন:</b></font> প্রথম স্ক্যানে অপ্রয়োজনীয় ফাইল খোঁজা এবং আপনার ফোনের ডেটা বিশ্লেষণের জন্য একটু বেশি সময় লাগতে পারে।</string>
+</resources>

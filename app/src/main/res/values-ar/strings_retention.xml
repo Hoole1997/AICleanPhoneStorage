@@ -1,0 +1,26 @@
+<resources>
+    <string name="retention_before">قبل أن تغادر…</string>
+    <string name="retention_loss">إذا أزلت هذا التطبيق، فستفقد إمكانية الوصول إلى الميزات التالية:</string>
+    <string name="retention_more">…وميزات أساسية أخرى</string>
+    <string name="retention_keep">الاحتفاظ بالتطبيق</string>
+    <string name="retention_anyway">إزالة التثبيت على أي حال</string>
+    <string name="retention_why">لماذا تزيل تثبيت التطبيق؟</string>
+    <string name="retention_reason_difficult">صعب الاستخدام</string>
+    <string name="retention_reason_ads">إعلانات كثيرة جدًا</string>
+    <string name="retention_reason_results">نتائج التنظيف لا تلبي توقعاتي</string>
+    <string name="retention_reason_features">يفتقر إلى ميزات أحتاجها</string>
+    <string name="retention_reason_slow">بطء أثناء التحميل</string>
+    <string name="retention_reason_other">أخرى</string>
+    <string name="retention_feedback_hint">يرجى إدخال سبب إزالة تثبيت %1$s</string>
+    <string name="retention_not_yet">عدم إزالة التثبيت الآن</string>
+    <string name="retention_uninstall">إزالة التثبيت</string>
+    <string name="retention_shortcut_disabled">لم يعد هذا الاختصار متاحًا.</string>
+    <string name="retention_unavailable">تعذر فتح شاشة إزالة التثبيت للنظام. يرجى المحاولة مجددًا.</string>
+    <string name="retention_back">رجوع</string>
+    <string name="retention_junk">تنظيف الملفات غير الضرورية</string>
+    <string name="retention_malware">فحص البرامج الضارة</string>
+    <string name="retention_similar">تنظيف الصور المكررة</string>
+    <string name="retention_screenshots">تنظيف لقطات الشاشة</string>
+    <string name="retention_large">تنظيف الملفات الكبيرة</string>
+    <string name="retention_notifications">تنظيف الإشعارات</string>
+</resources>

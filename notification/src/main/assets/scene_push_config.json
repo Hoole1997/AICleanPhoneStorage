@@ -1,0 +1,37 @@
+{
+  "enabled": true,
+  "chargeStartPushIntervalMinutes": 10,
+  "chargeCompletePushIntervalMinutes": 10,
+  "lowBatteryPushIntervalMinutes": 10,
+  "networkChangePushIntervalMinutes": 10,
+  "screenshotPushIntervalMinutes": 10,
+  "appInstallPushIntervalMinutes": 10,
+  "appUninstallPushIntervalMinutes": 10,
+  "newDownloadPushIntervalMinutes": 10,
+  "scenes": {
+    "1101": {
+      "enabled": true
+    },
+    "1102": {
+      "enabled": true
+    },
+    "1103": {
+      "enabled": true
+    },
+    "1104": {
+      "enabled": true
+    },
+    "1105": {
+      "enabled": true
+    },
+    "1106": {
+      "enabled": true
+    },
+    "1107": {
+      "enabled": true
+    },
+    "1108": {
+      "enabled": true
+    }
+  }
+}

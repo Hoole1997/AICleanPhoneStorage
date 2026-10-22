@@ -1,0 +1,18 @@
+<resources>
+    <string name="scene_alerts">Avisos inteligentes</string>
+    <string name="scene_all">Activar avisos inteligentes</string>
+    <string name="scene_charge_start">Carga iniciada</string>
+    <string name="scene_charge_end">Carga finalizada</string>
+    <string name="scene_low_battery">Batería baja</string>
+    <string name="scene_network">Cambios de red</string>
+    <string name="scene_screenshot">Nuevas capturas</string>
+    <string name="scene_app_install">App instalada</string>
+    <string name="scene_app_uninstall">App desinstalada</string>
+    <string name="scene_download">Nuevas descargas</string>
+    <string name="scene_back">Volver</string>
+    <string name="scene_settings_description">Elige qué eventos pueden mostrar avisos. Las notificaciones existentes se gestionan por separado.</string>
+    <string name="scene_settings_error">No se pudo guardar. Inténtalo de nuevo.</string>
+    <string name="scene_charge_summary">Fin de carga: %1$s · Batería: %2$d%%</string>
+    <string name="scene_charge_duration">Tiempo de carga: %1$s</string>
+    <string name="scene_network_tip">¿Sin conexión? Revisa el Wi-Fi o los datos móviles antes de medir la velocidad.</string>
+</resources>

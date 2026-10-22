@@ -18,6 +18,13 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application>
+        <!-- 首次解锁后仅恢复现有常驻服务；与 Alarm 的重新调度独立。 -->
+        <receiver android:name=".boot.BootCompletedReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <activity android:name=".scene.ScenePushSettingsActivity" android:exported="false" android:screenOrientation="portrait" android:theme="@style/Theme.SceneSettings" />
         <!-- 系统重启/升级仅恢复唯一任务；自定义 alarm 仅由显式 immutable PendingIntent 投递。 -->
         <receiver android:name=".alarm.AlarmWakeupReceiver" android:exported="false">
             <intent-filter>
@@ -69,7 +76,7 @@
             android:foregroundServiceType="specialUse">
             <!-- 复用常驻快捷入口，事件驱动接收用户锁屏/解锁，不执行后台扫描或定时唤醒。 -->
             <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="Maintain user-visible cleaning shortcuts and receive screen lock/unlock events without polling" />
+                android:value="Maintain user-visible cleaning shortcuts and receive screen, battery, connectivity, package and authorized MediaStore changes without polling" />
         </service>
     </application>
 

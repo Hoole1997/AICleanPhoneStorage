@@ -1,0 +1,18 @@
+<resources>
+    <string name="scene_alerts">Smart alerts</string>
+    <string name="scene_all">Enable smart alerts</string>
+    <string name="scene_charge_start">Charging started</string>
+    <string name="scene_charge_end">Charging ended</string>
+    <string name="scene_low_battery">Low battery</string>
+    <string name="scene_network">Network changes</string>
+    <string name="scene_screenshot">New screenshots</string>
+    <string name="scene_app_install">App installed</string>
+    <string name="scene_app_uninstall">App uninstalled</string>
+    <string name="scene_download">New downloads</string>
+    <string name="scene_back">Back</string>
+    <string name="scene_settings_description">Choose which device events can show reminders. Existing notifications are managed separately.</string>
+    <string name="scene_settings_error">Unable to save this setting. Please try again.</string>
+    <string name="scene_charge_summary">Charging ended at %1$s · Battery: %2$d%%</string>
+    <string name="scene_charge_duration">Charging time: %1$s</string>
+    <string name="scene_network_tip">No connection? Check Wi-Fi or mobile data before starting a speed test.</string>
+</resources>

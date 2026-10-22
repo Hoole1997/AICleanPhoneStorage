@@ -1,0 +1,146 @@
+[
+  {
+    "name": "charging_start",
+    "slot": [
+      36,
+      51,
+      10,
+      3
+    ],
+    "url": "https://www.figma.com/api/mcp/asset/dc23f3ba-92d6-4503-aff2-e3aa77761308.png",
+    "node": "7133:404",
+    "source": "design/figma/scene-push/source/charging_start.png",
+    "sha256": "95dfcba8e3a7fd649428a5aad12fb273b958622c0b79189c8b43dec335af5343",
+    "resource": "scene_charging_start",
+    "dp": [
+      56,
+      56
+    ]
+  },
+  {
+    "name": "network",
+    "slot": [
+      58,
+      58,
+      -1,
+      -1
+    ],
+    "url": "https://www.figma.com/api/mcp/asset/01853404-2c81-437c-bf82-40c02b776cbd.png",
+    "node": "7133:404",
+    "source": "design/figma/scene-push/source/network.png",
+    "sha256": "5c926d84c732c605d0132dce981f39dae116637dbf151b35eca7bf86eb96b296",
+    "resource": "scene_network",
+    "dp": [
+      56,
+      56
+    ]
+  },
+  {
+    "name": "screenshot",
+    "slot": [
+      56,
+      56,
+      0,
+      0
+    ],
+    "url": "https://www.figma.com/api/mcp/asset/a7036565-d256-4cae-86f1-81da93da4a64.png",
+    "node": "7133:404",
+    "source": "design/figma/scene-push/source/screenshot.png",
+    "sha256": "71dfebd42dd8fee46420e010ff59329a48c2cefa2e669af66cecc3ed7aec432e",
+    "resource": "scene_screenshot",
+    "dp": [
+      56,
+      56
+    ]
+  },
+  {
+    "name": "app_installed",
+    "slot": [
+      47,
+      48,
+      5,
+      4
+    ],
+    "url": "https://www.figma.com/api/mcp/asset/5a975ad7-3847-47ff-8d5d-de94319e4f4d.png",
+    "node": "7133:404",
+    "source": "design/figma/scene-push/source/app_installed.png",
+    "sha256": "7a5bc830cd04292600c560c06b6b816b296943e969865cb9b5f5f2129c599ef9",
+    "resource": "scene_app_installed",
+    "dp": [
+      56,
+      56
+    ]
+  },
+  {
+    "name": "app_uninstalled",
+    "slot": [
+      50,
+      49,
+      3,
+      4
+    ],
+    "url": "https://www.figma.com/api/mcp/asset/583c002b-54aa-4be2-94fd-59b088f9562d.png",
+    "node": "7133:404",
+    "source": "design/figma/scene-push/source/app_uninstalled.png",
+    "sha256": "46981e386881746c5559888e43db4e9bf1646079e4f47cb7d60fb0fe5e95b725",
+    "resource": "scene_app_uninstalled",
+    "dp": [
+      56,
+      56
+    ]
+  },
+  {
+    "name": "download",
+    "slot": [
+      52,
+      52,
+      2,
+      2
+    ],
+    "url": "https://www.figma.com/api/mcp/asset/ac28e390-8746-40e0-96e3-2557bf5bd756.png",
+    "node": "7133:404",
+    "source": "design/figma/scene-push/source/download.png",
+    "sha256": "540665a99075baf7122c35d43664096caf9dfaa8095081d3ef7f08b8d4b696f0",
+    "resource": "scene_download",
+    "dp": [
+      56,
+      56
+    ]
+  },
+  {
+    "name": "charging_end",
+    "slot": [
+      36,
+      50,
+      10,
+      3
+    ],
+    "url": "https://www.figma.com/api/mcp/asset/c885441e-dd9f-4a52-a8b2-a11d9055c062.png",
+    "node": "7133:404",
+    "source": "design/figma/scene-push/source/charging_end.png",
+    "sha256": "0416cec3264176d7500426fe861b7b14e30f464c6e1bd3e881a4d8952579584c",
+    "resource": "scene_charging_end",
+    "dp": [
+      56,
+      56
+    ]
+  },
+  {
+    "name": "low_battery",
+    "slot": [
+      36,
+      50,
+      10,
+      3
+    ],
+    "url": "https://www.figma.com/api/mcp/asset/301a4ad4-e211-4d75-8503-18454e500e98.png",
+    "node": "7133:404",
+    "source": "design/figma/scene-push/source/low_battery.png",
+    "sha256": "082a8872a6957a572de52eb3825955a117b9a3b34a7c55c97f7b9a97edf5eb49",
+    "resource": "scene_low_battery",
+    "dp": [
+      56,
+      56
+    ]
+  }
+]

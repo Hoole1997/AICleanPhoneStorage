@@ -1,0 +1,17 @@
+<resources>
+    <string name="new_user_device">ڈیوائس</string>
+    <string name="new_user_system">Android ورژن</string>
+    <string name="new_user_resolution">اسکرین ریزولیوشن</string>
+    <string name="new_user_density">اسکرین کی کثافت</string>
+    <string name="new_user_storage">استعمال شدہ اسٹوریج</string>
+    <string name="new_user_engine">انجن تیار ہو رہا ہے</string>
+    <string name="new_user_scanning">اسکین ہو رہا ہے…</string>
+    <string name="new_user_initializing">تیاری جاری ہے</string>
+    <string name="new_user_done">مکمل</string>
+    <string name="new_user_unknown">نامعلوم</string>
+    <string name="new_user_start">صفائی شروع کریں</string>
+    <string name="new_user_retry">دوبارہ کوشش کریں</string>
+    <string name="new_user_engine_failed">انجن تیار نہیں ہو سکا</string>
+    <string name="new_user_save_failed">پیش رفت محفوظ نہیں ہو سکی۔ دوبارہ کوشش کریں۔</string>
+    <string name="new_user_notice"><font color="#222222"><b>براہ کرم نوٹ کریں:</b></font> پہلے اسکین میں غیر ضروری فائلیں تلاش کرنے اور آپ کے فون کے ڈیٹا کا تجزیہ کرنے کی وجہ سے کچھ زیادہ وقت لگ سکتا ہے۔</string>
+</resources>

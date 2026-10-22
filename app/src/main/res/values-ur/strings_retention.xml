@@ -1,0 +1,26 @@
+<resources>
+    <string name="retention_before">جانے سے پہلے…</string>
+    <string name="retention_loss">اگر آپ یہ ایپ ان انسٹال کرتے ہیں تو درج ذیل خصوصیات استعمال نہیں کر سکیں گے:</string>
+    <string name="retention_more">…اور دیگر ضروری خصوصیات</string>
+    <string name="retention_keep">ایپ رکھیں</string>
+    <string name="retention_anyway">پھر بھی ان انسٹال کریں</string>
+    <string name="retention_why">آپ ان انسٹال کیوں کر رہے ہیں؟</string>
+    <string name="retention_reason_difficult">استعمال کرنا مشکل ہے</string>
+    <string name="retention_reason_ads">بہت زیادہ اشتہارات</string>
+    <string name="retention_reason_results">صفائی کے نتائج توقعات کے مطابق نہیں</string>
+    <string name="retention_reason_features">ضروری خصوصیات موجود نہیں</string>
+    <string name="retention_reason_slow">لوڈ ہونے میں رکاوٹ</string>
+    <string name="retention_reason_other">دیگر</string>
+    <string name="retention_feedback_hint">براہ کرم %1$s کو ان انسٹال کرنے کی وجہ لکھیں</string>
+    <string name="retention_not_yet">ابھی ان انسٹال نہ کریں</string>
+    <string name="retention_uninstall">ان انسٹال</string>
+    <string name="retention_shortcut_disabled">یہ شارٹ کٹ اب دستیاب نہیں ہے۔</string>
+    <string name="retention_unavailable">سسٹم کی ان انسٹال اسکرین نہیں کھل سکی۔ دوبارہ کوشش کریں۔</string>
+    <string name="retention_back">واپس</string>
+    <string name="retention_junk">غیر ضروری فائلوں کی صفائی</string>
+    <string name="retention_malware">میلویئر اسکین</string>
+    <string name="retention_similar">دہری تصاویر کی صفائی</string>
+    <string name="retention_screenshots">اسکرین شاٹ کی صفائی</string>
+    <string name="retention_large">بڑی فائلوں کی صفائی</string>
+    <string name="retention_notifications">اطلاعات کی صفائی</string>
+</resources>

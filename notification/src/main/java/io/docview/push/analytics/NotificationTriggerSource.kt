@@ -10,7 +10,10 @@ enum class NotificationTriggerSource(val value: String) {
     KEEPALIVE("keepalive"),
     ALARM_MANAGER("alarmmanager"),
     FCM("fcm"),
-    RESIDENT("resident");
+    RESIDENT("resident"),
+    CHARGE_START("charge_start"), CHARGE_END("charge_end"), LOW_BATTERY("low_battery"),
+    NETWORK_CHANGE("network_change"), SCREENSHOT("screenshot"), APP_INSTALL("app_install"),
+    APP_UNINSTALL("app_uninstall"), NEW_DOWNLOAD("new_download");
 
     fun properties(): Map<String, Any> = mapOf("trigger_source" to value)
 

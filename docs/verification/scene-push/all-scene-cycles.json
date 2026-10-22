@@ -1,0 +1,170 @@
+[
+  {
+    "scene": 1101,
+    "iteration": 0,
+    "postTime": 1792661401514,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_v1"
+  },
+  {
+    "scene": 1101,
+    "iteration": 1,
+    "postTime": 1792661405523,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_v1"
+  },
+  {
+    "scene": 1101,
+    "iteration": 2,
+    "postTime": 1792661409531,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_silent_v1"
+  },
+  {
+    "scene": 1102,
+    "iteration": 0,
+    "postTime": 1792661413544,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_v1"
+  },
+  {
+    "scene": 1102,
+    "iteration": 1,
+    "postTime": 1792661417553,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_v1"
+  },
+  {
+    "scene": 1102,
+    "iteration": 2,
+    "postTime": 1792661421559,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_silent_v1"
+  },
+  {
+    "scene": 1103,
+    "iteration": 0,
+    "postTime": 1792661425566,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_v1"
+  },
+  {
+    "scene": 1103,
+    "iteration": 1,
+    "postTime": 1792661429574,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_v1"
+  },
+  {
+    "scene": 1103,
+    "iteration": 2,
+    "postTime": 1792661433588,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_silent_v1"
+  },
+  {
+    "scene": 1104,
+    "iteration": 0,
+    "postTime": 1792661437601,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_v1"
+  },
+  {
+    "scene": 1104,
+    "iteration": 1,
+    "postTime": 1792661441613,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_v1"
+  },
+  {
+    "scene": 1104,
+    "iteration": 2,
+    "postTime": 1792661445624,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_silent_v1"
+  },
+  {
+    "scene": 1105,
+    "iteration": 0,
+    "postTime": 1792661449630,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_v1"
+  },
+  {
+    "scene": 1105,
+    "iteration": 1,
+    "postTime": 1792661453640,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_v1"
+  },
+  {
+    "scene": 1105,
+    "iteration": 2,
+    "postTime": 1792661457652,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_silent_v1"
+  },
+  {
+    "scene": 1106,
+    "iteration": 0,
+    "postTime": 1792661461664,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_v1"
+  },
+  {
+    "scene": 1106,
+    "iteration": 1,
+    "postTime": 1792661465673,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_v1"
+  },
+  {
+    "scene": 1106,
+    "iteration": 2,
+    "postTime": 1792661469685,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_silent_v1"
+  },
+  {
+    "scene": 1107,
+    "iteration": 0,
+    "postTime": 1792661473699,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_v1"
+  },
+  {
+    "scene": 1107,
+    "iteration": 1,
+    "postTime": 1792661477711,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_v1"
+  },
+  {
+    "scene": 1107,
+    "iteration": 2,
+    "postTime": 1792661481725,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_silent_v1"
+  },
+  {
+    "scene": 1108,
+    "iteration": 0,
+    "postTime": 1792661485732,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_v1"
+  },
+  {
+    "scene": 1108,
+    "iteration": 1,
+    "postTime": 1792661489744,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_v1"
+  },
+  {
+    "scene": 1108,
+    "iteration": 2,
+    "postTime": 1792661493755,
+    "onlyAlertOnce": false,
+    "channel": "scene_smart_alerts_silent_v1"
+  }
+]

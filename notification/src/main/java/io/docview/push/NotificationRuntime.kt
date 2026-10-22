@@ -22,6 +22,7 @@ class NotificationRuntime(context: Context, host: NotificationHost) {
     private val started = AtomicBoolean(false)
     private val ready = CompletableDeferred<Unit>()
     private val audienceReady = CompletableDeferred<Unit>()
+    internal val scenes by lazy { io.docview.push.scene.SceneRepository(app, PushEnvironment.host) }
     private val alarms by lazy {
         io.docview.push.alarm.AlarmWakeupCoordinator(app, PushEnvironment.host::alarmWakeupConfig,
             awaitAudience = { withTimeoutOrNull(500L) { audienceReady.await() }; Unit },
@@ -38,6 +39,8 @@ class NotificationRuntime(context: Context, host: NotificationHost) {
     fun initialize() {
         if (started.getAndSet(true)) return
         io.docview.push.analytics.NotificationVisibility.install(app as Application)
+        io.docview.push.boot.BootRestoreLifecycle.install(app)
+        io.docview.push.scene.SceneForegroundHints.install(app)
         Utils.init(app)
         PushEnvironment.scope.launch {
             try {
@@ -109,6 +112,19 @@ class NotificationRuntime(context: Context, host: NotificationHost) {
     }
 
     suspend fun awaitReady() { initialize(); ready.await() }
+
+    /** 只由 CoreService 调用，监听的生命周期由返回的句柄拥有，不启动额外服务。 */
+    internal suspend fun registerSceneEvents(service: Context, scope: CoroutineScope): AutoCloseable =
+        io.docview.push.scene.SceneEventRegistration.create(service, scope, scenes)
+
+    fun refreshScenePushConfig() {
+        initialize()
+        PushEnvironment.scope.launch {
+            try { ready.await(); scenes.refresh() }
+            catch (cancelled: CancellationException) { throw cancelled }
+            catch (error: Exception) { io.docview.push.utils.Logger.w("场景推送：配置刷新失败，异常类型=${error.javaClass.simpleName}") }
+        }
+    }
 
     /** Remax 激活回调和前台恢复共用调度入口；配置读取与注册不占用主线程。 */
     fun refreshAlarmSchedule() {

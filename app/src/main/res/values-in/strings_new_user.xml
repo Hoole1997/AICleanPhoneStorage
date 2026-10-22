@@ -1,0 +1,17 @@
+<resources>
+    <string name="new_user_device">Perangkat</string>
+    <string name="new_user_system">Versi Android</string>
+    <string name="new_user_resolution">Resolusi Layar</string>
+    <string name="new_user_density">Kerapatan Layar</string>
+    <string name="new_user_storage">Penyimpanan Terpakai</string>
+    <string name="new_user_engine">Menyiapkan mesin</string>
+    <string name="new_user_scanning">Memindai…</string>
+    <string name="new_user_initializing">Menyiapkan</string>
+    <string name="new_user_done">Selesai</string>
+    <string name="new_user_unknown">Tidak diketahui</string>
+    <string name="new_user_start">Mulai Bersihkan</string>
+    <string name="new_user_retry">Coba Lagi</string>
+    <string name="new_user_engine_failed">Gagal menyiapkan mesin</string>
+    <string name="new_user_save_failed">Tidak dapat menyimpan progres. Silakan coba lagi.</string>
+    <string name="new_user_notice"><font color="#222222"><b>Perhatikan:</b></font> Pemindaian pertama mungkin sedikit lebih lama karena mencari file sampah dan menganalisis data ponsel Anda.</string>
+</resources>

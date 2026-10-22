@@ -17,6 +17,9 @@ internal data class StartupEntry(
     val previewMode: String? = null,
     val hotStart: Boolean = false,
     val notification: NotificationClickContext? = null,
+    val launcher: Boolean = false,
+    val uninstallRetention: Boolean = false,
+    val scene: io.docview.push.scene.SceneLandingData? = null,
 )
 
 internal data class StartupState(
@@ -28,6 +31,8 @@ internal data class StartupState(
     val minimumStayComplete: Boolean = false,
     val consumed: Boolean = false,
     val offlineTimeout: Long? = null,
+    val newUserFlow: Boolean? = false,
+    val retentionAllowed: Boolean? = false,
 ) {
     val ready: Boolean
         get() = prepared && permissionCompleted && consentCompleted && adCompleted && minimumStayComplete
@@ -37,6 +42,8 @@ internal data class StartupState(
 internal class StartupViewModel(
     private val saved: SavedStateHandle,
     private val clock: () -> Long = { android.os.SystemClock.elapsedRealtime() },
+    private val resolveNewUserFlow: (suspend () -> Boolean)? = null,
+    private val resolveRetention: (suspend () -> Boolean)? = null,
     prepare: suspend () -> Unit,
 ) : ViewModel() {
     // beginAd 只在前台有焦点并完成首帧后调用；旋转保留起点，进程重建重新开始。
@@ -49,7 +56,10 @@ internal class StartupViewModel(
     private var network = StartupNetworkState.UNKNOWN
     private var adLoaded = false
     private var offlineJob: Job? = null
-    private val current = MutableStateFlow(StartupState(consumed = saved[CONSUMED] ?: false))
+    private var routeJob: Job? = null
+    private val current = MutableStateFlow(StartupState(consumed = saved[CONSUMED] ?: false,
+        newUserFlow = if (resolveNewUserFlow == null) false else null,
+        retentionAllowed = if (resolveRetention == null) false else null))
     val state = current.asStateFlow()
 
     init {
@@ -70,6 +80,16 @@ internal class StartupViewModel(
         saved[DESTINATION] = entry.destination.key
         saved[PREVIEW] = entry.previewMode
         saved[HOT_START] = entry.hotStart
+        saved[LAUNCHER] = entry.launcher
+        saved[RETENTION] = entry.uninstallRetention
+        saved["startup.scene.code"] = entry.scene?.code
+        saved["startup.scene.reference"] = entry.scene?.reference
+        saved["startup.scene.time"] = entry.scene?.occurredAt
+        saved["startup.scene.percent"] = entry.scene?.batteryPercent
+        saved["startup.scene.duration"] = entry.scene?.chargeDurationMs
+        // 新通知/快捷入口可以在配置检查挂起时替换目标；取消旧检查，但不重启正在展示的开屏。
+        routeJob?.cancel()
+        routeJob = null
         // 只保存有界基本字段，供广告/权限等待期间的页面重建使用，不保存 Notification/完整 Intent。
         saveNotification(entry.notification)
         // 等待中的新通知只更新目标；已交接后的新入口才开启下一次广告请求。
@@ -86,8 +106,11 @@ internal class StartupViewModel(
                     prepared = current.value.prepared,
                     permissionCompleted = current.value.permissionCompleted,
                     consentCompleted = current.value.consentCompleted,
+                    newUserFlow = if (resolveNewUserFlow == null) false else null,
+                    retentionAllowed = if (resolveRetention == null) false else null,
                 )
-        }
+        } else current.value = current.value.copy(newUserFlow = if (resolveNewUserFlow == null) false else null,
+            retentionAllowed = if (resolveRetention == null) false else null)
     }
 
     private fun saveNotification(notification: NotificationClickContext?) {
@@ -112,6 +135,12 @@ internal class StartupViewModel(
         NotificationClickContext.create(saved["startup.notification.origin"], saved["startup.notification.title"],
             saved["startup.notification.text"], saved["startup.notification.background"] ?: true,
             saved["startup.notification.trigger_source"]),
+        launcher = saved[LAUNCHER] ?: false,
+        uninstallRetention = saved[RETENTION] ?: false,
+        scene = saved.get<Int>("startup.scene.code")?.let { code ->
+            io.docview.push.scene.SceneLandingData(code, saved.get<String>("startup.scene.reference").orEmpty(),
+                saved["startup.scene.time"] ?: 0, saved["startup.scene.percent"], saved["startup.scene.duration"])
+        },
     )
 
     fun permissionFinished() {
@@ -204,6 +233,22 @@ internal class StartupViewModel(
 
     fun consume(): StartupEntry? {
         if (cleared || !current.value.ready || current.value.consumed) return null
+        // 仅真实桌面入口有资格；通知和热启动保持原业务路由。开屏结束后读取远程参数，
+        // 不在广告展示时启动设备扫描，也不让磁盘/配置读取阻塞主线程。
+        if (current.value.newUserFlow == null || current.value.retentionAllowed == null) {
+            if (routeJob?.isActive != true) routeJob = viewModelScope.launch {
+                val target = entry()
+                val retention = try { target.uninstallRetention && resolveRetention?.invoke() == true }
+                catch (cancelled: CancellationException) { throw cancelled }
+                catch (_: Exception) { false }
+                val enabled = try {
+                    !target.uninstallRetention && target.launcher && !target.hotStart && target.previewMode == null && resolveNewUserFlow?.invoke() == true
+                } catch (cancelled: CancellationException) { throw cancelled }
+                catch (_: Exception) { false } // 持久化状态无法读取时不重复触发首次引导。
+                current.value = current.value.copy(newUserFlow = enabled, retentionAllowed = retention)
+            }
+            return null
+        }
         saved[CONSUMED] = true
         current.value = current.value.copy(consumed = true)
         return entry()
@@ -215,6 +260,7 @@ internal class StartupViewModel(
         adStartedAt = null
         minimumStayJob?.cancel()
         offlineJob?.cancel()
+        routeJob?.cancel()
     }
 
     private companion object {
@@ -223,6 +269,8 @@ internal class StartupViewModel(
         const val DESTINATION = "startup.destination"
         const val PREVIEW = "startup.preview"
         const val HOT_START = "startup.hot"
+        const val LAUNCHER = "startup.launcher"
+        const val RETENTION = "startup.retention"
         const val CONSUMED = "startup.consumed"
     }
 }

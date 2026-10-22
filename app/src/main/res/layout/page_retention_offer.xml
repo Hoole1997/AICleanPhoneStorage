@@ -1,0 +1,39 @@
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/offerScroll" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:scrollbars="none" android:clipToPadding="false" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+        <!-- 英文为插画原有内容；原始图片与透明渐变蒙版在开发时合成，不以整页截图替代 UI。 -->
+        <ImageView android:id="@+id/hero" android:layout_width="match_parent" android:layout_height="330dp"
+            android:src="@drawable/retention_hero" android:scaleType="fitXY" android:importantForAccessibility="no"
+            android:contentDescription="@null" />
+        <LinearLayout android:id="@+id/offerContent" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:paddingHorizontal="@dimen/retention_gutter" android:paddingBottom="32dp">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="@string/retention_before" android:textSize="18sp" android:fontFamily="sans-serif-medium"
+                android:textColor="@color/retention_text" android:id="@+id/offerHeading" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="6dp" android:layout_marginBottom="16dp" android:text="@string/retention_loss"
+                android:textSize="14sp" android:textColor="#666666" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:baselineAligned="false">
+                <include android:id="@+id/junk" layout="@layout/item_retention_feature" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" />
+                <Space android:layout_width="11dp" android:layout_height="1dp" />
+                <include android:id="@+id/malware" layout="@layout/item_retention_feature" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" />
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:orientation="horizontal" android:baselineAligned="false">
+                <include android:id="@+id/similar" layout="@layout/item_retention_feature" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" />
+                <Space android:layout_width="11dp" android:layout_height="1dp" />
+                <include android:id="@+id/screenshots" layout="@layout/item_retention_feature" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" />
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:orientation="horizontal" android:baselineAligned="false">
+                <include android:id="@+id/large" layout="@layout/item_retention_feature" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" />
+                <Space android:layout_width="11dp" android:layout_height="1dp" />
+                <include android:id="@+id/notifications" layout="@layout/item_retention_feature" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" />
+            </LinearLayout>
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp"
+                android:text="@string/retention_more" android:textColor="#666666" android:textSize="12sp" android:gravity="center" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/offerKeep" style="@style/Retention.Primary"
+                android:layout_marginTop="50dp" android:text="@string/retention_keep" />
+            <TextView android:id="@+id/uninstallAnyway" style="@style/Retention.Link" android:text="@string/retention_anyway" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -14,6 +14,7 @@ internal class BatteryEntryCoordinator(
     private val model: BatteryEntryViewModel,
     private val transfer: OneShotTransfer<BatterySnapshot>,
     // 功能页真正打开后回调（首页据此隐藏当日入口角标）；授权拒绝、取消或失败均不回调。
+    private val decorateIntent: (Intent) -> Unit = {},
     private val onOpened: () -> Unit = {},
 ) {
     init {
@@ -50,6 +51,7 @@ internal class BatteryEntryCoordinator(
                     activity.startActivity(
                         Intent(activity, BatteryInfoActivity::class.java)
                             .putExtra(BatteryInfoActivity.EXTRA_SNAPSHOT, transfer.put(it))
+                            .apply(decorateIntent)
                     )
                     onOpened()
                 }
