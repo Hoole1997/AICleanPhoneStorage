@@ -20,3 +20,7 @@
 `new-user-verification/` 的布局截图由 Android 原生 View 在真机绘制，固定样例仅存在于 androidTest；生产页面读取真实系统数据。系统状态栏保留空间，未伪造时间/信号图标。实际 Activity 截图另见 `emulator/`。
 
 未点击真实广告，也未把接线测试视为线上填充验证。`new_user_start_clean` 的实际展示仍取决于广告后台配置、频控和填充。
+
+## 2026-10-22 Boolean 参数纠正
+
+用户确认 new_user_flow_config 本身是 Boolean。已删除 JSON 解析及对应旧测试，改用 SDK getBoolean，保留未配置默认 true。上文严格 JSON 验证属于历史实现。当前回归见 [Boolean 参数验证](boolean-config.md)。

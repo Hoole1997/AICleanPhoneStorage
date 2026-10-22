@@ -64,7 +64,7 @@
 
 - 用户于 2026-10-16 要求通知点击进入启动页即上报 Notific_Enter，不等待权限、广告或首页；Notific_Click 与 Notific_Enter 共用点击快照并配对上报。启动页优先消费，直接进入首页时才由首页兜底，同一次点击跨页、重建不重复；新的通知点击独立计数。
 
-- 用户于 2026-10-21 授权 v1.0.5 新用户流程，设备信息扫描使用独立 Activity，按 Figma 7121:9029 / 7121:9151 实现。沿用开屏广告，扫描真实设备字段与初始化现有扫描模块，不遍历文件；点击 Start Clean 后请求一次 new_user_start_clean 插屏再进入首页。new_user_flow_config.enabled 为 Boolean，缺失/错误默认 true。用户明确选择需求 1.1.5：开屏/扫描阶段退出后重走，进入插屏阶段后退出不重走；覆盖文档 1.1.4 的冲突规则。
+- 用户于 2026-10-21 授权 v1.0.5 新用户流程，设备信息扫描使用独立 Activity，按 Figma 7121:9029 / 7121:9151 实现。沿用开屏广告，扫描真实设备字段与初始化现有扫描模块，不遍历文件；点击 Start Clean 后请求一次 new_user_start_clean 插屏再进入首页。new_user_flow_config 本身为 Boolean（用户 2026-10-22 纠正文档），通过 ConfigRemoteManager.getBoolean 读取；没有 enabled 子字段，未配置/读取失败默认 true。用户明确选择需求 1.1.5：开屏/扫描阶段退出后重走，进入插屏阶段后退出不重走；覆盖文档 1.1.4 的冲突规则。
 
 - 用户授权 v1.0.5 卸载挽留：桌面长按入口必须通过代码动态配置，使用 uninstall_retention_config 的 paid.enabled 开关（默认 true）；仅买量用户，不使用静态 shortcuts.xml。界面使用独立 Activity + XML，对应 Figma 7121:9431 / 7121:9276 / 7121:9376。入口经过现有开屏；Uninstall Anyway 经过 uninstall_anyway 插屏再到原因页；最终卸载由系统确认，不接管系统原生卸载按钮。原因选项和输入仅本地交互，不上传；用户已确认将贷款相关理由和产品名称替换为清理产品文案。
 
@@ -99,3 +99,5 @@
 - 用户于 2026-10-22 在需求核对后明确：充电开始防抖改为 1 分钟，覆盖此前保留旧防抖的规则。新场景与旧日龄通知按钮都需要明显的呼吸/水波纹，不必受原文档效果限制；采用 XML 原生动画，保留单向扫光、原图图标，文字和点击区域稳定。仅更新旧通知按钮背景，不修改旧推送的触发、频控、ID、点击路由和循环策略；减少动效/省电/灭屏保留静态方案。
 
 - 用户于 2026-10-22 埋点原表核对后明确改为上报卸载原因和 Other 原文，覆盖此前不上传的要求。仅原因页底部 Keep/Uninstall 点击时发送 uninstall_reason_click，携带 action、reason、has_other_content；三者均为 String。未选择为 reason=none，Other 才带输入原文（既有 500 字符上限），非 Other/空输入为空串。编辑、选中、曝光和返回不提交反馈。现有清理效果问题与卡顿归 poor_user_experience，缺少功能归 unmet_needs，不伪造页面没有的 found_similar_app；沿用统一上报接口，自有诊断日志不复制正文。
+
+- 用户于 2026-10-22 纠正新用户流程配置：new_user_flow_config 是直接 Boolean 值，移除 JSON 解析/兼容分支，使用当前 SDK 实际提供的 ConfigRemoteManager.getBoolean（用户称 getBool）。保留默认 true；与首页 Boolean 开关一致，避免将未下发的静态 false 误认为显式关闭。

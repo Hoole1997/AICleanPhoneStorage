@@ -17,12 +17,6 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class NewUserFlowTest {
-    @Test fun onlyStrictBooleanFalseDisablesFlow() {
-        listOf(null, "", "broken", "[]", "null", "{}", "{enabled:false}", "{\"enabled\":false} trailing", "{\"enabled\":null}", "{\"enabled\":0}",
-            "{\"enabled\":\"false\"}", "{\"enabled\":true}").forEach { assertTrue(it, NewUserFlowConfig.parse(it)) }
-        assertFalse(NewUserFlowConfig.parse("{\"enabled\":false}"))
-    }
-
     @Test fun actualCompletionUnknownAndEngineRetryHaveSingleTelemetry() = runTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         val retained = ViewModelStore()

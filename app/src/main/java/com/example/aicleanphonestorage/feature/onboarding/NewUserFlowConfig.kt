@@ -1,34 +1,27 @@
 package com.example.aicleanphonestorage.feature.onboarding
 
-import com.google.gson.JsonParser
-import com.google.gson.Strictness
-import com.google.gson.stream.JsonReader
-import com.google.gson.stream.JsonToken
-import java.io.StringReader
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.corekit.core.utils.ConfigRemoteManager
 
-/** 只在开屏结束后的路由边界读取一次。缺失、拉取失败和类型错误均开启，严格保留显式 false。 */
+/** 开屏结束后读取单个 Boolean 参数；未配置/不可用默认开启，不再接受 JSON 对象协议。 */
 internal object NewUserFlowConfig {
     const val KEY = "new_user_flow_config"
+    private const val DEFAULT_ENABLED = true
 
-    suspend fun enabled(): Boolean = withContext(Dispatchers.IO) {
-        try {
-            if (!ConfigRemoteManager.isInitialized()) true
-            else parse(ConfigRemoteManager.getString(KEY, ""))
-        } catch (cancelled: CancellationException) { throw cancelled }
-        catch (_: Exception) { true }
+    // 只注入远程读取边界，默认值与取消语义仍由真实入口处理；不持有页面或启动轮询。
+    suspend fun enabled(readRemote: suspend () -> Boolean? = ::remoteBoolean): Boolean = withContext(Dispatchers.IO) {
+        try { readRemote() ?: DEFAULT_ENABLED }
+        catch (cancelled: CancellationException) { throw cancelled }
+        catch (_: Exception) { DEFAULT_ENABLED }
     }
 
-    fun parse(raw: String?): Boolean = try {
-        val reader = JsonReader(StringReader(raw.orEmpty())).apply { strictness = Strictness.STRICT }
-        val value = reader.use {
-            val root = JsonParser.parseReader(it).asJsonObject
-            check(it.peek() == JsonToken.END_DOCUMENT)
-            root.get("enabled")
-        }
-        if (value?.isJsonPrimitive == true && value.asJsonPrimitive.isBoolean) value.asBoolean else true
-    } catch (_: Exception) { true }
+    private suspend fun remoteBoolean(): Boolean? {
+        if (!ConfigRemoteManager.isInitialized()) return null
+        // 与首页 Boolean 开关一致：SDK 对未下发参数会返回静态 false，而非传入默认值。
+        // getString 仅判断参数存在，不解析内容；真正的开关值完全由 getBoolean 读取。
+        if (ConfigRemoteManager.getString(KEY, "").isNullOrEmpty()) return null
+        return ConfigRemoteManager.getBoolean(KEY, DEFAULT_ENABLED)
+    }
 }
