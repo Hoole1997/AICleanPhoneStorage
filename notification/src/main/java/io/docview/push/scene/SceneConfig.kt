@@ -6,6 +6,7 @@ import com.google.gson.Strictness
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import java.io.StringReader
+import io.docview.push.config.PushContentLanguage
 
 internal object SceneConfig {
     const val MAX_JSON = 262_144
@@ -35,8 +36,10 @@ internal object SceneConfig {
 internal data class SceneCopy(val id: String, val text: String, val button: String,
     val condition: String = "any", val translations: Map<String, SceneCopyText> = emptyMap()) {
     fun text(language: String): SceneCopyText {
-        val tag = language.replace('_', '-').lowercase()
-        return translations[tag] ?: translations[tag.substringBefore('-')] ?: SceneCopyText(text, button)
+        // 与日龄推送共用地区匹配：例如 es→es-MX、hi→hi-IN；精确 es-ES 仍优先。
+        // 只选择当前语言，不改变本场景文案游标，不改动旧推送的实现或数据。
+        return PushContentLanguage.candidates(language).firstNotNullOfOrNull { translations[it.lowercase()] }
+            ?: SceneCopyText(text, button)
     }
     fun applies(event: SceneEvent) = when (condition) {
         "any" -> true

@@ -43,6 +43,45 @@ class ScenePolicyTest {
         assertEquals(listOf("1106_1", "1106_2", "1106_3", "1106_1"), actual)
         assertEquals("1106_1", SceneCopies.select(copies, "removed_id", event, "en")!!.id)
     }
+    @Test fun everyLocalCopyHasExactlyTheSevenD1RegionalTranslations() {
+        val d1 = SceneConfig.objectValue(asset("pushContentD1Json.json")).getAsJsonArray("contents")
+        val languages = d1.flatMap { it.asJsonObject.getAsJsonObject("translations").keySet() }
+            .map { it.lowercase() }.toSet()
+        assertEquals(setOf("pt-br", "es-mx", "es-es", "id-id", "hi-in", "ja-jp", "ko-kr"), languages)
+        val copies = SceneCopies.parse(asset("scene_push_content.json")).values.flatten()
+        assertEquals(27, copies.size)
+        for (copy in copies) {
+            assertEquals(copy.id, languages, copy.translations.keys)
+            for (text in copy.translations.values) {
+                assertTrue(copy.id, text.text.startsWith("<font color=\"#FB4949\"><b>"))
+                assertTrue(copy.id, text.text.contains("</b></font> "))
+                assertTrue(text.button.isNotBlank())
+                assertFalse(text.text.contains("{app_name}"))
+            }
+        }
+    }
+    @Test fun appLanguageAliasesResolveToD1RegionsAndUnsupportedLanguagesUseEnglish() {
+        val copy = SceneCopies.parse(asset("scene_push_content.json")).getValue(PushScene.CHARGE_START).first()
+        val cases = mapOf("pt" to "pt-br", "PT_br" to "pt-br", "es" to "es-mx", "es-AR" to "es-mx",
+            "es-ES" to "es-es", "id" to "id-id", "in_ID" to "id-id", "hi" to "hi-in", "ja" to "ja-jp", "ko" to "ko-kr")
+        cases.forEach { (input, expected) -> assertEquals(input, copy.translations.getValue(expected), copy.text(input)) }
+        for (tag in listOf("en", "en-US", "zh-Hans", "ar", "fr", "", "invalid-tag"))
+            assertEquals(tag, SceneCopyText(copy.text, copy.button), copy.text(tag))
+    }
+    @Test fun remoteTranslationPreferenceAndLanguageSwitchKeepExistingCopyRotation() {
+        val remote = """{"1101":[{"id":"custom","text":"English","buttonText":"View","translations":{"es":{"text":"General","buttonText":"Ver"},"es-MX":{"text":"México","buttonText":"Ver"},"es-ES":{"text":"España","buttonText":"Ver"},"ja-JP":{"text":"broken"}}}]}"""
+        val custom = SceneCopies.parse(remote).getValue(PushScene.CHARGE_START).single()
+        assertEquals("España", custom.text("es-ES").text)
+        assertEquals("México", custom.text("es-MX").text)
+        assertEquals("General", custom.text("es-AR").text)
+        assertEquals("English", custom.text("ja").text)
+        val copies = SceneCopies.parse(asset("scene_push_content.json")).getValue(PushScene.CHARGE_START)
+        val event = SceneEvent(PushScene.CHARGE_START, 1, 1, charging = true, plugged = true)
+        val first = requireNotNull(SceneCopies.select(copies, "", event, "en"))
+        val next = requireNotNull(SceneCopies.select(copies, first.id, event, "ja"))
+        assertEquals("1101_2", next.id)
+        assertEquals(copies[1].translations.getValue("ja-jp"), next.text)
+    }
     @Test fun unsafeOrOversizedHtmlIsRejectedAndMissingVariablesAreSkipped() {
         val raw = """{"1106":[{"id":"variable","text":"<b>{app_name}</b> Check safety.","buttonText":"Check"},{"id":"fallback","text":"<b>New app!</b> Review safety.","buttonText":"Review"},{"id":"bad","text":"<script>x</script> Hi","buttonText":"View"}]}"""
         val copies = SceneCopies.parse(raw).getValue(PushScene.APP_INSTALL)

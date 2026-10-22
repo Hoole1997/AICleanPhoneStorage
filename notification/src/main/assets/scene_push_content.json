@@ -4,19 +4,109 @@
       "id": "1101_1",
       "buttonText": "View",
       "condition": "charging",
-      "text": "<font color=\"#FB4949\"><b>Charging started!</b></font> View status."
+      "text": "<font color=\"#FB4949\"><b>Charging started!</b></font> View status.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Carregamento iniciado!</b></font> Veja o status.",
+          "buttonText": "Ver"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Comenzó la carga!</b></font> Revisa el estado.",
+          "buttonText": "Ver"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Carga iniciada!</b></font> Consulta el estado.",
+          "buttonText": "Ver"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Pengisian daya dimulai!</b></font> Lihat status.",
+          "buttonText": "Lihat"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>चार्जिंग शुरू हो गई!</b></font> स्थिति देखें।",
+          "buttonText": "देखें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>充電を開始しました！</b></font> 状態を確認しましょう。",
+          "buttonText": "表示"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>충전을 시작했어요!</b></font> 상태를 확인하세요.",
+          "buttonText": "보기"
+        }
+      }
     },
     {
       "id": "1101_2",
       "buttonText": "View",
       "condition": "connected",
-      "text": "<font color=\"#FB4949\"><b>Power connected!</b></font> See status."
+      "text": "<font color=\"#FB4949\"><b>Power connected!</b></font> See status.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Carregador conectado!</b></font> Veja o status.",
+          "buttonText": "Ver"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Cargador conectado!</b></font> Revisa el estado.",
+          "buttonText": "Ver"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Cargador conectado!</b></font> Consulta el estado.",
+          "buttonText": "Ver"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Pengisi daya terhubung!</b></font> Lihat status.",
+          "buttonText": "Lihat"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>चार्जर जुड़ गया!</b></font> स्थिति देखें।",
+          "buttonText": "देखें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>電源に接続しました！</b></font> 状態を確認しましょう。",
+          "buttonText": "表示"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>전원이 연결됐어요!</b></font> 상태를 확인하세요.",
+          "buttonText": "보기"
+        }
+      }
     },
     {
       "id": "1101_3",
       "buttonText": "Check",
       "condition": "charging",
-      "text": "<font color=\"#FB4949\"><b>Charging now!</b></font> Check status."
+      "text": "<font color=\"#FB4949\"><b>Charging now!</b></font> Check status.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Carregando agora!</b></font> Confira o status.",
+          "buttonText": "Verificar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Cargando ahora!</b></font> Revisa el estado.",
+          "buttonText": "Revisar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Cargando ahora!</b></font> Comprueba el estado.",
+          "buttonText": "Comprobar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Sedang mengisi daya!</b></font> Periksa status.",
+          "buttonText": "Periksa"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>अभी चार्ज हो रहा है!</b></font> स्थिति जाँचें।",
+          "buttonText": "जाँचें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>充電中です！</b></font> 状態を確認しましょう。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>지금 충전 중이에요!</b></font> 상태를 확인하세요.",
+          "buttonText": "확인"
+        }
+      }
     }
   ],
   "1102": [
@@ -24,37 +114,217 @@
       "id": "1102_1",
       "buttonText": "Check",
       "condition": "full",
-      "text": "<font color=\"#FB4949\"><b>Fully charged!</b></font> Check health."
+      "text": "<font color=\"#FB4949\"><b>Fully charged!</b></font> Check health.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Carga completa!</b></font> Confira a saúde da bateria.",
+          "buttonText": "Verificar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Carga completa!</b></font> Revisa la salud de la batería.",
+          "buttonText": "Revisar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Carga completa!</b></font> Comprueba la salud de la batería.",
+          "buttonText": "Comprobar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Daya terisi penuh!</b></font> Periksa kesehatan baterai.",
+          "buttonText": "Periksa"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>चार्जिंग पूरी हो गई!</b></font> बैटरी की सेहत जाँचें।",
+          "buttonText": "जाँचें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>充電が完了しました！</b></font> バッテリーの健康状態を確認。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>충전이 완료됐어요!</b></font> 배터리 건강 상태를 확인하세요.",
+          "buttonText": "확인"
+        }
+      }
     },
     {
       "id": "1102_2",
       "buttonText": "View",
       "condition": "full",
-      "text": "<font color=\"#FB4949\"><b>Battery full!</b></font> View health."
+      "text": "<font color=\"#FB4949\"><b>Battery full!</b></font> View health.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Bateria cheia!</b></font> Veja a saúde da bateria.",
+          "buttonText": "Ver"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Batería llena!</b></font> Ve la salud de la batería.",
+          "buttonText": "Ver"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Batería llena!</b></font> Consulta la salud de la batería.",
+          "buttonText": "Ver"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Baterai penuh!</b></font> Lihat kesehatan baterai.",
+          "buttonText": "Lihat"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>बैटरी पूरी चार्ज है!</b></font> बैटरी की सेहत देखें।",
+          "buttonText": "देखें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>バッテリーが満充電です！</b></font> バッテリーの健康状態を表示。",
+          "buttonText": "表示"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>배터리가 가득 찼어요!</b></font> 배터리 건강 상태를 보세요.",
+          "buttonText": "보기"
+        }
+      }
     },
     {
       "id": "1102_3",
       "buttonText": "Check",
       "condition": "full",
-      "text": "<font color=\"#FB4949\"><b>Charging done!</b></font> Check health."
+      "text": "<font color=\"#FB4949\"><b>Charging done!</b></font> Check health.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Carregamento concluído!</b></font> Confira a saúde da bateria.",
+          "buttonText": "Verificar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Carga finalizada!</b></font> Revisa la salud de la batería.",
+          "buttonText": "Revisar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Carga finalizada!</b></font> Comprueba la salud de la batería.",
+          "buttonText": "Comprobar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Pengisian daya selesai!</b></font> Periksa kesehatan baterai.",
+          "buttonText": "Periksa"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>चार्जिंग पूरी हुई!</b></font> बैटरी की सेहत जाँचें।",
+          "buttonText": "जाँचें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>充電完了！</b></font> バッテリーの健康状態を確認。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>충전 완료!</b></font> 배터리 건강 상태를 확인하세요.",
+          "buttonText": "확인"
+        }
+      }
     },
     {
       "id": "1102_4",
       "buttonText": "View",
       "condition": "not_full",
-      "text": "<font color=\"#FB4949\"><b>Charging ended!</b></font> View status."
+      "text": "<font color=\"#FB4949\"><b>Charging ended!</b></font> View status.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Carregamento encerrado!</b></font> Veja o status.",
+          "buttonText": "Ver"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Terminó la carga!</b></font> Revisa el estado.",
+          "buttonText": "Ver"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡La carga ha terminado!</b></font> Consulta el estado.",
+          "buttonText": "Ver"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Pengisian daya berakhir!</b></font> Lihat status.",
+          "buttonText": "Lihat"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>चार्जिंग समाप्त हो गई!</b></font> स्थिति देखें।",
+          "buttonText": "देखें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>充電が終了しました！</b></font> 状態を確認しましょう。",
+          "buttonText": "表示"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>충전이 종료됐어요!</b></font> 상태를 확인하세요.",
+          "buttonText": "보기"
+        }
+      }
     },
     {
       "id": "1102_5",
       "buttonText": "View",
       "condition": "not_full_unplugged",
-      "text": "<font color=\"#FB4949\"><b>Power disconnected!</b></font> See status."
+      "text": "<font color=\"#FB4949\"><b>Power disconnected!</b></font> See status.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Carregador desconectado!</b></font> Veja o status.",
+          "buttonText": "Ver"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Cargador desconectado!</b></font> Revisa el estado.",
+          "buttonText": "Ver"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Cargador desconectado!</b></font> Consulta el estado.",
+          "buttonText": "Ver"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Pengisi daya dicabut!</b></font> Lihat status.",
+          "buttonText": "Lihat"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>चार्जर हट गया!</b></font> स्थिति देखें।",
+          "buttonText": "देखें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>電源が切断されました！</b></font> 状態を確認しましょう。",
+          "buttonText": "表示"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>전원 연결이 해제됐어요!</b></font> 상태를 확인하세요.",
+          "buttonText": "보기"
+        }
+      }
     },
     {
       "id": "1102_6",
       "buttonText": "Check",
       "condition": "not_full",
-      "text": "<font color=\"#FB4949\"><b>Charging stopped!</b></font> Check status."
+      "text": "<font color=\"#FB4949\"><b>Charging stopped!</b></font> Check status.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Carregamento interrompido!</b></font> Confira o status.",
+          "buttonText": "Verificar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Carga detenida!</b></font> Revisa el estado.",
+          "buttonText": "Revisar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Carga detenida!</b></font> Comprueba el estado.",
+          "buttonText": "Comprobar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Pengisian daya terhenti!</b></font> Periksa status.",
+          "buttonText": "Periksa"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>चार्जिंग रुक गई!</b></font> स्थिति जाँचें।",
+          "buttonText": "जाँचें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>充電が停止しました！</b></font> 状態を確認しましょう。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>충전이 중지됐어요!</b></font> 상태를 확인하세요.",
+          "buttonText": "확인"
+        }
+      }
     }
   ],
   "1103": [
@@ -62,19 +332,109 @@
       "id": "1103_1",
       "buttonText": "Save",
       "condition": "any",
-      "text": "<font color=\"#FB4949\"><b>Battery low!</b></font> Save power."
+      "text": "<font color=\"#FB4949\"><b>Battery low!</b></font> Save power.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Bateria fraca!</b></font> Economize energia.",
+          "buttonText": "Economizar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Batería baja!</b></font> Ahorra energía.",
+          "buttonText": "Ahorrar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Batería baja!</b></font> Ahorra energía.",
+          "buttonText": "Ahorrar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Baterai lemah!</b></font> Hemat daya.",
+          "buttonText": "Hemat"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>बैटरी कम है!</b></font> बिजली बचाएँ।",
+          "buttonText": "बचाएँ"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>バッテリー残量が少なめです！</b></font> 節電しましょう。",
+          "buttonText": "節電"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>배터리가 부족해요!</b></font> 전력을 절약하세요.",
+          "buttonText": "절전"
+        }
+      }
     },
     {
       "id": "1103_2",
       "buttonText": "Save",
       "condition": "percent_20",
-      "text": "<font color=\"#FB4949\"><b>Only 20% left!</b></font> Save power."
+      "text": "<font color=\"#FB4949\"><b>Only 20% left!</b></font> Save power.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Só restam 20%!</b></font> Economize energia.",
+          "buttonText": "Economizar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Solo queda un 20%!</b></font> Ahorra energía.",
+          "buttonText": "Ahorrar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Solo queda un 20%!</b></font> Ahorra energía.",
+          "buttonText": "Ahorrar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Tersisa 20%!</b></font> Hemat daya.",
+          "buttonText": "Hemat"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>सिर्फ़ 20% बचा है!</b></font> बिजली बचाएँ।",
+          "buttonText": "बचाएँ"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>残り20%です！</b></font> 節電しましょう。",
+          "buttonText": "節電"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>20%만 남았어요!</b></font> 전력을 절약하세요.",
+          "buttonText": "절전"
+        }
+      }
     },
     {
       "id": "1103_3",
       "buttonText": "Save",
       "condition": "critical",
-      "text": "<font color=\"#FB4949\"><b>Battery critical!</b></font> Save power."
+      "text": "<font color=\"#FB4949\"><b>Battery critical!</b></font> Save power.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Bateria crítica!</b></font> Economize energia.",
+          "buttonText": "Economizar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Batería crítica!</b></font> Ahorra energía.",
+          "buttonText": "Ahorrar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Batería crítica!</b></font> Ahorra energía.",
+          "buttonText": "Ahorrar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Baterai kritis!</b></font> Hemat daya.",
+          "buttonText": "Hemat"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>बैटरी बहुत कम है!</b></font> बिजली बचाएँ।",
+          "buttonText": "बचाएँ"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>バッテリー残量がわずかです！</b></font> 節電しましょう。",
+          "buttonText": "節電"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>배터리가 매우 부족해요!</b></font> 전력을 절약하세요.",
+          "buttonText": "절전"
+        }
+      }
     }
   ],
   "1104": [
@@ -82,19 +442,109 @@
       "id": "1104_1",
       "buttonText": "Test",
       "condition": "any",
-      "text": "<font color=\"#FB4949\"><b>Network changed!</b></font> Test speed."
+      "text": "<font color=\"#FB4949\"><b>Network changed!</b></font> Test speed.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>A rede mudou!</b></font> Teste a velocidade.",
+          "buttonText": "Testar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Cambió la red!</b></font> Prueba la velocidad.",
+          "buttonText": "Probar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡La red ha cambiado!</b></font> Prueba la velocidad.",
+          "buttonText": "Probar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Jaringan berubah!</b></font> Uji kecepatan.",
+          "buttonText": "Uji"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>नेटवर्क बदल गया!</b></font> स्पीड जाँचें।",
+          "buttonText": "जाँचें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>ネットワークが変わりました！</b></font> 速度を測定しましょう。",
+          "buttonText": "テスト"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>네트워크가 변경됐어요!</b></font> 속도를 테스트하세요.",
+          "buttonText": "테스트"
+        }
+      }
     },
     {
       "id": "1104_2",
       "buttonText": "Test",
       "condition": "mobile",
-      "text": "<font color=\"#FB4949\"><b>Mobile data on!</b></font> Test speed."
+      "text": "<font color=\"#FB4949\"><b>Mobile data on!</b></font> Test speed.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Dados móveis ativados!</b></font> Teste a velocidade.",
+          "buttonText": "Testar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Datos móviles activados!</b></font> Prueba la velocidad.",
+          "buttonText": "Probar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Datos móviles activados!</b></font> Prueba la velocidad.",
+          "buttonText": "Probar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Data seluler aktif!</b></font> Uji kecepatan.",
+          "buttonText": "Uji"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>मोबाइल डेटा चालू है!</b></font> स्पीड जाँचें।",
+          "buttonText": "जाँचें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>モバイルデータがオンです！</b></font> 速度を測定しましょう。",
+          "buttonText": "テスト"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>모바일 데이터가 켜졌어요!</b></font> 속도를 테스트하세요.",
+          "buttonText": "테스트"
+        }
+      }
     },
     {
       "id": "1104_3",
       "buttonText": "Test",
       "condition": "wifi",
-      "text": "<font color=\"#FB4949\"><b>New Network!</b></font> Test speed."
+      "text": "<font color=\"#FB4949\"><b>New Network!</b></font> Test speed.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Nova rede!</b></font> Teste a velocidade.",
+          "buttonText": "Testar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Nueva red!</b></font> Prueba la velocidad.",
+          "buttonText": "Probar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Nueva red!</b></font> Prueba la velocidad.",
+          "buttonText": "Probar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Jaringan baru!</b></font> Uji kecepatan.",
+          "buttonText": "Uji"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>नया नेटवर्क!</b></font> स्पीड जाँचें।",
+          "buttonText": "जाँचें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>新しいネットワークです！</b></font> 速度を測定しましょう。",
+          "buttonText": "テスト"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>새 네트워크예요!</b></font> 속도를 테스트하세요.",
+          "buttonText": "테스트"
+        }
+      }
     }
   ],
   "1105": [
@@ -102,19 +552,109 @@
       "id": "1105_1",
       "buttonText": "Clean",
       "condition": "any",
-      "text": "<font color=\"#FB4949\"><b>New screenshot!</b></font> Clean space."
+      "text": "<font color=\"#FB4949\"><b>New screenshot!</b></font> Clean space.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Nova captura de tela!</b></font> Libere espaço.",
+          "buttonText": "Limpar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Nueva captura de pantalla!</b></font> Libera espacio.",
+          "buttonText": "Limpiar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Nueva captura de pantalla!</b></font> Libera espacio.",
+          "buttonText": "Limpiar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Tangkapan layar baru!</b></font> Kosongkan ruang.",
+          "buttonText": "Bersihkan"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>नया स्क्रीनशॉट!</b></font> जगह खाली करें।",
+          "buttonText": "साफ़ करें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>新しいスクリーンショット！</b></font> 空き容量を増やしましょう。",
+          "buttonText": "クリーン"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>새 스크린샷이 있어요!</b></font> 공간을 확보하세요.",
+          "buttonText": "정리"
+        }
+      }
     },
     {
       "id": "1105_2",
       "buttonText": "Clean",
       "condition": "any",
-      "text": "<font color=\"#FB4949\"><b>Screenshot saved!</b></font> Clean up."
+      "text": "<font color=\"#FB4949\"><b>Screenshot saved!</b></font> Clean up.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Captura de tela salva!</b></font> Faça uma limpeza.",
+          "buttonText": "Limpar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Captura guardada!</b></font> Haz una limpieza.",
+          "buttonText": "Limpiar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Captura guardada!</b></font> Haz una limpieza.",
+          "buttonText": "Limpiar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Tangkapan layar tersimpan!</b></font> Bersihkan penyimpanan.",
+          "buttonText": "Bersihkan"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>स्क्रीनशॉट सेव हो गया!</b></font> सफ़ाई करें।",
+          "buttonText": "साफ़ करें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>スクリーンショットを保存！</b></font> 不要な画像を整理しましょう。",
+          "buttonText": "クリーン"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>스크린샷이 저장됐어요!</b></font> 불필요한 사진을 정리하세요.",
+          "buttonText": "정리"
+        }
+      }
     },
     {
       "id": "1105_3",
       "buttonText": "Clean",
       "condition": "any",
-      "text": "<font color=\"#FB4949\"><b>More screenshots!</b></font> Clean space."
+      "text": "<font color=\"#FB4949\"><b>More screenshots!</b></font> Clean space.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Mais capturas de tela!</b></font> Libere espaço.",
+          "buttonText": "Limpar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Más capturas de pantalla!</b></font> Libera espacio.",
+          "buttonText": "Limpiar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Más capturas de pantalla!</b></font> Libera espacio.",
+          "buttonText": "Limpiar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Tangkapan layar bertambah!</b></font> Kosongkan ruang.",
+          "buttonText": "Bersihkan"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>और स्क्रीनशॉट आए हैं!</b></font> जगह खाली करें।",
+          "buttonText": "साफ़ करें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>スクリーンショットが増えました！</b></font> 空き容量を増やしましょう。",
+          "buttonText": "クリーン"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>스크린샷이 늘었어요!</b></font> 공간을 확보하세요.",
+          "buttonText": "정리"
+        }
+      }
     }
   ],
   "1106": [
@@ -122,19 +662,109 @@
       "id": "1106_1",
       "buttonText": "Scan",
       "condition": "any",
-      "text": "<font color=\"#FB4949\"><b>New app installed!</b></font> Scan it."
+      "text": "<font color=\"#FB4949\"><b>New app installed!</b></font> Scan it.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Novo app instalado!</b></font> Faça uma análise.",
+          "buttonText": "Analisar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Nueva app instalada!</b></font> Escanéala.",
+          "buttonText": "Escanear"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Nueva aplicación instalada!</b></font> Escanéala.",
+          "buttonText": "Escanear"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Aplikasi baru terpasang!</b></font> Pindai aplikasi.",
+          "buttonText": "Pindai"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>नया ऐप इंस्टॉल हुआ!</b></font> इसे स्कैन करें।",
+          "buttonText": "स्कैन करें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>新しいアプリをインストール！</b></font> スキャンしましょう。",
+          "buttonText": "スキャン"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>새 앱이 설치됐어요!</b></font> 검사해 보세요.",
+          "buttonText": "검사"
+        }
+      }
     },
     {
       "id": "1106_2",
       "buttonText": "Check",
       "condition": "any",
-      "text": "<font color=\"#FB4949\"><b>App added!</b></font> Check safety."
+      "text": "<font color=\"#FB4949\"><b>App added!</b></font> Check safety.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>App adicionado!</b></font> Verifique a segurança.",
+          "buttonText": "Verificar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡App agregada!</b></font> Revisa su seguridad.",
+          "buttonText": "Revisar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Aplicación añadida!</b></font> Comprueba su seguridad.",
+          "buttonText": "Comprobar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Aplikasi ditambahkan!</b></font> Periksa keamanannya.",
+          "buttonText": "Periksa"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>ऐप जुड़ गया!</b></font> इसकी सुरक्षा जाँचें।",
+          "buttonText": "जाँचें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>アプリが追加されました！</b></font> 安全性を確認しましょう。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>앱이 추가됐어요!</b></font> 안전성을 확인하세요.",
+          "buttonText": "확인"
+        }
+      }
     },
     {
       "id": "1106_3",
       "buttonText": "Review",
       "condition": "any",
-      "text": "<font color=\"#FB4949\"><b>New app!</b></font> Review safety."
+      "text": "<font color=\"#FB4949\"><b>New app!</b></font> Review safety.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Novo app!</b></font> Revise a segurança.",
+          "buttonText": "Revisar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Nueva app!</b></font> Revisa su seguridad.",
+          "buttonText": "Revisar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Nueva aplicación!</b></font> Revisa su seguridad.",
+          "buttonText": "Revisar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Aplikasi baru!</b></font> Tinjau keamanannya.",
+          "buttonText": "Tinjau"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>नया ऐप!</b></font> इसकी सुरक्षा देखें।",
+          "buttonText": "जाँचें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>新しいアプリです！</b></font> 安全性を確認しましょう。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>새 앱이 있어요!</b></font> 안전성을 검토하세요.",
+          "buttonText": "검토"
+        }
+      }
     }
   ],
   "1107": [
@@ -142,19 +772,109 @@
       "id": "1107_1",
       "buttonText": "Clean",
       "condition": "any",
-      "text": "<font color=\"#FB4949\"><b>App deleted!</b></font> Clean junk."
+      "text": "<font color=\"#FB4949\"><b>App deleted!</b></font> Clean junk.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>App excluído!</b></font> Limpe arquivos desnecessários.",
+          "buttonText": "Limpar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡App eliminada!</b></font> Limpia archivos basura.",
+          "buttonText": "Limpiar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Aplicación eliminada!</b></font> Limpia archivos basura.",
+          "buttonText": "Limpiar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Aplikasi dihapus!</b></font> Bersihkan file sampah.",
+          "buttonText": "Bersihkan"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>ऐप मिटा दिया गया!</b></font> बेकार फ़ाइलें साफ़ करें।",
+          "buttonText": "साफ़ करें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>アプリが削除されました！</b></font> 不要なファイルを整理しましょう。",
+          "buttonText": "クリーン"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>앱이 삭제됐어요!</b></font> 불필요한 파일을 정리하세요.",
+          "buttonText": "정리"
+        }
+      }
     },
     {
       "id": "1107_2",
       "buttonText": "Clean",
       "condition": "any",
-      "text": "<font color=\"#FB4949\"><b>App removed!</b></font> Clean junk."
+      "text": "<font color=\"#FB4949\"><b>App removed!</b></font> Clean junk.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>App removido!</b></font> Limpe arquivos desnecessários.",
+          "buttonText": "Limpar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡App desinstalada!</b></font> Limpia archivos basura.",
+          "buttonText": "Limpiar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Aplicación desinstalada!</b></font> Limpia archivos basura.",
+          "buttonText": "Limpiar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Aplikasi dicopot!</b></font> Bersihkan file sampah.",
+          "buttonText": "Bersihkan"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>ऐप हटा दिया गया!</b></font> बेकार फ़ाइलें साफ़ करें।",
+          "buttonText": "साफ़ करें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>アプリがアンインストールされました！</b></font> 不要なファイルを整理しましょう。",
+          "buttonText": "クリーン"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>앱이 제거됐어요!</b></font> 불필요한 파일을 정리하세요.",
+          "buttonText": "정리"
+        }
+      }
     },
     {
       "id": "1107_3",
       "buttonText": "Clear",
       "condition": "any",
-      "text": "<font color=\"#FB4949\"><b>App gone!</b></font> Clear junk."
+      "text": "<font color=\"#FB4949\"><b>App gone!</b></font> Clear junk.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>App desinstalado!</b></font> Remova arquivos desnecessários.",
+          "buttonText": "Limpar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡La app ya no está!</b></font> Borra archivos basura.",
+          "buttonText": "Limpiar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡La aplicación ya no está!</b></font> Borra archivos basura.",
+          "buttonText": "Limpiar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Aplikasi sudah dihapus!</b></font> Hapus file sampah.",
+          "buttonText": "Bersihkan"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>ऐप अनइंस्टॉल हो गया!</b></font> बेकार फ़ाइलें हटाएँ।",
+          "buttonText": "साफ़ करें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>アプリをアンインストール！</b></font> 不要なファイルを削除しましょう。",
+          "buttonText": "削除"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>앱이 삭제되었어요!</b></font> 불필요한 파일을 지우세요.",
+          "buttonText": "정리"
+        }
+      }
     }
   ],
   "1108": [
@@ -162,19 +882,109 @@
       "id": "1108_1",
       "buttonText": "Manage",
       "condition": "any",
-      "text": "<font color=\"#FB4949\"><b>New download!</b></font> Manage files."
+      "text": "<font color=\"#FB4949\"><b>New download!</b></font> Manage files.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Novo download!</b></font> Gerencie seus arquivos.",
+          "buttonText": "Gerenciar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Nueva descarga!</b></font> Gestiona tus archivos.",
+          "buttonText": "Gestionar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Nueva descarga!</b></font> Gestiona tus archivos.",
+          "buttonText": "Gestionar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Unduhan baru!</b></font> Kelola file.",
+          "buttonText": "Kelola"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>नया डाउनलोड!</b></font> फ़ाइलें प्रबंधित करें।",
+          "buttonText": "प्रबंधित करें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>新しいダウンロード！</b></font> ファイルを管理しましょう。",
+          "buttonText": "管理"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>새 다운로드가 있어요!</b></font> 파일을 관리하세요.",
+          "buttonText": "관리"
+        }
+      }
     },
     {
       "id": "1108_2",
       "buttonText": "Check",
       "condition": "any",
-      "text": "<font color=\"#FB4949\"><b>Download saved!</b></font> Check files."
+      "text": "<font color=\"#FB4949\"><b>Download saved!</b></font> Check files.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Download salvo!</b></font> Verifique seus arquivos.",
+          "buttonText": "Verificar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Descarga guardada!</b></font> Revisa tus archivos.",
+          "buttonText": "Revisar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Descarga guardada!</b></font> Comprueba tus archivos.",
+          "buttonText": "Comprobar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>Unduhan tersimpan!</b></font> Periksa file.",
+          "buttonText": "Periksa"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>डाउनलोड सेव हो गया!</b></font> फ़ाइलें जाँचें।",
+          "buttonText": "जाँचें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>ダウンロードを保存！</b></font> ファイルを確認しましょう。",
+          "buttonText": "確認"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>다운로드가 저장됐어요!</b></font> 파일을 확인하세요.",
+          "buttonText": "확인"
+        }
+      }
     },
     {
       "id": "1108_3",
       "buttonText": "Manage",
       "condition": "any",
-      "text": "<font color=\"#FB4949\"><b>New file saved!</b></font> Manage files."
+      "text": "<font color=\"#FB4949\"><b>New file saved!</b></font> Manage files.",
+      "translations": {
+        "pt-BR": {
+          "text": "<font color=\"#FB4949\"><b>Novo arquivo salvo!</b></font> Gerencie seus arquivos.",
+          "buttonText": "Gerenciar"
+        },
+        "es-MX": {
+          "text": "<font color=\"#FB4949\"><b>¡Nuevo archivo guardado!</b></font> Gestiona tus archivos.",
+          "buttonText": "Gestionar"
+        },
+        "es-ES": {
+          "text": "<font color=\"#FB4949\"><b>¡Nuevo archivo guardado!</b></font> Gestiona tus archivos.",
+          "buttonText": "Gestionar"
+        },
+        "id-ID": {
+          "text": "<font color=\"#FB4949\"><b>File baru tersimpan!</b></font> Kelola file.",
+          "buttonText": "Kelola"
+        },
+        "hi-IN": {
+          "text": "<font color=\"#FB4949\"><b>नई फ़ाइल सेव हो गई!</b></font> फ़ाइलें प्रबंधित करें।",
+          "buttonText": "प्रबंधित करें"
+        },
+        "ja-JP": {
+          "text": "<font color=\"#FB4949\"><b>新しいファイルを保存！</b></font> ファイルを管理しましょう。",
+          "buttonText": "管理"
+        },
+        "ko-KR": {
+          "text": "<font color=\"#FB4949\"><b>새 파일이 저장됐어요!</b></font> 파일을 관리하세요.",
+          "buttonText": "관리"
+        }
+      }
     }
   ]
 }

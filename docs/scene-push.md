@@ -57,11 +57,11 @@
 }
 ```
 
-间隔须为正整数分钟，缺失/错误回退 10；其他未配置场景保持开启。充电开始另有需求规定的 5 分钟防抖。用户在 Settings → Smart alerts 中可关闭全部或指定场景；远程开关与用户开关同时允许才启用。本页和落地提示覆盖项目 16 种语言。
+间隔须为正整数分钟，缺失/错误回退 10；其他未配置场景保持开启。充电开始防抖为用户最新确认的 1 分钟。用户在 Settings → Smart alerts 中可关闭全部或指定场景；远程开关与用户开关同时允许才启用。本页和落地提示覆盖项目 16 种语言。
 
 ### `scene_push_content`
 
-完整默认文案在 `notification/src/main/assets/scene_push_content.json`，八个场景原表文案加三条未充满结束文案，共 27 条。默认采用需求中的英文，支持远程按语言覆盖：
+完整默认文案在 `notification/src/main/assets/scene_push_content.json`，八个场景原表文案加三条未充满结束文案，共 27 条。根部保留需求中的英文兜底；每条 translations 已完整翻译正文和按钮，范围仅与实际 D1 资源一致：pt-BR、es-MX、es-ES、id-ID、hi-IN、ja-JP、ko-KR（27 × 7 = 189 组）。不扩展到 App 其他语言。远程使用相同 translations 结构，例如：
 
 ```json
 {
@@ -72,7 +72,7 @@
       "buttonText": "Check",
       "condition": "full",
       "translations": {
-        "zh": { "text": "<font color='#FB4949'><b>充电已完成！</b></font> 查看电池状态。", "buttonText": "查看" }
+        "pt-BR": { "text": "<font color='#FB4949'><b>Carga completa!</b></font> Confira a saúde da bateria.", "buttonText": "Verificar" }
       }
     },
     {
@@ -85,7 +85,7 @@
 }
 ```
 
-只覆盖提供了有效条目的场景，其余使用本地默认。每场景最多 16 条、单条最多 32 种语言；优先完整语言标签，再基础语言，最后默认。`id` 应稳定且场景内唯一；轮播只选择条件匹配条目，成功展示后推进，旧 ID 移除后从头开始。
+只覆盖提供了有效条目的场景，其余使用本地默认。每场景最多 16 条、单条最多 32 种语言；与日龄推送共用匹配规则：精确标签 → 同语言通用标签 → 约定地区版本 → 该条英文。无地区 es 使用 es-MX，es-ES 优先西班牙译文；pt/id/hi/ja/ko 分别匹配 pt-BR/id-ID/hi-IN/ja-JP/ko-KR。远程条目缺少翻译时回退该条英文，不拼接本地可能已经过期的译文。`id` 应稳定且场景内唯一；轮播只选择条件匹配条目，成功展示后推进，旧 ID 移除后从头开始。
 
 `condition` 可选：`any`、`full`、`not_full`、`charging`、`connected`、`not_full_unplugged`、`percent_20`、`critical`、`mobile`、`wifi`。请为含事实断言的文案设置对应条件，尤其充满、电量 20%、正在充电。默认文案已配置这些条件。
 
@@ -136,3 +136,5 @@ Notific_Show/Click/Enter 保持旧分类协议并携带来源 `charge_start`、`
 ## 2026-10-22 HTML 颜色配置
 
 客户端已移除 b/strong → 红色的固定映射。例如 `"text": "<font color=\"#FB4949\"><b>New file saved!</b></font> Manage files."`。只写 `<b>New file saved!</b> Manage files.` 时只加粗；`<font color="#12AB34">...</font>` 可以独立指定绿色，不必同时加粗。参数名、id、condition、轮播、频控及纯文本埋点不变；旧的纯 b 远程配置不会自动补红色。
+
+D1 地区多语言范围、匹配回归与通知截图见 [验证记录](verification/scene-push/d1-languages/README.md)。完整资源 JSON 可直接作为 `scene_push_content` 的远程参数值下发。

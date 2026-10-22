@@ -105,3 +105,5 @@
 - 用户于 2026-10-22 要求删除不再需要的新用户配置包装类；启动页既有路由判定直接调用 ConfigRemoteManager.getBoolean，保留 IO 调度、未配置默认开启和取消传播，不另建替代配置类。
 
 - 用户于 2026-10-22 要求新场景推送颜色由 HTML 显式配置，覆盖此前 b/strong 固定映射红色的规则。b/strong 仅加粗，font color="#RRGGBB" 决定颜色；不加颜色标签则沿用通知默认文字色。本地 scene_push_content.json 的 27 条文案均显式给强调片段添加 #FB4949；不在客户端为旧远程纯加粗文案补颜色，保留过滤不支持/可执行 HTML 与纯文本埋点规则。
+
+- 用户于 2026-10-22 要求 scene_push_content.json 多语言范围仅对齐实际 D1 日龄文案的地区版本，不覆盖 App 全部语言：pt-BR、es-MX、es-ES、id-ID、hi-IN、ja-JP、ko-KR。27 条完整 text HTML 与 buttonText 均需翻译，根部保留英文兜底；颜色继续由 HTML 显式配置。场景语言选择复用 PushContentLanguage 的精确/通用/约定地区匹配，切换语言不重置场景轮播、频控或通知 ID；不复制 D1 的 title/desc 双字段结构。

@@ -121,6 +121,49 @@ class SceneNotificationDeviceTest {
         }
     }
 
+    @Test fun d1RegionalTranslationsRenderTheirHtmlAndButtons() {
+        val languages=listOf("pt-BR","es-MX","es-ES","id-ID","hi-IN","ja-JP","ko-KR")
+        val content=copies()
+        for(copy in content.values.flatten()) for(language in languages) {
+            val translated=copy.text(language)
+            val rendered=SceneRichText.render(translated.text) as Spanned
+            assertFalse("${copy.id}/$language",rendered.toString().contains('<'))
+            val color=rendered.getSpans(0,rendered.length,ForegroundColorSpan::class.java).single()
+            val bold=rendered.getSpans(0,rendered.length,StyleSpan::class.java).single()
+            assertEquals(Color.rgb(251,73,73),color.foregroundColor)
+            assertEquals(rendered.getSpanStart(bold),rendered.getSpanStart(color))
+            assertEquals(rendered.getSpanEnd(bold),rendered.getSpanEnd(color))
+            assertTrue(translated.button.isNotBlank())
+        }
+        val output=File(context.getExternalFilesDir(null),"scene-language-verification").apply { mkdirs() }
+        for(language in languages) for(scale in listOf(1f,2f)) instrumentation.runOnMainSync {
+            val configured=context.createConfigurationContext(Configuration(context.resources.configuration).apply {
+                setLocale(java.util.Locale.forLanguageTag(language));fontScale=scale
+            })
+            val e=event(PushScene.CHARGE_START)
+            val selected=requireNotNull(SceneCopies.select(content.getValue(e.scene),"",e,language))
+            val model=ScenePublisher(configured).model(e,selected,false,configured)
+            for((kind,remote) in listOf("compact" to model.contentView!!,"expanded" to model.bigContentView!!)) {
+                val parent=FrameLayout(configured)
+                val view=remote.apply(configured,parent)
+                parent.addView(view)
+                remote.reapply(configured,view)
+                val width=(320*configured.resources.displayMetrics.density).toInt()
+                view.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED))
+                view.layout(0,0,width,view.measuredHeight)
+                val body=view.findViewById<TextView>(R.id.sceneText)
+                assertEquals(SceneRichText.plain(selected.text.text),body.text.toString())
+                assertTrue("$language/$scale/$kind glyph height",body.layout.height<=body.height-body.compoundPaddingTop-body.compoundPaddingBottom)
+                assertEquals(selected.text.button,view.findViewById<TextView>(R.id.tvAction).text.toString())
+                val bitmap=Bitmap.createBitmap(width,view.measuredHeight,Bitmap.Config.ARGB_8888)
+                try {
+                    val canvas=Canvas(bitmap);canvas.drawColor(Color.WHITE);view.draw(canvas)
+                    File(output,"${language}_${scale}_$kind.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG,100,it) }
+                } finally { bitmap.recycle() }
+            }
+        }
+    }
+
     @Test fun eightNotificationIdsCoexistWithLegacyAndCancelIndependently()=runBlocking {
         val publisher=ScenePublisher(context)
         val legacyId=10000
