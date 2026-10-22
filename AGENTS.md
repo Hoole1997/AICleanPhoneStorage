@@ -103,3 +103,5 @@
 - 用户于 2026-10-22 纠正新用户流程配置：new_user_flow_config 是直接 Boolean 值，移除 JSON 解析/兼容分支，使用当前 SDK 实际提供的 ConfigRemoteManager.getBoolean（用户称 getBool）。保留默认 true；与首页 Boolean 开关一致，避免将未下发的静态 false 误认为显式关闭。
 
 - 用户于 2026-10-22 要求删除不再需要的新用户配置包装类；启动页既有路由判定直接调用 ConfigRemoteManager.getBoolean，保留 IO 调度、未配置默认开启和取消传播，不另建替代配置类。
+
+- 用户于 2026-10-22 要求新场景推送颜色由 HTML 显式配置，覆盖此前 b/strong 固定映射红色的规则。b/strong 仅加粗，font color="#RRGGBB" 决定颜色；不加颜色标签则沿用通知默认文字色。本地 scene_push_content.json 的 27 条文案均显式给强调片段添加 #FB4949；不在客户端为旧远程纯加粗文案补颜色，保留过滤不支持/可执行 HTML 与纯文本埋点规则。

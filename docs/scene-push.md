@@ -68,16 +68,16 @@
   "1102": [
     {
       "id": "1102_full_v1",
-      "text": "<b>Fully charged!</b> Check health.",
+      "text": "<font color='#FB4949'><b>Fully charged!</b></font> Check health.",
       "buttonText": "Check",
       "condition": "full",
       "translations": {
-        "zh": { "text": "<b>充电已完成！</b> 查看电池状态。", "buttonText": "查看" }
+        "zh": { "text": "<font color='#FB4949'><b>充电已完成！</b></font> 查看电池状态。", "buttonText": "查看" }
       }
     },
     {
       "id": "1102_partial_v1",
-      "text": "<b>Charging ended!</b> View status.",
+      "text": "<font color='#FB4949'><b>Charging ended!</b></font> View status.",
       "buttonText": "View",
       "condition": "not_full"
     }
@@ -91,7 +91,7 @@
 
 支持变量 `{battery_percent}`、`{app_name}`、`{file_count}`、`{size_mb}`；缺失事实或未知变量会跳过该条，不填造数据。替换内容做 HTML 转义。只接受一个完整的 `text` 富文本字段，明确不兼容 `title/desc`。可见长度 1～130；整个参数最多 262144 字符，单个富文本字段最多 500。
 
-富文本支持 `b/strong`、`i/em`、`u`、`br`、十六进制颜色 `font`。所有加粗片段统一红色 `#FB4949`。不使用 WebView，不支持远程图片、脚本或链接。
+富文本支持 `b/strong`、`i/em`、`u`、`br`、十六进制颜色 `font`。`b/strong` 仅加粗，不隐式修改颜色。颜色通过 `<font color="#RRGGBB">...</font>` 显式配置，支持单/双引号；不配置颜色的片段沿用通知 TextView 默认色。本地 27 条默认文案已显式配置 `#FB4949`，远程可以改成其他颜色或移除颜色标签。不使用 WebView，不支持远程图片、脚本或链接。
 
 ## 通知展示与埋点
 
@@ -99,7 +99,7 @@
 
 后台使用系统通知；到期时前台使用可见业务页短提示，不缓存到下次前台。1101 额外以插电时前后台判定。系统仍决定实际是否弹出悬浮横幅（通知权限、用户渠道设置、勿扰及系统限频），多个 ID 可共存不代表系统会同时显示多个横幅。
 
-Notific_Show/Click/Enter 保持旧分类协议并携带来源 `charge_start`、`charge_end`、`low_battery`、`network_change`、`screenshot`、`app_install`、`app_uninstall`、`new_download`。新场景没有标题，展示与点击埋点的 `title` 留空，`text` 保存整句的有界纯文本快照；系统标准正文、前台提示和自定义 RemoteViews 均使用同一句话，只有 HTML 标记片段标红加粗，普通文字不加粗。点击快照在开屏即消费，跨页/重建不重复。业务元数据只传五个白名单标量，不传列表、不复制原始 extras。
+Notific_Show/Click/Enter 保持旧分类协议并携带来源 `charge_start`、`charge_end`、`low_battery`、`network_change`、`screenshot`、`app_install`、`app_uninstall`、`new_download`。新场景没有标题，展示与点击埋点的 `title` 留空，`text` 保存整句的有界纯文本快照；系统标准正文、前台提示和自定义 RemoteViews 均使用同一句话，加粗和颜色分别由 HTML 标签控制，普通文字不加粗；本地默认将强调片段配置成红色加粗。点击快照在开屏即消费，跨页/重建不重复。业务元数据只传五个白名单标量，不传列表、不复制原始 extras。
 
 ## 循环悬浮展示
 
@@ -132,3 +132,7 @@ Notific_Show/Click/Enter 保持旧分类协议并携带来源 `charge_start`、`
 ## 2026-10-22 核对后调整
 
 充电开始连接防抖为 **60 秒**（满 60 秒允许），独立于远程发送间隔；持续抖动以最近一次连接为起点。新旧通知按钮均采用增强呼吸、双层扩散水波纹和扫光，文字与点击区域不缩放。XML 由 `tools/generate_notification_motion.py` 统一维护；原图图标未重绘。减少动效、灭屏和省电时构建静态版本，隐藏后原生 ProgressBar 停止动画。
+
+## 2026-10-22 HTML 颜色配置
+
+客户端已移除 b/strong → 红色的固定映射。例如 `"text": "<font color=\"#FB4949\"><b>New file saved!</b></font> Manage files."`。只写 `<b>New file saved!</b> Manage files.` 时只加粗；`<font color="#12AB34">...</font>` 可以独立指定绿色，不必同时加粗。参数名、id、condition、轮播、频控及纯文本埋点不变；旧的纯 b 远程配置不会自动补红色。

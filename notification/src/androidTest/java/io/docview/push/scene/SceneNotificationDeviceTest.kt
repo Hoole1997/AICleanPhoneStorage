@@ -76,8 +76,49 @@ class SceneNotificationDeviceTest {
         val value=SceneRichText.render("<b>Charging started!</b> View <font color='#336699'>status</font>.<script>hidden()</script>") as Spanned
         assertEquals("Charging started! View status.",value.toString())
         assertTrue(value.getSpans(0,value.length,StyleSpan::class.java).any {it.style and Typeface.BOLD !=0})
-        assertTrue(value.getSpans(0,value.length,ForegroundColorSpan::class.java).any {it.foregroundColor==Color.rgb(251,73,73)})
+        val color=value.getSpans(0,value.length,ForegroundColorSpan::class.java).single()
+        assertEquals(Color.rgb(51,102,153),color.foregroundColor)
+        assertEquals("status",value.subSequence(value.getSpanStart(color),value.getSpanEnd(color)).toString())
         assertFalse(value.toString().contains("hidden"))
+    }
+
+    @Test fun boldAndStrongWithoutHtmlColorNeverCreateColorSpans() {
+        for(tag in listOf("b","strong")) {
+            val text=SceneRichText.render("<$tag>New file saved!</$tag> Manage files.") as Spanned
+            assertEquals("New file saved! Manage files.",text.toString())
+            assertTrue(text.getSpans(0,text.length,ForegroundColorSpan::class.java).isEmpty())
+            val bold=text.getSpans(0,text.length,StyleSpan::class.java).single()
+            assertEquals(Typeface.BOLD,bold.style)
+            assertEquals(0,text.getSpanStart(bold))
+            assertEquals("New file saved!".length,text.getSpanEnd(bold))
+        }
+    }
+
+    @Test fun configuredColorsArePreservedIndependentlyOfBoldAndTagNesting() {
+        for(html in listOf("<font color='#12AB34'><b>Green</b></font>",
+            "<strong><font color=\"#12AB34\">Green</font></strong>")) {
+            val text=SceneRichText.render("$html <font color='#336699'>Blue</font> Normal") as Spanned
+            assertEquals("Green Blue Normal",text.toString())
+            val colors=text.getSpans(0,text.length,ForegroundColorSpan::class.java)
+            assertEquals(2,colors.size)
+            assertEquals(mapOf("Green" to Color.rgb(18,171,52),"Blue" to Color.rgb(51,102,153)),
+                colors.associate { text.subSequence(text.getSpanStart(it),text.getSpanEnd(it)).toString() to it.foregroundColor })
+            val bold=text.getSpans(0,text.length,StyleSpan::class.java).single()
+            assertEquals("Green",text.subSequence(text.getSpanStart(bold),text.getSpanEnd(bold)).toString())
+        }
+    }
+
+    @Test fun everyLocalDefaultColorsOnlyItsHtmlEmphasis() {
+        for(copy in copies().values.flatten()) {
+            val text=SceneRichText.render(copy.text) as Spanned
+            val bold=text.getSpans(0,text.length,StyleSpan::class.java).single()
+            val color=text.getSpans(0,text.length,ForegroundColorSpan::class.java).single()
+            assertEquals(copy.id,Color.rgb(251,73,73),color.foregroundColor)
+            assertEquals(text.getSpanStart(bold),text.getSpanStart(color))
+            assertEquals(text.getSpanEnd(bold),text.getSpanEnd(color))
+            assertEquals(copy.id,0,text.getSpanStart(color))
+            assertTrue(copy.id,text.getSpanEnd(color)<text.length)
+        }
     }
 
     @Test fun eightNotificationIdsCoexistWithLegacyAndCancelIndependently()=runBlocking {

@@ -31,9 +31,9 @@ class ScenePolicyTest {
         assertEquals(27, copies.values.sumOf { it.size })
         val full = SceneEvent(PushScene.CHARGE_END, 1, 1, fullCharge = true)
         val partial = full.copy(fullCharge = false)
-        assertEquals("<b>Fully charged!</b> Check health.", SceneCopies.select(copies.getValue(full.scene), "", full, "en")!!.text.text)
-        assertEquals("<b>Charging ended!</b> View status.", SceneCopies.select(copies.getValue(full.scene), "", partial, "en")!!.text.text)
-        assertEquals("<b>New download!</b> Manage files.", copies.getValue(PushScene.DOWNLOAD).first().text)
+        assertEquals("<font color=\"#FB4949\"><b>Fully charged!</b></font> Check health.", SceneCopies.select(copies.getValue(full.scene), "", full, "en")!!.text.text)
+        assertEquals("<font color=\"#FB4949\"><b>Charging ended!</b></font> View status.", SceneCopies.select(copies.getValue(full.scene), "", partial, "en")!!.text.text)
+        assertEquals("<font color=\"#FB4949\"><b>New download!</b></font> Manage files.", copies.getValue(PushScene.DOWNLOAD).first().text)
     }
     @Test fun cursorIsPerArrayAndDeletedIdsRestartAtFirstAvailableCopy() {
         val copies = SceneCopies.parse(asset("scene_push_content.json")).getValue(PushScene.APP_INSTALL)

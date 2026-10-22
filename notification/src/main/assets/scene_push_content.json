@@ -4,19 +4,19 @@
       "id": "1101_1",
       "buttonText": "View",
       "condition": "charging",
-      "text": "<b>Charging started!</b> View status."
+      "text": "<font color=\"#FB4949\"><b>Charging started!</b></font> View status."
     },
     {
       "id": "1101_2",
       "buttonText": "View",
       "condition": "connected",
-      "text": "<b>Power connected!</b> See status."
+      "text": "<font color=\"#FB4949\"><b>Power connected!</b></font> See status."
     },
     {
       "id": "1101_3",
       "buttonText": "Check",
       "condition": "charging",
-      "text": "<b>Charging now!</b> Check status."
+      "text": "<font color=\"#FB4949\"><b>Charging now!</b></font> Check status."
     }
   ],
   "1102": [
@@ -24,37 +24,37 @@
       "id": "1102_1",
       "buttonText": "Check",
       "condition": "full",
-      "text": "<b>Fully charged!</b> Check health."
+      "text": "<font color=\"#FB4949\"><b>Fully charged!</b></font> Check health."
     },
     {
       "id": "1102_2",
       "buttonText": "View",
       "condition": "full",
-      "text": "<b>Battery full!</b> View health."
+      "text": "<font color=\"#FB4949\"><b>Battery full!</b></font> View health."
     },
     {
       "id": "1102_3",
       "buttonText": "Check",
       "condition": "full",
-      "text": "<b>Charging done!</b> Check health."
+      "text": "<font color=\"#FB4949\"><b>Charging done!</b></font> Check health."
     },
     {
       "id": "1102_4",
       "buttonText": "View",
       "condition": "not_full",
-      "text": "<b>Charging ended!</b> View status."
+      "text": "<font color=\"#FB4949\"><b>Charging ended!</b></font> View status."
     },
     {
       "id": "1102_5",
       "buttonText": "View",
       "condition": "not_full_unplugged",
-      "text": "<b>Power disconnected!</b> See status."
+      "text": "<font color=\"#FB4949\"><b>Power disconnected!</b></font> See status."
     },
     {
       "id": "1102_6",
       "buttonText": "Check",
       "condition": "not_full",
-      "text": "<b>Charging stopped!</b> Check status."
+      "text": "<font color=\"#FB4949\"><b>Charging stopped!</b></font> Check status."
     }
   ],
   "1103": [
@@ -62,19 +62,19 @@
       "id": "1103_1",
       "buttonText": "Save",
       "condition": "any",
-      "text": "<b>Battery low!</b> Save power."
+      "text": "<font color=\"#FB4949\"><b>Battery low!</b></font> Save power."
     },
     {
       "id": "1103_2",
       "buttonText": "Save",
       "condition": "percent_20",
-      "text": "<b>Only 20% left!</b> Save power."
+      "text": "<font color=\"#FB4949\"><b>Only 20% left!</b></font> Save power."
     },
     {
       "id": "1103_3",
       "buttonText": "Save",
       "condition": "critical",
-      "text": "<b>Battery critical!</b> Save power."
+      "text": "<font color=\"#FB4949\"><b>Battery critical!</b></font> Save power."
     }
   ],
   "1104": [
@@ -82,19 +82,19 @@
       "id": "1104_1",
       "buttonText": "Test",
       "condition": "any",
-      "text": "<b>Network changed!</b> Test speed."
+      "text": "<font color=\"#FB4949\"><b>Network changed!</b></font> Test speed."
     },
     {
       "id": "1104_2",
       "buttonText": "Test",
       "condition": "mobile",
-      "text": "<b>Mobile data on!</b> Test speed."
+      "text": "<font color=\"#FB4949\"><b>Mobile data on!</b></font> Test speed."
     },
     {
       "id": "1104_3",
       "buttonText": "Test",
       "condition": "wifi",
-      "text": "<b>New Network!</b> Test speed."
+      "text": "<font color=\"#FB4949\"><b>New Network!</b></font> Test speed."
     }
   ],
   "1105": [
@@ -102,19 +102,19 @@
       "id": "1105_1",
       "buttonText": "Clean",
       "condition": "any",
-      "text": "<b>New screenshot!</b> Clean space."
+      "text": "<font color=\"#FB4949\"><b>New screenshot!</b></font> Clean space."
     },
     {
       "id": "1105_2",
       "buttonText": "Clean",
       "condition": "any",
-      "text": "<b>Screenshot saved!</b> Clean up."
+      "text": "<font color=\"#FB4949\"><b>Screenshot saved!</b></font> Clean up."
     },
     {
       "id": "1105_3",
       "buttonText": "Clean",
       "condition": "any",
-      "text": "<b>More screenshots!</b> Clean space."
+      "text": "<font color=\"#FB4949\"><b>More screenshots!</b></font> Clean space."
     }
   ],
   "1106": [
@@ -122,19 +122,19 @@
       "id": "1106_1",
       "buttonText": "Scan",
       "condition": "any",
-      "text": "<b>New app installed!</b> Scan it."
+      "text": "<font color=\"#FB4949\"><b>New app installed!</b></font> Scan it."
     },
     {
       "id": "1106_2",
       "buttonText": "Check",
       "condition": "any",
-      "text": "<b>App added!</b> Check safety."
+      "text": "<font color=\"#FB4949\"><b>App added!</b></font> Check safety."
     },
     {
       "id": "1106_3",
       "buttonText": "Review",
       "condition": "any",
-      "text": "<b>New app!</b> Review safety."
+      "text": "<font color=\"#FB4949\"><b>New app!</b></font> Review safety."
     }
   ],
   "1107": [
@@ -142,19 +142,19 @@
       "id": "1107_1",
       "buttonText": "Clean",
       "condition": "any",
-      "text": "<b>App deleted!</b> Clean junk."
+      "text": "<font color=\"#FB4949\"><b>App deleted!</b></font> Clean junk."
     },
     {
       "id": "1107_2",
       "buttonText": "Clean",
       "condition": "any",
-      "text": "<b>App removed!</b> Clean junk."
+      "text": "<font color=\"#FB4949\"><b>App removed!</b></font> Clean junk."
     },
     {
       "id": "1107_3",
       "buttonText": "Clear",
       "condition": "any",
-      "text": "<b>App gone!</b> Clear junk."
+      "text": "<font color=\"#FB4949\"><b>App gone!</b></font> Clear junk."
     }
   ],
   "1108": [
@@ -162,19 +162,19 @@
       "id": "1108_1",
       "buttonText": "Manage",
       "condition": "any",
-      "text": "<b>New download!</b> Manage files."
+      "text": "<font color=\"#FB4949\"><b>New download!</b></font> Manage files."
     },
     {
       "id": "1108_2",
       "buttonText": "Check",
       "condition": "any",
-      "text": "<b>Download saved!</b> Check files."
+      "text": "<font color=\"#FB4949\"><b>Download saved!</b></font> Check files."
     },
     {
       "id": "1108_3",
       "buttonText": "Manage",
       "condition": "any",
-      "text": "<b>New file saved!</b> Manage files."
+      "text": "<font color=\"#FB4949\"><b>New file saved!</b></font> Manage files."
     }
   ]
 }
