@@ -33,6 +33,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import net.corekit.core.utils.ConfigRemoteManager
 
 /** 冷启动/通知进入首页；热启动在广告结束后仅关闭自身，恢复原 Activity。 */
 class StartupActivity : AppCompatActivity() {
@@ -41,8 +42,16 @@ class StartupActivity : AppCompatActivity() {
             initializer {
                 val app = application as CleanApplication
                 StartupViewModel(createSavedStateHandle(), resolveNewUserFlow = {
-                    app.container.newUserFlow.eligible() &&
-                        com.example.aicleanphonestorage.feature.onboarding.NewUserFlowConfig.enabled()
+                    app.container.newUserFlow.eligible() && withContext(Dispatchers.IO) {
+                        val key = "new_user_flow_config"
+                        try {
+                            // SDK 未下发参数时会返回静态 false；先判存在，保持默认开启。
+                            // 配置本身是 Boolean，直接调用 getBoolean，不再增加配置包装类。
+                            if (!ConfigRemoteManager.isInitialized() || ConfigRemoteManager.getString(key, "").isNullOrEmpty()) true
+                            else ConfigRemoteManager.getBoolean(key, true) ?: true
+                        } catch (cancelled: CancellationException) { throw cancelled }
+                        catch (_: Exception) { true }
+                    }
                 }, resolveRetention = { app.container.uninstallRetention.checkNow() }, prepare = { app.languages.ready.await() })
             }
         }

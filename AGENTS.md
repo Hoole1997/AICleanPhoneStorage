@@ -101,3 +101,5 @@
 - 用户于 2026-10-22 埋点原表核对后明确改为上报卸载原因和 Other 原文，覆盖此前不上传的要求。仅原因页底部 Keep/Uninstall 点击时发送 uninstall_reason_click，携带 action、reason、has_other_content；三者均为 String。未选择为 reason=none，Other 才带输入原文（既有 500 字符上限），非 Other/空输入为空串。编辑、选中、曝光和返回不提交反馈。现有清理效果问题与卡顿归 poor_user_experience，缺少功能归 unmet_needs，不伪造页面没有的 found_similar_app；沿用统一上报接口，自有诊断日志不复制正文。
 
 - 用户于 2026-10-22 纠正新用户流程配置：new_user_flow_config 是直接 Boolean 值，移除 JSON 解析/兼容分支，使用当前 SDK 实际提供的 ConfigRemoteManager.getBoolean（用户称 getBool）。保留默认 true；与首页 Boolean 开关一致，避免将未下发的静态 false 误认为显式关闭。
+
+- 用户于 2026-10-22 要求删除不再需要的新用户配置包装类；启动页既有路由判定直接调用 ConfigRemoteManager.getBoolean，保留 IO 调度、未配置默认开启和取消传播，不另建替代配置类。

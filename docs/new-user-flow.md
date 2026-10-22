@@ -5,7 +5,7 @@
 ## 入口与状态
 
 - 沿用启动页通知权限、consent、开屏广告能力；开屏关闭/失败/无填充后判定新用户路由。只有桌面启动入口进入独立 `DeviceScanActivity`，通知目标与热启动不变。
-- `new_user_flow_config` 是单个 **Boolean** 参数，值直接为 `true` / `false`，不是 JSON，也没有 `.enabled` 子字段。当前 SDK 方法名为 `ConfigRemoteManager.getBoolean(KEY, true)`。未初始化、未下发、读取失败/返回 null 使用 true，显式 false 跳过引导；类型转换由 SDK 负责，不兼容旧 JSON 协议。SDK 对不存在的参数可能直接返回 false，因此先通过同一管理类判断参数存在，再读取 Boolean；不新增其他开关。
+- `new_user_flow_config` 是单个 **Boolean** 参数，值直接为 `true` / `false`，不是 JSON，也没有 `.enabled` 子字段。现有启动页在注入新用户路由判定时直接调用 `ConfigRemoteManager.getBoolean(key, true)`，不再保留独立配置包装类。未初始化、未下发、读取失败/返回 null 使用 true，显式 false 跳过引导；类型转换由 SDK 负责，不兼容旧 JSON 协议。SDK 对不存在的参数可能直接返回 false，因此先通过同一管理类判断参数存在，再读取 Boolean；不新增其他开关。
 - 2026-10-21 用户明确采用需求 **1.1.5** 的阶段规则，覆盖 1.1.4 第 6 条：开屏/扫描退出保持 pending；点击 Start Clean 先持久化 interstitial，再请求广告，之后退出不重走；首页实际创建后记为 completed。
 - 状态存储于 DataStore，排除云备份与设备迁移。旧版本已有首页扫描索引且没有阶段记录时迁移为 completed；写过 pending 后不会把本次引擎创建的索引误判为老用户。
 - 普通配置重建保留 ViewModel 和已完成字段；进程死亡后恢复扫描 Activity 时，pending 回启动页重走开屏，其余阶段恢复首页。
