@@ -23,7 +23,7 @@
 - 原因页单选，默认未选，可不选择直接卸载；输入最多 500 字符，仅保留有界页面 SavedState。用户已确认将贷款文案改为“清理效果不符合预期”“缺少需要的功能”和当前应用名称，其余理由保持原意。
 - 点击 Uninstall 调用本应用包名的系统 ACTION_DELETE 确认界面；应用不静默卸载、不自动确认，不把系统返回当作卸载成功。保留应用管理和病毒页禁止卸载自家包的原规则，使用独立的自卸载协调器。参见 [Android Intent.ACTION_DELETE](https://developer.android.com/reference/android/content/Intent#ACTION_DELETE)。
 - 原因页返回键回到挽留页；挽留页返回键正常退出。系统卸载取消后留在原因页；打开系统界面失败时显示可重试提示。系统原生卸载按钮、设置中的卸载路径不受本功能影响。
-- 文案覆盖 16 种语言；插画内文字保持 Figma 原图。没有新权限、文件扫描、用户数据上传或服务器反馈接口。
+- 文案覆盖 16 种语言；插画内文字保持 Figma 原图。没有新权限、文件扫描或独立服务器反馈接口；反馈按下文用户最新授权通过已有埋点通道提交。
 
 ## 埋点与反馈边界
 
@@ -31,6 +31,12 @@
 
 `uninstall_feature_click`：仅含白名单 `feature_name`，在导航前发送。
 
-`uninstall_retention_click`、`uninstall_reason_click`：仅含 `action=keep_app/uninstall`。**按用户最新要求，第三页选项与输入不上传，不发送 reason、has_other_content 或文本。** 本地选择和编辑没有埋点操作。
+`uninstall_retention_click` 仅含 `action=keep_app/uninstall`。
+
+用户于 2026-10-22 原表核对后改为允许上报：`uninstall_reason_click` 在原因页点击 Keep/Uninstall 时，携带 String 类型的 `action`、`reason`、`has_other_content`。未选择时 `reason=none`；选择 Other 时 `has_other_content` 为输入原文（保留既有 500 字符上限），非 Other 或空输入为空串，不发送 Boolean、不上传旧的 Other 草稿。选项变化、输入、曝光、返回和广告回调不提交反馈。
+
+现有清理选项映射：Difficult to use → difficult_to_use；Too many ads → too_many_ads；清理结果不符合预期 / Loading stutter → poor_user_experience；Missing features I need → unmet_needs；Others → other。页面没有“找到类似应用”选项，不能把其他选项强行映射到 found_similar_app。
+
+参数在点击时锁存，经现有 BusinessTelemetry/ReportDataManager 分发；不等待网络返回才打开系统卸载页。应用日志及自有 Firebase 适配器日志遮盖输入正文，实际提交值保持原样。
 
 广告点位已接线；实际线上填充、频控与广告平台配置需要另行联调。本次不实现需求第 3–5 章的场景推送、开机自启或 grouping。

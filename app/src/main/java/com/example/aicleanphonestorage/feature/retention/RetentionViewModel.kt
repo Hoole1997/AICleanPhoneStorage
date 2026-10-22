@@ -18,17 +18,17 @@ internal enum class RetentionFeature(val wire: String, val destination: Notifica
 }
 internal data class RetentionState(val page: RetentionPage = RetentionPage.OFFER, val busy: Boolean = false)
 
-/** 反馈只在本地有界 SavedState 中恢复，不传给 Intent、日志、分析 SDK 或网络；无上传接口。 */
+/** 输入在有界 SavedState 中恢复；仅原因页底部按钮点击时，快照交给已有统一埋点通道。 */
 internal class RetentionViewModel(private val saved: SavedStateHandle, private val telemetry: EventSink = BusinessTelemetry) : ViewModel() {
     private val current = MutableStateFlow(RetentionState(
         if (saved.get<Boolean>(AD_PENDING) == true || saved.get<String>(PAGE) == RetentionPage.REASON.name) RetentionPage.REASON else RetentionPage.OFFER))
     val state = current.asStateFlow()
     init { saved[AD_PENDING] = false; saved[PAGE] = current.value.page.name }
     var reason: Int?
-        get() = saved.get<Int>(REASON)?.takeIf { it in 0..5 }
-        set(value) { saved[REASON] = value?.takeIf { it in 0..5 } }
+        get() = saved.get<Int>(REASON)?.takeIf { RetentionReason.fromSelection(it) != null }
+        set(value) { saved[REASON] = value?.takeIf { RetentionReason.fromSelection(it) != null } }
     var feedback: String
-        get() = saved.get<String>(TEXT).orEmpty()
+        get() = saved.get<String>(TEXT).orEmpty().take(MAX_FEEDBACK)
         set(value) { saved[TEXT] = value.take(MAX_FEEDBACK) }
 
     fun shown() {
@@ -45,9 +45,17 @@ internal class RetentionViewModel(private val saved: SavedStateHandle, private v
     fun keep() = button("keep_app")
     fun uninstall() = button("uninstall")
     private fun button(action: String) {
-        // 用户明确要求第三页选择与文本不上传：只记录操作，不附带 reason/has_other_content。
-        telemetry.send(if (current.value.page == RetentionPage.OFFER) MetricEvent.UNINSTALL_RETENTION_CLICK else MetricEvent.UNINSTALL_REASON_CLICK,
-            mapOf("action" to action))
+        if (current.value.page == RetentionPage.OFFER) {
+            telemetry.send(MetricEvent.UNINSTALL_RETENTION_CLICK, mapOf("action" to action))
+            return
+        }
+        val selected = RetentionReason.fromSelection(reason)
+        // 两个按钮采用相同协议；按点击瞬间取值。切换离开 Other 后不能带出之前输入的文本。
+        telemetry.send(MetricEvent.UNINSTALL_REASON_CLICK, mapOf(
+            "action" to action,
+            "reason" to (selected?.wire ?: "none"),
+            "has_other_content" to if (selected == RetentionReason.OTHER) feedback else "",
+        ))
     }
 
     fun beginAnyway(): Boolean {

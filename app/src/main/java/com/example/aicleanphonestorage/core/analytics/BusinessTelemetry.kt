@@ -9,7 +9,7 @@ import net.corekit.core.report.ReportDataManager
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-/** 事件只携带小型数值、白名单枚举或有界自家通知文案；SDK 初始化前有界缓存，顺序上报，不阻塞业务主线程。 */
+/** 事件只携带小型数值、白名单枚举或有界自家通知文案/用户主动提交的卸载反馈；SDK 初始化前有界缓存，顺序上报，不阻塞业务主线程。 */
 internal object BusinessTelemetry : EventSink {
     private data class Pending(val event: MetricEvent, val parameters: Map<String, Any>, val permission: Deferred<String>? = null)
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO.limitedParallelism(2))
@@ -40,7 +40,7 @@ internal object BusinessTelemetry : EventSink {
                     params["user_type"] = userType(ChannelUserController.getCurrentChannel())
                 if (ReportDataManager.isInitialized()) {
                     ReportDataManager.reportData(pending.event.wireName, params)
-                    Log.d("BusinessMetrics", "${pending.event.wireName} $params")
+                    Log.d("BusinessMetrics", "${pending.event.wireName} ${net.corekit.metrics.log.EventLogParameters.redact(params)}")
                 } else Log.w("BusinessMetrics", "No configured reporter: ${pending.event.wireName}")
                 val lost = dropped.getAndSet(0)
                 if (lost > 0) Log.w("BusinessMetrics", "Startup queue overflow: dropped=$lost")

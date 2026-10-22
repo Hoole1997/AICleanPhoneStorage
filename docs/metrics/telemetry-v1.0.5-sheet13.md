@@ -12,7 +12,7 @@
 | 27 | `uninstall_feature_click` | 点击功能卡片，页面跳转前 | `feature_name` | `RetentionViewModel.feature`；调用先于 `openHome` |
 | 28 | `uninstall_retention_click` | 点击第一层页底部按钮 | `action=keep_app/uninstall` | `keep` / `beginAnyway` |
 | 29 | `uninstall_reason_show` | 第二层原因页成功展示，每次进入一次 | 无 | `RetentionViewModel.shown`；广告回调后页面切换才曝光 |
-| 30–32 | `uninstall_reason_click` | 点击原因页底部按钮 | `action=keep_app/uninstall`；另外两项按用户指示不上传，见下文 | `RetentionViewModel.keep/uninstall` |
+| 30–32 | `uninstall_reason_click` | 点击原因页底部按钮 | `action=keep_app/uninstall`、`reason`、`has_other_content`（用户核对后授权补齐） | `RetentionViewModel.keep/uninstall` |
 | 33 | `new_user_scan_exposure` | 进入设备扫描页 | 无 | `DeviceScanViewModel.foreground` |
 | 34 | `new_user_scan_finish` | 扫描完成 | 无 | 六个真实字段完成且引擎初始化成功后；失败不报完成 |
 | 35 | `new_user_start_clean_click` | 扫描完成后点击 Start Clean | 无 | `DeviceScanViewModel.startClean`，请求广告前 |
@@ -32,13 +32,13 @@ notification_cleaner
 
 I28、I30 的值均为 `keep_app`、`uninstall`，属性类型为 String。重复点击等待中的插屏不重复上报/请求；页面重建或普通后台恢复不重复曝光，真正返回前一层再进入则是新的页面曝光。
 
-## 用户明确覆盖的原表字段
+## 原表反馈字段与最新授权
 
 原表 E31 / I31：`reason`，String，枚举 `none/difficult_to_use/too_many_ads/poor_user_experience/found_similar_app/unmet_needs/other`。
 
 原表 E32 / H32：`has_other_content`，String；说明实际要求 Other 补充文本原文，不能因字段名含 `has` 就误写成 Boolean。
 
-用户此前明确“第三页选项和输入不上传”。因此这两个字段以及文本原文均不传入埋点、网络或日志；`uninstall_reason_click` 仅保留按钮操作 `action`。本地选项、输入和清理产品文案保持已有实现。这是用户确认的覆盖规则，不是漏字段，本轮没有恢复反馈上传。
+用户在本次核对后明确改为上报这两个字段，覆盖此前“不上传”的要求。原因页两个底部按钮均提交 `reason` 与 String 类型的 `has_other_content`；Other 才取输入原文（既有 500 字符上限），其余为空串，未选原因使用 none。只编辑/选择不发送，点击时才锁存参数。现有清理结果不符合预期、运行卡顿均映射 poor_user_experience，缺少功能映射 unmet_needs；没有找到类似应用选项，不伪造 found_similar_app。详见[卸载挽留实现](../uninstall-retention.md)。
 
 ## 第 13 项既有事件复核
 
@@ -58,6 +58,6 @@ I28、I30 的值均为 `keep_app`、`uninstall`，属性类型为 String。重�
 
 ## 验证范围
 
-检查了实际 Activity → ViewModel → EventSink 调用与原表单元格，未发现需要修改的业务埋点代码。现有 `RetentionTest` 覆盖反馈不上传、按钮属性、曝光/重建及功能入口；`NewUserFlowTest` 覆盖三项事件顺序与点击去重；`SpeedTestTelemetryTest` 覆盖事件大小写、两个 action 及八个 reason。最近一次 local 回归 523 项单元测试通过，本轮没有代码变更，因此未重复编译或写实现镜像测试。
+初次核对确认事件名及调用完整；随后按用户授权补齐反馈属性。`RetentionTest` 覆盖反馈仅在点击时提交、各原因映射、空值、切换选项、500 字符上限、重建与快照隔离；`NewUserFlowTest` 覆盖三项事件顺序与点击去重；`SpeedTestTelemetryTest` 覆盖事件大小写、两个 action 及八个 reason。本次补齐后的 local 验证见[反馈参数验证](../verification/uninstall-retention/feedback-parameters.md)。
 
 结论针对客户端契约与调用链；未向线上注入测试事件，也未验证 Firebase/数数后台到账。

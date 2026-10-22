@@ -27,22 +27,64 @@ class RetentionTest {
         assertTrue(RetentionPolicy.enabled("{\"paid\":{\"enabled\":false}} trailing", true))
     }
 
-    @Test fun localFeedbackIsBoundedAndNeverAppearsInTelemetry() {
+    @Test fun feedbackIsBoundedAndSentOnlyForOtherOnReasonPageButtonClick() {
         val calls = mutableListOf<Pair<MetricEvent, Map<String, Any>>>()
         val model = RetentionViewModel(SavedStateHandle(), EventSink { event, params -> calls += event to params })
         model.shown(); model.shown()
         assertTrue(model.beginAnyway()); assertFalse(model.beginAnyway())
         assertEquals(RetentionPage.OFFER, model.state.value.page)
         model.adFinished(); model.shown(); model.shown()
-        model.reason = 3
-        model.feedback = "private-feedback".repeat(80)
+        model.reason = 5
+        model.feedback = "test-feedback".repeat(80)
         assertEquals(500, model.feedback.length)
+        assertEquals(3, calls.size) // 选择和输入本身不发送事件。
         model.uninstall(); model.keep()
         assertEquals(listOf(MetricEvent.UNINSTALL_RETENTION_SHOW, MetricEvent.UNINSTALL_RETENTION_CLICK,
             MetricEvent.UNINSTALL_REASON_SHOW, MetricEvent.UNINSTALL_REASON_CLICK, MetricEvent.UNINSTALL_REASON_CLICK), calls.map { it.first })
-        assertEquals(mapOf("action" to "uninstall"), calls[3].second)
-        assertEquals(mapOf("action" to "keep_app"), calls[4].second)
-        assertTrue(calls.all { (_, params) -> params.keys.all { it == "action" } })
+        assertEquals(mapOf("action" to "uninstall", "reason" to "other", "has_other_content" to model.feedback), calls[3].second)
+        assertEquals(mapOf("action" to "keep_app", "reason" to "other", "has_other_content" to model.feedback), calls[4].second)
+        assertEquals(mapOf("action" to "uninstall"), calls[1].second)
+        model.feedback = "changed after click"
+        assertEquals(500, (calls[3].second["has_other_content"] as String).length)
+    }
+
+    @Test fun currentCleaningReasonsUseDocumentEnumsAndNeverInventSimilarAppSelection() {
+        val calls = mutableListOf<Map<String, Any>>()
+        val model = RetentionViewModel(SavedStateHandle(), EventSink { _, params -> calls += params })
+        model.beginAnyway(); model.adFinished(); calls.clear()
+        val reasons = listOf(null to "none", 0 to "difficult_to_use", 1 to "too_many_ads",
+            2 to "poor_user_experience", 3 to "unmet_needs", 4 to "poor_user_experience", 5 to "other", 99 to "none")
+        for ((selected, wire) in reasons) {
+            model.reason = selected
+            model.feedback = "  test input\n原文  "
+            model.keep(); model.uninstall()
+            for (parameters in calls.takeLast(2)) {
+                assertEquals(wire, parameters["reason"])
+                assertEquals(if (selected == 5) model.feedback else "", parameters["has_other_content"])
+                assertTrue(parameters["has_other_content"] is String)
+            }
+        }
+        assertFalse(calls.any { it["reason"] == "found_similar_app" })
+    }
+
+    @Test fun editingOtherThenSwitchingReasonOrReturningToOfferDoesNotSendStaleText() {
+        val calls = mutableListOf<Pair<MetricEvent, Map<String, Any>>>()
+        val saved = SavedStateHandle()
+        val model = RetentionViewModel(saved, EventSink { event, params -> calls += event to params })
+        model.beginAnyway(); model.adFinished(); calls.clear()
+        model.reason = 5; model.feedback = "test draft"
+        assertTrue(calls.isEmpty())
+        val restored = RetentionViewModel(SavedStateHandle(saved.keys().associateWith { saved.get<Any?>(it) }),
+            EventSink { event, params -> calls += event to params })
+        restored.keep()
+        assertEquals("test draft", calls.last().second["has_other_content"])
+        restored.reason = 1; restored.uninstall()
+        assertEquals("", calls.last().second["has_other_content"])
+        restored.reason = 5; restored.feedback = ""; restored.keep()
+        assertEquals("other", calls.last().second["reason"])
+        assertEquals("", calls.last().second["has_other_content"])
+        restored.back(); restored.keep()
+        assertEquals(MetricEvent.UNINSTALL_RETENTION_CLICK to mapOf("action" to "keep_app"), calls.last())
     }
 
     @Test fun recreationKeepsFeedbackAndDoesNotReplayPendingAd() {
