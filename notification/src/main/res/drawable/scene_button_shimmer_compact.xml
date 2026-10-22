@@ -1,4 +1,8 @@
 <animated-vector xmlns:android="http://schemas.android.com/apk/res/android" android:drawable="@drawable/scene_button_surface_compact">
-    <target android:name="pulse" android:animation="@animator/scene_button_pulse" />
+    <target android:name="pulse" android:animation="@animator/notification_button_pulse" />
+    <target android:name="wave_a" android:animation="@animator/notification_wave_scale_a" />
+    <target android:name="wave_line_a" android:animation="@animator/notification_wave_fade_a" />
+    <target android:name="wave_b" android:animation="@animator/notification_wave_scale_b" />
+    <target android:name="wave_line_b" android:animation="@animator/notification_wave_fade_b" />
     <target android:name="sweep" android:animation="@animator/scene_button_sweep_compact" />
 </animated-vector>

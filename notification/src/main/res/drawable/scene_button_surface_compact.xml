@@ -1,9 +1,16 @@
+<!-- 背景呼吸、圆角裁切、双层水波纹与单向扫光；不移动文字或 View 边界。 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="77dp" android:height="32dp" android:viewportWidth="77" android:viewportHeight="32">
     <group android:name="pulse" android:pivotX="38.5" android:pivotY="16.0">
         <path android:fillColor="#0D60F1" android:pathData="M 16.0,0 H 61.0 A 16.0,16.0 0 0 1 77,16.0 A 16.0,16.0 0 0 1 61.0,32 H 16.0 A 16.0,16.0 0 0 1 0,16.0 A 16.0,16.0 0 0 1 16.0,0 Z" />
         <clip-path android:pathData="M 16.0,0 H 61.0 A 16.0,16.0 0 0 1 77,16.0 A 16.0,16.0 0 0 1 61.0,32 H 16.0 A 16.0,16.0 0 0 1 0,16.0 A 16.0,16.0 0 0 1 16.0,0 Z" />
+        <group android:name="wave_a" android:pivotX="38.5" android:pivotY="16.0" android:scaleX="0.20" android:scaleY="0.20">
+            <path android:name="wave_line_a" android:pathData="M 26.18,16.0 a 12.32,19.2 0 1 0 24.64,0 a 12.32,19.2 0 1 0 -24.64,0 Z" android:strokeColor="#FFFFFF" android:strokeWidth="1.2" android:strokeAlpha="0" android:fillColor="@android:color/transparent" />
+        </group>
+        <group android:name="wave_b" android:pivotX="38.5" android:pivotY="16.0" android:scaleX="0.20" android:scaleY="0.20">
+            <path android:name="wave_line_b" android:pathData="M 26.18,16.0 a 12.32,19.2 0 1 0 24.64,0 a 12.32,19.2 0 1 0 -24.64,0 Z" android:strokeColor="#FFFFFF" android:strokeWidth="1.2" android:strokeAlpha="0" android:fillColor="@android:color/transparent" />
+        </group>
         <group android:name="sweep" android:translateX="-15.246">
-            <path android:fillColor="#26FFFFFF" android:pathData="M -13.86,16.0 a 13.86,13.86 0 1 0 27.72,0 a 13.86,13.86 0 1 0 -27.72,0 Z" />
+            <path android:fillColor="#52FFFFFF" android:pathData="M -13.86,16.0 a 13.86,13.86 0 1 0 27.72,0 a 13.86,13.86 0 1 0 -27.72,0 Z" />
         </group>
     </group>
 </vector>

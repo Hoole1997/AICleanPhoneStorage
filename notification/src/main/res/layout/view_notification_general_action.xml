@@ -4,11 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <ImageView
+        android:id="@+id/notificationButtonStatic"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:background="@drawable/noti_timing_notify_btn_simple"
+        android:importantForAccessibility="no" android:visibility="gone" />
+
     <ProgressBar
+        android:id="@+id/notificationButtonMotion"
+        android:indeterminateTint="@null"
+        android:indeterminateOnly="false"
+        android:importantForAccessibility="no"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:indeterminate="true"
-        android:indeterminateDrawable="@drawable/noti_timing_notify_btn_long"
+        android:indeterminateDrawable="@drawable/notification_button_motion"
         android:minWidth="0dp"
         android:minHeight="0dp" />
 

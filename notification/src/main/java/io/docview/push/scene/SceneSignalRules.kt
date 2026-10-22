@@ -5,6 +5,8 @@ internal data class SceneSignals(val events: List<SceneEvent> = emptyList(), val
 
 /** 纯状态边沿判定，首次粘性快照只建立基线，不把前台服务重建当成插拔/低电量事件。 */
 internal class BatterySceneRules {
+    // 插电防抖独立于发送间隔和触发确认延迟，按最新要求为一分钟。
+    private companion object { const val CHARGE_CONNECTION_DEBOUNCE_MS = 60_000L }
     var current: SceneBattery? = null
         private set
     private var startedElapsed: Long? = null
@@ -31,7 +33,7 @@ internal class BatterySceneRules {
             val ongoing = startedElapsed != null && !ended && (previous.plugged || previous.charging)
             if (!ongoing) {
                 session = now.elapsed.toString(); startedElapsed = now.elapsed; ended = false
-                val bounce = lastConnection?.let { now.elapsed - it < 300_000L } == true
+                val bounce = lastConnection?.let { now.elapsed - it < CHARGE_CONNECTION_DEBOUNCE_MS } == true
                 lastConnection = now.elapsed
                 if (!bounce) events += SceneEvent(PushScene.CHARGE_START, now.wall, now.elapsed,
                     reference = session, batteryPercent = value.percent, charging = value.charging, plugged = value.plugged, fullCharge = value.full)

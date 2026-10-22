@@ -215,7 +215,8 @@ class GeneralModelManager() {
     }
 
     /** 内容选择与构建分离，确保本地/远程内容经过相同的图标、文案、PendingIntent 链路。 */
-    fun build(context: Context, data: Content, type: CheckCtrl.NotificationType): GeneralNotificationData {
+    fun build(context: Context, data: Content, type: CheckCtrl.NotificationType,
+        animate: Boolean = NotificationMotion.allowed(context)): GeneralNotificationData {
         val notificationId = type2notificationId[NotificationType.GENERAL] ?: 0
         val title = data.title
         val content = data.desc
@@ -242,7 +243,7 @@ class GeneralModelManager() {
             .setViewVisible(R.id.tvDesc, compactDescriptionFits(context, title, content))
             .setTextViewText(R.id.tvAction, data.buttonText)
             .setOnClickPendingIntent(R.id.tvAction, pendingIntent)
-            .build()
+            .build().also { NotificationMotion.applyLegacy(it, animate) }
 
         val bigContentView = ViewBuilder(
             context.packageName,
@@ -256,7 +257,7 @@ class GeneralModelManager() {
             .setTextViewText(R.id.tvDesc, content)
             .setTextViewText(R.id.tvAction, data.buttonText)
             .setOnClickPendingIntent(R.id.tvAction, pendingIntent)
-            .build()
+            .build().also { NotificationMotion.applyLegacy(it, animate) }
 
         return GeneralNotificationData(
             notificationId = notificationId,

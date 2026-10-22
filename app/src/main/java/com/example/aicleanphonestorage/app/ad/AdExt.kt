@@ -128,8 +128,6 @@ private fun FragmentActivity.canRequestAfterRiskWait() =
     !isFinishing && !isDestroyed && hasWindowFocus() && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
 
 internal fun isAdSlotEnabled(positionName: String): Boolean {
-    // 测试阶段刻意放行所有广告位；线上参数尚未配置。Slot Key 清单见 docs/ads/slots.md。
-    //todo 联调完成后移除这一行 return true，恢复下面的远程开关判断。
-//    return true
+    // 所有点位统一读取远程开关；请求入口不再保留测试强制放行分支。
     return AdSlotSwitchController.isEnabled(positionName)
 }

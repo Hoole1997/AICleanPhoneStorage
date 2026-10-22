@@ -73,7 +73,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
+        <!-- 背景层动效不改变文字或点击区域；减少动效时显式切为静态。 -->
+        <ImageView
+            android:id="@+id/notificationButtonStatic"
+            android:layout_width="0dp" android:layout_height="0dp"
+            android:layout_alignStart="@id/tvAction" android:layout_alignEnd="@id/tvAction"
+            android:layout_alignTop="@id/tvAction" android:layout_alignBottom="@id/tvAction"
+            android:background="@drawable/noti_timing_notify_btn_simple"
+            android:importantForAccessibility="no" android:visibility="gone" />
+
         <ProgressBar
+            android:id="@+id/notificationButtonMotion"
+            android:indeterminateTint="@null"
+            android:indeterminateOnly="false"
+            android:importantForAccessibility="no"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_alignStart="@id/tvAction"
@@ -81,7 +94,7 @@
             android:layout_alignEnd="@id/tvAction"
             android:layout_alignBottom="@id/tvAction"
             android:indeterminate="true"
-            android:indeterminateDrawable="@drawable/noti_timing_notify_btn_long"
+            android:indeterminateDrawable="@drawable/notification_button_motion_compact"
             android:minWidth="0dp"
             android:minHeight="0dp" />
 

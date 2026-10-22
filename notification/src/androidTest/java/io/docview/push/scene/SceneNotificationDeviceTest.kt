@@ -248,6 +248,90 @@ class SceneNotificationDeviceTest {
         Unit
     }
 
+    @Test fun legacyMotionSupportsBothLayoutsAndStaticReapply(): Unit = runBlocking {
+        val data = io.docview.push.config.Content("motion", "Storage summary", "Review your files.", "Clean", 1, 1)
+        val model = GeneralModelManager().build(context, data, io.docview.push.check.CheckCtrl.NotificationType.ALARM_MANAGER, animate = true)
+        val output = File(context.getExternalFilesDir(null), "motion-verification").apply { mkdirs() }
+        for ((kind, remote) in listOf("compact" to model.contentView!!, "expanded" to model.bigContentView!!)) {
+            lateinit var content: View
+            lateinit var motion: android.widget.ProgressBar
+            ActivityScenario.launch(SceneRenderTestActivity::class.java).use { scenario ->
+                scenario.onActivity { activity ->
+                    val parent = activity.findViewById<FrameLayout>(android.R.id.content)
+                    parent.setBackgroundColor(Color.WHITE)
+                    content = remote.apply(activity, parent)
+                    parent.addView(content, FrameLayout.LayoutParams((320 * activity.resources.displayMetrics.density).toInt(), FrameLayout.LayoutParams.WRAP_CONTENT, android.view.Gravity.CENTER))
+                    motion = content.findViewById(R.id.notificationButtonMotion)
+                }
+                delay(250)
+                val samples = mutableSetOf<Int>()
+                repeat(12) { frame ->
+                    val bounds = android.graphics.Rect()
+                    scenario.onActivity {
+                        motion.getGlobalVisibleRect(bounds)
+                        val action = content.findViewById<TextView>(R.id.tvAction)
+                        assertTrue(action.layout.height <= action.height - action.compoundPaddingTop - action.compoundPaddingBottom)
+                        assertTrue(action.hasOnClickListeners())
+                        assertEquals(motion.width, motion.indeterminateDrawable.bounds.width())
+                        assertEquals(motion.height, motion.indeterminateDrawable.bounds.height())
+                        assertTrue(motion.indeterminateDrawable is android.graphics.drawable.AnimatedVectorDrawable)
+                    }
+                    val bitmap = requireNotNull(instrumentation.uiAutomation.takeScreenshot())
+                    try {
+                        val pixels = IntArray(bounds.width() * bounds.height())
+                        bitmap.getPixels(pixels, 0, bounds.width(), bounds.left, bounds.top, bounds.width(), bounds.height())
+                        samples += pixels.contentHashCode()
+                        if (frame == 6) File(output, "legacy-$kind.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+                    } finally { bitmap.recycle() }
+                    delay(100)
+                }
+                assertTrue("Legacy $kind must visibly animate", samples.size >= 6)
+                scenario.onActivity {
+                    NotificationMotion.applyLegacy(remote, false)
+                    remote.reapply(it, content)
+                    assertEquals(View.GONE, motion.visibility)
+                    assertEquals(View.VISIBLE, content.findViewById<View>(R.id.notificationButtonStatic).visibility)
+                    assertEquals("Clean", content.findViewById<TextView>(R.id.tvAction).text.toString())
+                }
+                delay(100)
+                scenario.onActivity { assertFalse((motion.indeterminateDrawable as android.graphics.drawable.Animatable).isRunning) }
+            }
+        }
+    }
+
+    @Test fun rippleAloneChangesVisiblePixelsWithoutSweepOrBreathing(): Unit = runBlocking {
+        lateinit var motion: android.widget.ProgressBar
+        val samples = mutableSetOf<Int>()
+        ActivityScenario.launch(SceneRenderTestActivity::class.java).use { scenario ->
+            scenario.onActivity { activity ->
+                val parent = activity.findViewById<FrameLayout>(android.R.id.content)
+                parent.setBackgroundColor(Color.WHITE)
+                motion = android.widget.ProgressBar(activity).apply {
+                    isIndeterminate = true
+                    indeterminateTintList = null
+                    indeterminateDrawable = activity.getDrawable(io.docview.push.test.R.drawable.notification_wave_fixture)
+                }
+                parent.addView(motion, FrameLayout.LayoutParams((295 * activity.resources.displayMetrics.density).toInt(), (46 * activity.resources.displayMetrics.density).toInt(), android.view.Gravity.CENTER))
+            }
+            delay(200)
+            repeat(14) {
+                val bounds = android.graphics.Rect()
+                scenario.onActivity { motion.getGlobalVisibleRect(bounds) }
+                val bitmap = requireNotNull(instrumentation.uiAutomation.takeScreenshot())
+                try {
+                    val pixels = IntArray(bounds.width() * bounds.height())
+                    bitmap.getPixels(pixels, 0, bounds.width(), bounds.left, bounds.top, bounds.width(), bounds.height())
+                    samples += pixels.contentHashCode()
+                } finally { bitmap.recycle() }
+                delay(100)
+            }
+            assertTrue("Water ripples must actually expand and fade", samples.size >= 8)
+            scenario.onActivity { motion.visibility = View.GONE }
+            delay(100)
+            scenario.onActivity { assertFalse((motion.indeterminateDrawable as android.graphics.drawable.Animatable).isRunning) }
+        }
+    }
+
     @Test fun serviceOwnedListenersAreReleasedOnDisableAndClose()=runBlocking {
         var enabled=true
         val runtimeHost=object:NotificationHost by host {

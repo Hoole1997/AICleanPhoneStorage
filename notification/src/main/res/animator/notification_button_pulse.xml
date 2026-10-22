@@ -1,0 +1,5 @@
+<!-- 仅变换背景，文字与点击区域保持稳定；完整呼吸周期 1100ms。 -->
+<set xmlns:android="http://schemas.android.com/apk/res/android" android:ordering="together">
+    <objectAnimator android:propertyName="scaleX" android:valueFrom="1" android:valueTo="0.90" android:valueType="floatType" android:duration="550" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/accelerate_decelerate" />
+    <objectAnimator android:propertyName="scaleY" android:valueFrom="1" android:valueTo="0.86" android:valueType="floatType" android:duration="550" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/accelerate_decelerate" />
+</set>

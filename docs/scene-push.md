@@ -95,7 +95,7 @@
 
 ## 通知展示与埋点
 
-用户补充 [Figma 7136:4768](https://www.figma.com/design/dVsTL6ggoDPXVPcEKg856G/lcb-%E9%A1%B5%E9%9D%A2UI?node-id=7136-4768&m=dev) 后，新场景采用独立 XML 布局，复用原通知构建器与点击链路，旧通知 XML 和文案布局保持原样。折叠态设计包含 28dp App 图标、24dp 场景图标、单一富文本文案、77dp 最小宽按钮；Android 12+ 已由系统在同一行提供 App 图标，因此隐藏自定义 App 图标，避免重复挤占文案。动画展开态使用居中 56dp 场景图标、文案、39dp 最小高按钮，减少动效时采用稿中横排展开态。系统提供 App 名称、真实时间和展开/收起控件。新场景使用独立 HIGH 渠道 `scene_smart_alerts_v1`（Smart alerts），有声音、无振动，不使用全屏 Intent。八个 ID、PendingIntent 和分组隔离，不触发旧删除重发接收器。原版图标离线转换为五档密度 WebP，源图、SHA-256 和节点来源记录在 `design/figma/scene-push/assets.json`。按用户视频参考，按钮使用 XML AnimatedVectorDrawable + objectAnimator 连续插值：900ms 小幅呼吸，1200ms 单向扫光，圆角裁切不会溢出；图标原版位图采用 48 帧/960ms 平滑呼吸，双箭头采用 32 帧/960ms 平滑向内位移。均经原生 ProgressBar 承载，无 App 帧循环、重复 notify 或运行时图片转换。额外素材与 SHA-256 见 `design/figma/scene-push/layout-assets.json`；系统折叠箭头保留源文件供对照，由系统实际绘制。省电、灭屏或减少动效时构建为静态，XML 动画不靠反复 notify 驱动；循环悬浮展示由下面独立的有限重发任务管理。
+用户补充 [Figma 7136:4768](https://www.figma.com/design/dVsTL6ggoDPXVPcEKg856G/lcb-%E9%A1%B5%E9%9D%A2UI?node-id=7136-4768&m=dev) 后，新场景采用独立 XML 布局，复用原通知构建器与点击链路，旧通知文案与内容布局保持原样；按用户最新要求，旧日龄通知按钮也共用增强呼吸/水波纹，只有背景动效与静态替代层更新。折叠态设计包含 28dp App 图标、24dp 场景图标、单一富文本文案、77dp 最小宽按钮；Android 12+ 已由系统在同一行提供 App 图标，因此隐藏自定义 App 图标，避免重复挤占文案。动画展开态使用居中 56dp 场景图标、文案、39dp 最小高按钮，减少动效时采用稿中横排展开态。系统提供 App 名称、真实时间和展开/收起控件。新场景使用独立 HIGH 渠道 `scene_smart_alerts_v1`（Smart alerts），有声音、无振动，不使用全屏 Intent。八个 ID、PendingIntent 和分组隔离，不触发旧删除重发接收器。原版图标离线转换为五档密度 WebP，源图、SHA-256 和节点来源记录在 `design/figma/scene-push/assets.json`。按用户视频参考，按钮使用 XML AnimatedVectorDrawable + objectAnimator 连续插值：1100ms 明显呼吸、两层错开 700ms 的 1400ms 扩散淡出水波纹、1400ms 单向扫光，圆角裁切不会溢出；图标原版位图采用 48 帧/960ms 平滑呼吸，双箭头采用 32 帧/960ms 平滑向内位移。均经原生 ProgressBar 承载，无 App 帧循环、重复 notify 或运行时图片转换。额外素材与 SHA-256 见 `design/figma/scene-push/layout-assets.json`；系统折叠箭头保留源文件供对照，由系统实际绘制。省电、灭屏或减少动效时构建为静态，XML 动画不靠反复 notify 驱动；循环悬浮展示由下面独立的有限重发任务管理。
 
 后台使用系统通知；到期时前台使用可见业务页短提示，不缓存到下次前台。1101 额外以插电时前后台判定。系统仍决定实际是否弹出悬浮横幅（通知权限、用户渠道设置、勿扰及系统限频），多个 ID 可共存不代表系统会同时显示多个横幅。
 
@@ -128,3 +128,7 @@ Notific_Show/Click/Enter 保持旧分类协议并携带来源 `charge_start`、`
 验证结果与截图见 `docs/verification/scene-push/README.md`。仅使用 local 渠道编译和模拟器测试，未发布远程配置，也未构建 google 渠道。
 
 平台约束参考：[截图检测](https://developer.android.com/about/versions/14/features/screenshot-detection)、[共享媒体存储](https://developer.android.com/training/data-storage/shared/media)、[网络监听](https://developer.android.com/develop/connectivity/network-ops/reading-network-state)。
+
+## 2026-10-22 核对后调整
+
+充电开始连接防抖为 **60 秒**（满 60 秒允许），独立于远程发送间隔；持续抖动以最近一次连接为起点。新旧通知按钮均采用增强呼吸、双层扩散水波纹和扫光，文字与点击区域不缩放。XML 由 `tools/generate_notification_motion.py` 统一维护；原图图标未重绘。减少动效、灭屏和省电时构建静态版本，隐藏后原生 ProgressBar 停止动画。

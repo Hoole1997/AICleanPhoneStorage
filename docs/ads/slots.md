@@ -6,11 +6,11 @@
 
 卸载挽留新增插屏 `uninstall_anyway`：第一张挽留页点击 Uninstall Anyway 后请求，关闭/失败/无填充后才显示原因页；Keep the App 和最终系统卸载按钮不新增广告。详见 [卸载挽留流程](../uninstall-retention.md)。
 
-已合并 [v1.0.1 需求第 4 章](https://pic6ktmsyi.feishu.cn/wiki/T4vOwfFKviXZBYkwCgFcH6xmnAc)（2026-09-20 核对）与原 v11 总表，共 **55 个 Key，52 个已接入实际入口**，另有 1 个条件位与 2 个预留完成页位。本次只完善广告位和业务触发，不改内置配置、远程开关、广告 ID 或频控。入口接入不代表真实 SDK 一定填充。原版审计见 [历史审计报告](slot-key-audit.md)。
+已合并 [v1.0.1 需求第 4 章](https://pic6ktmsyi.feishu.cn/wiki/T4vOwfFKviXZBYkwCgFcH6xmnAc)（2026-09-20 核对）与原 v11 总表，截至 v1.0.5 共 **59 个 Key，56 个已接入实际入口**，另有 1 个条件位与 2 个预留完成页位。合计包括 v1.0.4 测网速两个插屏及 v1.0.5 两个插屏。本次只完善广告位和业务触发，不改内置配置、远程开关、广告 ID 或频控。入口接入不代表真实 SDK 一定填充。原版审计见 [历史审计报告](slot-key-audit.md)。
 
 ## 测试开关与 SDK 参数
 
-`app/ad/AdExt.kt` 的 `isAdSlotEnabled()` **按用户要求保持 `return true`**。线上开关参数尚未配置；联调完成后移除该行，恢复 `AdSlotSwitchController.isEnabled(positionName)` 即可，页面无需逐个加判断。
+`app/ad/AdExt.kt` 的 `isAdSlotEnabled()` 当前直接调用 `AdSlotSwitchController.isEnabled(positionName)`；没有测试强制放行。新增的 `new_user_start_clean`、`uninstall_anyway` 同样读取远程点位开关。代码接入已核对；线上配置、广告账户点位及实际填充需在对应后台联调确认。
 
 原生、插屏、开屏均将同一个 `positionName` 传入 SDK 的 `position` 参数；SDK 自身请求资格、频次、缓存与填充规则仍生效。原生失败时收起容器，没有填充不展示占位素材。
 

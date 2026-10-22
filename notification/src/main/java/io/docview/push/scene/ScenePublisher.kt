@@ -6,7 +6,6 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.os.Build
-import android.os.PowerManager
 import io.docview.push.NotificationPermissionAccess
 import io.docview.push.R
 import io.docview.push.analytics.NotificationContent
@@ -55,7 +54,7 @@ internal class ScenePublisher(context: Context, private val repeats: SceneRepeat
         }
     }
 
-    internal fun model(event: SceneEvent, copy: SceneSelection, animate: Boolean = motionAllowed(), renderContext: Context = app): GeneralNotificationData {
+    internal fun model(event: SceneEvent, copy: SceneSelection, animate: Boolean = NotificationMotion.allowed(app), renderContext: Context = app): GeneralNotificationData {
         val text = SceneRichText.render(copy.text.text)
         val button = SceneRichText.plain(copy.text.button)
         val pending = entryPointPendingIntent(app, event.scene.notificationId) { intent ->
@@ -84,10 +83,6 @@ internal class ScenePublisher(context: Context, private val repeats: SceneRepeat
         }
     }
 
-    private fun motionAllowed(): Boolean {
-        val power = app.getSystemService(PowerManager::class.java)
-        return power.isInteractive && !power.isPowerSaveMode && (Build.VERSION.SDK_INT < 26 || android.animation.ValueAnimator.areAnimatorsEnabled())
-    }
     companion object {
         const val CHANNEL = "scene_smart_alerts_v1"
         const val SILENT_CHANNEL = "scene_smart_alerts_silent_v1"

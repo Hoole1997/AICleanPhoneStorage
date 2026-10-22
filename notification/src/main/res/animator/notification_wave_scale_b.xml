@@ -1,0 +1,4 @@
+<set xmlns:android="http://schemas.android.com/apk/res/android" android:ordering="together">
+    <objectAnimator android:propertyName="scaleX" android:valueFrom="0.20" android:valueTo="3.4" android:valueType="floatType" android:duration="1400" android:startOffset="700" android:repeatCount="infinite" android:repeatMode="restart" android:interpolator="@android:interpolator/linear" />
+    <objectAnimator android:propertyName="scaleY" android:valueFrom="0.20" android:valueTo="3.4" android:valueType="floatType" android:duration="1400" android:startOffset="700" android:repeatCount="infinite" android:repeatMode="restart" android:interpolator="@android:interpolator/linear" />
+</set>

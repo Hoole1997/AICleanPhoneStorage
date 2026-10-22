@@ -1,0 +1,7 @@
+<!-- 隔离生产水波纹目标：没有呼吸/扫光，像素变化只能来自水波纹。 -->
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android" android:drawable="@drawable/scene_button_surface">
+    <target android:name="wave_a" android:animation="@animator/notification_wave_scale_a" />
+    <target android:name="wave_line_a" android:animation="@animator/notification_wave_fade_a" />
+    <target android:name="wave_b" android:animation="@animator/notification_wave_scale_b" />
+    <target android:name="wave_line_b" android:animation="@animator/notification_wave_fade_b" />
+</animated-vector>

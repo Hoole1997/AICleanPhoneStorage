@@ -21,6 +21,17 @@ class SceneSignalTest {
         assertTrue(rules.update(battery(50, true), time(200)).events.isEmpty())
         assertTrue("同一次插电的后续充电状态不能使原触发事件失效", rules.valid(start))
     }
+    @Test fun connectionDebounceRejectsBelowOneMinuteAndAcceptsExactBoundary() {
+        for (elapsed in listOf(59_999L, 60_000L, 120_000L)) {
+            val rules = BatterySceneRules()
+            rules.update(battery(50), time(0))
+            rules.update(battery(50, true), time(100))
+            rules.update(battery(50), time(200))
+            val reconnect = rules.update(battery(50, true), time(100 + elapsed))
+            assertEquals("重连间隔=$elapsed", if (elapsed < 60_000L) 0 else 1,
+                reconnect.events.count { it.scene == PushScene.CHARGE_START })
+        }
+    }
     @Test fun chargingBeforePluggedUpdateKeepsOriginalSessionAndDuration() {
         val rules = BatterySceneRules()
         rules.update(battery(50), time(0))
