@@ -33,7 +33,7 @@ class UninstallRetentionActivity : AppCompatActivity() {
     private lateinit var binding: ScreenUninstallRetentionBinding
     private lateinit var renderer: RetentionRenderer
     private lateinit var ads: InterstitialActions
-    private lateinit var uninstall: SelfUninstallCoordinator
+    private lateinit var systemSettings: RetentionSettingsCoordinator
     private var allowed = false
     private var pendingHome = false
     private var leaving = false
@@ -45,7 +45,7 @@ class UninstallRetentionActivity : AppCompatActivity() {
         binding = ScreenUninstallRetentionBinding.inflate(layoutInflater)
         setContentView(binding.root)
         renderer = RetentionRenderer(binding)
-        uninstall = SelfUninstallCoordinator(this) { failed ->
+        systemSettings = RetentionSettingsCoordinator(this) { failed ->
             binding.reason.uninstallError.isVisible = failed
             render()
         }
@@ -64,7 +64,7 @@ class UninstallRetentionActivity : AppCompatActivity() {
             if (canAct() && model.beginAnyway()) ads.run(InterstitialPlacements.UNINSTALL_ANYWAY, InterstitialPlacements.UNINSTALL_ANYWAY)
         }
         binding.reason.uninstall.setOnClickListener {
-            if (canAct()) { model.uninstall(); uninstall.launch() }
+            if (canAct()) { model.uninstall(); systemSettings.launch() }
         }
         binding.reason.back.setOnClickListener { back() }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -105,16 +105,16 @@ class UninstallRetentionActivity : AppCompatActivity() {
     }
 
     private fun render() {
-        if (!this::uninstall.isInitialized) return
-        renderer.render(model.state.value, allowed, uninstall.busy)
+        if (!this::systemSettings.isInitialized) return
+        renderer.render(model.state.value, allowed, systemSettings.busy)
         if (allowed && !pendingHome && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) model.shown()
     }
 
-    private fun canAct() = allowed && !pendingHome && !leaving && !ads.busy && !uninstall.busy && !model.state.value.busy
+    private fun canAct() = allowed && !pendingHome && !leaving && !ads.busy && !systemSettings.busy && !model.state.value.busy
 
     private fun keep() { if (canAct()) { model.keep(); openHome() } }
     private fun back() {
-        if (ads.busy || uninstall.busy || model.state.value.busy) return
+        if (ads.busy || systemSettings.busy || model.state.value.busy) return
         androidx.core.view.WindowCompat.getInsetsController(window, binding.root).hide(WindowInsetsCompat.Type.ime())
         if (!model.back()) finish()
     }

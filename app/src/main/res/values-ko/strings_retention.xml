@@ -15,7 +15,7 @@
     <string name="retention_not_yet">아직 삭제하지 않기</string>
     <string name="retention_uninstall">삭제</string>
     <string name="retention_shortcut_disabled">이 바로가기는 더 이상 사용할 수 없습니다.</string>
-    <string name="retention_unavailable">시스템 삭제 화면을 열 수 없습니다. 다시 시도해 주세요.</string>
+    <string name="retention_unavailable">앱 정보를 열 수 없습니다. 다시 시도해 주세요.</string>
     <string name="retention_back">뒤로</string>
     <string name="retention_junk">불필요한 파일 정리</string>
     <string name="retention_malware">악성 소프트웨어 검사</string>

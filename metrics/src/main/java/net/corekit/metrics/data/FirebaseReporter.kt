@@ -134,7 +134,7 @@ class FirebaseReporter : ReporterData {
             // 上报到Firebase Analytics
             analytics.logEvent(eventName, bundle)
 
-            MetricsLogger.d("Firebase Analytics数据上报: $eventName, JSON: ${mapToJson(net.corekit.metrics.log.EventLogParameters.redact(normalized))}")
+            MetricsLogger.d("Firebase Analytics数据上报: $eventName, JSON: ${mapToJson(normalized)}")
 
         } catch (e: Exception) {
             MetricsLogger.e("Firebase Analytics数据上报失败", e)

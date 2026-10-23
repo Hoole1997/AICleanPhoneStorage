@@ -15,7 +15,7 @@
     <string name="retention_not_yet">Jangan hapus dulu</string>
     <string name="retention_uninstall">Hapus instalasi</string>
     <string name="retention_shortcut_disabled">Pintasan ini tidak tersedia lagi.</string>
-    <string name="retention_unavailable">Tidak dapat membuka layar penghapusan sistem. Silakan coba lagi.</string>
+    <string name="retention_unavailable">Tidak dapat membuka info aplikasi. Silakan coba lagi.</string>
     <string name="retention_back">Kembali</string>
     <string name="retention_junk">Pembersih Sampah</string>
     <string name="retention_malware">Pemindaian Malware</string>

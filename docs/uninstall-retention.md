@@ -21,8 +21,8 @@
 - Keep the App、Don’t uninstall yet 返回首页，不新增保留按钮广告。
 - Uninstall Anyway 触发插屏 `uninstall_anyway`，Slot Key 和 Position Name 相同。关闭、失败、无填充或开关关闭后进入原因页；回调在后台到达时等待前台，连续点击不会重复请求。同一 Activity 重建保留请求，进程恢复不自动重放旧广告。
 - 原因页单选，默认未选，可不选择直接卸载；输入最多 500 字符，仅保留有界页面 SavedState。用户已确认将贷款文案改为“清理效果不符合预期”“缺少需要的功能”和当前应用名称，其余理由保持原意。
-- 点击 Uninstall 调用本应用包名的系统 ACTION_DELETE 确认界面；应用不静默卸载、不自动确认，不把系统返回当作卸载成功。保留应用管理和病毒页禁止卸载自家包的原规则，使用独立的自卸载协调器。参见 [Android Intent.ACTION_DELETE](https://developer.android.com/reference/android/content/Intent#ACTION_DELETE)。
-- 原因页返回键回到挽留页；挽留页返回键正常退出。系统卸载取消后留在原因页；打开系统界面失败时显示可重试提示。系统原生卸载按钮、设置中的卸载路径不受本功能影响。
+- 按用户最新要求，点击原因页 Uninstall 通过 `Settings.ACTION_APPLICATION_DETAILS_SETTINGS` + 当前 App 的 `package:` URI 打开系统应用信息页。由用户在系统页自行操作，不直接调用 ACTION_DELETE 或 ACTION_UNINSTALL_PACKAGE。`RetentionSettingsCoordinator` 管理防连点、返回及热启动保护；其他功能的卸载策略不变。
+- 原因页返回键回到挽留页；挽留页返回键正常退出。从系统应用信息页返回后留在原因页；打开系统界面失败时显示可重试提示。系统原生卸载按钮、设置中的卸载路径不受本功能影响。
 - 文案覆盖 16 种语言；插画内文字保持 Figma 原图。没有新权限、文件扫描或独立服务器反馈接口；反馈按下文用户最新授权通过已有埋点通道提交。
 
 ## 埋点与反馈边界
@@ -33,10 +33,10 @@
 
 `uninstall_retention_click` 仅含 `action=keep_app/uninstall`。
 
-用户于 2026-10-22 原表核对后改为允许上报：`uninstall_reason_click` 在原因页点击 Keep/Uninstall 时，携带 String 类型的 `action`、`reason`、`has_other_content`。未选择时 `reason=none`；选择 Other 时 `has_other_content` 为输入原文（保留既有 500 字符上限），非 Other 或空输入为空串，不发送 Boolean、不上传旧的 Other 草稿。选项变化、输入、曝光、返回和广告回调不提交反馈。
+用户于 2026-10-22 原表核对后改为允许上报：`uninstall_reason_click` 在原因页点击 Keep/Uninstall 时，携带 String 类型的 `action`、`reason`、`has_other_content`。未选择时 `reason=none`；`has_other_content` 独立于所选原因，始终取点击时输入框里的原文（保留既有 500 字符上限）；仅没有输入时为空串。选择或切换任意选项都不丢弃输入，不发送 Boolean。选项变化、输入、曝光、返回和广告回调不提交反馈。
 
 现有清理选项映射：Difficult to use → difficult_to_use；Too many ads → too_many_ads；清理结果不符合预期 / Loading stutter → poor_user_experience；Missing features I need → unmet_needs；Others → other。页面没有“找到类似应用”选项，不能把其他选项强行映射到 found_similar_app。
 
-参数在点击时锁存，经现有 BusinessTelemetry/ReportDataManager 分发；不等待网络返回才打开系统卸载页。应用日志及自有 Firebase 适配器日志遮盖输入正文，实际提交值保持原样。
+参数在点击时锁存，经现有 BusinessTelemetry/ReportDataManager 分发；不等待网络返回才打开系统应用信息页。按用户最新要求，应用日志及自有 Firebase 适配器日志直接显示实际参数：空串显示为空，非空输入显示原文，不替换成 [redacted]；未修改日志开关或实际上报值。
 
 广告点位已接线；实际线上填充、频控与广告平台配置需要另行联调。本次不实现需求第 3–5 章的场景推送、开机自启或 grouping。

@@ -15,7 +15,7 @@
     <string name="retention_not_yet">暂不卸载</string>
     <string name="retention_uninstall">卸载</string>
     <string name="retention_shortcut_disabled">此快捷入口已不可用。</string>
-    <string name="retention_unavailable">无法打开系统卸载页面，请重试。</string>
+    <string name="retention_unavailable">无法打开应用信息页面，请重试。</string>
     <string name="retention_back">返回</string>
     <string name="retention_junk">垃圾清理</string>
     <string name="retention_malware">恶意软件扫描</string>

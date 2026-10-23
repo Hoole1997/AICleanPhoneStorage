@@ -15,7 +15,7 @@
     <string name="retention_not_yet">Ne pas désinstaller pour l’instant</string>
     <string name="retention_uninstall">Désinstaller</string>
     <string name="retention_shortcut_disabled">Ce raccourci n’est plus disponible.</string>
-    <string name="retention_unavailable">Impossible d’ouvrir l’écran de désinstallation du système. Veuillez réessayer.</string>
+    <string name="retention_unavailable">Impossible d’ouvrir les informations de l’application. Veuillez réessayer.</string>
     <string name="retention_back">Retour</string>
     <string name="retention_junk">Fichiers inutiles</string>
     <string name="retention_malware">Analyse de logiciels malveillants</string>

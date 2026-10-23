@@ -1,0 +1,50 @@
+com.example.aicleanphonestorage.RetentionDeviceTest:
+Error in reasonPressFeedbackIsClippedToTheTouchedRow(com.example.aicleanphonestorage.RetentionDeviceTest):
+java.lang.AssertionError: 选项波纹必须有显式遮罩，不能使用系统无边界按钮波纹
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at com.example.aicleanphonestorage.RetentionDeviceTest.reasonPressFeedbackIsClippedToTheTouchedRow$lambda$20$lambda$19(RetentionDeviceTest.kt:146)
+	at com.example.aicleanphonestorage.RetentionDeviceTest$$ExternalSyntheticLambda6.perform(D8$$SyntheticClass:0)
+	at androidx.test.core.app.ActivityScenario.lambda$onActivity$2$androidx-test-core-app-ActivityScenario(ActivityScenario.java:794)
+	at androidx.test.core.app.ActivityScenario$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:520)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at android.app.Instrumentation$SyncRunnable.run(Instrumentation.java:2675)
+	at android.os.Handler.handleCallback(Handler.java:1082)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:126)
+	at android.os.Looper.loopOnce(Looper.java:295)
+	at android.os.Looper.loop(Looper.java:398)
+	at android.app.ActivityThread.main(ActivityThread.java:9569)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:918)
+
+
+Time: 2.179
+There was 1 failure:
+1) reasonPressFeedbackIsClippedToTheTouchedRow(com.example.aicleanphonestorage.RetentionDeviceTest)
+java.lang.AssertionError: 选项波纹必须有显式遮罩，不能使用系统无边界按钮波纹
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at com.example.aicleanphonestorage.RetentionDeviceTest.reasonPressFeedbackIsClippedToTheTouchedRow$lambda$20$lambda$19(RetentionDeviceTest.kt:146)
+	at com.example.aicleanphonestorage.RetentionDeviceTest$$ExternalSyntheticLambda6.perform(D8$$SyntheticClass:0)
+	at androidx.test.core.app.ActivityScenario.lambda$onActivity$2$androidx-test-core-app-ActivityScenario(ActivityScenario.java:794)
+	at androidx.test.core.app.ActivityScenario$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:520)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at android.app.Instrumentation$SyncRunnable.run(Instrumentation.java:2675)
+	at android.os.Handler.handleCallback(Handler.java:1082)
+	at android.os.Handler.dispatchMessageImpl(Handler.java:135)
+	at android.os.Handler.dispatchMessage(Handler.java:126)
+	at android.os.Looper.loopOnce(Looper.java:295)
+	at android.os.Looper.loop(Looper.java:398)
+	at android.app.ActivityThread.main(ActivityThread.java:9569)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:575)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:918)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1

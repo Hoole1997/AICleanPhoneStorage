@@ -15,7 +15,7 @@
     <string name="retention_not_yet">Don’t uninstall yet</string>
     <string name="retention_uninstall">Uninstall</string>
     <string name="retention_shortcut_disabled">This shortcut is no longer available.</string>
-    <string name="retention_unavailable">Unable to open the system uninstall screen. Please try again.</string>
+    <string name="retention_unavailable">Unable to open app info. Please try again.</string>
     <string name="retention_back">Back</string>
     <string name="retention_junk">Junk Cleaner</string>
     <string name="retention_malware">Malware Scan</string>

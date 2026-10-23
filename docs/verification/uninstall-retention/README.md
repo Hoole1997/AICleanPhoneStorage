@@ -33,3 +33,7 @@
 ## 2026-10-22 原表核对后的反馈上报
 
 用户已改为允许 reason 与 has_other_content 上报；上文“反馈不上传”是初次实现时的历史验证口径，最新行为与测试见 [反馈参数验证](feedback-parameters.md)。
+
+## 2026-10-22 系统目标页纠正
+
+按用户最新要求，原因页 Uninstall 改为本 App 的系统应用信息页（ACTION_APPLICATION_DETAILS_SETTINGS）。上文 ACTION_DELETE 属于历史实现，不再是该入口的行为。验证见 [系统应用信息页](system-app-info/README.md)。

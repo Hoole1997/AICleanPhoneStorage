@@ -16,6 +16,17 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class RetentionTest {
+    @Test fun uninstallWithoutInputSendsEmptyContentForDifferentReasons() {
+        for ((selection, expectedReason) in listOf(null to "none", 1 to "too_many_ads", 5 to "other")) {
+            val calls = mutableListOf<Pair<MetricEvent, Map<String, Any>>>()
+            val model = RetentionViewModel(SavedStateHandle(), EventSink { event, params -> calls += event to params })
+            model.beginAnyway(); model.adFinished(); calls.clear()
+            model.reason = selection
+            model.uninstall()
+            val expected = mapOf("action" to "uninstall", "reason" to expectedReason, "has_other_content" to "")
+            assertEquals(listOf(MetricEvent.UNINSTALL_REASON_CLICK to expected), calls)
+        }
+    }
     @Test fun remoteConfigDefaultsNeverPromoteOrganicOrUnknownAudience() {
         val inputs = listOf(null, "", "broken", "{}", "{paid:{enabled:false}}", "{\"paid\":{\"enabled\":\"false\"}}",
             "{\"paid\":{\"enabled\":true},\"organic\":{\"enabled\":true}}")
@@ -27,7 +38,7 @@ class RetentionTest {
         assertTrue(RetentionPolicy.enabled("{\"paid\":{\"enabled\":false}} trailing", true))
     }
 
-    @Test fun feedbackIsBoundedAndSentOnlyForOtherOnReasonPageButtonClick() {
+    @Test fun feedbackIsBoundedAndSentOnlyOnReasonPageButtonClick() {
         val calls = mutableListOf<Pair<MetricEvent, Map<String, Any>>>()
         val model = RetentionViewModel(SavedStateHandle(), EventSink { event, params -> calls += event to params })
         model.shown(); model.shown()
@@ -60,14 +71,14 @@ class RetentionTest {
             model.keep(); model.uninstall()
             for (parameters in calls.takeLast(2)) {
                 assertEquals(wire, parameters["reason"])
-                assertEquals(if (selected == 5) model.feedback else "", parameters["has_other_content"])
+                assertEquals(model.feedback, parameters["has_other_content"])
                 assertTrue(parameters["has_other_content"] is String)
             }
         }
         assertFalse(calls.any { it["reason"] == "found_similar_app" })
     }
 
-    @Test fun editingOtherThenSwitchingReasonOrReturningToOfferDoesNotSendStaleText() {
+    @Test fun restoredFeedbackSurvivesReasonChangesButIsExcludedFromOfferPage() {
         val calls = mutableListOf<Pair<MetricEvent, Map<String, Any>>>()
         val saved = SavedStateHandle()
         val model = RetentionViewModel(saved, EventSink { event, params -> calls += event to params })
@@ -79,12 +90,27 @@ class RetentionTest {
         restored.keep()
         assertEquals("test draft", calls.last().second["has_other_content"])
         restored.reason = 1; restored.uninstall()
-        assertEquals("", calls.last().second["has_other_content"])
+        assertEquals("too_many_ads", calls.last().second["reason"])
+        assertEquals("test draft", calls.last().second["has_other_content"])
         restored.reason = 5; restored.feedback = ""; restored.keep()
         assertEquals("other", calls.last().second["reason"])
         assertEquals("", calls.last().second["has_other_content"])
         restored.back(); restored.keep()
         assertEquals(MetricEvent.UNINSTALL_RETENTION_CLICK to mapOf("action" to "keep_app"), calls.last())
+    }
+
+    @Test fun typingBeforeSelectingAdsKeepsTheOriginalTextOnUninstall() {
+        val calls = mutableListOf<Pair<MetricEvent, Map<String, Any>>>()
+        val model = RetentionViewModel(SavedStateHandle(), EventSink { event, params -> calls += event to params })
+        model.beginAnyway(); model.adFinished(); calls.clear()
+        model.feedback = "  测试反馈\nToo many interruptions  "
+        model.reason = 1
+        assertTrue(calls.isEmpty())
+        model.uninstall()
+        assertEquals(listOf(MetricEvent.UNINSTALL_REASON_CLICK to mapOf(
+            "action" to "uninstall", "reason" to "too_many_ads",
+            "has_other_content" to "  测试反馈\nToo many interruptions  ",
+        )), calls)
     }
 
     @Test fun recreationKeepsFeedbackAndDoesNotReplayPendingAd() {

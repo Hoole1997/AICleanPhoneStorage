@@ -15,7 +15,7 @@
     <string name="retention_not_yet">Пока не удалять</string>
     <string name="retention_uninstall">Удалить</string>
     <string name="retention_shortcut_disabled">Этот ярлык больше недоступен.</string>
-    <string name="retention_unavailable">Не удалось открыть системное окно удаления. Повторите попытку.</string>
+    <string name="retention_unavailable">Не удалось открыть сведения о приложении. Повторите попытку.</string>
     <string name="retention_back">Назад</string>
     <string name="retention_junk">Очистка мусора</string>
     <string name="retention_malware">Поиск вредоносного ПО</string>

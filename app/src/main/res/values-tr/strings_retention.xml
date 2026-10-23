@@ -15,7 +15,7 @@
     <string name="retention_not_yet">Henüz kaldırma</string>
     <string name="retention_uninstall">Kaldır</string>
     <string name="retention_shortcut_disabled">Bu kısayol artık kullanılamıyor.</string>
-    <string name="retention_unavailable">Sistemin kaldırma ekranı açılamadı. Lütfen tekrar deneyin.</string>
+    <string name="retention_unavailable">Uygulama bilgileri açılamadı. Lütfen tekrar deneyin.</string>
     <string name="retention_back">Geri</string>
     <string name="retention_junk">Gereksiz Dosya Temizliği</string>
     <string name="retention_malware">Kötü Amaçlı Yazılım Taraması</string>

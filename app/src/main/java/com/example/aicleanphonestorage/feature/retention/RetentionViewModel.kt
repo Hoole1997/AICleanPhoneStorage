@@ -50,11 +50,11 @@ internal class RetentionViewModel(private val saved: SavedStateHandle, private v
             return
         }
         val selected = RetentionReason.fromSelection(reason)
-        // 两个按钮采用相同协议；按点击瞬间取值。切换离开 Other 后不能带出之前输入的文本。
+        // 原因选项与补充内容独立：两个按钮都发送点击时的原文，不能因切换选项丢弃输入。
         telemetry.send(MetricEvent.UNINSTALL_REASON_CLICK, mapOf(
             "action" to action,
             "reason" to (selected?.wire ?: "none"),
-            "has_other_content" to if (selected == RetentionReason.OTHER) feedback else "",
+            "has_other_content" to feedback,
         ))
     }
 

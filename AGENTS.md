@@ -98,7 +98,7 @@
 
 - 用户于 2026-10-22 在需求核对后明确：充电开始防抖改为 1 分钟，覆盖此前保留旧防抖的规则。新场景与旧日龄通知按钮都需要明显的呼吸/水波纹，不必受原文档效果限制；采用 XML 原生动画，保留单向扫光、原图图标，文字和点击区域稳定。仅更新旧通知按钮背景，不修改旧推送的触发、频控、ID、点击路由和循环策略；减少动效/省电/灭屏保留静态方案。
 
-- 用户于 2026-10-22 埋点原表核对后明确改为上报卸载原因和 Other 原文，覆盖此前不上传的要求。仅原因页底部 Keep/Uninstall 点击时发送 uninstall_reason_click，携带 action、reason、has_other_content；三者均为 String。未选择为 reason=none，Other 才带输入原文（既有 500 字符上限），非 Other/空输入为空串。编辑、选中、曝光和返回不提交反馈。现有清理效果问题与卡顿归 poor_user_experience，缺少功能归 unmet_needs，不伪造页面没有的 found_similar_app；沿用统一上报接口，自有诊断日志不复制正文。
+- 用户于 2026-10-22 埋点原表核对后明确改为上报卸载原因和 Other 原文，覆盖此前不上传的要求。仅原因页底部 Keep/Uninstall 点击时发送 uninstall_reason_click，携带 action、reason、has_other_content；三者均为 String。未选择为 reason=none；按用户后续纠正，has_other_content 与选项独立，始终带输入框原文（既有 500 字符上限），仅空输入为空串，切换选项不丢弃正文。编辑、选中、曝光和返回不提交反馈。现有清理效果问题与卡顿归 poor_user_experience，缺少功能归 unmet_needs，不伪造页面没有的 found_similar_app；沿用统一上报接口；按用户后续要求，自有诊断日志显示实际反馈参数：空串为空，有值显示填写原文，不替换为 [redacted]。
 
 - 用户于 2026-10-22 纠正新用户流程配置：new_user_flow_config 是直接 Boolean 值，移除 JSON 解析/兼容分支，使用当前 SDK 实际提供的 ConfigRemoteManager.getBoolean（用户称 getBool）。保留默认 true；与首页 Boolean 开关一致，避免将未下发的静态 false 误认为显式关闭。
 
@@ -107,3 +107,5 @@
 - 用户于 2026-10-22 要求新场景推送颜色由 HTML 显式配置，覆盖此前 b/strong 固定映射红色的规则。b/strong 仅加粗，font color="#RRGGBB" 决定颜色；不加颜色标签则沿用通知默认文字色。本地 scene_push_content.json 的 27 条文案均显式给强调片段添加 #FB4949；不在客户端为旧远程纯加粗文案补颜色，保留过滤不支持/可执行 HTML 与纯文本埋点规则。
 
 - 用户于 2026-10-22 要求 scene_push_content.json 多语言范围仅对齐实际 D1 日龄文案的地区版本，不覆盖 App 全部语言：pt-BR、es-MX、es-ES、id-ID、hi-IN、ja-JP、ko-KR。27 条完整 text HTML 与 buttonText 均需翻译，根部保留英文兜底；颜色继续由 HTML 显式配置。场景语言选择复用 PushContentLanguage 的精确/通用/约定地区匹配，切换语言不重置场景轮播、频控或通知 ID；不复制 D1 的 title/desc 双字段结构。
+
+- 用户于 2026-10-22 纠正卸载原因页 Uninstall 的目标：进入本 App 系统应用信息页面（Settings.ACTION_APPLICATION_DETAILS_SETTINGS，package:当前包名），由用户在系统页面自行操作；该入口不直接调用 ACTION_DELETE/ACTION_UNINSTALL_PACKAGE。保留点击埋点、返回原因页、防连点和外部页面热启动保护，不改变应用管理/病毒扫描等其他卸载入口。

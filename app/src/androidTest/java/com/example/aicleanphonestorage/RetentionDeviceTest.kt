@@ -58,13 +58,49 @@ class RetentionDeviceTest {
         } finally { manager.disableShortcuts(listOf(id)); manager.removeDynamicShortcuts(listOf(id)) }
     }
 
-    @Test fun selfUninstallOnlyBuildsOwnPackageSystemIntent() {
-        // 不启动/确认真实卸载；验证必须由系统接管且不能接收反馈文本或任意包名 extras。
-        val intent = SelfUninstallCoordinator.intent(context.packageName)
-        assertEquals(Intent.ACTION_DELETE, intent.action)
+    @Test fun reasonUninstallOnlyBuildsOwnPackageAppInfoIntent() {
+        // 只导航本应用的系统信息页，不构建删除请求，也不将反馈参数传给系统。
+        val intent = RetentionSettingsCoordinator.intent(context.packageName)
+        assertEquals(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, intent.action)
         assertEquals("package:${context.packageName}", intent.dataString)
-        assertTrue(intent.getBooleanExtra(Intent.EXTRA_RETURN_RESULT, false))
-        assertEquals(setOf(Intent.EXTRA_RETURN_RESULT), intent.extras!!.keySet())
+        assertTrue(intent.extras == null || intent.extras!!.isEmpty)
+    }
+
+    @Test fun reasonUninstallIntentActuallyOpensAndroidAppInfo() {
+        var guard: AutoCloseable? = null
+        instrumentation.runOnMainSync { guard = ForegroundTransitionGuard.hold("retention-settings-test") }
+        try {
+            ActivityScenario.launch(AboutActivity::class.java).use { scenario ->
+                val automation = instrumentation.uiAutomation
+                val event = automation.executeAndWaitForEvent({
+                    scenario.onActivity { it.startActivity(RetentionSettingsCoordinator.intent(it.packageName)) }
+                }, { it.eventType == android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED &&
+                    it.packageName?.toString() == "com.android.settings" }, 10_000)
+                event.recycle()
+                val label = context.applicationInfo.loadLabel(context.packageManager).toString()
+                fun containsLabel(node: android.view.accessibility.AccessibilityNodeInfo?): Boolean {
+                    if (node == null) return false
+                    if (node.text?.toString() == label || node.contentDescription?.toString() == label) return true
+                    return (0 until node.childCount).any { containsLabel(node.getChild(it)) }
+                }
+                // Android 37 的系统设置使用 Compose 虚拟节点；窗口事件早于内容加载，按可见内容有界等待。
+                val deadline = SystemClock.elapsedRealtime() + 5_000
+                var root = automation.rootInActiveWindow
+                while (!containsLabel(root) && SystemClock.elapsedRealtime() < deadline) {
+                    SystemClock.sleep(50)
+                    root = automation.rootInActiveWindow
+                }
+                assertEquals("com.android.settings", root?.packageName?.toString())
+                assertTrue("系统应用信息页应显示当前 App 名称", containsLabel(root))
+                val screenshot = requireNotNull(automation.takeScreenshot())
+                try { File(output, "system-app-info.png").outputStream().use {
+                    screenshot.compress(Bitmap.CompressFormat.PNG, 100, it)
+                } } finally { screenshot.recycle() }
+                // 不点击系统卸载、停用或清数据，只验证正常返回。
+                assertTrue(automation.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK))
+                instrumentation.waitForIdleSync()
+            }
+        } finally { instrumentation.runOnMainSync { guard?.close() } }
     }
 
     @Test fun interstitialFailureStillAdvancesOnlyAfterCallbackAndForeground() {
@@ -95,6 +131,59 @@ class RetentionDeviceTest {
                 scenario.moveToState(Lifecycle.State.RESUMED)
                 instrumentation.waitForIdleSync()
                 scenario.onActivity { assertEquals(RetentionPage.REASON, model.state.value.page) }
+            }
+        } finally { instrumentation.runOnMainSync { guard?.close() } }
+    }
+
+    @Test fun reasonPressFeedbackIsClippedToTheTouchedRow() {
+        var guard: AutoCloseable? = null
+        instrumentation.runOnMainSync { guard = ForegroundTransitionGuard.hold("retention-press-test") }
+        try {
+            ActivityScenario.launch(AboutActivity::class.java).use { scenario ->
+                lateinit var binding: ScreenUninstallRetentionBinding
+                scenario.onActivity { activity ->
+                    binding = ScreenUninstallRetentionBinding.inflate(activity.layoutInflater)
+                    val renderer = RetentionRenderer(binding)
+                    activity.setContentView(binding.root)
+                    binding.reason.root.setPadding(0, 80, 0, 32)
+                    renderer.render(RetentionState(RetentionPage.REASON), true, false)
+                }
+                instrumentation.waitForIdleSync()
+                val point = FloatArray(2)
+                scenario.onActivity {
+                    val row = binding.reason.reasonAds
+                    val location = IntArray(2)
+                    row.getLocationOnScreen(location)
+                    point[0] = location[0] + row.width - row.compoundDrawablesRelative[2].intrinsicWidth / 2f
+                    point[1] = location[1] + row.height / 2f
+                }
+                val started = SystemClock.uptimeMillis()
+                fun touch(action: Int) {
+                    val event = android.view.MotionEvent.obtain(started, SystemClock.uptimeMillis(), action, point[0], point[1], 0)
+                    event.source = android.view.InputDevice.SOURCE_TOUCHSCREEN
+                    try { instrumentation.sendPointerSync(event) } finally { event.recycle() }
+                }
+                touch(android.view.MotionEvent.ACTION_DOWN)
+                // 捕获真实按压中的 Ripple，而非软件 Canvas 的静态背景模拟。
+                SystemClock.sleep(180)
+                val screenshot = requireNotNull(instrumentation.uiAutomation.takeScreenshot())
+                try { File(output, "reason-option-pressed.png").outputStream().use {
+                    screenshot.compress(Bitmap.CompressFormat.PNG, 100, it)
+                } } finally { screenshot.recycle() }
+                touch(android.view.MotionEvent.ACTION_UP)
+                instrumentation.waitForIdleSync()
+                scenario.onActivity {
+                    val row = binding.reason.reasonAds
+                    assertTrue(row.isChecked)
+                    assertFalse(binding.reason.reasonDifficult.isChecked)
+                    for (choice in listOf(binding.reason.reasonDifficult, binding.reason.reasonAds, binding.reason.reasonResults,
+                        binding.reason.reasonFeatures, binding.reason.reasonSlow, binding.reason.reasonOther)) {
+                        val ripple = choice.background as android.graphics.drawable.RippleDrawable
+                        assertNotNull("选项波纹必须有显式遮罩，不能使用系统无边界按钮波纹", ripple.findDrawableByLayerId(android.R.id.mask))
+                        assertEquals(choice.width, ripple.bounds.width())
+                        assertEquals(choice.height, ripple.bounds.height())
+                    }
+                }
             }
         } finally { instrumentation.runOnMainSync { guard?.close() } }
     }

@@ -15,7 +15,7 @@
     <string name="retention_not_yet">ابھی ان انسٹال نہ کریں</string>
     <string name="retention_uninstall">ان انسٹال</string>
     <string name="retention_shortcut_disabled">یہ شارٹ کٹ اب دستیاب نہیں ہے۔</string>
-    <string name="retention_unavailable">سسٹم کی ان انسٹال اسکرین نہیں کھل سکی۔ دوبارہ کوشش کریں۔</string>
+    <string name="retention_unavailable">ایپ کی معلومات نہیں کھل سکیں۔ دوبارہ کوشش کریں۔</string>
     <string name="retention_back">واپس</string>
     <string name="retention_junk">غیر ضروری فائلوں کی صفائی</string>
     <string name="retention_malware">میلویئر اسکین</string>

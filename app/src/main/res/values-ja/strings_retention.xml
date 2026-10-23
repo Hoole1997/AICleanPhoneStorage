@@ -15,7 +15,7 @@
     <string name="retention_not_yet">今はアンインストールしない</string>
     <string name="retention_uninstall">アンインストール</string>
     <string name="retention_shortcut_disabled">このショートカットは利用できなくなりました。</string>
-    <string name="retention_unavailable">システムのアンインストール画面を開けませんでした。もう一度お試しください。</string>
+    <string name="retention_unavailable">アプリ情報を開けませんでした。もう一度お試しください。</string>
     <string name="retention_back">戻る</string>
     <string name="retention_junk">不要ファイルの削除</string>
     <string name="retention_malware">マルウェアスキャン</string>

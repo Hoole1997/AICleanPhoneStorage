@@ -15,7 +15,7 @@
     <string name="retention_not_yet">अभी अनइंस्टॉल न करें</string>
     <string name="retention_uninstall">अनइंस्टॉल करें</string>
     <string name="retention_shortcut_disabled">यह शॉर्टकट अब उपलब्ध नहीं है।</string>
-    <string name="retention_unavailable">सिस्टम की अनइंस्टॉल स्क्रीन नहीं खुल सकी। फिर कोशिश करें।</string>
+    <string name="retention_unavailable">ऐप की जानकारी नहीं खुल सकी। फिर कोशिश करें।</string>
     <string name="retention_back">वापस</string>
     <string name="retention_junk">जंक सफ़ाई</string>
     <string name="retention_malware">मैलवेयर स्कैन</string>

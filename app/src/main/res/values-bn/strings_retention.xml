@@ -15,7 +15,7 @@
     <string name="retention_not_yet">এখনই আনইনস্টল নয়</string>
     <string name="retention_uninstall">আনইনস্টল</string>
     <string name="retention_shortcut_disabled">এই শর্টকাট আর উপলব্ধ নেই।</string>
-    <string name="retention_unavailable">সিস্টেমের আনইনস্টল স্ক্রিন খোলা যায়নি। আবার চেষ্টা করুন।</string>
+    <string name="retention_unavailable">অ্যাপের তথ্য খোলা যায়নি। আবার চেষ্টা করুন।</string>
     <string name="retention_back">ফিরুন</string>
     <string name="retention_junk">অপ্রয়োজনীয় ফাইল পরিষ্কার</string>
     <string name="retention_malware">ম্যালওয়্যার স্ক্যান</string>

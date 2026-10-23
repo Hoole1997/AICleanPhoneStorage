@@ -15,7 +15,7 @@
     <string name="retention_not_yet">Não desinstalar ainda</string>
     <string name="retention_uninstall">Desinstalar</string>
     <string name="retention_shortcut_disabled">Este atalho não está mais disponível.</string>
-    <string name="retention_unavailable">Não foi possível abrir a tela de desinstalação do sistema. Tente novamente.</string>
+    <string name="retention_unavailable">Não foi possível abrir as informações do app. Tente novamente.</string>
     <string name="retention_back">Voltar</string>
     <string name="retention_junk">Limpeza de lixo</string>
     <string name="retention_malware">Análise de malware</string>

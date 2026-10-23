@@ -15,7 +15,7 @@
     <string name="retention_not_yet">Chưa gỡ cài đặt</string>
     <string name="retention_uninstall">Gỡ cài đặt</string>
     <string name="retention_shortcut_disabled">Lối tắt này không còn khả dụng.</string>
-    <string name="retention_unavailable">Không thể mở màn hình gỡ cài đặt của hệ thống. Vui lòng thử lại.</string>
+    <string name="retention_unavailable">Không thể mở thông tin ứng dụng. Vui lòng thử lại.</string>
     <string name="retention_back">Quay lại</string>
     <string name="retention_junk">Dọn tệp rác</string>
     <string name="retention_malware">Quét phần mềm độc hại</string>

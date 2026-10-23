@@ -40,7 +40,8 @@ internal object BusinessTelemetry : EventSink {
                     params["user_type"] = userType(ChannelUserController.getCurrentChannel())
                 if (ReportDataManager.isInitialized()) {
                     ReportDataManager.reportData(pending.event.wireName, params)
-                    Log.d("BusinessMetrics", "${pending.event.wireName} ${net.corekit.metrics.log.EventLogParameters.redact(params)}")
+                    // 按用户要求，反馈日志与提交参数一致：空串保留为空，有内容显示原文。
+                    Log.d("BusinessMetrics", "${pending.event.wireName} $params")
                 } else Log.w("BusinessMetrics", "No configured reporter: ${pending.event.wireName}")
                 val lost = dropped.getAndSet(0)
                 if (lost > 0) Log.w("BusinessMetrics", "Startup queue overflow: dropped=$lost")

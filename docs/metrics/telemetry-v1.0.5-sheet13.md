@@ -38,7 +38,7 @@ I28、I30 的值均为 `keep_app`、`uninstall`，属性类型为 String。重�
 
 原表 E32 / H32：`has_other_content`，String；说明实际要求 Other 补充文本原文，不能因字段名含 `has` 就误写成 Boolean。
 
-用户在本次核对后明确改为上报这两个字段，覆盖此前“不上传”的要求。原因页两个底部按钮均提交 `reason` 与 String 类型的 `has_other_content`；Other 才取输入原文（既有 500 字符上限），其余为空串，未选原因使用 none。只编辑/选择不发送，点击时才锁存参数。现有清理结果不符合预期、运行卡顿均映射 poor_user_experience，缺少功能映射 unmet_needs；没有找到类似应用选项，不伪造 found_similar_app。详见[卸载挽留实现](../uninstall-retention.md)。
+用户在本次核对后明确改为上报这两个字段，覆盖此前“不上传”的要求。原因页两个底部按钮均提交 `reason` 与 String 类型的 `has_other_content`；按用户最新要求，输入内容与选项独立：任意选项（包括未选）均取输入原文（既有 500 字符上限），仅未输入时为空串；未选原因使用 none。只编辑/选择不发送，点击时才锁存参数。现有清理结果不符合预期、运行卡顿均映射 poor_user_experience，缺少功能映射 unmet_needs；没有找到类似应用选项，不伪造 found_similar_app。详见[卸载挽留实现](../uninstall-retention.md)。
 
 ## 第 13 项既有事件复核
 

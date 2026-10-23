@@ -15,7 +15,7 @@
     <string name="retention_not_yet">عدم إزالة التثبيت الآن</string>
     <string name="retention_uninstall">إزالة التثبيت</string>
     <string name="retention_shortcut_disabled">لم يعد هذا الاختصار متاحًا.</string>
-    <string name="retention_unavailable">تعذر فتح شاشة إزالة التثبيت للنظام. يرجى المحاولة مجددًا.</string>
+    <string name="retention_unavailable">تعذر فتح معلومات التطبيق. يُرجى المحاولة مجددًا.</string>
     <string name="retention_back">رجوع</string>
     <string name="retention_junk">تنظيف الملفات غير الضرورية</string>
     <string name="retention_malware">فحص البرامج الضارة</string>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 自定义勾选图标不使用系统 buttonDrawable；显式遮罩将按压波纹限制在当前选项行。 -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?attr/colorControlHighlight">
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/white" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+</ripple>

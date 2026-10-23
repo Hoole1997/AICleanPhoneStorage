@@ -15,7 +15,7 @@
     <string name="retention_not_yet">Noch nicht deinstallieren</string>
     <string name="retention_uninstall">Deinstallieren</string>
     <string name="retention_shortcut_disabled">Diese Verknüpfung ist nicht mehr verfügbar.</string>
-    <string name="retention_unavailable">Die Deinstallationsansicht des Systems konnte nicht geöffnet werden. Bitte erneut versuchen.</string>
+    <string name="retention_unavailable">App-Info konnte nicht geöffnet werden. Bitte erneut versuchen.</string>
     <string name="retention_back">Zurück</string>
     <string name="retention_junk">Datenmüll bereinigen</string>
     <string name="retention_malware">Malware-Scan</string>

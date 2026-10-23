@@ -1,0 +1,5 @@
+com.example.aicleanphonestorage.RetentionDeviceTest:..
+
+Time: 47.979
+
+OK (2 tests)
