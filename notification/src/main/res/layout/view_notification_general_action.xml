@@ -22,10 +22,12 @@
         android:minWidth="0dp"
         android:minHeight="0dp" />
 
+    <!-- FrameLayout 先按文字/背景的自然尺寸测量，再让文字占满最终按钮高度。
+         动效背景固有高度可能大于文字最小高度；wrap_content 会让文字和点击区域贴顶。 -->
     <TextView
         android:id="@+id/tvAction"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:minHeight="@dimen/notification_general_action_min_height"
         android:paddingHorizontal="12dp"
         android:paddingVertical="4dp"

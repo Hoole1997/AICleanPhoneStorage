@@ -193,7 +193,7 @@ dependencies {
     implementation(libs.lottie)
 
     implementation("com.github.toukaremax:core:1.0.15")
-    implementation("com.github.toukaremax:bill:support_risk_1.0.12")
+    implementation("com.github.toukaremax:bill:support_risk_1.0.14")
     implementation("com.github.toukaremax:ad-risk:1.0.8")
     implementation("com.google.code.gson:gson:2.13.1")
     implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.0.0")
